@@ -1,0 +1,44 @@
+# Main
+
+Modular gene reg
+  parts
+  modular
+    basic
+    synth
+3UTRs and termintors
+  why important
+  roles
+Comp Bio of 3'UTRs and Motifs
+  Paragraph on selecting predicting effects of yeast 3'UTR motifs.
+  What is a motif?
+Example of non-modular gene reg
+  codon context together with promoter
+Synthetic biology screens
+Here, we
+  chimeras
+  following cheng et al
+  motif combinations
+
+The regulatory effects of mRNA transcript 3'UTRs cover transcription rate, alternative cleavage / polyadenylation and stability. 3'UTR length correlates with genomic size, with a typical yeast 3'UTR lengths of ~150bp [@Tuller2009aa] and human 3'UTR lengths of ~1200bp. This complexity relation suggests that the regulatory role of 3'UTRs increases significance in larger transcriptomic enviroments. 
+
+Unlike ORFs, Yeast 3'UTRs do not contain highly conserved stop sequences to indicate the end of transcription. Conserved sequences, denoted processing elements, do exist that signify downstream cleavage and polyadenylation sites in the mature mRNA. However, mature mRNA polyA sites do not represent the transcription termination site on the pre-mRNA transcript. In fact, previous studies have shown that the 100bp downstream of the polyadenylation sites are important for efficient transcription termination [@doi101002yea320110507]. It has been shown that post-cleavage polyII continues to transcribe for 100's of base pairs before stopping.
+
+The lack of easily identifiable transcript end points has led to poor 3'UTR annotations even in smaller genomes.  The Saccharomyces Genome Database collates the 3'UTR annotations from five publications, [@Miura17846],[@Nagalakshmi1344], [@Yassour3264], [@Xu2009aa] and [@doi101038sjemboj7600711], to determine the 3'UTR for 2,849 of 6,713 ORFs. Alarmingly, for the 1,363 3'UTRs determined from more than one source, less than half have consistant lengths. Rather oddly, I believe these five papers have more 3`UTRs than SGD includes in its data base.
+
+Yeast 3'UTRs are known to contain processing elements and RNA-binding protein motifs. Processing elements manipluate the cleavage and polyadenylation stage of mRNA maturation. They include Efficency Elements (EE), e.g. UAUAUA, and Positioning Elements (PE), e.g. AAUAA. EE's tend to appear 30-70 nt upstream of transcript polyadenylation sites and are associated with Hrb1 binding meanwhile PE's signalling cleavage site ~20 bp downstream and are associated with Rna15 part of CF1A. Systematic mutagenesis of EEs reveals upto 10 log-fold changes in expression and abnormally long transcripts due to miss-cleavage [@101371journalpgen1005147],[@ZARET1982563]. Meanwhile, changes in PE tend to leave transcription rates uneffected but poly(A) site locations vary [@doi101002j146020751991tb07983x]. Yeast processing elements tend not be as highly conserved as those in other higher eukaryotes with AAUAA being one of the most highly conserved motifs in animals [@PROUDFOOT1991671]. 
+
+Transcript cleavage plays a role in determining transcription rates by controlling termination and elongation. There is a strong correlation between polyA signals in the 3'UTR and transcription termination efficiency. In eukaryotes, RNA polymerase II is bound tightly to the DNA template requiring several factors to be recruited before dislodging. The termination factors are only recuited after cleavage and polyadenylation factors are bound [@BAEJEN201738], linking cleavage and termination. Yeast mutants with defective 3'end processing, deleted cleavage and polyadenylation factors, showed significant run-through beyond typical detatchment points for the poly II and reduced transcription [@Birse298].
+
+For elongation, RNA polymerase II moves via brownian motion causing regular backtracking and transcriptional stalling.  To re-initiate transcription a section of the stalled transcript is cleaved off to allow realignment [@SIGURDSSON2010202]. 
+
+Alternative polyadenylation sites are seen in most yeast genes (72% have two at least 50 bp apart), with 14% have overlapping 3'UTRs (in a tail to tail orientation). Polyadenylation site can also be found in introns and exons. This is from [@Ozsolak2010aa] a paper with very interesting dataset all of which is apparently lost. Alternative polyadenylation in internal exons or introns can lead to different 3' end terminal exons. In practise, the most common 3'UTR isoform is often only present far less than 50% of the transcripts of a given gene, [@Moqtaderi11073].
+
+Contrasting Poly II with Poly I and Poly III, both seem to have more simpler detatchment (without significant recruitment of factors) after cleavage within their active sites and more distinct transcription termination sequences [@Braglia20052005],[@Jeong1995aa].
+
+Over half of yeast genes have a bidirectional promoter (i.e. head to head) compared to just 11% for humans [@Xu2012aa]. Bidirectional promoters tend to have no directional bias leaving only the control of transcription termination on the two possible transcripts (one of which may be ncRNA) to enforce a prefered direction. In addition, since transcription initiation and termination factors have been known to overlap in function the formation of gene-loops could inbue directional bias. The manipulation of bidirectional promoters add another degree to which cell can manipulate transcript production using 3'UTR motifs. [@Grzechnik2014aa]
+
+Transcript degradation either happens from 5' to 3' via Xrn1 or Rat1 mediated exonucleolytic digestion or 3' to 5' by the exosome complex. Either way, both are triggered by disassociation of Pab1 and the deadenylation of the poly(A) tails.
+
+The introduction of U residues into the 3'UTR, not corresponding to any known protein binding motif, often incurs stability likely due to changings in secondary structure. Poly(T) sequences near the poly(A) tail can imbue stability by forming stem loops. Pab1 binding is often reduced in sequences with poly(U) stretches, the same occurs for transcripts with GC rich stem loops. Not only could folding reduce interactions with Pab1 but all deadenylation proteins could be affected, causing stability. [@GEISBERG2014812]
+
+The quintessential 3'UTR binding post-transcriptional regulatory protein family is the PUF, Pumilio homology domain, family. They are highly conserved amoungst eukaryotic organisms and known for promoting ribosome stalling and govening RNA-decay. There are 6 known Puf proteins in yeast. Mpt5p, for example, is known to shorten poly(A) tails in certain transcripts. UGU based motifs are common in Puf protein targets. [@ijms19020410] Puf3 is known to promote degradation in mitochondrial proteins. 

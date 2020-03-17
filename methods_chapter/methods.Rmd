@@ -1,0 +1,973 @@
+---
+title: Draft manuscript for the mRNA decay prediction linear model using 3UTR Motifs
+output:
+  pdf_document:
+    df_print: kable
+    includes:
+      in_header: new3UTRstyles.sty
+geometry: margin=1in
+---
+
+Candidate 3'UTR motifs previously predicted to be associated with decay regulating RNA binding proteins were determined to be modular and to combine linearly when used to predict mRNA half lives.
+
+### Predicting mRNA abundance with linear combinations of sequences features.
+
+ To study post-transcriptional, cis-regulatory determinants of gene expression, we first determined the contributions to transcript half-lives of 69 suspected 3'UTR binding motifs of RNA decay proteins. We used two independent genome-wide studies of mRNA decay rates, described in Material and Methods, to determine motif contributions with a loose correlation between measured half lives seen in Figure 1. We fitted a linear model of half life to each data set independently, using codon usage and 3'UTR motif frequency as predicates. The predictive power of the models can be seen in Figure 2; ??% and 51% of the variability in half lives was explained for the Sun et al (2013) and Chan et al (2017) data sets respectively. Motifs predicted to be significant in both decay data sets are plotted in Figure 3 with their magnitudes calculated according to the data sets plotted against each other. All four motifs determined to be significant by Cheng et al (2017) appear as significant in both data sets. Interestingly, the TGTAAATA motif was predicted to have opposing effects in the two data sets. 
+ 
+
+
+### Materials and Methods
+
+Our analysis was performed separately on two independent, genome-wide studies of yeast mRNA decay rates to confirm motif significance, Sun et al (2013) and Chan et al (2017). Both papers used a non-invasive 4-thio-uracil (4TU) pulse labelling assay to measure decay with minimal metabolic burden.  Sun et al (2013) contained decay rates, which we converted to half lives, for ??% of all annotated transcripts by measuring 4TU incorporation after 6 minutes. We considered the Chan et al (2017) data set more comprehensive and sensitive as it contains half lives for ??% of all annotated transcripts and measured 4TU levels every five minutes for an hour.
+
+We collated 69 3'UTR motifs previously suspected to recruit or obstruct mRNA decay proteins from three separate studies: Hogan et al (2008), Shalgi et al (2005) and Cheng et al (2017). The 14 motifs taken from Hogan et al (2008) where deduced by immunoprecipitating known RNA-binding protiens (RBP) that had been modified by a tandom affinity purification (TAP)-tag which allowed any protein-bound RNA to precipitate alongside. Enrichment analysis highlighted mRNA bound to the proteins beyond random interactions and the 3'UTRs of enriched mRNAs were broken into 6 nucleotide long fragments for consensus sequence analysis. Any 3'UTR consensus sequences associated with decay proteins were chosen as motifs for our analysis. Shalgi et al (2005) provided the most motifs, 51, through enrichment analysis of 3'UTR k-mers with lengths 8-12 in mRNAs within the top and bottom 20-30% of half lives taken from Wang et al (2002). The final 4 motifs from Cheng et al (2017) were found by spliting the 3'UTRs of all mRNAs into k-mers of lengths 3 to 8 and predicting half-life with them using a sparce regression model described in Zhou et al (2013).
+
+  To calculate the frequency of each of the 69 motifs per gene we used the median 3'UTR lengths according to the Pelechano et al (2013) 3'UTR data set. They implement a novel RNA-seq assay, Transcript Isoform (TIF)-seq, to capture the 3' and 5' ends of transcripts and detect common isoforms of transcripts with differing UTRs. Using this data set we removed any motifs with less that six matches and avoided double counting by filtering out occurances of smaller motifs inside longer motifs. Only 38 of the original 69 motifs passed the count filter with the majority of excluded motifs being found downstream of the median polyadenlyation site suggested by Pelechano et al (2013). 
+  
+  We predicted $log_2$ $\lambda^{1/2}$ for every detected gene using a linear combination of motif frequencies with a greedy algorithm maximising the Akaike information criterion (AIC) to select for motifs with the largest contributions. In addition to motif frequencies, the linear model also included contributions from codon usage as similar work conducted by Cheng et al (2017) showed over 50% of the variabililty in transcript half lives could be explained by codon usage alone. 
+  
+  
+  
+  Cheng et al dataset has the half lives for 824 genes not in the Sun et al data set. and is missing 741
+  
+    and inferred their impacts on mRNA abundance by using a known solution  to a simple model of mRNA production
+ 
+ mRNA transcript 3'UTR sequence effects on gene expression  
+ 
+ 
+ 
+ The predictive power of the model using the two decay data sets can be seen in Figure 2. The model predicts ??% of the variability in half life with ??% coming from codon usage and ?% from 3'UTR motifs. Comparing results with Cheng et al (2017) motifs shows that we explain less of the variability with the new dataset but still detect the four motifs they determinate as significant. Interestingly, the TGTAAATA motifs was consider stabilitising using the Cheng et al (2017) dataset. The puf3 protein associated with motif is known to change function in carbon deficient condition which were likely present due to the bespoke CSM-lowURA media the cultures were grown in overnight, Sun et al (2013) used standard YPD media. 
+  
+  Figure 1 shows a clear correlation between the two decay data sets.
+
+```{r readAndFormatRawData,include = FALSE}
+library(tidyverse)
+library(Biostrings)
+library(latex2exp)
+library(glmnet)
+library(stringi)
+library(broom)
+library(readxl)
+library(cowplot)
+library(tikzDevice)
+
+# BiocManager::install("BSgenome.Scerevisiae.UCSC.sacCer3")
+
+# import Chan et al 2017 yeast mRNA decay dataset
+chan_decay_raw <-read_tsv("./methods_chapter/data/new_chan_dr_data.txt")
+
+# Calculate the mean over two decay rate replicates, remove NAs and rename column
+chan_decay_hlife <- chan_decay_raw %>%
+  dplyr::rename(transcriptName = gene_id, geneAltId = gene_short_name, hlifeR1 = halflife_160412_r1, hlifeR2 = halflife_160412_r2) %>%
+  select(-geneAltId) %>%
+  transmute(transcriptName,hlife = rowMeans(cbind(hlifeR1, hlifeR2), na.rm = TRUE)) %>%
+  filter(is.finite(hlife))
+
+# import sun et al 2013 decay rate data
+sun_decay_raw <- read_tsv("./methods_chapter/data/sun_total_dr.txt", 
+                       locale = locale(decimal = ","))
+#change weird name of 3rd column and orf to consistent ones geneName
+colnames(sun_decay_raw)[3] <- "d_rate"
+colnames(sun_decay_raw)[1] <- "geneName" 
+  
+#convert decayrate in sun et al to hlife and remove other cols
+sun_decay_hlife <- sun_decay_raw %>%
+  dplyr::select(geneName, d_rate) %>%
+    mutate(hlife = log(2)/d_rate) %>% 
+      dplyr::select(-d_rate)
+
+# combine datasets
+combined_decay_hlife <- full_join(chan_decay_hlife,sun_decay_hlife, by = c("transcriptName"="geneName"), suffix = c("_chan","_sun"))
+
+
+# import list of collated 3'UTR motifs
+motifs_raw <- scan("./methods_chapter/data/list_motifs.txt", character())
+
+# import yeast 3'UTR dataset
+tif_seq_raw <- read_csv("./methods_chapter/data/3primeUTR_5primeUTR_isoforms.csv") 
+
+tif_seq_UTR_raw <- tif_seq_raw %>%
+  select(gene,threePrimeUTR) %>%
+  filter(!is.na(threePrimeUTR))
+
+colnames(tif_seq_UTR_raw) <- c("transcriptName","threePrimeUTR")
+
+# import yeast open reading frame dataset
+Scer_ORF <- readDNAStringSet("https://downloads.yeastgenome.org/sequence/S288C_reference/orf_dna/orf_coding_all.fasta.gz")
+Scer_ORF_name <- as_tibble(names(Scer_ORF)) %>%
+  separate(value,c("transcriptName",NA),extra="drop",sep=" ")
+
+# Separate gene position in genomic coordinates from fasta file comment section
+Scer_ORF_coords <- tibble(gene = Scer_ORF_name$transcriptName,startSite = as.integer(str_extract(names(Scer_ORF),"(?<=Chr [IVX]{1,5} from )[0-9]+")),endSite = as.integer(str_extract(names(Scer_ORF),"(?<=Chr [IVX]{1,5} from [0-9]{1,10}-)[0-9]+")))
+
+# import list of codons
+codon <- readRDS("./methods_chapter/data/codons.rds")
+codon_no_TTT <- codon[-1]
+
+# Find the frequency of codons for each yeast ORF
+codon_freq <- tibble(geneName = Scer_ORF_name$transcriptName,ORF=as.character(Scer_ORF),length=width(Scer_ORF)) %>% 
+  mutate(ORF = gsub("([ATCG]{3})([ATCG]{3})",'\\1,\\2,',as.character(ORF))) %>%
+  filter((length %% 3) == 0) %>%
+  separate_rows(ORF,sep = ",") %>% 
+  group_by(geneName,ORF) %>%
+  summarise(counts=n()) %>%
+  spread(key = ORF,value = counts,fill=0) %>%
+  select(-V1) %>%
+  inner_join(tibble(geneName = Scer_ORF_name$transcriptName, geneLength = width(Scer_ORF)),by="geneName") %>%
+  gather(key=codon,value=number,-geneLength,-geneName) %>%
+  mutate(number=number/geneLength) %>% 
+  spread(key=codon,value=number) %>%
+  select(-TTT, -geneLength) %>%
+  dplyr::rename(transcriptName = geneName )
+
+# Import single cell RNA-seq dataset for transcript abundance
+nadal_ribelles_scRNA_seq <-read_tsv("./methods_chapter/data/nadal_ribelles_scRNA.tab")
+
+# filter out genes with poor coverage
+nadal_ribelles_scRNA_seq_filter <- nadal_ribelles_scRNA_seq %>%
+  select(-comGeneName)%>%
+  group_by(geneName) %>%
+  sample_n(1) %>%
+  ungroup() %>%
+  gather(-geneName, key = cell, value = counts) %>%
+  group_by(geneName) %>%
+  mutate(totCount = sum(counts), totCell = sum(!(counts == 0))) %>%
+  filter(totCount > 5 & totCell >1) %>%
+  select(-totCount, -totCell) %>%
+  filter(geneName %in% Scer_ORF_name$transcriptName) %>%
+  arrange(geneName) %>%
+  summarize(meanCount = mean(counts))
+
+colnames(nadal_ribelles_scRNA_seq_filter) <- c( "geneName","meanTranscriptPerCell")
+
+# Import protein fluorescence data set
+FI_data <- readxl::read_xls("./methods_chapter/data/terminatome.xls", skip = 1, range = "A3:C5304", col_names = c("geneName","comgeneName", "rel_FI"))
+
+
+
+```
+
+```{r findMotifs,include = FALSE}
+# using the collated list of 3'UTR motifs in list_motifs.txt find the frequency of the motifs in every yeast 3'UTR given by pelechano et al dataset
+
+# IUPAC to regex function
+iupac_to_regex <- function(iupac_string){
+  iupac_string %>% str_replace_all(c("U" = "T", "W" = "(A|T)", "S" = "(C|G)", "M" = "(A|C)", "K" = "(G|T)", "R" = "(A|G)", "Y" = "(C|T)", "B" = "(C|G|T)", "D" = "(A|G|T)", "H" = "(A|C|T)", "V" = "(A|C|G)", "N" = "(A|C|G|T)"))
+}
+
+# Dictionary for converted IUPAC codes into machine readable regular expressions and converting U -> T
+motifs_dictionary <- iupac_to_regex(motifs_raw) 
+
+# function to create all alternative version of motifs explicitally as strings
+regex_to_string <- function(motif_regex){
+  all_regex_as_string <- motif_regex
+  while(sum(str_detect(all_regex_as_string,"\\("))>0){
+    current_regex_as_string <- vector(mode = "character", length = 0)
+    for(i in 1:length(all_regex_as_string)){
+      current_regex <- all_regex_as_string[i]
+      extracted_alt_nuc <- substring(current_regex,str_locate(current_regex,"\\(")[1,1],str_locate(current_regex,"\\)")[1,1])
+      alternative_SNP <- str_remove(str_split(extracted_alt_nuc,"\\|")[[1]],"\\(|\\)")
+      extracted_alt_nuc <- str_replace(extracted_alt_nuc,"\\(","\\\\\\(") %>%
+        str_replace("\\)","\\\\\\)") %>%
+        str_replace_all("\\|","\\\\\\|")
+      temp_regex_as_string <- vector(mode="character")
+      for(j in 1:length(alternative_SNP)){
+        temp_regex_as_string[j] <- str_replace(current_regex,extracted_alt_nuc,alternative_SNP[j])
+      }
+      current_regex_as_string <- c(current_regex_as_string,temp_regex_as_string)
+    }
+    all_regex_as_string <- current_regex_as_string
+  }
+  all_regex_as_string
+}
+
+# Manipulations to remove double counting of motifs
+motifs_all_alternatives <- tibble(motifIUPAC = motifs_raw,motifsRegex = motifs_dictionary) %>% 
+  group_by(motifIUPAC) %>%
+  mutate(motifsStrings = map(motifsRegex,regex_to_string)) %>%
+  unnest(motifsStrings) 
+
+motifs_unique_alternatives <- motifs_all_alternatives %>% 
+  group_by(motifsStrings) %>%
+  mutate(pairedMotifString = list(pairedMotifString=motifs_all_alternatives$motifsStrings)) %>%
+  unnest(pairedMotifString) %>%
+  group_by(motifsRegex) %>%
+  filter(!(motifsStrings==pairedMotifString)) %>%
+  ungroup() %>%
+  mutate(matchingMotif = str_detect(motifsStrings,pairedMotifString)) %>%
+  group_by(motifsStrings) %>%
+  filter(sum(matchingMotif) == 0) %>%
+  select(-matchingMotif,-pairedMotifString) %>%
+  distinct(motifsStrings,.keep_all = TRUE) %>%
+  group_by(motifIUPAC) %>%
+  mutate(newMotifIUPAC = map_chr(motifsStrings,(function(x){as.character(DECIPHER::ConsensusSequence(DNAStringSet(motifsStrings)))}))) %>%
+  ungroup() %>%
+  mutate(newMotifsRegex = iupac_to_regex(newMotifIUPAC)) %>%
+  select(-motifIUPAC,-motifsRegex)
+
+# function to find 3'UTR median length across all detected 3'UTR for each yeast gene
+find_median <- function(isoform_length){
+  median_length = median(isoform_length)
+  if(!is.integer(median_length)) {
+    median_length = min(isoform_length[isoform_length >= median_length])
+  }
+  median_length
+}
+
+# find the median length isoforms for each gene
+median_3UTR_motif_freq <- tif_seq_UTR_raw %>%
+  distinct(threePrimeUTR,.keep_all = TRUE) %>%
+  mutate(threeUTRLength = str_length(threePrimeUTR)) %>%
+  group_by(transcriptName) %>%
+  mutate(medianLength = find_median(threeUTRLength)) %>%
+  filter(threeUTRLength == medianLength) %>%
+  select(transcriptName,threePrimeUTR)
+
+# Create 'empty' motif count tibble for median length 3'UTRs 
+single_count_median_3UTR_motifs_freq <- median_3UTR_motif_freq  %>%
+  select(transcriptName,threePrimeUTR)
+
+# Unduplicated motifs
+unique_IUPAC <- motifs_unique_alternatives %>% distinct(newMotifsRegex,.keep_all = TRUE) %>% pull(newMotifIUPAC)
+
+#Search and add frequency of each c(motif) as a column in ref dataset
+for (i in 1:length(unique_IUPAC)){
+  motif_count <- str_count(single_count_median_3UTR_motifs_freq$threePrimeUTR, str_c(motifs_unique_alternatives %>% filter(newMotifIUPAC == unique_IUPAC[i]) %>% pull(motifsStrings),collapse = "|"))
+  if(sum(motif_count) > 5)  single_count_median_3UTR_motifs_freq <- mutate(single_count_median_3UTR_motifs_freq %>% ungroup(), !!unique_IUPAC[i] := motif_count)
+}
+  
+```
+
+## mRNA decay data comparison
+```{r compareSunVsChan,warning=FALSE,message=FALSE,fig.cap="Comparison of mRNA half life datasets from Sun \\textit{et al} 2013 and Chan \\textit{et al} 2018", echo=FALSE}
+#jUst summary of both to calculate r-squared
+decay_data_set_cor <- cor(
+  combined_decay_hlife %>%
+  filter(!is.na(hlife_chan),!is.na(hlife_sun)) %>%
+  pull(hlife_chan),
+  combined_decay_hlife %>%
+  filter(!is.na(hlife_chan),!is.na(hlife_sun)) %>%
+  pull(hlife_sun)
+)
+
+combined_decay_hlife %>%
+  ggplot(aes(x = hlife_chan, y = hlife_sun)) +
+    geom_bin2d( bins=70) + 
+    theme_bw(base_size = 20) + 
+  theme(panel.grid.minor = element_blank(), legend.position = "none") +
+    labs(y = TeX("$\\lambda^^{1/2}$ (min) Sun \\textit{et al}"), 
+         x = TeX("$\\lambda^{1/2}$ (min) Chan \\textit{et al}")) +
+  annotate("text",label = paste0("R = ",signif(decay_data_set_cor,2)),size=6,x=40,y=2) +
+  scale_y_log10(limits = c(0.9,200)) +
+  scale_x_log10(breaks=c(1,10,100),limits = c(0.9,200)) +
+  coord_fixed()
+```
+
+```{R violinplotsforSunDecay,fig.cap="Cheng \\textit{et al} 2017 violin plot recreated for Sun \\textit{et al} 2013 decay data. The horizontal line represents the median half life with and without the motif.", echo=FALSE,eval=FALSE}
+# recreate the box plots showing the impacts of the motifs detected by cheng et al data set but as violin plots
+
+#add dr data for Sun et al
+cheng_motifs_sun_decay <- left_join(single_count_median_3UTR_motifs_freq, sun_decay_hlife, by = c("transcriptName"="geneName")) %>%
+  filter(is.finite(hlife))
+
+# Change frequencies of motifs into 0 or >= 1
+data_violin_plot_sun_decay <- cheng_motifs_sun_decay %>%
+  dplyr::select(hlife, ATATTC, TGCAT, TGTAAATA, TTTTTTA) %>%
+  mutate(ATATTC = replace(ATATTC, ATATTC >= 1, 1),
+         TGCAT = replace(TGCAT, TGCAT >= 1, 1),
+         TGTAAATA = replace(TGTAAATA, TGTAAATA >= 1, 1),
+         TTTTTTA = replace(TTTTTTA, TTTTTTA >= 1, 1))
+
+
+plot_ATATTC_sun <- data_violin_plot_sun_decay %>%
+  ggplot(., aes(x = ATATTC, y = hlife)) +
+    geom_violin(aes(group = ATATTC),scale="count",draw_quantiles = 0.5) + 
+    scale_x_continuous(breaks = c(0,1), labels = c("0", ">=1")) +
+    scale_y_continuous(trans = "log10", breaks = c(1,10,100)) +
+    labs(y = TeX("$\\lambda_{1/2}$ (min)")) +
+  theme_bw(base_size = 15) +
+  theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank()) 
+
+
+plot_TGCAT_sun <- data_violin_plot_sun_decay %>%
+  ggplot(data = ., aes(x = TGCAT, y = hlife)) +
+    geom_violin(aes(group = TGCAT),scale="count",draw_quantiles = 0.5) + 
+    scale_x_continuous(breaks = c(0,1), labels = c("0", ">=1"))+
+    scale_y_continuous(trans = "log10", breaks = c(1,10,100)) + 
+    labs(y = element_blank()) +
+  theme_bw(base_size = 15) +
+  theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(),axis.ticks.y = element_blank(),axis.text.y = element_blank())
+
+plot_TGTAAATA_sun <- data_violin_plot_sun_decay %>%
+  ggplot(data = ., aes(x = TGTAAATA, y = hlife)) +
+    geom_violin(aes(group = TGTAAATA),scale="count",draw_quantiles = 0.5) + 
+    scale_x_continuous(breaks = c(0,1), labels = c("0", ">=1"))+
+    scale_y_continuous(trans = "log10", breaks = c(1,10,100)) + 
+    labs(y = element_blank()) +
+  theme_bw(base_size = 15) +
+  theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(),axis.ticks.y = element_blank(),axis.text.y = element_blank())
+
+
+plot_TTTTTTA_sun <- data_violin_plot_sun_decay %>%
+  ggplot(data = ., aes(x = TTTTTTA, y = hlife)) +
+    geom_violin(aes(group = TTTTTTA),scale="count",draw_quantiles = 0.5) + 
+    scale_x_continuous(breaks = c(0,1), labels = c("0", ">=1"))+
+    scale_y_continuous(trans = "log10", breaks = c(1,10,100)) + 
+    labs(y = element_blank()) +
+  theme_bw(base_size = 15) +
+  theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(),axis.ticks.y = element_blank(),axis.text.y = element_blank())
+
+cowplot::plot_grid(plot_ATATTC_sun, plot_TGCAT_sun, plot_TGTAAATA_sun, plot_TTTTTTA_sun, ncol=4,axis="l")
+
+```
+
+```{R BoxplotsForChanDecay,fig.cap="Cheng \\textit{et al} 2017 violin plot recreated for Chan \\textit{et al} 2018 decay data. The horizontal line represents the median half life with and without the motif.", echo = FALSE,eval=FALSE}
+# recreate the box plots showing the impacts of the motifs detected by cheng et al but for new decay data set and as violin plots
+
+
+#add dr data for Chan et al
+cheng_motifs_chan_decay <- left_join(single_count_median_3UTR_motifs_freq, chan_decay_hlife, by = "transcriptName") %>%
+  filter(is.finite(hlife))
+
+# Change frequencies of motifs into 0 or >= 1
+data_violin_plot_chan_decay <- cheng_motifs_chan_decay %>%
+  dplyr::select(hlife, ATATTC, TGCAT, TGTAAATA, TTTTTTA) %>%
+  mutate(ATATTC = replace(ATATTC, ATATTC >= 1, 1),
+         TGCAT = replace(TGCAT, TGCAT >= 1, 1),
+         TGTAAATA = replace(TGTAAATA, TGTAAATA >= 1, 1),
+         TTTTTTA = replace(TTTTTTA, TTTTTTA >= 1, 1))
+
+
+plot_ATATTC_chan <- data_violin_plot_chan_decay %>%
+    ggplot(., aes(x = ATATTC, y = hlife)) +
+    geom_violin(aes(group = ATATTC),scale="count",draw_quantiles = 0.5) + 
+    scale_x_continuous(breaks = c(0,1), labels = c("0", ">=1")) +
+    scale_y_continuous(trans = "log10", breaks = c(1,10,100)) +
+    labs(y = TeX("$\\lambda_{1/2}$ (min)")) +
+  theme_bw(base_size = 15) +
+  theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank()) 
+
+
+plot_TGCAT_chan <- data_violin_plot_chan_decay %>%
+  ggplot(data = ., aes(x = TGCAT, y = hlife)) +
+    geom_violin(aes(group = TGCAT),scale="count",draw_quantiles = 0.5) + 
+    scale_x_continuous(breaks = c(0,1), labels = c("0", ">=1"))+
+    scale_y_continuous(trans = "log10", breaks = c(1,10,100)) + 
+    labs(y = element_blank()) +
+  theme_bw(base_size = 15) +
+  theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(),axis.ticks.y = element_blank(),axis.text.y = element_blank())
+
+plot_TGTAAATA_chan <- data_violin_plot_chan_decay  %>%
+  ggplot(data = ., aes(x = TGTAAATA, y = hlife)) +
+    geom_violin(aes(group = TGTAAATA),scale="count",draw_quantiles = 0.5) + 
+    scale_x_continuous(breaks = c(0,1), labels = c("0", ">=1"))+
+    scale_y_continuous(trans = "log10", breaks = c(1,10,100)) + 
+    labs(y = element_blank()) +
+  theme_bw(base_size = 15) +
+  theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(),axis.ticks.y = element_blank(),axis.text.y = element_blank())
+
+
+plot_TTTTTTA_chan <- data_violin_plot_chan_decay %>%
+  ggplot(data = ., aes(x = TTTTTTA, y = hlife)) +
+    geom_violin(aes(group = TTTTTTA),scale="count",draw_quantiles = 0.5) + 
+    scale_x_continuous(breaks = c(0,1), labels = c("0", ">=1"))+
+    scale_y_continuous(trans = "log10", breaks = c(1,10,100)) + 
+    labs(y = element_blank()) +
+  theme_bw(base_size = 15) +
+  theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank(),axis.ticks.y = element_blank(),axis.text.y = element_blank())
+
+cowplot::plot_grid(plot_ATATTC_chan, plot_TGCAT_chan, plot_TGTAAATA_chan, plot_TTTTTTA_chan, ncol=4,axis="l")
+
+```
+## mRNA decay rate prediction
+
+```{r trainLinearModelHlife,echo = FALSE}
+
+# combine motif,codon and decay datasets
+single_count_decay_prediction_dataset <- single_count_median_3UTR_motifs_freq %>%
+  inner_join(combined_decay_hlife) %>%
+  inner_join(codon_freq)
+
+single_decay_prediction_med_length_dataset_sun <- single_count_decay_prediction_dataset %>%
+  filter(!(is.na(hlife_sun))) %>%
+  mutate(hlife = hlife_sun)  %>%
+  select(-hlife_chan,-hlife_sun)
+
+single_decay_prediction_med_length_dataset_chan <- single_count_decay_prediction_dataset %>%
+  filter(!(is.na(hlife_chan))) %>%
+  mutate(hlife = hlife_chan)  %>%
+  select(-hlife_chan,-hlife_sun)
+
+# Function to find motifs associated with decay for all isoforms 
+greedy_linear_motif_selection <- function(motif_counts_half_life_data,observable){
+  motif_counts_half_life_data_glob <<- motif_counts_half_life_data
+  
+  # predict half life with codon usage only
+  base_codon_model <- lm(paste0("log2(",observable,")~",str_flatten(codon_no_TTT,"+")),data = motif_counts_half_life_data_glob)
+  
+  # select motifs to use on top of codons to predrict half life using a greedy AIC method 
+  raw_motifs_list <- colnames(single_count_median_3UTR_motifs_freq)[3:length(single_count_median_3UTR_motifs_freq)]
+  
+  raw_motifs_list <- raw_motifs_list[raw_motifs_list %in% colnames(motif_counts_half_life_data)]
+  
+  step(base_codon_model,paste0("log2(",observable,")~",str_flatten(codon_no_TTT,"+"),"+",str_flatten(raw_motifs_list,"+")),trace=FALSE)
+  
+}
+# Find motifs associated with decay for all isoforms without duplicated motif counts for chan et al
+single_motif_chan_decay_step_model <- greedy_linear_motif_selection(single_decay_prediction_med_length_dataset_chan,"hlife")
+
+# Find motifs associated with decay for all isoforms without duplicated motif counts for sun et al
+single_motif_sun_decay_step_model <- greedy_linear_motif_selection(single_decay_prediction_med_length_dataset_sun,"hlife")
+
+```
+
+```{r decayModelPredictivePower,fig.cap="Comparison of the two predictive power of the two models", echo = FALSE, warning = FALSE}
+two_data_sets_predictive_power_tibble <- single_decay_prediction_med_length_dataset_chan %>%
+  select(transcriptName,hlife) %>%
+  mutate(Measured_Half_Life = hlife, Predicted_Half_Life = 2^predict(single_motif_chan_decay_step_model),Data_Set = "Chan") %>%
+  bind_rows(
+    single_decay_prediction_med_length_dataset_sun %>%
+  select(transcriptName,hlife) %>%
+  mutate(Measured_Half_Life =hlife, Predicted_Half_Life = 2^predict(single_motif_sun_decay_step_model),Data_Set = "Sun")
+  )
+
+chan_step_model_r_squared <- summary(single_motif_chan_decay_step_model)$r.squared
+
+sun_step_model_r_squared <- summary(single_motif_sun_decay_step_model)$r.squared
+
+chan_pred_vs_obvs_plot <- ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Chan")) +
+  geom_bin2d(aes(x=Predicted_Half_Life,y=Measured_Half_Life), bins = 70) +
+  labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obs}$"),title = TeX("Chan $\\textit{et al}$")) +
+  theme_bw(base_size = 15) +
+  scale_y_log10(limits = c(0.9,200)) +
+  scale_x_log10(breaks=c(1,10),minor_breaks = c(3,30),limits = c(1,60)) +
+  theme(legend.position = "none",panel.grid.minor.y = element_blank(),plot.title = element_text(hjust=0.5)) +
+  annotate("text",label = TeX(paste0("$R^2=$",signif(chan_step_model_r_squared,2))),size=6,x=3,y=130)
+
+sun_pred_vs_obvs_plot <- ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Sun")) +
+  geom_bin2d(aes(x=Predicted_Half_Life,y=Measured_Half_Life), bins = 70) +
+  labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obvs}$"),title = TeX("Sun $\\textit{et al}$")) +
+  theme_bw(base_size = 15) +
+  scale_y_log10(limits = c(0.9,200)) +
+  scale_x_log10(breaks=c(1,10),minor_breaks = c(3,30),limits = c(1,60)) +
+  theme(legend.position = "none",panel.grid.minor.y = element_blank(),plot.title = element_text(hjust=0.5),axis.title.y=element_blank(), axis.text.y = element_blank(),axis.ticks.y = element_blank()) +
+  annotate("text",label = TeX(paste0("$R^2=$",signif(sun_step_model_r_squared,2))),size=6,x=3,y=130)
+
+cowplot::plot_grid(chan_pred_vs_obvs_plot,sun_pred_vs_obvs_plot,align="v")
+
+```
+
+```{r plotMotifsOfInterest,fig.cap="Comparison of significant motif contributions to half life as trained on Chan \\textit{et al} and Sun \\textit{et al}"}
+# create tibble with the different motif coefficients from the two data sets
+two_decay_dataset_models_comparison <- tidy(single_motif_sun_decay_step_model) %>%
+  dplyr::rename(sun.error = "std.error",Sun = "estimate") %>%
+  select(-statistic,-p.value) %>%
+  full_join( 
+    tidy(single_motif_chan_decay_step_model) %>%
+  dplyr::rename(chan.error = "std.error",Chan = "estimate") %>%
+  select(-statistic,-p.value)
+    ) %>%
+  dplyr::rename(Motif = "term") %>%
+  filter(Motif %in% colnames(single_count_median_3UTR_motifs_freq)) %>%
+  filter(!is.na(Sun) & !is.na(Chan)) 
+
+ggplot(two_decay_dataset_models_comparison,aes(x = Chan, y = Sun, xmin=Chan - chan.error,xmax=Chan + chan.error,ymin=Sun - sun.error,ymax=Sun + sun.error,colour=Motif)) +
+  geom_errorbar() +
+  geom_errorbarh() +
+  theme_bw(base_size = 15) +
+  theme(axis.text.x=element_text(angle=90,vjust = 0.5),panel.grid.minor=element_blank()) +
+  labs(y=TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Sun}$"),x=TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Chan}$")) +
+  scale_shape_manual(values=1:7) +
+  geom_hline(yintercept = 0,size = 0.2) +
+  geom_vline(xintercept = 0,size = 0.2)
+```
+
+```{r trainLinearModelAbundance,echo = FALSE,fig.cap="Comparison of significant motif contributions to transcript abundance as trained on Nadal-Ribelles \\textit{et al}",eval=FALSE}
+
+# combine motif,codon and abundance datasets
+single_count_abundance_prediction_dataset <- single_count_median_3UTR_motifs_freq %>%
+  inner_join(nadal_ribelles_scRNA_seq_filter,by = c("transcriptName" = "geneName")) %>%
+  inner_join(codon_freq)
+
+# Find motifs associated with abundance for all isoforms without duplicated motif counts
+single_motif_abundance_step_model <- greedy_linear_motif_selection(single_count_abundance_prediction_dataset,"meanTranscriptPerCell")
+
+# create tibble with the different motif coefficients from the two data sets
+abundance_dataset_motifs_comparison <- tidy(single_motif_abundance_step_model) %>%
+  filter(term %in% colnames(single_count_median_3UTR_motifs_freq)) %>%
+  dplyr::rename(motif = term, coefficient = estimate) %>%
+  select(-std.error,-statistic)
+
+ggplot(abundance_dataset_motifs_comparison) +
+  geom_point(aes(x=motif,y=coefficient),size = 2) +
+  theme_bw(base_size = 15) +
+  theme(axis.text.x=element_text(angle=90,vjust = 0.5),panel.grid.major.x = element_blank(),panel.grid.minor.x=element_blank(), axis.title.x=element_blank(),axis.ticks.x=element_blank()) +
+  labs(colour = "Data Set",y=TeX("$\\Delta \\log_2$ $\\mu$"))
+
+```
+
+```{r abundanceModelPredictivePower,fig.cap="Graph of the two predictive power of the transcript abundance model", echo = FALSE, warning = FALSE,eval=FALSE}
+abundance_data_set_predictive_power_tibble <- single_count_abundance_prediction_dataset %>%
+  select(transcriptName,meanTranscriptPerCell) %>%
+  mutate(Measured_Abundance = meanTranscriptPerCell, Predicted_Abundance = 2^predict(single_motif_abundance_step_model))
+
+abundance_step_model_r_squared <- summary(single_motif_abundance_step_model)$r.squared
+
+ggplot(abundance_data_set_predictive_power_tibble) +
+  geom_bin2d(aes(x=Predicted_Abundance,y=Measured_Abundance), bins = 70) +
+  labs(x=TeX("$\\mu_{pred}$"),y=TeX("$\\mu_{obs}$")) +
+  theme_bw(base_size = 15) +
+  scale_y_log10() +
+  scale_x_log10(breaks=c(1,10)) +
+  theme(legend.position = "none",panel.grid.minor.y = element_blank(),plot.title = element_text(hjust=0.5)) +
+  annotate("text",label = TeX(paste0("$R^2=$",signif(abundance_step_model_r_squared,2))),size=6,x=0.2,y=130)
+
+```
+
+```{r trainLinearModelProtein,echo = FALSE,fig.cap="Comparison of significant motif contributions to protein fluorescence as trained on ?? \\textit{et al}",eval=FALSE}
+
+# combine motif,codon and abundance datasets
+single_count_protein_prediction_dataset <- single_count_median_3UTR_motifs_freq %>%
+  inner_join(FI_data,by = c("transcriptName" = "geneName")) %>%
+  inner_join(codon_freq)
+
+# Find motifs associated with abundance for all isoforms without duplicated motif counts
+single_motif_protein_step_model <- greedy_linear_motif_selection(single_count_protein_prediction_dataset,"rel_FI")
+
+# create tibble with the different motif coefficients from the two data sets
+protein_dataset_motifs_comparison <- tidy(single_motif_protein_step_model) %>%
+  filter(term %in% colnames(single_count_median_3UTR_motifs_freq)) %>%
+  dplyr::rename(motif = term, coefficient = estimate) %>%
+  select(-std.error,-statistic)
+
+ggplot(protein_dataset_motifs_comparison) +
+  geom_point(aes(x=motif,y=coefficient),size = 2) +
+  theme_bw(base_size = 15) +
+  theme(axis.text.x=element_text(angle=90,vjust = 0.5),panel.grid.major.x = element_blank(),panel.grid.minor.x=element_blank(), axis.title.x=element_blank(),axis.ticks.x=element_blank()) +
+  labs(colour = "Data Set",y=TeX("$\\Delta \\log_2$ Fluorescence"))
+
+```
+
+```{r proteinModelPredictivePower,fig.cap="Graph of the two predictive power of the protein fluorescence model", echo = FALSE, warning = FALSE,eval=FALSE}
+protein_data_set_predictive_power_tibble <- single_count_protein_prediction_dataset %>%
+  select(transcriptName,rel_FI) %>%
+  mutate(Measured_Fluorescence = rel_FI, Predicted_Fluorescence = 2^predict(single_motif_protein_step_model))
+
+protien_step_model_r_squared <- summary(single_motif_protein_step_model)$r.squared
+
+ggplot(protein_data_set_predictive_power_tibble) +
+  geom_bin2d(aes(x=Measured_Fluorescence,y=Predicted_Fluorescence), bins = 70) +
+  labs(x=TeX("$\\Fluorescence_{pred}$"),y=TeX("$\\Fluorescence_{obs}$")) +
+  theme_bw(base_size = 15) +
+  scale_y_log10() +
+  scale_x_log10(breaks=c(1,10)) +
+  theme(legend.position = "none",panel.grid.minor.y = element_blank(),plot.title = element_text(hjust=0.5)) +
+  annotate("text",label = TeX(paste0("$R^2=$",signif(protien_step_model_r_squared,2))),size=6,x=0.05,y=2)
+
+```
+
+## 3'UTR Selection Criteria
+Motifs predicted to contribute significantly to mRNA abundance were inserted into the 3'UTRs of two functionally unrelated genes to control for context specific effects. In order to minimise confounding interaction effects between different motifs the genes were selected to have two or less motifs in their native 3'UTR. The selection of a region inside the 3'UTR to insert motifs into is complicated by the extensive 3'UTR heterogeneity caused by alternative polyadenylation (APA) in the yeast mRNA production (Ozsolak et al, 2010). Furthermore, it is well established that the sequences around 100 base pairs downstream of the APA site can influence transcription termination and mRNA abundance (Russo, 1995) but experimental constraints limit the maximum length of a construct to 300 nucleotides. Therefore, efficient transcription and motif incorporation was maintained by using the (Pelecheno et al, 2013) isoform dataset to determine 3'UTRs with a minimum length of 50 nucleotides and maximum length of 200 nucleotides in 80% of detected transcripts. Genes were also selected to be in the top 5% most abundant in the (Nadal-Ribelles et al, 2019) scRNA-seq dataset, using counts normalised by BASiCS (Vallejos, Marioni and Richardson, 2015), and several other non-biological constraints for construct fabrication, i.e. GC content threshold. The selection process is summarised in supplementary figure 1 with supplimentary table 1 containing the shortlist of genes. A ribosomal protien, RPS3, and redox homeostasis protein, TSA1, were chosen to investigate motif effects across genes associated with different biological functions whilst matching 3'UTR structual characteristics. 
+
+```{r 3UTRSelection,echo = FALSE,message=FALSE}
+# Using the criteria explained in the paragraph above to find the most suitable 3'UTRs to transform
+
+# Find a 3'UTR with less than three motifs in the median isoform
+few_motif_3UTRs <- single_count_median_3UTR_motifs_freq %>%
+  gather(key=motif,value=count,-transcriptName,-threePrimeUTR) %>%
+  group_by(transcriptName,threePrimeUTR) %>%
+  summarise(numOfMotif=sum(count)) %>%
+  ungroup() %>%
+  mutate(moreThanThreeMotifUTRs = (numOfMotif > 2)) %>% 
+  group_by(transcriptName) %>%
+  summarise(numLessThreeMotifsIsoforms = sum(moreThanThreeMotifUTRs)) %>%
+  filter(numLessThreeMotifsIsoforms == 0) %>%
+  pull(transcriptName)
+
+# function to calculate the cumulative frequency of 3'UTR lengths for each yeast gene
+cumulative_freq_calculator <- function(UTR_length_density){
+  cumulative_frequency <- vector(mode = "logical",length = length(UTR_length_density))
+  for(i in 1:length(UTR_length_density)){
+    cumulative_frequency[i] =  sum(UTR_length_density[1:i])
+  }
+  cumulative_frequency
+}
+
+# Now filter genes s.t. the majority (70%) of transcripts isoforms have 3'UTR length  < 200 nucleotides but > 50 nucleotides
+few_motif_short_3UTRs <- tif_seq_UTR_raw %>%
+  filter(transcriptName %in% few_motif_3UTRs) %>%
+  group_by(transcriptName,threePrimeUTR) %>%
+  summarise(UTRCount = n()) %>% 
+  ungroup() %>% 
+  mutate(UTRLength = str_length(threePrimeUTR),UTRDensity = UTRCount*UTRLength) %>%
+  group_by(transcriptName) %>%
+  mutate(totalAmount = sum(UTRDensity)) %>% 
+  ungroup() %>% 
+  mutate(UTRDensity = UTRDensity / totalAmount) %>%
+  group_by(transcriptName) %>%
+  mutate(cumulativeFreq = cumulative_freq_calculator(UTRDensity)) %>%
+  filter(cumulativeFreq > 0.15 , cumulativeFreq < 0.85) %>%
+  pull(transcriptName)
+
+# Filter for top 5%  of abundance (transcript per cell)
+
+few_motif_short_abundant_3UTRs <- single_count_median_3UTR_motifs_freq %>% 
+  filter(transcriptName %in% few_motif_short_3UTRs) %>%
+  inner_join(nadal_ribelles_scRNA_seq_filter,by = (c("transcriptName"="geneName"))) %>%
+  top_frac(0.05,meanTranscriptPerCell)  %>% 
+  arrange(-meanTranscriptPerCell) %>%
+  ungroup()
+
+# prepare variable for flowchart output
+
+genes_in_pelechano <- length(median_3UTR_motif_freq %>% distinct(transcriptName) %>% pull(transcriptName))
+
+filter_motifs <- length(median_3UTR_motif_freq %>% filter(transcriptName %in% few_motif_3UTRs) %>% distinct(transcriptName) %>% pull(transcriptName))
+
+filter_length <- length(median_3UTR_motif_freq %>% filter(transcriptName %in% few_motif_short_3UTRs) %>% distinct(transcriptName) %>% pull(transcriptName))
+
+filter_abundance <- length(few_motif_short_abundant_3UTRs %>% distinct(transcriptName) %>% pull(transcriptName))
+
+
+```
+
+```{r checkFiltered3UTROnGblocks,echo = FALSE,message=FALSE}
+# prepare filtered 3'UTRs for easy export into a csv file so that the proprietary construnction check software can be ran
+
+# Access the full yeast genome to convert genomic coordinates to sequences
+full_yeast_genome <- BSgenome::getBSgenome("BSgenome.Scerevisiae.UCSC.sacCer3")
+seqnames(full_yeast_genome) <-as.character(c(1:17))
+
+# create new dataframe with orf positions, chromosome and strand then add sequences (to allow specification of the terminator)
+mTIF_terminator_dataset <- tif_seq_raw %>%
+  select(chr,gene,strand) %>%
+  distinct(gene,.keep_all = TRUE) %>%
+  inner_join(Scer_ORF_coords,by = "gene") %>%
+  group_by(chr) %>%
+  filter(gene %in% few_motif_short_abundant_3UTRs$transcriptName) %>%
+  nest() 
+
+# Create a tibble of the main and the complement of the yeast genome (for genes on the negative strand)
+main_and_comp_yeast_genome <- tibble(chr = vector(mode = "integer"), mainChrom = vector(mode = "character"), compChrom = vector(mode = "character"))
+for(i in 1:17){
+  main_and_comp_yeast_genome <- main_and_comp_yeast_genome %>%
+    bind_rows(tibble(chr = i, mainChrom = toString(full_yeast_genome[[i]]), compChrom = toString(complement(full_yeast_genome[[i]]))))
+}
+
+# add chromsome data to TIFseq dataset
+chromosome_mTIF_terminator_isoform_dataset <- mTIF_terminator_dataset %>%
+  inner_join(main_and_comp_yeast_genome)
+
+# function to convert positions to sequences
+position_to_sequence <- function(start_pos,end_pos,chromosome_seq){
+   str_sub(chromosome_seq,start_pos,end_pos)
+}
+
+# function to convert 3'UTR and 5'UTR positions to actual sequences
+terminator_sequences_conversion <- function(TIF_seq_data,main_chromosome_seq,complement_chromosome_seq){
+  negative_strand <- TIF_seq_data %>% 
+    filter(strand == "-")
+  
+  positive_strand <- TIF_seq_data %>% 
+    filter(strand == "+")
+  
+  # add terminator sequences to strand (reverse sequence so that start/stop codons are in the same orientation as main strand)
+  negative_strand <- negative_strand %>%
+    group_by(endSite) %>%
+    mutate(terminator = stri_reverse(map_chr(endSite - 300,position_to_sequence,endSite - 1,complement_chromosome_seq)))
+  
+  positive_strand <- positive_strand %>%
+    group_by(endSite) %>%
+    mutate(terminator = map_chr(endSite + 1,position_to_sequence,endSite + 300,main_chromosome_seq))
+    
+    bind_rows(negative_strand,positive_strand)
+}
+
+# get sequences for filtered isoforms 
+terminator_300bp_sequences <- chromosome_mTIF_terminator_isoform_dataset %>%
+  transmute(TIFseqData = map(data,terminator_sequences_conversion,mainChrom,compChrom)) %>% 
+  unnest(TIFseqData) %>%
+  select(gene,terminator)
+
+write_csv(terminator_300bp_sequences %>% ungroup() %>% select(gene,terminator),"~/Documents/PhD/3UTR_motifs/motifPrediction/second_3UTR_selection/data/filteredTerminators.csv")
+
+constructs_failing_contruction_protocol <- c(1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35, 36, 38,39) # proprietary software is used to decide whether a construct is easily made (exact criteria is not known)
+
+constructs_passing_contruction_protocol <- c((terminator_300bp_sequences %>% pull(gene))[-constructs_failing_contruction_protocol],"YNL178W") # RPS3 narrowly misses the threshhold so is re-introduced)
+
+filter_constructs <- length(constructs_passing_contruction_protocol)
+
+```
+
+\begin{tikzpicture}[node distance=2cm]
+\centering
+\node (start) [startstop] {Collect all genes with 3'UTRs availiable in (Pelechano et al, 2013) dataset.};
+\node (out1) [io, below of=start, yshift=-0cm] {Number of Genes: `r genes_in_pelechano`};
+\node (dec1) [decision, below of=out1, yshift=-2cm] {Filter for genes with $<3$ known motifs in longest 3'UTR.};
+\node (out2) [io, below of=dec1, yshift=-2cm] {Number of Genes: `r filter_motifs`};
+\node (dec2) [decision, below of=out2, yshift=-2cm] {Filter for genes with $80\%$ of transcripts having max 3'UTR length $<200$ and min $>50$.};
+\node (out3) [io, below of=dec2, yshift=-2cm] {Number of Genes: `r filter_length`};
+\node (dec3) [decision, right of=dec2, xshift=6cm] {Filter for genes with $>5$ total transcripts counts per cell.};
+\node (out4) [io, above of=dec3, yshift=2cm] {Number of Genes: `r filter_abundance`};
+\node (dec4) [decision, above of=out4, yshift=2cm] {Filter for genes with 3'UTRs that can be constructed with GBlocks.};
+\node (stop) [io, above of=dec4, yshift=2cm] {Number of Genes: `r filter_constructs`};
+\draw [arrow] (start) -- (out1);
+\draw [arrow] (out1) -- (dec1);
+\draw [arrow] (dec1) -- (out2);
+\draw [arrow] (out2) -- (dec2);
+\draw [arrow] (dec2) -- (out3);
+\draw [arrow] (out3) -| (dec3);
+\draw [arrow] (dec3) -- (out4);
+\draw [arrow] (out4) -- (dec4);
+\draw [arrow] (dec4) -- (stop);
+\end{tikzpicture}
+```{r formatedFiltered3UTRdata,echo=FALSE,message=FALSE,eval=FALSE}
+# Output a clean table of 3'UTRs successfully passing the filter
+
+alternative_nadal_ribelles_scRNA_seq_filter <- nadal_ribelles_scRNA_seq_filter 
+colnames(alternative_nadal_ribelles_scRNA_seq_filter) <- c("transcriptName","Transcript_Per_Cell")
+
+choosen_median_UTRs <- single_count_median_3UTR_motifs_freq  %>%
+  filter(transcriptName %in% constructs_passing_contruction_protocol) %>%
+  group_by(transcriptName,threePrimeUTR) %>%
+  summarise(UTRLength = mean(str_length(threePrimeUTR)),isoformCounts = n()) %>%
+  group_by(transcriptName) %>%
+  summarise(Max_Length = max(UTRLength),Min_Length = min(UTRLength)) %>%
+  inner_join(median_UTR_length %>% select(transcriptName,medianLength) %>% group_by(transcriptName) %>% summarise(Median_Length = mean(medianLength))) %>%
+  inner_join(alternative_nadal_ribelles_scRNA_seq_filter) %>%
+  inner_join(motifs_freq %>% mutate(length = str_length(threePrimeUTR)) %>% 
+               select(-threePrimeUTR)) %>%
+  filter(length==Median_Length) %>%
+  select(-length) %>%
+  gather(key=motif,value=motifCount,-transcriptName,-Max_Length,-Min_Length,-Median_Length,-Transcript_Per_Cell) %>%
+  filter(motifCount > 0) %>%
+  spread(key=motif,value=motifCount) %>%
+  mutate(Ontology = c("ribosomal subunit", "protein translocation", "ribosomal subunit","glycolysis","antioxidant","ribosomal subunit","translation initiation","ribosomal subunit","ribosomal subunit")) %>%
+  mutate(Alt_Name = c("RPP2B","EGD2","RPL34B","GPM1","TSA1","RPS3","SUI1","RPS28A","RPL36B"))
+
+colnames(choosen_median_UTRs) <- c("Transcript Name", "Max","Min","Median Length","Transcript Per Cell","DRARAMGMD","HWNCAUUWY","TATATATA","TGCAT","UUCUUGUW","WUAUAUAW","Ontology","Alt Name")
+
+choosen_median_UTRs %>%
+  select(`Transcript Name`,`Alt Name`,`Transcript Per Cell`,Ontology,`Median Length`,Min,Max)
+```
+
+```{r predictConstructDecayRates,include=FALSE,eval=FALSE}
+
+ RPS3_inserted_3UTR <- tibble(transcriptName = "YNL178W",plasmid = c("tRPS3-WT-200bp","tRPS3-200bp-mod0","tRPS3-200bp-modA","tRPS3-200bp-modB","tRPS3-200bp-modC","tRPS3-200bp-modD","tRPS3-200bp-modE"),threePrimeUTR = c("ATTTAATTATTAAATACATAAATAAACTATAAGTACAATAATTTCTTCTATTCTAGTGCACTTAATTGTTGCGGTTTCTTGCATATTGCC","ATTTAATTATTAAATACATAAATCGTCTACGAAAACTATAAGTACAAACTACGCCTTAATGCTTGAGGATTCTTCTATTCTAGTGCACTTAATTGTTGCGGTTTCTTGCATAT","ATTTAATTATTAAATACATAAATCGTCTACGAAAACTATAAGTACAATGTACAATATAATGCTTGAGGATTCTTCTATTCTAGTGCACTTAATTGTTGCGGTTTCTTGCATAT","ATTTAATTATTAAATACATAAATCGTCTACGAAAACTATAAGTACAAACTATATTCTAATATATTCGGATTCTTCTATTCTAGTGCACTTAATTGTTGCGGTTTCTTGCATAT","ATTTAATTATTAAATACATAAATCGTCTACGAAAACTATAAGTACAAGTATACCTATAATGTATACCTATTCTTCTATTCTAGTGCACTTAATTGTTGCGGTTTCTTGCATAT","ATTTAATTATTAAATACATAAATTTTCATTTCAAACTATAAGTACAAACTACGCCTTAATTTTCATTTCTTCTTCTATTCTAGTGCACTTAATTGTTGCGGTTTCTTGCATAT","ATTTAATTATTAAATACATAAATTTTCATTTCAAACTATAAGTACAATGTACAATATAATTTTCATTTCTTCTTCTATTCTAGTGCACTTAATTGTTGCGGTTTCTTGCATAT"))
+
+ TSA1_inserted_3UTR <- tibble(transcriptName = "YML028W",plasmid = c("pTAS1-mCh-tTAS1-mod0","pTAS1-mCh-tTAS1-modA","pTAS1-mCh-tTAS1-modB","pTAS1-mCh-tTAS1-modC","pTAS1-mCh-tTAS1-modD","pTAS1-mCh-tTAS1-modE"),threePrimeUTR = c("GACGCTTGCAGAGTTGTCTAAAATCACAGAATGACTACTTATTTAAAATCAAGTTAATTCACTCTTTACGTTTATACCTATCTTATGTTGGTATCTATATATAAAACCCATAAACTTAATGCTATTCACTGACAAAACGATACACT","GACGCTTGCAGAGTTGTCTAAAATCACAGAATGACTACTTATTTAAAATTGTACAATATCACTCTTTACGTTTATACCTATCTTATGTTGGTATCTATATATAAAACCCATAAACTTAATGCTATTCACTGACAAAACGATACACT","GACGCTTGCAGAGTTGTCTAAAATCACAGAATGACTACTTATTTAAAATCAAATATTCTCACTCTTTACGTTTATACCTATCATATTCTGGTATCTATATATAAAACCCATAAACTTAATGCTATTCACTGACAAAACGATACACT","GACGCTTGCAGAGTTGTCTAAAATCACAGAATGACTACTTATTTAAAATGTATACCTATCACTCTTTACGTTTATACCTATCGTATACCTATATCTATATATAAAACCCATAAACTTAATGCTATTCACTGACAAAACGATACACT","GACGCTTGCAGAGTTGTCTATTTCATTTCAATGACTACTTATTTAAAATCAAGTTAATTCACTCTTTACGTTTATACCTATCTTTCATTTCTATCTATATATAAAACCCATAAACTTAATGCTATTCACTGACAAAACGATACACT","GACGCTTGCAGAGTTGTCTATTTCATTTCAATGACTACTTATTTAAAATTGTACAATATCACTCTTTACGTTTATACCTATCTTTCATTTCTATCTATATATAAAACCCATAAACTTAATGCTATTCACTGACAAAACGATACACT"))
+ 
+ 
+ #Search and add frequency of each c(motif) as a column in ref dataset
+for (i in 1:length(unique_IUPAC)){
+  motif_count <- str_count(TSA1_inserted_3UTR$threePrimeUTR, str_c(motifs_unique_alternatives %>% filter(newMotifIUPAC == unique_IUPAC[i]) %>% pull(motifsStrings),collapse = "|"))
+  TSA1_inserted_3UTR <- mutate(TSA1_inserted_3UTR %>% ungroup(), !!unique_IUPAC[i] := motif_count)
+}
+ 
+  #Search and add frequency of each c(motif) as a column in ref dataset
+for (i in 1:length(unique_IUPAC)){
+  motif_count <- str_count(RPS3_inserted_3UTR$threePrimeUTR, str_c(motifs_unique_alternatives %>% filter(newMotifIUPAC == unique_IUPAC[i]) %>% pull(motifsStrings),collapse = "|"))
+  RPS3_inserted_3UTR <- mutate(RPS3_inserted_3UTR %>% ungroup(), !!unique_IUPAC[i] := motif_count)
+}
+ 
+ RPS3_platereader_data <- read_csv("~/Documents/PhD/supplimental/platereader/pRPS3-mCh-tRPS3-200bp/20200118-tRPS3mod200/fluorescence_per_od_200bp_pRPS3_tRPS3_n2.csv") %>% 
+  select(-X1) %>%
+  filter(!(strain =="null")) %>%
+  separate(strain,into = c("plasmid","clone"),sep = " clone ",remove=FALSE) %>%
+  mutate(plasmid = factor(plasmid,levels=c("POT1-ccdB","tRPS3-WT-200bp","tRPS3-200bp-mod0","tRPS3-200bp-modB","tRPS3-200bp-modC","tRPS3-200bp-modA","tRPS3-200bp-modD","tRPS3-200bp-modE"))) %>%
+  mutate(experiment = "RPS3 200bp Terminator Experimental Rep 2")
+ 
+ TSA1_decay_prediction_data <- TSA1_inserted_3UTR %>%
+   inner_join(codon_freq) %>%
+   mutate(hlife = 16.1)
+
+TSA1_decay_prediction_data <- TSA1_decay_prediction_data %>%
+  mutate(predHlife = predict(single_count_motif_codon_decay_prediction_linear_model,TSA1_decay_prediction_data),sePredHlife=predict(single_count_motif_codon_decay_prediction_linear_model,TSA1_decay_prediction_data,se.fit=TRUE)$se.fit) %>%
+  #inner_join(TSA_platereader_data) %>%
+  mutate(log2FoldChange=predHlife-3.80) 
+
+RPS3_decay_prediction_data <- RPS3_inserted_3UTR %>%
+   inner_join(codon_freq) %>%
+   mutate(hlife = 12.6)
+
+RPS3_decay_prediction_data <- RPS3_decay_prediction_data %>%
+  mutate(predHlife = predict(single_count_motif_codon_decay_prediction_linear_model,RPS3_decay_prediction_data),sePredHlife=predict(single_count_motif_codon_decay_prediction_linear_model,RPS3_decay_prediction_data,se.fit=TRUE)$se.fit) %>%
+  inner_join(RPS3_platereader_data) %>%
+  mutate(log2FoldChange=predHlife-3.80) 
+
+ggplot() + geom_point(aes(x=log2FoldChange,y=`mCherry-100 per OD at max local gr`,colour=plasmid),RPS3_decay_prediction_data) + geom_errorbarh(aes(y=`mCherry-100 per OD at max local gr`,xmin=log2FoldChange-sePredHlife, xmax=log2FoldChange+sePredHlife, colour=plasmid),RPS3_decay_prediction_data) + xlab(TeX("Predicted mRNA log_2 Fold Change")) + ylab("Fluorescence Normalised By OD") + scale_color_discrete(labels = c("Wildtype","CONTROL","TGTACAATA","ATATTC","GTATACCTA","TTTCATTTC","TTTCATTTC + \nTGTACAATA")) + theme_bw(base_size=18) + labs(colour = "Inserted Motif")
+
+```
+
+## Experimental Results
+```{r platereaderResults,echo=FALSE,fig.cap="Comparison of mRNA 3'UTR motifs on protein abundance",warning=FALSE,message=FALSE, include=FALSE,eval=FALSE}
+standardise_x_axis_dictionary <- tibble(condition=c("POT1-ccdB","tRPS3-WT-200bp","tRPS3-200bp-mod0","tRPS3-200bp-modB","tRPS3-200bp-modC","tRPS3-200bp-modA","tRPS3-200bp-modD","tRPS3-200bp-modE","PGK1-mCh-tPGK1","POT1-ccdb","Re2.8","pCYC1 Re2.8","pRPS3-mCh-tRPS3-mod0","pRPS3-mCh-tRPS3-modB","pRPS3-mCh-tRPS3-modC","pRPS3-mCh-tRPS3-modA","pRPS3-mCh-tRPS3-modD","pRPS3-mCh-tRPS3-modE"), construct=factor(c("POT1","Wildtype","mod0","modB","modC","modA","modD","modE","PGK1","POT1","Re2.8","CYC1","mod0","modB","modC","modA","modD","modE"),levels = c("PGK1","Re2.8","CYC1","POT1","Wildtype","mod0","modB","modC","modA","modD","modE")))
+
+
+RPS3_motif_fluorescence_max_gr <- read_csv("~/Documents/PhD/supplimental/platereader/RPS3-Motif-screening/20190930/mean_fluorescence_max_gr_RPS3_motif.csv") %>% 
+  select(-X1) %>%
+  filter(!(strain  == "null")) %>%
+  separate(strain,into = c("condition","clone"),sep = " clone ",remove=FALSE) %>%
+  separate(clone,into = c("clone","biorep"),sep = " biorep ") %>%
+  mutate(condition = factor(condition,levels=c("PGK1-mCh-tPGK1","POT1-ccdb","Re2.8","pCYC1 Re2.8","pRPS3-mCh-tRPS3-mod0","pRPS3-mCh-tRPS3-modB","pRPS3-mCh-tRPS3-modC","pRPS3-mCh-tRPS3-modA","pRPS3-mCh-tRPS3-modD","pRPS3-mCh-tRPS3-modE"))) %>%
+  filter(!(condition  %in% c("PGK1-mCh-tPGK1","Re2.8","pCYC1 Re2.8"))) %>%
+  mutate(experiment = "RPS3 86bp Terminator")
+
+tRPS3_200bp_pRPS3_n1_fluorescence_max_gr <- read_csv("~/Documents/PhD/supplimental/platereader/pRPS3-mCh-tRPS3-200bp/20200117-tRPS3mod200/fluorescence_per_od_200bp_pRPS3_tRPS3_n1.csv") %>% 
+  select(-X1) %>%
+  filter(!(strain =="null")) %>%
+  separate(strain,into = c("condition","clone"),sep = " clone ",remove=FALSE) %>%
+  mutate(condition = factor(condition,levels=c("POT1-ccdB","tRPS3-WT-200bp","tRPS3-200bp-mod0","tRPS3-200bp-modB","tRPS3-200bp-modC","tRPS3-200bp-modA","tRPS3-200bp-modD","tRPS3-200bp-modE"))) %>%
+  mutate(experiment = "RPS3 200bp Terminator Experimental Rep 1")
+
+
+tRPS3_200bp_pRPS3_n2_fluorescence_max_gr <- read_csv("~/Documents/PhD/supplimental/platereader/pRPS3-mCh-tRPS3-200bp/20200118-tRPS3mod200/fluorescence_per_od_200bp_pRPS3_tRPS3_n2.csv") %>% 
+  select(-X1) %>%
+  filter(!(strain =="null")) %>%
+  separate(strain,into = c("condition","clone"),sep = " clone ",remove=FALSE) %>%
+  mutate(condition = factor(condition,levels=c("POT1-ccdB","tRPS3-WT-200bp","tRPS3-200bp-mod0","tRPS3-200bp-modB","tRPS3-200bp-modC","tRPS3-200bp-modA","tRPS3-200bp-modD","tRPS3-200bp-modE"))) %>%
+  mutate(experiment = "RPS3 200bp Terminator Experimental Rep 2")
+
+
+multi_experimental_comparison_data_decay <- bind_rows(RPS3_motif_fluorescence_max_gr,tRPS3_200bp_pRPS3_n2_fluorescence_max_gr,tRPS3_200bp_pRPS3_n1_fluorescence_max_gr) %>%
+  inner_join(standardise_x_axis_dictionary) %>%
+  filter(construct %in% c("POT1","Wildtype","mod0","modB","modA","modD","modE"))
+
+multi_experimental_comparison_data_stabilise <- bind_rows(RPS3_motif_fluorescence_max_gr,tRPS3_200bp_pRPS3_n2_fluorescence_max_gr,tRPS3_200bp_pRPS3_n1_fluorescence_max_gr) %>%
+  inner_join(standardise_x_axis_dictionary) %>%
+  filter(construct %in% c("POT1","Wildtype","mod0","modC"))
+
+ggplot(multi_experimental_comparison_data_decay,aes(x=construct,y=`mCherry-100 per OD at max local gr`,group=construct)) +
+  geom_point() + 
+  stat_summary(geom="crossbar", colour = "lightgrey") +
+  theme_bw(base_size = 10) +
+  theme(axis.text.x = element_text(angle = 90),axis.title.x = element_blank()) +
+  facet_wrap(~experiment,scales = "free_x") + 
+  ylab("Fluorescence per OD at max growth rate")
+
+ggplot(multi_experimental_comparison_data_stabilise,aes(x=construct,y=`mCherry-100 per OD at max local gr`,group=construct)) +
+  geom_point() + 
+  stat_summary(geom="crossbar", colour = "lightgrey") +
+  theme_bw(base_size = 10) +
+  theme(axis.text.x = element_text(angle = 90),axis.title.x = element_blank()) +
+  facet_wrap(~experiment,scales = "free_x") + 
+  ylab("Fluorescence per OD at max growth rate")
+```
+
+```{r qpcrFun,echo = FALSE, warning = FALSE,include=FALSE}
+library(tidyqpcr)
+
+# list Targets /Probes
+Probes <- c("mCh-7", "URA3-ORF", "RPS3-ORF", "PGK1-ORF")
+Probesvalues <-factor(rep(Probes,levels=Probes))
+
+Strainlevels <- c("200bp-WT","200bp-mod0","200bp-modA","200bp-modB","200bp-modC", "200bp-modD", "200bp-modE","POT1-ccdB")
+Strainvalues <- factor(rep(Strainlevels,each=3),levels=Strainlevels)
+
+Bioreplevels <- c("biorep1","biorep2","biorep3")
+Biorepvalues <- factor(rep(Bioreplevels,times=8),levels=Bioreplevels)
+
+columns<-factor(c(1:24))
+print(columns)
+
+
+colkey <- tibble(WellC=columns,
+                 Sample=Strainvalues,
+                 Biorep=Biorepvalues
+                 ) 
+print(colkey)
+
+rowkey <- create_rowkey_4in16(Probe=Probesvalues) 
+print(rowkey)
+
+plateplan <-     
+    label_plate_rowcol(create_blank_plate(WellR = LETTERS[1:16],WellC=1:24),
+                       rowkey,colkey)
+
+plates <- read_tsv("~/Documents/PhD/3UTR_motifs/3UTR_selection/JA_20200121_tRPS3-200bp-n1-ct.txt",skip=1) %>%
+    mutate(Well=Pos,Ct=Cp) %>%
+    left_join(plateplan)
+
+platesnorm <- plates %>% 
+    filter(Type=="+RT") %>%
+    normalizeqPCR(normProbes = "PGK1-ORF") %>%
+    mutate(Sample = fct_relevel(Sample, 
+            "200bp-modC", 
+            "200bp-modE", 
+            "200bp-modD", 
+            "200bp-modA", 
+            "200bp-modB", 
+            "200bp-mod0", 
+            "200bp-WT", 
+            "POT1-ccdB"))%>%
+filter(Probe=="mCh-7")
+platesmed <- platesnorm %>%
+
+      mutate(Sample = fct_relevel(Sample, 
+            "200bp-modC", 
+            "200bp-modE", 
+            "200bp-modD", 
+            "200bp-modA", 
+            "200bp-modB", 
+            "200bp-mod0", 
+            "200bp-WT", 
+            "POT1-ccdB"))%>%
+      group_by(Sample,Probe,Biorep) %>%
+filter(Probe=="mCh-7")%>%
+    summarize(Ct=median(Value.norm,na.rm=TRUE),
+              Abund=median(Value.normexp,na.rm=TRUE))
+```
+
+```{r latestExperimentalData,echo = FALSE, warning = FALSE}
+tRPS3_200bp_pRPS3_n1_fluorescence_max_gr <- read_csv("~/Documents/PhD/supplimental/platereader/pRPS3-mCh-tRPS3-200bp/20200117-tRPS3mod200/fluorescence_per_od_200bp_pRPS3_tRPS3_n1.csv") %>% 
+  select(-X1) %>%
+  filter(!(strain =="null")) %>%
+  separate(strain,into = c("condition","clone"),sep = " clone ",remove=FALSE) %>%
+  mutate(condition = factor(condition,levels=c("POT1-ccdB","tRPS3-WT-200bp","tRPS3-200bp-mod0","tRPS3-200bp-modB","tRPS3-200bp-modC","tRPS3-200bp-modA","tRPS3-200bp-modD","tRPS3-200bp-modE"))) %>%
+  mutate(Experiment = "Rep 1")
+
+tRPS3_200bp_pRPS3_n2_fluorescence_max_gr <- read_csv("~/Documents/PhD/supplimental/platereader/pRPS3-mCh-tRPS3-200bp/20200118-tRPS3mod200/fluorescence_per_od_200bp_pRPS3_tRPS3_n2.csv") %>% 
+  select(-X1) %>%
+  filter(!(strain =="null")) %>%
+  separate(strain,into = c("condition","clone"),sep = " clone ",remove=FALSE) %>%
+  mutate(condition = factor(condition,levels=c("POT1-ccdB","tRPS3-WT-200bp","tRPS3-200bp-mod0","tRPS3-200bp-modB","tRPS3-200bp-modC","tRPS3-200bp-modA","tRPS3-200bp-modD","tRPS3-200bp-modE"))) %>%
+  mutate(Experiment = "Rep 2")
+
+standardise_x_axis_dictionary <- tibble(condition=c("POT1-ccdB","tRPS3-WT-200bp","tRPS3-200bp-mod0","tRPS3-200bp-modB","tRPS3-200bp-modC","tRPS3-200bp-modA","tRPS3-200bp-modD","tRPS3-200bp-modE","PGK1-mCh-tPGK1","POT1-ccdb","Re2.8","pCYC1 Re2.8","pRPS3-mCh-tRPS3-mod0","pRPS3-mCh-tRPS3-modB","pRPS3-mCh-tRPS3-modC","pRPS3-mCh-tRPS3-modA","pRPS3-mCh-tRPS3-modD","pRPS3-mCh-tRPS3-modE"),
+                                        construct=factor(c("Empty Vector","Wildtype","mod0","modB","modC","modA","modD","modE","PGK1","Empty Vector","Re2.8","CYC1","mod0","modB","modC","modA","modD","modE"),levels = rev(c("PGK1","Re2.8","CYC1","Empty Vector","Wildtype","mod0","modB","modA","modD","modE","modC"))))
+
+multi_experimental_comparison_data <- bind_rows(tRPS3_200bp_pRPS3_n2_fluorescence_max_gr,tRPS3_200bp_pRPS3_n1_fluorescence_max_gr) %>%
+  inner_join(standardise_x_axis_dictionary)
+
+gm_mean = function(x, na.rm=TRUE){
+  exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
+}
+
+RPS3_200bp_fluorescence<- ggplot()  + 
+  stat_summary(aes(x=construct,y=`mCherry-100 per OD at max local gr`,colour = Experiment),multi_experimental_comparison_data ,geom="errorbar", fun.ymax = "gm_mean",fun.ymin = "gm_mean",position=position_dodge(width=0.7)) +
+  geom_point(aes(x=construct,y=`mCherry-100 per OD at max local gr`,colour=Experiment),multi_experimental_comparison_data,size=2,alpha=0.7,position=position_dodge(width=0.7)) +
+  theme_bw(base_size = 15) +
+  ylab("Fluorescence per OD at \n Max Growth Rate") +
+    theme(axis.title.y=element_blank(),
+         panel.grid.major = element_line(colour = "grey50",size=0.125),axis.ticks.y = element_blank(),axis.text.y = element_blank(),panel.grid.minor = element_blank(),plot.title = element_text(hjust = 0.5)) + 
+  scale_y_continuous(expand = c(0, 0), limits = c(-2,5000)) +
+  coord_flip() +
+  labs(title="Protein")
+
+
+
+RPS3_200bp_mRNA <- ggplot(data=platesmed %>% group_by(Sample) %>% mutate(geomMean = gm_mean(Abund))) +
+  geom_point(aes(y=Abund,x=Sample,shape=Biorep),
+               position=position_jitter(width = 0.2,height=0)) +
+  scale_shape_manual(values=c(15:18,5:6)) + 
+  geom_errorbar(aes(x=Sample,ymax=geomMean,ymin=geomMean))+ 
+  labs(title="mRNA") +
+  theme_bw(base_size = 15) +
+  scale_y_log10("Relative Abundance") + 
+  theme(axis.text.x=element_text(vjust=0.5),
+         panel.grid.major = element_line(colour = "grey50",size=0.125),legend.position = "none",axis.title.y=element_blank(),axis.text.y = element_blank(),axis.ticks.y=element_blank(),plot.title = element_text(hjust = 0.5)) +
+  coord_flip()
+          #panel.border=element_rect(fill = NA,linetype=1,
+                                    #colour = "grey50",size=0.5))
+plot_grid(RPS3_200bp_mRNA,RPS3_200bp_fluorescence,align = "h",rel_widths = c(1,1.3))
+```
