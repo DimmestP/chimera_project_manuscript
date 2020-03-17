@@ -11,6 +11,10 @@ Modular gene reg
 Comp Bio of 3'UTRs and Motifs
   Paragraph on selecting predicting effects of yeast 3'UTR motifs.
   What is a motif?
+  
+Parallel to the development of novel experimental techniques which investigate the mRNA-protein interactions post-transcriptionally, a range of generally applicable statistical methods to select significant contributors to experimental measurements from large lists of predictors are now available. Previous high-throughput 3'UTR motif searches depended on the enrichment of such sequence motifs soley in the most highly/lowly expressed genes(Shalgi et al 2005) and then inferring consensus motifs.  Alternatively, by selecting predictors of abundance by choosing predictor combinations with the greatest Akaike Information Criteron (AIC)  (Cheng et al 2017). penalised linear regression model (Vijayabaskar et al 2019).  
+
+  
 Example of non-modular gene reg
   codon context together with promoter
 Synthetic biology screens

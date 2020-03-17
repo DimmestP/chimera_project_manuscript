@@ -1,0 +1,2 @@
+rmd_files: ["abstract.Rmd","methods_chapter/methods.Rmd", "main_chapter/main.Rmd", "results_chapter/results.Rmd", "discussion_chapter/discussion.Rmd"]
+book_filename: "manuscript"
