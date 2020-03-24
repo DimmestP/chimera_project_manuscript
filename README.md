@@ -1,5 +1,5 @@
-# Prediction of cell-to-cell variability with stability motifs
-The development of a manuscript investigating the relationship between mRNA transcript half-lives and cell-to-cell variability in transcript numbers.
+# Modular effects of yeast 3'UTRs and cis-regulartory elements inside yeast 3'UTRs on mRNA abundance
+The development of a manuscript investigating the relationship between mRNA 3'UTR motifs effecting half-lives and their modular effects on transcript abundance.
 
 The data and code (including ALL analysis referred to in the paper) required to create the manuscript is included in this GitHub page. The R package Bookdown, created by Yihui Xie, can be used to recreate the manuscript and re-calculate all of the analysis. 
 
