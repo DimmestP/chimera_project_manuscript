@@ -69,7 +69,7 @@ display_plate( plateplan %>%
 Here, only one experimental replicate is loaded (n=1)
 ```{r load_plates,dependson="label_plates",results="show"}
 # read my plates
-plates <- read_tsv( "data/JA_20200121_tRPS3-200bp-n1-ct.txt",skip=1) %>%
+plates <- read_tsv( "data/JA_20200121_pRPS3-tRPS3mod-n1-ct.txt",skip=1) %>%
     mutate(Well=Pos,Ct=Cp) %>%
     left_join(plateplan)
 summary(plates)
@@ -157,7 +157,7 @@ ggplot(data=platesmed) +
 ##For plotting the melt curves and amplification curves
 ```{r load_amp,dependson="label_plates",results="show"}
 
-platecurve <- read_tsv("data/JA_20200121_tRPS3-200bp-n1.txt",
+platecurve <- read_tsv("data/JA_20200121_pRPS3-tRPS3mod-n1.txt",
                        skip=2,
                         col_names=c("Well","SID","Program","Segment",
                                     "Cycle","Time","Temperature","Fluor") 
