@@ -19,8 +19,8 @@ The strains used here are pPGK1-mCherry-tRPS3 wild type (WT), pPGK1-mCherry-tRPS
 ## knitr options for report generation
 knitr::opts_chunk$set(warning=FALSE,message=FALSE,echo=TRUE,cache=FALSE,
                       results="show",
-                      fig.path="figures/analyse-qPCR-2020-01-23_pPGK1-tRPS3mod",
-                      cache.path="cache/analyse-qPCR-2020-01-23_pPGK1-tRPS3mod")
+                      fig.path="figures/analyse-qPCR-2020-02-21_pPGK1-tRPS3mod",
+                      cache.path="cache/analyse-qPCR-2020-02-21_pPGK1-tRPS3mod")
 
 library(tidyverse)
 library(cowplot)
