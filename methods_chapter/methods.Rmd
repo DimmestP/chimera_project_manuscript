@@ -680,7 +680,7 @@ terminator_300bp_sequences <- chromosome_mTIF_terminator_isoform_dataset %>%
   unnest(TIFseqData) %>%
   select(gene,terminator)
 
-write_csv(terminator_300bp_sequences %>% ungroup() %>% select(gene,terminator),"~/Documents/PhD/3UTR_motifs/motifPrediction/second_3UTR_selection/data/filteredTerminators.csv")
+write_csv(terminator_300bp_sequences %>% ungroup() %>% select(gene,terminator),"./methods_chapter/data/filteredTerminators.csv")
 
 constructs_failing_contruction_protocol <- c(1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35, 36, 38,39) # proprietary software is used to decide whether a construct is easily made (exact criteria is not known)
 
@@ -761,7 +761,7 @@ for (i in 1:length(unique_IUPAC)){
   RPS3_inserted_3UTR <- mutate(RPS3_inserted_3UTR %>% ungroup(), !!unique_IUPAC[i] := motif_count)
 }
  
- RPS3_platereader_data <- read_csv("~/Documents/PhD/supplimental/platereader/pRPS3-mCh-tRPS3-200bp/20200118-tRPS3mod200/fluorescence_per_od_200bp_pRPS3_tRPS3_n2.csv") %>% 
+ RPS3_platereader_data <- read_csv("./methods_chapter/pRPS3-mCh-tRPS3-200bp/20200118-tRPS3mod200/fluorescence_per_od_200bp_pRPS3_tRPS3_n2.csv") %>% 
   select(-X1) %>%
   filter(!(strain =="null")) %>%
   separate(strain,into = c("plasmid","clone"),sep = " clone ",remove=FALSE) %>%
@@ -795,7 +795,7 @@ ggplot() + geom_point(aes(x=log2FoldChange,y=`mCherry-100 per OD at max local gr
 standardise_x_axis_dictionary <- tibble(condition=c("POT1-ccdB","tRPS3-WT-200bp","tRPS3-200bp-mod0","tRPS3-200bp-modB","tRPS3-200bp-modC","tRPS3-200bp-modA","tRPS3-200bp-modD","tRPS3-200bp-modE","PGK1-mCh-tPGK1","POT1-ccdb","Re2.8","pCYC1 Re2.8","pRPS3-mCh-tRPS3-mod0","pRPS3-mCh-tRPS3-modB","pRPS3-mCh-tRPS3-modC","pRPS3-mCh-tRPS3-modA","pRPS3-mCh-tRPS3-modD","pRPS3-mCh-tRPS3-modE"), construct=factor(c("POT1","Wildtype","mod0","modB","modC","modA","modD","modE","PGK1","POT1","Re2.8","CYC1","mod0","modB","modC","modA","modD","modE"),levels = c("PGK1","Re2.8","CYC1","POT1","Wildtype","mod0","modB","modC","modA","modD","modE")))
 
 
-RPS3_motif_fluorescence_max_gr <- read_csv("~/Documents/PhD/supplimental/platereader/RPS3-Motif-screening/20190930/mean_fluorescence_max_gr_RPS3_motif.csv") %>% 
+RPS3_motif_fluorescence_max_gr <- read_csv("./methods_chapter/data/mean_fluorescence_max_gr_RPS3_motif.csv") %>% 
   select(-X1) %>%
   filter(!(strain  == "null")) %>%
   separate(strain,into = c("condition","clone"),sep = " clone ",remove=FALSE) %>%
@@ -804,7 +804,7 @@ RPS3_motif_fluorescence_max_gr <- read_csv("~/Documents/PhD/supplimental/platere
   filter(!(condition  %in% c("PGK1-mCh-tPGK1","Re2.8","pCYC1 Re2.8"))) %>%
   mutate(experiment = "RPS3 86bp Terminator")
 
-tRPS3_200bp_pRPS3_n1_fluorescence_max_gr <- read_csv("~/Documents/PhD/supplimental/platereader/pRPS3-mCh-tRPS3-200bp/20200117-tRPS3mod200/fluorescence_per_od_200bp_pRPS3_tRPS3_n1.csv") %>% 
+tRPS3_200bp_pRPS3_n1_fluorescence_max_gr <- read_csv("./methods_chapter/fluorescence_per_od_200bp_pRPS3_tRPS3_n1.csv") %>% 
   select(-X1) %>%
   filter(!(strain =="null")) %>%
   separate(strain,into = c("condition","clone"),sep = " clone ",remove=FALSE) %>%
@@ -875,7 +875,7 @@ plateplan <-
     label_plate_rowcol(create_blank_plate(WellR = LETTERS[1:16],WellC=1:24),
                        rowkey,colkey)
 
-plates <- read_tsv("~/Documents/PhD/3UTR_motifs/3UTR_selection/JA_20200121_tRPS3-200bp-n1-ct.txt",skip=1) %>%
+plates <- read_tsv("./methods_chapter/data/JA_20200121_tRPS3-200bp-n1-ct.txt",skip=1) %>%
     mutate(Well=Pos,Ct=Cp) %>%
     left_join(plateplan)
 
@@ -910,14 +910,14 @@ filter(Probe=="mCh-7")%>%
 ```
 
 ```{r latestExperimentalData,echo = FALSE, warning = FALSE}
-tRPS3_200bp_pRPS3_n1_fluorescence_max_gr <- read_csv("~/Documents/PhD/supplimental/platereader/pRPS3-mCh-tRPS3-200bp/20200117-tRPS3mod200/fluorescence_per_od_200bp_pRPS3_tRPS3_n1.csv") %>% 
+tRPS3_200bp_pRPS3_n1_fluorescence_max_gr <- read_csv("./methods_chapter/data/fluorescence_per_od_200bp_pRPS3_tRPS3_n1.csv") %>% 
   select(-X1) %>%
   filter(!(strain =="null")) %>%
   separate(strain,into = c("condition","clone"),sep = " clone ",remove=FALSE) %>%
   mutate(condition = factor(condition,levels=c("POT1-ccdB","tRPS3-WT-200bp","tRPS3-200bp-mod0","tRPS3-200bp-modB","tRPS3-200bp-modC","tRPS3-200bp-modA","tRPS3-200bp-modD","tRPS3-200bp-modE"))) %>%
   mutate(Experiment = "Rep 1")
 
-tRPS3_200bp_pRPS3_n2_fluorescence_max_gr <- read_csv("~/Documents/PhD/supplimental/platereader/pRPS3-mCh-tRPS3-200bp/20200118-tRPS3mod200/fluorescence_per_od_200bp_pRPS3_tRPS3_n2.csv") %>% 
+tRPS3_200bp_pRPS3_n2_fluorescence_max_gr <- read_csv("./methods_chapter/data/fluorescence_per_od_200bp_pRPS3_tRPS3_n2.csv") %>% 
   select(-X1) %>%
   filter(!(strain =="null")) %>%
   separate(strain,into = c("condition","clone"),sep = " clone ",remove=FALSE) %>%
