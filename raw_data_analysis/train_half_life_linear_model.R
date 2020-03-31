@@ -1,6 +1,6 @@
 # import and prepare half-life data
 
-chan_decay_raw <-read_tsv("./data/new_chan_dr_data.txt")
+chan_decay_raw <-read_tsv("../methods_chapter/data/new_chan_dr_data.txt")
 chan_decay_hlife <- chan_decay_raw %>%
   dplyr::rename(transcriptName = gene_id, geneAltId = gene_short_name, hlifeR1 = halflife_160412_r1, hlifeR2 = halflife_160412_r2) %>%
   select(-geneAltId) %>%
@@ -8,7 +8,7 @@ chan_decay_hlife <- chan_decay_raw %>%
   filter(is.finite(hlife))
 
 # import list of collated 3'UTR motifs
-motifs_raw <- scan("./data/list_motifs.txt", character())
+motifs_raw <- scan("../methods_chapter/data/list_motifs.txt", character())
 
 # import yeast open reading frame dataset
 Scer_ORF <- readDNAStringSet("https://downloads.yeastgenome.org/sequence/S288C_reference/orf_dna/orf_coding_all.fasta.gz")
@@ -16,13 +16,13 @@ Scer_ORF_name <- as_tibble(names(Scer_ORF)) %>%
   separate(value,c("transcriptName",NA),extra="drop",sep=" ")
 
 # Gather all yeast 3'UTRs
-yeast_3UTRs <- read_csv("./data/whole_genome_3UTR.csv")
+yeast_3UTRs <- read_csv("../methods_chapter/data/whole_genome_3UTR.csv")
 
 # import list of collated 3'UTR motifs
-motifs_raw <- scan("./data/list_motifs.txt", character())
+motifs_raw <- scan("../methods_chapter/data/list_motifs.txt", character())
 
 # import list of codons
-codon <- readRDS("./data/codons.rds")
+codon <- readRDS("../methods_chapter/data/codons.rds")
 codon_no_TTT <- codon[-1]
 
 # Find the frequency of codons for each yeast ORF
