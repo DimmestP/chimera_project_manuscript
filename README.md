@@ -9,10 +9,10 @@ To recreate the manuscript:
     git clone <this repo>
     open -a RStudio
 
-    # In R console
-    setwd( " <local repo address> " )
-    install.packages("bookdown") # if necessary
-    bookdown::render_book("abstract.Rmd")
+    # In console at the bottom of RStudio
+    setwd( <local repo address> )
+    source("./library_setup.R") # check all required libraries are installed
+    bookdown::render_book("abstract.Rmd") # this will take a little while
 ```
 
 The pdf version of the manuscript will be created in a _book folder.

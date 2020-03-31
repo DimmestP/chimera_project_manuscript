@@ -40,6 +40,7 @@ library(broom)
 library(readxl)
 library(cowplot)
 library(tikzDevice)
+library(DECIPHER)
 
 # BiocManager::install("BSgenome.Scerevisiae.UCSC.sacCer3")
 
