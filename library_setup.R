@@ -38,3 +38,9 @@ if(!require("BSgenome.Scerevisiae.UCSC.sacCer3")){
 if(!require("DECIPHER")){
   BiocManager::install("DECIPHER")
 }
+if(!require("devtools")){
+  install.packages("devtools")
+}
+if(!require("tidyqpcr")){
+  devtools::install_github("ewallace/tidyqpcr",build_vignettes = TRUE)
+}
