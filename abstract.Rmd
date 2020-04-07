@@ -6,6 +6,10 @@ output:
     toc: FALSE
     include:
       in_header: authors.tex
+    bibliography: "./references/chimeraProject.bib" 
+    biblio-style: "apalike"
+    link-citations: true
+---
     
     
 ---
