@@ -1,3 +1,10 @@
 
 # Results
 
+![Figure 1 - Validating the portability of a characterised decay motif (ATATTC) in the reporter system.](figures/Motifpaperfigures-ATATTC.png){ width=80% }
+
+![Figure 3 - Identifying the effects of linear combinations of predicted decay motifs in the RPS3 3’UTR on mRNA abundance.](figures/Motifpaperfigures-Decay.png){ width=80% }
+
+
+
+![Figure 4 - Identifying the effect of a predicted stability motif in the RPS3 3’UTR on mRNA abundance .](figures/Motifpaperfigures-Stability.png){ width=80% }
