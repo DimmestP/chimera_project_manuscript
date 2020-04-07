@@ -180,14 +180,14 @@ mRNA_abund_exp_vs_pred_data <- bind_rows(tRPS3_constructs_abund_pred %>% dplyr::
 
 
 ## Plotting the mCherry mRNA detected in each strain (for biological replicates only)
-```{r plot_normalizedsummarized1,dependson="normalize_counts",fig.height=3,fig.width=6}
+```{r plot_normalizedsummarized1,dependson="normalize_counts",fig.height=3,fig.width=3}
 # plot ATATTC motifs
 ggplot(data=mRNA_abund_exp_vs_pred_data %>% filter(construct %in% c("WT","mod0","modB"))) +
     geom_point(aes(x=Abund,y=construct,colour=BioRep),
                position=position_jitter(width = 0.2,height=0)) +
     scale_shape_manual(values=c(15:18,5:6)) + 
     scale_x_log10nice("Relative mRNA detected") + 
-    xlim(0.001, 10)+
+    xlim(0.001, 8)+
     theme(axis.text.x=element_text(angle=90,vjust=0.5),
          panel.grid.major = element_line(colour = "grey50",size=0.125)) +
   geom_errorbarh(aes(xmin=abund_pred,xmax=abund_pred,y=construct)) +
@@ -199,7 +199,7 @@ ggplot(data=mRNA_abund_exp_vs_pred_data %>% filter(construct %in% c("WT","mod0",
                position=position_jitter(width = 0.2,height=0)) +
     scale_shape_manual(values=c(15:18,5:6)) + 
     scale_x_log10nice("Relative mRNA detected") + 
-    xlim(0.001, 10)+
+    xlim(0.001, 8)+
     theme(axis.text.x=element_text(angle=90,vjust=0.5),
          panel.grid.major = element_line(colour = "grey50",size=0.125)) +
   geom_errorbarh(aes(xmin=abund_pred,xmax=abund_pred,y=construct)) +
@@ -211,7 +211,7 @@ ggplot(data=mRNA_abund_exp_vs_pred_data %>% filter(construct %in% c("WT","mod0",
                position=position_jitter(width = 0.2,height=0)) +
     scale_shape_manual(values=c(15:18,5:6)) + 
     scale_x_log10nice("Relative mRNA detected") + 
-    xlim(0.001, 10)+
+    xlim(0.001, 8)+
     theme(axis.text.x=element_text(angle=90,vjust=0.5),
          panel.grid.major = element_line(colour = "grey50",size=0.125)) +
   geom_errorbarh(aes(xmin=abund_pred,xmax=abund_pred,y=construct)) +
