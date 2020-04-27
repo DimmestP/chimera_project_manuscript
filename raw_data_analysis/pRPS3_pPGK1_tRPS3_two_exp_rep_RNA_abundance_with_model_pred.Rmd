@@ -38,8 +38,8 @@ theme_set(theme_cowplot(font_size=11) %+replace%
 ```{r label_plates,dependson="plate_functions"}
 
 # list Targets /Probes
-Probes <- c("mCh-7", "URA3-ORF", "RPS3-ORF", "PGK1-ORF")
-Probesvalues <-factor(rep(Probes,levels=Probes))
+TargetID <- c("mCh-7", "URA3-ORF", "RPS3-ORF", "PGK1-ORF")
+TargetIDvalues <-factor(rep(TargetID,levels=TargetID))
 
 StrainlevelsR3 <- c("pRPS3-tRPS3_WT","pRPS3-tRPS3_mod0","pRPS3-tRPS3_modA","pRPS3-tRPS3_modB","pRPS3-tRPS3_modC", "pRPS3-tRPS3_modD", "pRPS3-tRPS3_modE","POT1-ccdB")
 StrainvaluesR3 <- factor(rep(StrainlevelsR3,each=3),levels=StrainlevelsR3)
@@ -52,33 +52,39 @@ BioReplevels_B <- c("BioRep4","BioRep5","BioRep6")
 BioRepvalues_B <- factor(rep(BioReplevels_B,times=8),levels=BioReplevels_B)
 
 colkeyR3_1 <- tibble(WellC=1:24,
-                 Sample=StrainvaluesR3,
+                 Strain=StrainvaluesR3,
                  BioRep=BioRepvalues_A) 
 colkeyR3_2 <- tibble(WellC=1:24,
-                 Sample=StrainvaluesR3,
+                 Strain=StrainvaluesR3,
                  BioRep=BioRepvalues_B) 
 colkeyP1_1 <- tibble(WellC=1:24,
-                 Sample=StrainvaluesP1,
+                 Strain=StrainvaluesP1,
                  BioRep=BioRepvalues_A) 
 colkeyP1_2 <- tibble(WellC=1:24,
-                 Sample=StrainvaluesP1,
+                 Strain=StrainvaluesP1,
                  BioRep=BioRepvalues_B) 
 
-rowkey <- create_rowkey_4in16(Probe=Probesvalues) 
+rowkey <- create_rowkey_4in16(TargetID=TargetIDvalues) 
 
 
 plateplanR3_1 <-     
     label_plate_rowcol(create_blank_plate(WellR = LETTERS[1:16],WellC=1:24),
-                       rowkey,colkeyR3_1)
+                       rowkey,colkeyR3_1%>% 
+    unite(SampleID,Strain,BioRep,remove=FALSE))
 plateplanR3_2 <-     
     label_plate_rowcol(create_blank_plate(WellR = LETTERS[1:16],WellC=1:24),
-                       rowkey,colkeyR3_2)
+                       rowkey,colkeyR3_2%>% 
+    unite(SampleID,Strain,BioRep,remove=FALSE))
 plateplanP1_1 <-     
     label_plate_rowcol(create_blank_plate(WellR = LETTERS[1:16],WellC=1:24),
-                       rowkey,colkeyP1_1)
+                       rowkey,colkeyP1_1%>% 
+    unite(SampleID,Strain,BioRep,remove=FALSE))
 plateplanP1_2 <-     
     label_plate_rowcol(create_blank_plate(WellR = LETTERS[1:16],WellC=1:24),
-                       rowkey,colkeyP1_2)
+                       rowkey,colkeyP1_2%>% 
+    unite(SampleID,Strain,BioRep,remove=FALSE))
+
+print(plateplanR3_1)
 ```
 
 ```{r load_plates,dependson="label_plates",results="show"}
@@ -107,16 +113,16 @@ Here, i'm normalising the CT values of the mCh-7 probe by the detection by PGK1-
 ```{r normalize_counts,dependson="load_plates"}
 platesnorm <- plates %>% 
     filter(Type=="+RT", expRep==2) %>%
-    normalizeqPCR(normProbes = "PGK1-ORF") %>%
-    filter(Probe=="mCh-7") %>%
+    normalizeqPCR(normTargetIDs = "PGK1-ORF") %>%
+    filter(TargetID=="mCh-7") %>%
     bind_rows(plates %>% 
     filter(Type=="+RT", expRep==1) %>%
-    normalizeqPCR(normProbes = "PGK1-ORF") %>%
-    filter(Probe=="mCh-7"))
+    normalizeqPCR(normTargetIDs = "PGK1-ORF") %>%
+    filter(TargetID=="mCh-7"))
 
 platesmed <- platesnorm %>%
-      group_by(Sample,Probe,BioRep,expRep) %>%
-      filter(Probe=="mCh-7")%>%
+      group_by(Strain,TargetID,BioRep,expRep) %>%
+      filter(TargetID=="mCh-7")%>%
       summarize(Ct=median(Value.norm,na.rm=TRUE),
               Abund=median(Value.normexp,na.rm=TRUE))
 ```
@@ -164,15 +170,15 @@ for (i in 1:length(unique_IUPAC)){
 # calculate construct abundance according to changes in half life (using WT abundance as baseline)
 tRPS3_constructs_abund_pred <- RPS3_constructs_hlife_pred %>%
   filter(!(construct == "WT")) %>%
-  transmute(construct,abund_pred = delta_hlife_pred * (platesmed  %>% filter(Sample == "pRPS3-tRPS3_WT") %>% group_by(Sample) %>% summarise(mean_Abund = mean(Abund)) %>% pull(mean_Abund))) %>%
+  transmute(construct,abund_pred = delta_hlife_pred * (platesmed  %>% filter(Strain == "pRPS3-tRPS3_WT") %>% group_by(Strain) %>% summarise(mean_Abund = mean(Abund)) %>% pull(mean_Abund))) %>%
   bind_rows(RPS3_constructs_hlife_pred %>%
   filter(!(construct == "WT")) %>%
-  transmute(construct,abund_pred = delta_hlife_pred * (platesmed  %>% filter(Sample == "pPGK1-tRPS3_WT") %>% group_by(Sample) %>% summarise(mean_Abund = mean(Abund)) %>% pull(mean_Abund)))) %>%
+  transmute(construct,abund_pred = delta_hlife_pred * (platesmed  %>% filter(Strain == "pPGK1-tRPS3_WT") %>% group_by(Strain) %>% summarise(mean_Abund = mean(Abund)) %>% pull(mean_Abund)))) %>%
     mutate(construct = c("pRPS3-tRPS3_mod0","pRPS3-tRPS3_modA","pRPS3-tRPS3_modB","pRPS3-tRPS3_modC","pRPS3-tRPS3_modD","pRPS3-tRPS3_modE","pPGK1-tRPS3_mod0","pPGK1-tRPS3_modA","pPGK1-tRPS3_modB","pPGK1-tRPS3_modC","pPGK1-tRPS3_modD","pPGK1-tRPS3_modE"))
 
 # combine with experimental data
-mRNA_abund_exp_vs_pred_data <- bind_rows(tRPS3_constructs_abund_pred %>% dplyr::rename(Sample = construct),platesmed) %>%
-  separate(Sample,remove = FALSE,sep="-",into=c("promoter","terminator")) %>%
+mRNA_abund_exp_vs_pred_data <- bind_rows(tRPS3_constructs_abund_pred %>% dplyr::rename(Strain = construct),platesmed) %>%
+  separate(Strain,remove = FALSE,sep="-",into=c("promoter","terminator")) %>%
   separate(terminator,sep="_",into=c("terminator","construct")) %>%
   mutate(construct = factor(construct,levels = c("modE","modD","modC","modB","modA","mod0","WT")))
 
@@ -180,7 +186,7 @@ mRNA_abund_exp_vs_pred_data <- bind_rows(tRPS3_constructs_abund_pred %>% dplyr::
 
 
 ## Plotting the mCherry mRNA detected in each strain (for biological replicates only)
-```{r plot_normalizedsummarized1,dependson="normalize_counts",fig.height=3,fig.width=3}
+```{r plot_normalizedsummarized1,dependson="normalize_counts",fig.height=6,fig.width=6}
 # plot ATATTC motifs
 ggplot(data=mRNA_abund_exp_vs_pred_data %>% filter(construct %in% c("WT","mod0","modB"))) +
     geom_point(aes(x=Abund,y=construct,colour=BioRep),
