@@ -90,35 +90,43 @@ print(plateplanR3_1)
 ```{r load_plates,dependson="label_plates",results="show"}
 # read my plates
 platesR3_1 <- read_tsv( "data/JA_20200121-pRPS3-tRPS3mod-n1-ct.txt",skip=1) %>%
-    mutate(Well=Pos,Ct=Cp,expRep = 1) %>%
+    mutate(Well=Pos,Cq=Cp,expRep = 1) %>%
     left_join(plateplanR3_1)
 
 platesR3_2 <- read_tsv( "data/JA_20200204-pRPS3-tRPS3mod-n2-ct.txt",skip=1) %>%
-    mutate(Well=Pos,Ct=Cp,expRep = 2) %>%
+    mutate(Well=Pos,Cq=Cp,expRep = 2) %>%
     left_join(plateplanR3_2)
 
 platesP1_1 <- read_tsv( "data/JA_20200221_pPGK1-tRPS3mod-n1-ct.txt",skip=1) %>%
-    mutate(Well=Pos,Ct=Cp,expRep = 1) %>%
+    mutate(Well=Pos,Cq=Cp,expRep = 1) %>%
     left_join(plateplanP1_1)
 
 platesP1_2 <- read_tsv( "data/JA_20200311-pPGK1-tRPS3mod-n2-ct.txt",skip=1) %>%
-    mutate(Well=Pos,Ct=Cp,expRep = 2) %>%
+    mutate(Well=Pos,Cq=Cp,expRep = 2) %>%
     left_join(plateplanP1_2)
 
 plates <- bind_rows(platesR3_1,platesR3_2,platesP1_1,platesP1_2) 
 ```
 
+### Check that we have the right numbers of sample for each replicate
+
+Note: incomplete. 
+
+```{r check_samplecounts,dependson="load_plates"}
+plates %>%
+  group_by(Strain,TargetID) %>%
+  tally
+```
+
+
+
 ## Normalize Ct to PGK1, within Sample only 
 Here, i'm normalising the CT values of the mCh-7 probe by the detection by PGK1-ORF.
 ```{r normalize_counts,dependson="load_plates"}
 platesnorm <- plates %>% 
-    filter(Type=="+RT", expRep==2) %>%
+    filter(Type=="+RT") %>%
     normalizeqPCR(normTargetIDs = "PGK1-ORF") %>%
-    filter(TargetID=="mCh-7") %>%
-    bind_rows(plates %>% 
-    filter(Type=="+RT", expRep==1) %>%
-    normalizeqPCR(normTargetIDs = "PGK1-ORF") %>%
-    filter(TargetID=="mCh-7"))
+    filter(TargetID=="mCh-7") 
 
 platesmed <- platesnorm %>%
       group_by(Strain,TargetID,BioRep,expRep) %>%
