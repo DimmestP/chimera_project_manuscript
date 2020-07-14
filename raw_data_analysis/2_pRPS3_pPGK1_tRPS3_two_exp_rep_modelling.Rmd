@@ -1,0 +1,638 @@
+---
+title: "Modelling the relationship of genetic elements on RNA abundance (using experimental data)"
+author: "Jamie Auxillos"
+date: "06/05/2020"
+output:
+  html_document:
+    toc: yes
+---
+
+The data used in the modelling below are from two sets strains collections, each containing the mCherry reporter gene and the tRPS3 terminator. tRPS3 terminator was modified to incorporate several different 3'cis-regulatory motifs within the 3'UTR, resulting in 5 different 3'UTR variants (tRPS3-modA, tRPS3-modB, tRPS3-modC, tRPS3-modD, tRPS3-modE), a negative control (tRPS3-mod0). These 3'UTR/terminators have been assembled with an mCherry ORF and two different promoters to test the effects of the 3'UTR/terminators when coupled with different promoters/5'UTRs. The strains containing each of the constructs were analysed by RT-qPCR. The strains were analysed in batches, based on the promoter choice, resulting in two datasets - pRPS3 dataset and pPGK1. Each batch was ran 2x in separate days (Experimental replicate), where 3 clones of each strain was grown and tested (Biological replciates). Within the qPCR experiment, technical triplicates for each biological replicate sample was loaded on the plate (Technical replicate. The data was analysed on a separate R markdown file -  1 - pRPS3_pPGK1_tRPS3_two_exp_rep_dataanalysis.Rmd
+
+```{r setup,warning=FALSE,message=FALSE,echo=FALSE}
+
+## knitr options for report generation
+knitr::opts_chunk$set(warning=FALSE,message=FALSE,echo=FALSE,cache=FALSE,
+                      #results="show",
+                      fig.path="figures_tRPS3mod_modelling/")
+
+library(tidyverse)
+library(cowplot)
+library(tidyqpcr)
+library(moderndive)
+
+ # set default theme for graphics
+theme_set(theme_cowplot(font_size=11) %+replace% 
+              theme(panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
+                    panel.grid.major = element_line(size = 0.25, linetype = 'solid',colour = "grey"),
+                    strip.background = element_blank(),
+                    axis.text=element_text(family="Tahoma"),
+                    axis.title=element_text(family="Tahoma"),
+                    legend.text=element_text(family="Tahoma"),
+                    legend.title=element_text(family="Tahoma")))
+```
+
+## Loading and organising data
+
+#### Load analysed data from (pRPS3_pPGK1_tRPS3_two_exp_rep_dataanalysis.Rmd)
+
+```{r load_data,results="show"}
+# load analysed qPCR data
+platesnorm_mod0_median <- read_csv("analysed_data/platesnorm_mod0_median.csv")
+head(platesnorm_mod0_median)
+```
+
+#### Constructing motif counts table
+This motif table is only including the motif counts of 6x 3'UTRs (tRPS3_mod0, tRPS3_modA, tRPS3_modB, tRPS3_modC, tRPS3_modD, tRPS3_modE). The tRPS3_WT 3'UTR was not included in the count
+
+```{r motiftable, echo=FALSE}
+tRPS3_3UTR <- c("tRPS3_mod0","tRPS3_modA","tRPS3_modB",
+                      "tRPS3_modC","tRPS3_modD","tRPS3_modE")
+# Each variable of each motif should correspond to the motifs present in the 'tRPS3_3UTR' variable (thhe order matters!)
+ATATTC    <- c(0,0,2,0,0,0)
+GTATACCTA <- c(0,0,0,2,0,0)
+TGTACAATA <- c(0,1,0,0,0,1)
+TTTCATTTC <- c(0,0,0,0,2,2)
+
+motiftable <- data.frame(tRPS3_3UTR,ATATTC,GTATACCTA,TGTACAATA,TTTCATTTC)
+motiftable
+```
+
+#### Combine qPCR data and incorporating motif counts
+
+Splitting the platesnorm_mod0_median dataframe into two (based on the Promoter), re-naming 'Ter_mod' to 'tRPS3_3UTR', selecting relevant columns (tRPS3_3UTR,BioRep, Promoter, RNA_Abundance) and removing the datapoints for 'tRPS3_WT'. Then joining them together to make another dataframe with both promoter datasets.
+
+```{r join_data_motifcounts, echo=FALSE}
+# Organised dataframe for pRPS3 data + motif table
+RNA_abund_pRPS3 <- ungroup(platesnorm_mod0_median) %>%  
+  filter(Promoter=="pRPS3")%>%
+  transmute(tRPS3_3UTR = Ter_mod, tRPS3_3UTR,BioRep, ExpRep, Promoter, RNA_Abundance)%>%
+  filter(!tRPS3_3UTR %in% c('tRPS3_WT'))
+RNA_abund_motiftable_pRPS3 <-left_join(RNA_abund_pRPS3,motiftable)           
+
+# Organised dataframe for pPGK1 data + motif table
+RNA_abund_pPGK1 <- ungroup(platesnorm_mod0_median) %>%  
+  filter(Promoter=="pPGK1")%>%
+  transmute(tRPS3_3UTR=Ter_mod, tRPS3_3UTR,BioRep, ExpRep, Promoter,RNA_Abundance)%>%
+  filter(!tRPS3_3UTR %in% c('tRPS3_WT'))
+RNA_abund_motiftable_pPGK1<-left_join(RNA_abund_pPGK1,motiftable)           
+ 
+# Combined dataframe
+RNA_abundance_all  <- bind_rows(RNA_abund_motiftable_pRPS3,RNA_abund_motiftable_pPGK1)
+head(RNA_abundance_all, 10)
+```
+
+#### Summarising and visualising the data
+Promoter selection in combination with each 3'UTR doesn't dramatically alter the trend in RNA abundance. However the spread of data with the pRPS3 dataset is larger than the pPGK1 dataset - particularly for tRPS3-modC.
+
+```{r plot_RNAabund, echo=FALSE}
+# Looking at the distribution of RNA abundances for each 3'UTR construct. Colour coding for promoters
+#ggplot(RNA_abundance_all, aes(x=RNA_Abundance, color=Promoter))+
+#  geom_histogram(binwidth = 0.1)+
+#  labs(x="RNA Abundance")+
+#  facet_wrap(~tRPS3_3UTR)
+
+# Comparing the RNA abundances between promoters for each 3'UTR constructt
+ggplot(RNA_abundance_all, aes(x=tRPS3_3UTR, y=RNA_Abundance, color=Promoter))+
+  geom_boxplot()+
+  labs(x="", y= "RNA Abundance")+
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+
+## 1) Influence of motif count on combined qPCR data
+Fitting a linear model to the qPCR data (combined datasets of 2 promoters) and determining the contribution of each motif (ATATTC, GTATACCTA, TGTACAATA, TTTCATTTC)  on RNA abundance.  Only ATATTC and TTTCATTTC have a significant effect.
+
+**lm_alldata - Adjusted R-squared of 0.4552**  
+```{r lm_1_all, echo=FALSE}
+# Fitting linear model to all qPCR data
+lm_alldata <- lm(formula = RNA_Abundance ~ ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC, 
+                      data = RNA_abundance_all)
+
+# Resulting y_hat and residual values from the model (all data)
+# moderndive::get_regression_points(lm_alldata)   # to get the yhat and residual values
+
+# Linear model results (all data)
+summary(lm_alldata)
+#confint(lm_alldata)  # To obtain confidence intervals
+layout(matrix(c(1,2,3,4),2,2))
+plot(lm_alldata)    # Diagnostic plots for linear modelling (all data)
+```
+
+```{r coeff_table_1, echo=FALSE}
+# Use get_regression_table() to get coefficients and ci for each motif (all data)
+lm_alldata_result <- moderndive::get_regression_table(lm_alldata) %>%
+  filter(term %in% c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC'))%>%
+  mutate(term = factor(term, levels = c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC')))%>%
+  transmute(Factors=term, coefficient=estimate, lower_ci, upper_ci,
+         abs_ci = upper_ci-lower_ci, four_sderror = 4*std_error)
+```
+
+#### Comparing the coefficients of each motif (model 1)
+Plot of the slope coefficients of each motif.
+
+Confidence intervals are within two standard errors.
+
+```{r plot_lm_1_all, echo=FALSE, fig.height=3, fig.width=6}
+# Plotting the coefficients of each motif from the linear model
+
+ggplot(lm_alldata_result, aes(x = Factors, y = coefficient, color=Factors)) +
+  geom_point(size=2, alpha=0.8) +
+  ylim(-0.5,0.4)+
+  scale_colour_manual(values = c('#CC6666', "#66CC66", "#6699FF", "#9966CC", "#CC99CC"))+
+  labs(x='Motifs', y='Change in relative RNA abundance')+
+  geom_errorbar(aes(ymin=lower_ci, ymax=upper_ci), size=0.75, width=0.05, alpha=0.8) +
+  geom_hline(yintercept = 0, color = "black", linetype= 'dotted', size=1)
+```
+
+Comments on model 1 - What was not previously considered was the effect of the promoter choice.
+
+
+## 2) Influence of motif count + promoter choice on combined qPCR data
+Fitting a linear model to the combined qPCR data (+ promoter) where we add another term (Promoter) and introduce interaction terms between the promoter and each motif.  
+
+What is the relationship of the promoter on RNA abundance?  
+Fit of the model slightly improves but the Promoter does not have a significant impact on RNA abundance.  
+
+**lm_alldata_pro - Adjusted R-squared of 0.4901**  
+```{r lm_2_all_pro, echo=FALSE}
+# Fitting linear model to all qPCR data with an interaction term for each motif and the promoter
+lm_alldata_pro <- lm(formula = RNA_Abundance ~ ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + Promoter + 
+                       (ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC) : Promoter, 
+                      data = RNA_abundance_all)
+
+# Resulting y_hat and residual values from the model (all data)
+# moderndive::get_regression_points(lm_alldata)   # to get the yhat and residual values
+
+# Linear model results (all data)
+summary(lm_alldata_pro)
+#confint(lm_alldata)  # To obtain confidence intervals
+#layout(matrix(c(1,2,3,4),2,2))
+#plot(lm_alldata_pro)    # Diagnostic plots for linear modelling (all data)
+```
+
+```{r coeff_table_2, echo=FALSE}
+# Use get_regression_table() to get coefficients and ci for each motif (all data)
+lm_alldata_pro_result <- moderndive::get_regression_table(lm_alldata_pro) %>%
+  filter(term %in% c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'PromoterpRPS3',  
+                     'ATATTC:PromoterpRPS3', 
+                     'GTATACCTA:PromoterpRPS3', 
+                     'TGTACAATA:PromoterpRPS3', 
+                     'TTTCATTTC:PromoterpRPS3', 
+                     'PromoterpRPS3'))%>%
+  mutate(term = factor(term, levels = c('ATATTC', 'ATATTC:PromoterpRPS3', 
+                                        'GTATACCTA', 'GTATACCTA:PromoterpRPS3', 
+                                        'TGTACAATA', 'TGTACAATA:PromoterpRPS3', 
+                                        'TTTCATTTC', 'TTTCATTTC:PromoterpRPS3',
+                                        'PromoterpRPS3' )))%>%
+  transmute(Factors=term, coefficient=estimate, lower_ci, upper_ci,
+         abs_ci=upper_ci-lower_ci, four_sderror=4*std_error)
+```
+
+```{r plot_lm_2_all_pro, echo=FALSE}
+# Plotting the coefficients of each motif from the linear model
+
+#ggplot(lm_alldata_pro_result, aes(x = Factors, y = coefficient, color = Factors)) +
+#  geom_point(size=2, alpha=0.8) +
+#  ylim(-0.75,0.5)+
+#  scale_colour_manual(values = c('#CC6666', '#945a59', "#66CC66", "#5ba366", "#6699FF", "#5b85a3",  "#9966CC", "#785791", "black"))+
+#  labs(x='Motifs', y='Change in relative RNA abundance')+
+#  geom_errorbar(aes(ymin=lower_ci, ymax=upper_ci), size=0.75, width=0.05, alpha=0.8) +
+#  geom_hline(yintercept = 0, color = "black", linetype= 'dotted', size=1) +
+#  theme(axis.text.x=element_text(angle=90))
+
+```
+
+
+## 3) Influence of motif count on separate datasets based on promoter
+Here, I split up the data based on promoters and individually fitting a linear model to each qPCR dataset. 
+
+Fit of the model is only better with the pPGK1 (accounting for ~60% of variability in RNA abundance). The influence of motifs seem to vary between datasets (ie. TTTCATTTC)
+
+**lm_pRPS3 - Adjusted R-squared of 0.4627**  
+**lm_pPGK1 - Adjusted R-squared of  0.6251**
+```{r lm_3_pro, echo=FALSE}
+# Fitting linear model to pRPS3 dataset
+lm_pRPS3 <- lm(formula = RNA_Abundance ~ ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC, 
+                      data = RNA_abund_motiftable_pRPS3)
+
+# Resulting y_hat and residual values from the model (pRPS3 dataset)
+#moderndive::get_regression_points(lm_pRPS3)   # to get the yhat and residual values
+
+# Linear model results (pRPS3 dataset)
+summary(lm_pRPS3)
+#confint(lm_pRPS3)  # To obtain confidence intervals
+#layout(matrix(c(1,2,3,4),2,2))
+#plot(lm_pRPS3)    # Diagnostic plots for linear modelling (pRPS3 dataset)
+
+
+# Fitting linear model to pPGK1 dataset
+lm_pPGK1<-lm(formula = RNA_Abundance ~ ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC, 
+                       data = RNA_abund_motiftable_pPGK1)
+
+# Resulting y_hat and residual values from the model (pPGK1 dataset)
+#moderndive::get_regression_points(lm_pPGK1)
+
+# Linear model results (pPGK1 dataset)
+summary(lm_pPGK1)
+#confint(lm_pPGK1)  # To obtain confidence intervals
+#layout(matrix(c(1,2,3,4),2,2))
+#plot(lm_pPGK1)    # Diagnostic plots for linear modelling (pPGK1 dataset)
+```
+
+```{r coeff_table_3, echo=FALSE}
+# Use get_regression_table() to get coefficients and ci for each motif (pRPS3)
+lm_pRPS3_result <- moderndive::get_regression_table(lm_pRPS3) %>%
+  filter(term %in% c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC'))%>%
+  mutate(term = factor(term, levels = c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC')))%>%
+  transmute(Motifs=term, coefficent_pRPS3=estimate, lower_ci_pRPS3=lower_ci, upper_ci_pRPS3=upper_ci,
+         abs_ci_pRPS3=upper_ci-lower_ci, four_sderror_pRPS3=4*std_error)
+
+# Use get_regression_table() to get coefficients and ci for each motif (pPGK1)
+lm_pPGK1_result <- moderndive::get_regression_table(lm_pPGK1) %>%
+  filter(term %in% c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC')) %>%
+  mutate(term = factor(term,levels = c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC')))%>%
+  transmute(Motifs=term, coefficent_pPGK1=estimate, lower_ci_pPGK1=lower_ci, upper_ci_pPGK1=upper_ci,
+         abs_ci_pPGK1=upper_ci-lower_ci, four_sderror_pPGK1=4*std_error)
+
+# Combining the two get_regression_table() into 1 dataframe
+lm_pro_result<- left_join(lm_pRPS3_result,lm_pPGK1_result, by='Motifs')
+```
+
+#### Comparing the coefficients of each motif from the two models (model 3)
+Confidence intervals are within two standard errors.
+
+Plotting the slope coefficients (of each term/Factor) of each dataset to identify differences in motif contribution between promoter strains. In both cases, ATATTC and TTTCATTTC motifs are asssociated with a significant decrease in RNA abundance when present in the 3'UTR.
+```{r plot_lm_3_pro, echo=FALSE}
+# Plotting the coefficients of each motif from the two linear models
+ggplot(lm_pro_result, aes(x = coefficent_pRPS3, y = coefficent_pPGK1, color=Motifs)) +
+  geom_point(size=2, alpha=0.8) +
+  xlim(-0.75,0.75)+
+  ylim(-0.75,0.75)+
+  coord_equal() +
+  geom_abline(slope=1,intercept=0,color="grey")+
+  scale_colour_manual(values = c('#CC6666', "#66CC66", "#6699FF", "#9966CC", "#CC99CC"))+
+  labs(x='Change in relative RNA abundance \n (mCherry driven by the pRPS3 promoter)', 
+       y='Change in relative RNA abundance \n (mCherry driven by the pPGK1 promoter)') +
+  geom_errorbar(aes(ymin=lower_ci_pPGK1, ymax=upper_ci_pPGK1), size=0.75, width=0.05, alpha=0.8) +
+  geom_errorbarh(aes(xmin=lower_ci_pRPS3, xmax=upper_ci_pRPS3), width=0.05,size=0.75, alpha=0.8) +
+  geom_hline(yintercept = 0, color = "black", linetype= 'dotted', size=1) +
+  geom_vline(xintercept = 0, color = "black", linetype= 'dotted', size=1) 
+```
+
+
+## 4) Influence of motif count (+ interaction between motifs) on separate datasets based on promoter
+Fitting a linear model to each qPCR dataset (based on promoter with an interaction term between TGTACAATA and  TTTCATTTC)
+
+We have one construct (modE) which has a combination of two motifs. Here, we want to see the relationship between these two motifs are when placed in one 3'UTR (additive effect?) and their effect on RNA abundance.
+
+Again, we see a difference in the effect of motifs on RNA abundance between datasets (ATATTC and TTTCATTTC).  
+
+**lm_pRPS3_int - Adjusted R-squared of 0.4604**  
+**lm_pPGK1_int - Adjusted R-squared of  0.6148**
+```{r lm_4_pro_int, echo=FALSE}
+
+# Fitting linear model to pRPS3 dataset. An interaction term (:) was incorporated to identify the effect of having both motifs in a 3'UTR
+lm_pRPS3_int <- lm(formula = RNA_Abundance ~ ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TGTACAATA : TTTCATTTC, 
+                      data = RNA_abund_motiftable_pRPS3)
+
+# Resulting y_hat and residual values from the model (pRPS3 dataset + interaction)
+#moderndive::get_regression_points(lm_pRPS3_int)   # to get the yhat and residual values
+
+# Linear model results (pRPS3 dataset + interaction)
+summary(lm_pRPS3_int)
+#confint(lm_pRPS3_int)  # To obtain confidence intervals
+#layout(matrix(c(1,2,3,4),2,2))
+#plot(lm_pRPS3_int)    # Diagnostic plots for linear modelling (pRPS3 dataset)
+
+
+# Fitting linear model to pPGK1 dataset. An interaction term (*) was incorporated to identify the effect of having both motifs in a 3'UTR
+lm_pPGK1_int<-lm(formula = RNA_Abundance ~ ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TGTACAATA : TTTCATTTC, 
+                       data = RNA_abund_motiftable_pPGK1)
+
+# Resulting y_hat and residual values from the model (pPGK1 dataset + interaction)
+#moderndive::get_regression_points(lm_pPGK1_int)
+
+# Linear model results (pPGK1 dataset + interaction)
+summary(lm_pPGK1_int)
+#confint(lm_pPGK1_int)  # To obtain confidence intervals
+#layout(matrix(c(1,2,3,4),2,2))
+#plot(lm_pPGK1_int)    # Diagnostic plots for linear modelling (pPGK1 dataset)
+```
+
+```{r coeff_table_4, echo=FALSE}
+# Use get_regression_table() to get coefficients and ci for each motif (pRPS3)
+lm_pRPS3_int_result <- moderndive::get_regression_table(lm_pRPS3_int) %>%
+  filter(term %in% c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'TGTACAATA:TTTCATTTC'))%>%
+  mutate(term = factor(term, levels = c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'TGTACAATA:TTTCATTTC')))%>%
+  transmute(Factor=term, coefficent_pRPS3=estimate, lower_ci_pRPS3=lower_ci, upper_ci_pRPS3=upper_ci,
+         abs_ci_pRPS3=upper_ci-lower_ci, four_sderror_pRPS3=4*std_error)
+
+# Use get_regression_table() to get coefficients and ci for each motif (pPGK1)
+lm_pPGK1_int_result <- moderndive::get_regression_table(lm_pPGK1_int) %>%
+  filter(term %in% c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'TGTACAATA:TTTCATTTC')) %>%
+  mutate(term = factor(term,levels = c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'TGTACAATA:TTTCATTTC')))%>%
+  transmute(Factor=term, coefficent_pPGK1=estimate, lower_ci_pPGK1=lower_ci, upper_ci_pPGK1=upper_ci,
+         abs_ci_pPGK1=upper_ci-lower_ci, four_sderror_pPGK1=4*std_error)
+
+# Combining the two get_regression_table() into 1 dataframe
+lm_pro_int_result<- left_join(lm_pRPS3_int_result,lm_pPGK1_int_result, by='Factor')
+```
+
+### Comparing the coefficients of each motif from the two linear models
+Confidence intervals are within two standard errors.
+
+The ATATTC and TTTCATTTC motifs are asssociated with a decrease in RNA abundance when present in the 3'UTR. The combined effect of TGTACAATA and TTTCATTTC does not result in a significant decrease in RNA abundance in both datasets (non additive effect?).
+```{r plot_lm_4_pro_int, echo=FALSE}
+# Plotting the coefficients of each motif from the two linear models
+ggplot(lm_pro_int_result, aes(x = coefficent_pRPS3, y = coefficent_pPGK1, color=Factor)) +
+  geom_point(size=2, alpha=0.8) +
+  xlim(-0.75,0.75)+
+  ylim(-0.75,0.75)+
+  coord_equal() +
+  geom_abline(slope=1,intercept=0,color="grey")+
+  scale_colour_manual(values = c('#CC6666', "#66CC66", "#6699FF", "#9966CC", "#CC99CC"))+
+  labs(x='Change in relative RNA abundance \n (mCherry driven by the pRPS3 strains)', 
+       y='Change in relative RNA abundance \n (mCherry driven by the pPGK1 strains)')+
+  geom_errorbar(aes(ymin=lower_ci_pPGK1, ymax=upper_ci_pPGK1), size=0.75, width=0.05, alpha=0.8) +
+  geom_errorbarh(aes(xmin=lower_ci_pRPS3, xmax=upper_ci_pRPS3), width=0.05,size=0.75, alpha=0.8) +
+  geom_hline(yintercept = 0, color = "black", linetype= 'dotted', size=1) +
+  geom_vline(xintercept = 0, color = "black", linetype= 'dotted', size=1) 
+```
+
+
+
+## 5) Influence of motif count (+ interaction between motifs) + Experimental replicate on separate datasets based on promoter
+
+Fitting a linear model to each qPCR dataset (based on promoter with an interaction term between TGTACAATA and  TTTCATTTC), but we're adding another term, ExpRep (from the data analysis, the datapoints for experimental replicates in pRPS3 in particular were claded together). 
+
+Here we're seeing a significant contribution of the ExpRep variable on the RNA abundance (a technical issue in the experiment - previously described in the data analysis Rmd file). However now we are getting a better fit of the model to the pRPS3 dataset.
+
+**lm_pRPS3_int_Exp - Adjusted R-squared of 0.6871**  
+**lm_pPGK1_int_Exp - Adjusted R-squared of  0.6351**
+```{r lm_5_pro_int_Exp, echo=FALSE}
+
+# Fitting linear model to pRPS3 dataset. An interaction term (:) was incorporated to identify the effect of having both motifs in a 3'UTR
+lm_pRPS3_int_Exp <- lm(formula = RNA_Abundance ~ ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TGTACAATA : TTTCATTTC + ExpRep, 
+                      data = RNA_abund_motiftable_pRPS3)
+
+# Resulting y_hat and residual values from the model (pRPS3 dataset + interaction)
+#moderndive::get_regression_points(lm_pRPS3_int)   # to get the yhat and residual values
+
+# Linear model results (pRPS3 dataset + interaction)
+summary(lm_pRPS3_int_Exp)
+#confint(lm_pRPS3_int_Exp)  # To obtain confidence intervals
+#layout(matrix(c(1,2,3,4),2,2))
+#plot(lm_pRPS3_int_Exp)    # Diagnostic plots for linear modelling (pRPS3 dataset)
+
+
+# Fitting linear model to pPGK1 dataset. An interaction term (:) was incorporated to identify the effect of having both motifs in a 3'UTR
+lm_pPGK1_int_Exp<-lm(formula = RNA_Abundance ~ ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TGTACAATA : TTTCATTTC + ExpRep, 
+                       data = RNA_abund_motiftable_pPGK1)
+
+# Resulting y_hat and residual values from the model (pPGK1 dataset + interaction)
+#moderndive::get_regression_points(lm_pPGK1_int_Exp)   # to get the yhat and residual values
+
+# Linear model results (pPGK1 dataset + interaction)
+summary(lm_pPGK1_int_Exp)
+#confint(lm_pPGK1_int_Exp)  # To obtain confidence intervals
+#layout(matrix(c(1,2,3,4),2,2))
+#plot(lm_pPGK1_int_Exp)    # Diagnostic plots for linear modelling (pPGK1 dataset)
+```
+
+```{r coeff_table_5, echo=FALSE}
+# Use get_regression_table() to get coefficients and ci for each motif (pRPS3)
+lm_pRPS3_int_Exp_result <- moderndive::get_regression_table(lm_pRPS3_int_Exp) %>%
+  filter(term %in% c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'TGTACAATA:TTTCATTTC', 'ExpRep'))%>%
+  mutate(term = factor(term, levels = c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'TGTACAATA:TTTCATTTC', 'ExpRep')))%>%
+  transmute(Factor=term, coefficent_pRPS3=estimate, lower_ci_pRPS3=lower_ci, upper_ci_pRPS3=upper_ci,
+         abs_ci_pRPS3=upper_ci-lower_ci, four_sderror_pRPS3=4*std_error)
+
+# Use get_regression_table() to get coefficients and ci for each motif (pPGK1)
+lm_pPGK1_int_Exp_result <- moderndive::get_regression_table(lm_pPGK1_int_Exp) %>%
+  filter(term %in% c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'TGTACAATA:TTTCATTTC', 'ExpRep')) %>%
+  mutate(term = factor(term,levels = c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'TGTACAATA:TTTCATTTC', 'ExpRep')))%>%
+  transmute(Factor=term, coefficent_pPGK1=estimate, lower_ci_pPGK1=lower_ci, upper_ci_pPGK1=upper_ci,
+         abs_ci_pPGK1=upper_ci-lower_ci, four_sderror_pPGK1=4*std_error)
+
+# Combining the two get_regression_table() into 1 dataframe
+lm_pro_int_Exp_result<- left_join(lm_pRPS3_int_Exp_result,lm_pPGK1_int_Exp_result, by='Factor')
+```
+
+### Comparing the coefficients of each motif from the two linear models
+Confidence intervals are within two standard errors.
+
+The ATATTC and TTTCATTTC motifs are associated with a decrease in RNA abundance when present in the 3'UTR. Interestingly, the effect of having both TGTACAATA and TTTCATTTC does not result in a significant decrease in RNA abundance.
+```{r plot_lm_5_pro_interaction, echo=FALSE}
+# Plotting the coefficients of each motif from the two linear models
+ggplot(lm_pro_int_Exp_result, aes(x = coefficent_pRPS3, y = coefficent_pPGK1, color=Factor)) +
+  geom_point(size=2, alpha=0.8) +
+  xlim(-0.75,0.75)+
+  ylim(-0.75,0.75)+
+  coord_equal() +
+  geom_abline(slope=1,intercept=0,color="grey")+
+  scale_colour_manual(values = c('#CC6666', "#66CC66", "#6699FF", "#9966CC", "#CC99CC", "black"))+
+  labs(x='Change in relative RNA abundance \n (mCherry driven by the pRPS3 promoter)', 
+       y='Change in relative RNA abundance \n (mCherry driven by the pPGK1 promoter)') +
+  geom_errorbar(aes(ymin=lower_ci_pPGK1, ymax=upper_ci_pPGK1), size=0.75, width=0.05, alpha=0.8) +
+  geom_errorbarh(aes(xmin=lower_ci_pRPS3, xmax=upper_ci_pRPS3), width=0.05,size=0.75, alpha=0.8) +
+  geom_hline(yintercept = 0, color = "black", linetype= 'dotted', size=1) +
+  geom_vline(xintercept = 0, color = "black", linetype= 'dotted', size=1) 
+```
+
+
+## 6) Influence of motif count  + Experimental replicate on separate datasets based on promoter
+
+Fitting a linear model to each qPCR dataset (based on promoter with an interaction term between TGTACAATA and  TTTCATTTC), but we're adding another term, ExpRep (from the data analysis, the datapoints for experimental replicates in pRPS3 in particular were claded together). 
+
+Here we're seeing a significant contribution of the ExpRep variable on the RNA abundance (a technical issue in the experiment - previously described in the data analysis Rmd file). However now we are getting a better fit of the model to the pRPS3 dataset.
+
+**lm_pRPS3_int_Exp - Adjusted R-squared of 0.6819**  
+**lm_pPGK1_int_Exp - Adjusted R-squared of  0.6451**
+```{r lm_6_pro_Exp, echo=FALSE}
+
+# Fitting linear model to pRPS3 dataset. An interaction term (:) was incorporated to identify the effect of having both motifs in a 3'UTR
+lm_pRPS3_6_Exp <- lm(formula = RNA_Abundance ~ ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC +  ExpRep, 
+                      data = RNA_abund_motiftable_pRPS3)
+
+# Resulting y_hat and residual values from the model (pRPS3 dataset + interaction)
+#moderndive::get_regression_points(lm_pRPS3_int)   # to get the yhat and residual values
+
+# Linear model results (pRPS3 dataset + interaction)
+summary(lm_pRPS3_6_Exp)
+#confint(lm_pRPS3_int_Exp)  # To obtain confidence intervals
+#layout(matrix(c(1,2,3,4),2,2))
+#plot(lm_pRPS3_int_Exp)    # Diagnostic plots for linear modelling (pRPS3 dataset)
+
+
+# Fitting linear model to pPGK1 dataset. An interaction term (:) was incorporated to identify the effect of having both motifs in a 3'UTR
+lm_pPGK1_6_Exp<-lm(formula = RNA_Abundance ~ ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC  + ExpRep, 
+                       data = RNA_abund_motiftable_pPGK1)
+
+# Resulting y_hat and residual values from the model (pPGK1 dataset + interaction)
+#moderndive::get_regression_points(lm_pPGK1_int_Exp)   # to get the yhat and residual values
+
+# Linear model results (pPGK1 dataset + interaction)
+summary(lm_pPGK1_6_Exp)
+#confint(lm_pPGK1_int_Exp)  # To obtain confidence intervals
+#layout(matrix(c(1,2,3,4),2,2))
+#plot(lm_pPGK1_int_Exp)    # Diagnostic plots for linear modelling (pPGK1 dataset)
+```
+
+```{r coeff_table_6, echo=FALSE}
+# Use get_regression_table() to get coefficients and ci for each motif (pRPS3)
+lm_pRPS3_6_Exp_result <- moderndive::get_regression_table(lm_pRPS3_6_Exp) %>%
+  filter(term %in% c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'ExpRep'))%>%
+  mutate(term = factor(term, levels = c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'ExpRep')))%>%
+  transmute(Factor=term, coefficent_pRPS3=estimate, lower_ci_pRPS3=lower_ci, upper_ci_pRPS3=upper_ci,
+         abs_ci_pRPS3=upper_ci-lower_ci, four_sderror_pRPS3=4*std_error)
+
+# Use get_regression_table() to get coefficients and ci for each motif (pPGK1)
+lm_pPGK1_6_Exp_result <- moderndive::get_regression_table(lm_pPGK1_6_Exp) %>%
+  filter(term %in% c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'ExpRep')) %>%
+  mutate(term = factor(term,levels = c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'ExpRep')))%>%
+  transmute(Factor=term, coefficent_pPGK1=estimate, lower_ci_pPGK1=lower_ci, upper_ci_pPGK1=upper_ci,
+         abs_ci_pPGK1=upper_ci-lower_ci, four_sderror_pPGK1=4*std_error)
+
+# Combining the two get_regression_table() into 1 dataframe
+lm_pro_6_Exp_result<- left_join(lm_pRPS3_6_Exp_result,lm_pPGK1_6_Exp_result, by='Factor')
+```
+
+### Comparing the coefficients of each motif from the two linear models
+Confidence intervals are within two standard errors.
+
+The ATATTC and TTTCATTTC motifs are associated with a decrease in RNA abundance when present in the 3'UTR. Interestingly, the effect of having both TGTACAATA and TTTCATTTC does not result in a significant decrease in RNA abundance.
+```{r plot_lm_6_pro, echo=FALSE}
+# Plotting the coefficients of each motif from the two linear models
+ggplot(lm_pro_6_Exp_result, aes(x = coefficent_pRPS3, y = coefficent_pPGK1, color=Factor)) +
+  geom_point(size=2, alpha=0.8) +
+  xlim(-0.75,0.75)+
+  ylim(-0.75,0.75)+
+  coord_equal() +
+  geom_abline(slope=1,intercept=0,color="grey")+
+  scale_colour_manual(values = c('#CC6666', "#66CC66", "#6699FF", "#9966CC", "black"))+
+  labs(x='Change in relative RNA abundance \n (mCherry driven by the pRPS3 promoter)', 
+       y='Change in relative RNA abundance \n (mCherry driven by the pPGK1 promoter)') +
+  geom_errorbar(aes(ymin=lower_ci_pPGK1, ymax=upper_ci_pPGK1), size=0.75, width=0.05, alpha=0.8) +
+  geom_errorbarh(aes(xmin=lower_ci_pRPS3, xmax=upper_ci_pRPS3), width=0.05,size=0.75, alpha=0.8) +
+  geom_hline(yintercept = 0, color = "black", linetype= 'dotted', size=1) +
+  geom_vline(xintercept = 0, color = "black", linetype= 'dotted', size=1) 
+```
+
+#### Comments - 
+- ATATTC and TTTCATTTC are associated with a decrease in RNA expression, however the degree of their influence is dependent on the promoter choice.  
+- The effect of TGTACAATA and TTTCATTTC is not additive, with no significant downregulation of gene expression when present in combination within a 3'UTR. 
+- Experimental replicate in pRPS3 has a significant effect in the model. This is partly confirmed by previous data analysis of the qPCR experiments (with ExpRep1 having a low Cq value in the negative control - suggesting overloading maybe? There is also the issue of the mCherry primer efficiency - needs proper primer calibration).
+
+
+## Loading and organising data (different normalisation of qPCR data)
+Following the delta Cq calculation, the data was split based on promoter and also split into ExpRep 1 and ExpRep 2. One control strain (mod0) was calculated for each promoter and for each ExpRep (total of 4x mod0 controls). These mod0 were used foro the delta delta Cq calculation of each data point. 
+
+#### Load analysed data from (pRPS3_pPGK1_tRPS3_two_exp_rep_dataanalysis.Rmd)
+Here I am uploading the second analysed dataset
+
+```{r load_data_ExpRep,results="show"}
+# load second analysed qPCR data
+platesnorm_mod0_median_ExpRep <- read_csv("analysed_data/platesnorm_mod0_median_ExpRep.csv")
+head(platesnorm_mod0_median_ExpRep)
+```
+
+#### Combine qPCR data and incorporating motif counts
+
+Splitting the platesnorm_mod0_median dataframe into two (based on the Promoter), re-naming 'Ter_mod' to 'tRPS3_3UTR', selecting relevant columns (tRPS3_3UTR,BioRep, Promoter, RNA_Abundance) and removing the datapoints for 'tRPS3_WT'. Then joining them together to make another dataframe with both promoter datasets.
+
+```{r join_data_motifcounts_Exp, echo=FALSE}
+# Organised dataframe for pRPS3 data + motif table
+RNA_abund_pRPS3_ExpRep <- ungroup(platesnorm_mod0_median_ExpRep) %>%  
+  filter(Promoter=="pRPS3")%>%
+  transmute(tRPS3_3UTR = Ter_mod, tRPS3_3UTR,BioRep, ExpRep, Promoter, RNA_Abundance)%>%
+  filter(!tRPS3_3UTR %in% c('tRPS3_WT'))
+RNA_abund_motiftable_pRPS3_ExpRep <-left_join(RNA_abund_pRPS3_ExpRep, motiftable)           
+
+# Organised dataframe for pPGK1 data + motif table
+RNA_abund_pPGK1_ExpRep <- ungroup(platesnorm_mod0_median_ExpRep) %>%  
+  filter(Promoter=="pPGK1")%>%
+  transmute(tRPS3_3UTR=Ter_mod, tRPS3_3UTR,BioRep, ExpRep, Promoter,RNA_Abundance)%>%
+  filter(!tRPS3_3UTR %in% c('tRPS3_WT'))
+RNA_abund_motiftable_pPGK1_ExpRep <- left_join(RNA_abund_pPGK1_ExpRep, motiftable)           
+ 
+# Combined dataframe
+RNA_abundance_all_ExpRep  <- bind_rows(RNA_abund_motiftable_pRPS3_ExpRep,RNA_abund_motiftable_pPGK1_ExpRep)
+head(RNA_abundance_all_ExpRep, 10)
+```
+
+## 7) New dataset Influence of motif count  + Experimental replicate on separate datasets based on promoter
+
+Fitting a linear model to each qPCR dataset (based on promoter), but here, the dataset was normalised to its own ExpRep mod0  
+
+Here we're getting a better fit for the pRPS3 model
+
+**lm_pRPS3_7_Exp - Adjusted R-squared of 0.735**  
+**lm_pPGK1_7_Exp - Adjusted R-squared of  0.6376**
+```{r lm_7_pro_Exp, echo=FALSE}
+
+# Fitting linear model to pRPS3 dataset. An interaction term (:) was incorporated to identify the effect of having both motifs in a 3'UTR
+lm_pRPS3_7_Exp <- lm(formula = RNA_Abundance ~ ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC, 
+                      data = RNA_abund_motiftable_pRPS3_ExpRep)
+
+# Resulting y_hat and residual values from the model (pRPS3 dataset + interaction)
+#moderndive::get_regression_points(lm_pRPS3_int)   # to get the yhat and residual values
+
+# Linear model results (pRPS3 dataset + interaction)
+summary(lm_pRPS3_7_Exp)
+#confint(lm_pRPS3_int_Exp)  # To obtain confidence intervals
+#layout(matrix(c(1,2,3,4),2,2))
+#plot(lm_pRPS3_int_Exp)    # Diagnostic plots for linear modelling (pRPS3 dataset)
+
+
+# Fitting linear model to pPGK1 dataset. An interaction term (:) was incorporated to identify the effect of having both motifs in a 3'UTR
+lm_pPGK1_7_Exp<-lm(formula = RNA_Abundance ~ ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC, 
+                       data = RNA_abund_motiftable_pPGK1_ExpRep)
+
+# Resulting y_hat and residual values from the model (pPGK1 dataset + interaction)
+#moderndive::get_regression_points(lm_pPGK1_int_Exp)   # to get the yhat and residual values
+
+# Linear model results (pPGK1 dataset + interaction)
+summary(lm_pPGK1_7_Exp)
+#confint(lm_pPGK1_int_Exp)  # To obtain confidence intervals
+#layout(matrix(c(1,2,3,4),2,2))
+#plot(lm_pPGK1_int_Exp)    # Diagnostic plots for linear modelling (pPGK1 dataset)
+```
+
+```{r coeff_table_7, echo=FALSE}
+# Use get_regression_table() to get coefficients and ci for each motif (pRPS3)
+lm_pRPS3_7_Exp_result <- moderndive::get_regression_table(lm_pRPS3_7_Exp) %>%
+  filter(term %in% c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'ExpRep'))%>%
+  mutate(term = factor(term, levels = c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'ExpRep')))%>%
+  transmute(Factor=term, coefficent_pRPS3=estimate, lower_ci_pRPS3=lower_ci, upper_ci_pRPS3=upper_ci,
+         abs_ci_pRPS3=upper_ci-lower_ci, four_sderror_pRPS3=4*std_error)
+
+# Use get_regression_table() to get coefficients and ci for each motif (pPGK1)
+lm_pPGK1_7_Exp_result <- moderndive::get_regression_table(lm_pPGK1_7_Exp) %>%
+  filter(term %in% c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'ExpRep')) %>%
+  mutate(term = factor(term,levels = c('ATATTC', 'GTATACCTA', 'TGTACAATA', 'TTTCATTTC', 'ExpRep')))%>%
+  transmute(Factor=term, coefficent_pPGK1=estimate, lower_ci_pPGK1=lower_ci, upper_ci_pPGK1=upper_ci,
+         abs_ci_pPGK1=upper_ci-lower_ci, four_sderror_pPGK1=4*std_error)
+
+# Combining the two get_regression_table() into 1 dataframe
+lm_pro_7_Exp_result<- left_join(lm_pRPS3_7_Exp_result,lm_pPGK1_7_Exp_result, by='Factor')
+```
+
+### Comparing the coefficients of each motif from the two linear models
+Confidence intervals are within two standard errors.
+```{r plot_lm_7_pro, echo=FALSE}
+# Plotting the coefficients of each motif from the two linear models
+ggplot(lm_pro_7_Exp_result, aes(x = coefficent_pRPS3, y = coefficent_pPGK1, color=Factor)) +
+  geom_point(size=2, alpha=0.8) +
+  xlim(-0.6,0.6)+
+  ylim(-0.6,0.6)+
+  coord_equal() +
+  geom_abline(slope=1,intercept=0,color="grey")+
+  scale_colour_manual(values = c('#CC6666', "#66CC66", "#6699FF", "#9966CC", "black"))+
+  labs(x='Change in relative RNA abundance \n (mCherry driven by the pRPS3 promoter)', 
+       y='Change in relative RNA abundance \n (mCherry driven by the pPGK1 promoter)') +
+  geom_errorbar(aes(ymin=lower_ci_pPGK1, ymax=upper_ci_pPGK1), size=0.75, width=0.05, alpha=0.8) +
+  geom_errorbarh(aes(xmin=lower_ci_pRPS3, xmax=upper_ci_pRPS3), width=0.05,size=0.75, alpha=0.8) +
+  geom_hline(yintercept = 0, color = "black", linetype= 'dotted', size=1) +
+  geom_vline(xintercept = 0, color = "black", linetype= 'dotted', size=1) 
+```
