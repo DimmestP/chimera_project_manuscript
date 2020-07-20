@@ -1,21 +1,25 @@
----
-title: "Materials and Methods section"
-#bibliography: bibliography.bib
-output:
-  pdf_document: default
-  html_document: default
----
+# Materials and methods
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Materials and methods
 
 ### Strains and media
 The BY4741 (*MATa his3$\Delta1$ leu2$\Delta0$ met15$\Delta0$ ura3$\Delta0$*) wild type strain was used in this study and grown in either synthetic complete medium without uracil (SC -URA medium), containing 0.69% Yeast Nitrogen Base without amino acids and with ammonium sulfate (Formedium, Norfolk, UK), 0.193% amino acid drop-out supplement mixture (Formedium, Norfolk, UK) and 2% glucose, or YPDA medium, containing 2% peptone, 1% yeast extract, 2% glucose and 0.004% adenine. 
 
+### Determining 3'UTR decay motifs
+
+Following the methodology presented in Cheng et al (2017), a linear model predicting transcript half life using codon usage and 3'UTR motif frequency was used to determine motif significance. 
+$$log_2(\lambda_g^{1/2}) = \sum_c\beta_cp_{cg} + \sum_m\alpha_mn_{mg} + \epsilon_g$$
+where $\lambda_g^{1/2}$ is the half life of gene g, $\beta_c$ is the coefficient associate with codon c, $p_{cg}$ is the proportion of gene g's ORF that corresponds to codon c, $\alpha_m$ is the coefficient associated with motif m, $n_{mg}$ is number of counts of motif m in gene g's 3'UTR and $\epsilon_g$ is the noise term. The original list of 69 3'UTR motifs to investigate was collated from three separate studies of cis-regulatory sequences suspected to regulate mRNA decay: Hogan et al (2008), Shalgi et al (2005) and Cheng et al (2017). The Pelechano et al (2013) 3'UTR data set of median length yeast 3'UTR's was used to calculate the frequency of each of the 69 motifs in every gene across the whole yeast genome. Our analysis was performed separately on two independent, genome-wide studies of yeast mRNA decay rates to confirm motif significance, Sun et al (2013) and Chan et al (2017).
+
 ### Selection criteria of 3'UTRs devoid of sequence motifs of interest (for introducing sequence motifs)
+
+A pair of suitable 3'UTR's from the Pelechano et al (2013) median length 3'UTR dataset were chosen for introducing the selected motifs of interest. The primary selection criteria for these 3'UTRs where; 1) native 3'UTR does not contain any motif of interest, 2) <300 nt in length including terminator, 3) top 5% most abundant in the Nadal-Ribelles et al (2019) scRNA-seq dataset. The selection process is summarised in supplementary figure 1 with supplementary table 1 containing the shortlist of genes.
+
+
 - Extract 3'UTR sequences (Median 3'UTR lengths from Pelechano dataset)
 - Filter for 3'UTRs of less than 300 bp
 - Motif table of interest
