@@ -76,7 +76,7 @@ motifs_raw <- scan("./methods_chapter/data/list_motifs.txt", character())
 
 # import yeast 3'UTR dataset
 tif_seq_raw <- read_csv("./methods_chapter/data/3primeUTR_5primeUTR_isoforms.csv") 
-
+# filter out empty values
 tif_seq_UTR_raw <- tif_seq_raw %>%
   select(gene,threePrimeUTR) %>%
   filter(!is.na(threePrimeUTR))
