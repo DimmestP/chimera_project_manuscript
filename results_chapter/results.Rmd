@@ -1,17 +1,9 @@
----
-title: "Results section"
-#bibliography: bibliography.bib
-output:
-  pdf_document: default
-  html_document: default
-header-includes:
-  \usepackage{float}
-  \floatplacement{figure}{H}
----
+# Results
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+library(here)
 ```
+
 ## Initial characterisation of promoter-terminator swaps and determining their effects on RNA abundance
 Initially, to test the effects of 3'UTRs on RNA abundance, promoter-terminator swaps consisting of a collection of 12 (**10 ?**) terminators and 3 promoters driving the expression of an mCherry CDS in a plasmid were constructed. Unlike in previous studies where expression enhancing terminators were identified for further investigation, we selected terminators of from genes of varying expression profiles (Curran et al. 2013, Ito et al. 2013, Ito et al. 2016)
 
@@ -50,7 +42,7 @@ tRPS3 3'UTR-terminator were modified to incorporate three 9 bp cloning sites for
 Analysis of RNA abundance by RT-qPCR was carried out on these strains showed a decrease in RNA abundance with the incorporation of putative decay motifs (ATATTC, TGTACAATA and TTTCATTTC). The relative fold change associated with each motif varies depending on promoter choice. A ~4 fold decrease in RNA abundance with the incorporation of ATATTC when the tRPS3 3'UTR-terminator is coupled with the pRPS3 promoter. When coupled with the pPGK1 promoter, only a ~2 fold decrease in RNA abundance was observed with the incorporation of ATATTC when the tRPS3 3'UTR-terminator. With the incorporation of both candidate decay motifs - TGTACAATA and TTTCATTTC, a ~4 fold decrease in RNA abundance was observed when the tRPS3 3'UTR-terminator is coupled with the pRPS3 promoter however, only a ~2 fold decrease in RNA abundance was observed when coupled with the pPGK1 promoter. Our results demonstrate that, consistent with our model, the incorporation of candidate decay motifs result in a moderate but significant decrease in protein abundance.
 
 
-![Design of modified tRPS3 3'UTRs and RT-qPCR measurement of RNA abundance in each reporter construct.](figures/results_figure2.png){ width=85% }
+![Design of modified tRPS3 3'UTRs and RT-qPCR measurement of RNA abundance in each reporter construct.](`r here("results_chapter/figures/results_figure2.png")`){ width=85% }
 
 #### Effects of candidate cis-regulatory motifs in tTSA1 3'UTR-terminator in combination with different promoters
 
@@ -58,14 +50,14 @@ tTSA1 3'UTR-terminator were modified to also incorporate three 9 bp cloning site
 
 - RT-qPCR data and results analysis for tTSA1 swaps with pTSA1 and pPGK1  
 
-![Design of modified tTSA1 3'UTRs and RT-qPCR measurement of RNA abundance in each reporter construct.](figures/results_figure3.png){ width=85% }
+![Design of modified tTSA1 3'UTRs and RT-qPCR measurement of RNA abundance in each reporter construct.](`r here("results_chapter/figures/results_figure3.png")`){ width=85% }
 
 #### Modelling the relationship of cis-regulatory motifs on RNA abundance
 
 We fitted a linear model to each dataset (based on promoter - pRPS3 or pPGK1) to determine the contribution of each motif on RNA abundance. The linear model explains ~70% of the variability in RNA abundance due to cis-regulatory motifs in the 3'UTR. With both promoters, the putative stability (GTATACCTA) sequence show no significant effect on RNA abundance. The ATATTC and TTTACTTTC cis-regulatory sequences contribute to a moderate but significant decrease RNA abundance (p<0.001 wth both promoters). Interestingly, the decay (TGTACAATA) motif shows variable effects when in combination with different promooters (p<0.01 with pRPS3, n.s with pPGK1). The combination of both TGTACAATA and TTTCATTTC is not additive, with no significant downregulation of gene expression when present in combination within a 3'UTR with both promooters.
 
 
-![Modelling the relationship of genetic elements on RNA abundance (using experimental data). Confidence intervals are within two standard errors.](figures/results_figure5.png){ width=80% }
+![Modelling the relationship of genetic elements on RNA abundance (using experimental data). Confidence intervals are within two standard errors.](`r here("results_chapter/figures/results_figure5.png")`){ width=80% }
 
 
 ## Comparison of motif effects from qPCR and half-life dataset models
@@ -76,11 +68,11 @@ We used high-throughput 5PSeq (HT-5Pseq) technique to investigate whether modifi
 The distributions of 5’ ends did not differ significantly between the samples (figure 4), while at the same time they differed from those observed in native RPS3, suggesting that the coding sequence and not 3’UTR is the major contributor to ribosome stalling observed near 3’ end of coding sequence of RPS3 (figure **missing figure**, which I forgot to make – I will by the end of today). However, there were major differences between distributions of 3’ ends between different constructs corresponding to different polyadenylation sites, especially between constructs with non-modified (tRPS3-WT) and modified (tRPS3-mod0, tRPS3-modA and tRPS3-modB) 3’UTRs (figure 5 and 6). In all modified 3’ UTRs we observed additional poly(A) sites at 44 nt and 56 nt from STOP codon, which corresponds to 35 nt and 47 nt in WT 3’ UTR. Secondly, we observed differences in the distribution of poly(A) sites between modified 3’UTRs with different motifs inserted. Poly(A) sites located 44 nt and 56 nt from STOP codon are more abundant in tRPS3-mod0 compared to tRPS3-modA, with tRPS3-modB between them. Poly(A) site at 67 nt is pronounced only in tRPS3-mod0 and at 74 nt is especially visible in tRPS3-modA and at 80 nt in tRPS3-modB. The differences could be caused either by new polyadenylation signals introduced into the 3’ UTR or by increased stability of these isoforms conferred by addition of new motifs.  
 
 
-![5PSeq figure](figures/results_figure6.png){ width=70% }
+![5PSeq figure](`r here("results_chapter/figures/results_figure6.png")`){ width=70% }
 
-![5PSeq figure](figures/results_figure7.png){ width=70% }
+![5PSeq figure](`r here("results_chapter/figures/results_figure7.png")`){ width=70% }
 
-![5PSeq figure](figures/results_figure8.png){ width=70% }
+![5PSeq figure](`r here("results_chapter/figures/results_figure8.png")`){ width=70% }
 
 
 ## Comparison of whole-genome ATATTC motif effect vs. reporter-gene ATATTC motif effect

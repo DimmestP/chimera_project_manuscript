@@ -1,11 +1,5 @@
 # Materials and methods
 
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-
 ### Strains and media
 The BY4741 (*MATa his3$\Delta1$ leu2$\Delta0$ met15$\Delta0$ ura3$\Delta0$*) wild type strain was used in this study and grown in either synthetic complete medium without uracil (SC -URA medium), containing 0.69% Yeast Nitrogen Base without amino acids and with ammonium sulfate (Formedium, Norfolk, UK), 0.193% amino acid drop-out supplement mixture (Formedium, Norfolk, UK) and 2% glucose, or YPDA medium, containing 2% peptone, 1% yeast extract, 2% glucose and 0.004% adenine. 
 
