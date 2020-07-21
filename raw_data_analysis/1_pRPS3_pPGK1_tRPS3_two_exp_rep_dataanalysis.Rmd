@@ -371,6 +371,12 @@ ggplot(platesnorm, aes(Ter_mod,Value.norm))+
   geom_hline(yintercept = 0, color = "black", linetype= 'dotted', size=1) 
 ```
 
+### 1) Exporting analysed delta Cq values data
+```{r export_normdata, echo=TRUE}
+#exporting platesnorm dataframe
+write.csv(platesnorm,"analysed_data/platesnorm.csv", row.names = FALSE)
+```
+
 Plot shows shifted distributions in normalised Cq values for pRPS3 samples between experimental replciates. This shift in distributions between experimental replicates is not seen for pPGK1 samples.
 ```{r deltaCq_norm_1,dependson="load_plates", echo=TRUE, fig.height=5, fig.width=9}
 
@@ -463,12 +469,6 @@ platesnorm_mod0_median <- bind_rows(platesnorm_mod0_pRPS3, platesnorm_mod0_pPGK1
 
 # to verify the calculation done 
 platesnorm_mod0_median %>% select(Strain, BioRep, Median_Cq, RNA_Abundance)
-```
-
-### 2A) Exporting analysed delta-delta Cq values data
-```{r export_normdata, echo=TRUE}
-#exporting platesnorm_mod0_median dataframe
-write.csv(platesnorm_mod0_median,"analysed_data/platesnorm_mod0_median.csv", row.names = FALSE)
 ```
 
 ### 2A) Plotting the results in a scatter plot
