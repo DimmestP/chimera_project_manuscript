@@ -446,6 +446,25 @@ platesnorm_mod0_pPGK1 <- platesnorm_pPGK1 %>%
 platesnorm_mod0_pPGK1 %>% select(Strain, BioRep, TechRep, Value.norm.mod0)
 ```
 
+### 2A) Exporting analysed delta Cq values data
+```{r export_deltadeltaCq, echo=TRUE}
+# Combining the calculated delta-delta Cq from the two dataframes
+platesnorm_deltadeltaCq <- bind_rows(platesnorm_mod0_pRPS3, platesnorm_mod0_pPGK1)%>%
+  
+          # Below is to create columns for strain information using details from the 'Strain' column
+                    separate(Strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator")) %>%
+                    separate(Terminator, remove = FALSE, sep="_",into=c("Terminator","Construct")) %>%
+                    mutate(Construct = factor(Construct,levels = c("modE","modD","modC","modB","modA","mod0","WT")),remove = FALSE)%>%
+                    unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
+                    unite(Ter_mod,Terminator,Construct,sep="_", remove=FALSE) %>%
+                    mutate(Pro_mCh = factor(Pro_mCh,levels = c("pRPS3-mCherry","pPGK1-mCherry"))) %>% 
+                    mutate(Ter_mod = factor(Ter_mod,levels=c("tRPS3_modC","tRPS3_modE","tRPS3_modD","tRPS3_modA",
+                                           "tRPS3_modB","tRPS3_mod0","tRPS3_WT")))
+
+#exporting platesnorm_deltadeltaCq dataframe
+write.csv(platesnorm_deltadeltaCq,"analysed_data/platesnorm_deltadeltaCq.csv", row.names = FALSE)
+```
+
 ## 2A) Mean Cq and RNA abundance calculation
 In the previous 2 chunks, we have calculated the delta-delta Cq value for each techrep. Here, we are summarising that information by calculating the median Cq for each biorep and calculating the RNA abundance (2^-Median_Cq).  
 
