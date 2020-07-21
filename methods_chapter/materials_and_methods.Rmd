@@ -11,16 +11,7 @@ where $\lambda_g^{1/2}$ is the half life of gene g, $\beta_c$ is the coefficient
 
 ### Selection criteria of 3'UTRs devoid of sequence motifs of interest (for introducing sequence motifs)
 
-A pair of suitable 3'UTR's from the Pelechano et al (2013) median length 3'UTR dataset were chosen for introducing the selected motifs of interest. The primary selection criteria for these 3'UTRs where; 1) native 3'UTR does not contain any motif of interest, 2) <300 nt in length including terminator, 3) top 5% most abundant in the Nadal-Ribelles et al (2019) scRNA-seq dataset. The selection process is summarised in supplementary figure 1 with supplementary table 1 containing the shortlist of genes.
-
-
-- Extract 3'UTR sequences (Median 3'UTR lengths from Pelechano dataset)
-- Filter for 3'UTRs of less than 300 bp
-- Motif table of interest
-- Screen for 3'UTRs without motifs
-- Check if it can be synthesised by IDT
-- Check if there are no BsaI or BsmBI sites
-- Introduce insertion sites (M1, M2 and M3) that minimally disrupts 3'UTR secondary structure compared to WT 3'UTR
+A pair of suitable 3'UTR's from the Pelechano et al (2013) median length 3'UTR dataset were chosen for introducing the selected motifs of interest. The primary selection criteria for these 3'UTRs were; 1) native 3'UTR does not contain any motif of interest, 2) <300 nt in length including terminator, 3) top 5% most abundant in the Nadal-Ribelles et al (2019) scRNA-seq dataset. The selection process is summarised in supplementary figure 1 with supplementary table 1 containing the shortlist of genes. The positions for inserting the motifs of interest were selected by first avoiding any efficiency elements or polyadenylaton sites in the chosen 3'UTRs. Then, the position was matched to the average position of the motifs in the 3'UTR's in which they appear natively. The final position selection also considered regions that minimally disrupt the 3'UTR secondary structure compared to wild type 3'UTR.
 
 ### Selection criteria of 3'UTRs with sequence motifs of interest (for removing sequence motifs)
 - Extract 3'UTR sequences (Median 3'UTR lengths from Pelechano dataset)

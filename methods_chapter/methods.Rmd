@@ -45,7 +45,7 @@ library(DECIPHER)
 # BiocManager::install("BSgenome.Scerevisiae.UCSC.sacCer3")
 
 # import Chan et al 2017 yeast mRNA decay dataset
-chan_decay_raw <-read_tsv("./methods_chapter/data/new_chan_dr_data.txt")
+chan_decay_raw <-read_tsv(here("./methods_chapter/data/new_chan_dr_data.txt"))
 
 # Calculate the mean over two decay rate replicates, remove NAs and rename column
 chan_decay_hlife <- chan_decay_raw %>%
@@ -55,7 +55,7 @@ chan_decay_hlife <- chan_decay_raw %>%
   filter(is.finite(hlife))
 
 # import sun et al 2013 decay rate data
-sun_decay_raw <- read_tsv("./methods_chapter/data/sun_total_dr.txt", 
+sun_decay_raw <- read_tsv(here("./methods_chapter/data/sun_total_dr.txt"), 
                        locale = locale(decimal = ","))
 #change weird name of 3rd column and orf to consistent ones geneName
 colnames(sun_decay_raw)[3] <- "d_rate"
@@ -72,10 +72,10 @@ combined_decay_hlife <- full_join(chan_decay_hlife,sun_decay_hlife, by = c("tran
 
 
 # import list of collated 3'UTR motifs
-motifs_raw <- scan("./methods_chapter/data/list_motifs.txt", character())
+motifs_raw <- scan(here("./methods_chapter/data/list_motifs.txt"), character())
 
 # import yeast 3'UTR dataset
-tif_seq_raw <- read_csv("./methods_chapter/data/3primeUTR_5primeUTR_isoforms.csv") 
+tif_seq_raw <- read_csv(here("./methods_chapter/data/3primeUTR_5primeUTR_isoforms.csv")) 
 # filter out empty values
 tif_seq_UTR_raw <- tif_seq_raw %>%
   select(gene,threePrimeUTR) %>%
@@ -92,7 +92,7 @@ Scer_ORF_name <- as_tibble(names(Scer_ORF)) %>%
 Scer_ORF_coords <- tibble(gene = Scer_ORF_name$transcriptName,startSite = as.integer(str_extract(names(Scer_ORF),"(?<=Chr [IVX]{1,5} from )[0-9]+")),endSite = as.integer(str_extract(names(Scer_ORF),"(?<=Chr [IVX]{1,5} from [0-9]{1,10}-)[0-9]+")))
 
 # import list of codons
-codon <- readRDS("./methods_chapter/data/codons.rds")
+codon <- readRDS(here("./methods_chapter/data/codons.rds"))
 codon_no_TTT <- codon[-1]
 
 # Find the frequency of codons for each yeast ORF
@@ -112,7 +112,7 @@ codon_freq <- tibble(geneName = Scer_ORF_name$transcriptName,ORF=as.character(Sc
   dplyr::rename(transcriptName = geneName )
 
 # Import single cell RNA-seq dataset for transcript abundance
-nadal_ribelles_scRNA_seq <-read_tsv("./methods_chapter/data/nadal_ribelles_scRNA.tab")
+nadal_ribelles_scRNA_seq <-read_tsv(here("./methods_chapter/data/nadal_ribelles_scRNA.tab"))
 
 # filter out genes with poor coverage
 nadal_ribelles_scRNA_seq_filter <- nadal_ribelles_scRNA_seq %>%
@@ -132,7 +132,7 @@ nadal_ribelles_scRNA_seq_filter <- nadal_ribelles_scRNA_seq %>%
 colnames(nadal_ribelles_scRNA_seq_filter) <- c( "geneName","meanTranscriptPerCell")
 
 # Import protein fluorescence data set
-FI_data <- readxl::read_xls("./methods_chapter/data/terminatome.xls", skip = 1, range = "A3:C5304", col_names = c("geneName","comgeneName", "rel_FI"))
+FI_data <- readxl::read_xls(here("./methods_chapter/data/terminatome.xls"), skip = 1, range = "A3:C5304", col_names = c("geneName","comgeneName", "rel_FI"))
 
 
 
@@ -241,7 +241,7 @@ decay_data_set_cor <- cor(
   pull(hlife_sun)
 )
 
-combined_decay_hlife %>%
+compare_datasets <- combined_decay_hlife %>%
   ggplot(aes(x = hlife_chan, y = hlife_sun)) +
     geom_bin2d( bins=70) + 
     theme_bw(base_size = 20) + 
@@ -252,6 +252,8 @@ combined_decay_hlife %>%
   scale_y_log10(limits = c(0.9,200)) +
   scale_x_log10(breaks=c(1,10,100),limits = c(0.9,200)) +
   coord_fixed()
+
+ggsave(here("results_chapter/figures/chan_vs_sun_plot.png"),plot=compare_datasets, width = 10, height = 10)
 ```
 
 ```{R violinplotsforSunDecay,fig.cap="Cheng \\textit{et al} 2017 violin plot recreated for Sun \\textit{et al} 2013 decay data. The horizontal line represents the median half life with and without the motif.", echo=FALSE,eval=FALSE}
