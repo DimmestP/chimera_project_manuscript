@@ -1,14 +1,16 @@
-# import and prepare half-life data
+library(tidyverse)
+library(Biostrings)
+library(DECIPHER)
+
+# import chan et al half-life data
 
 chan_decay_raw <-read_tsv("../methods_chapter/data/new_chan_dr_data.txt")
+
+# rename chan et al columns and filter out missing data
 chan_decay_hlife <- chan_decay_raw %>%
   dplyr::rename(transcriptName = gene_id, geneAltId = gene_short_name, hlifeR1 = halflife_160412_r1, hlifeR2 = halflife_160412_r2) %>%
-  select(-geneAltId) %>%
   transmute(transcriptName,hlife = rowMeans(cbind(hlifeR1, hlifeR2), na.rm = TRUE)) %>%
   filter(is.finite(hlife))
-
-# import list of collated 3'UTR motifs
-motifs_raw <- scan("../methods_chapter/data/list_motifs.txt", character())
 
 # import yeast open reading frame dataset
 Scer_ORF <- readDNAStringSet("https://downloads.yeastgenome.org/sequence/S288C_reference/orf_dna/orf_coding_all.fasta.gz")
@@ -23,69 +25,45 @@ motifs_raw <- scan("../methods_chapter/data/list_motifs.txt", character())
 
 # import list of codons
 codon <- readRDS("../methods_chapter/data/codons.rds")
+
+# remove one codon to remove colinearity issue in linear model
 codon_no_TTT <- codon[-1]
 
-# Find the frequency of codons for each yeast ORF
-codon_freq <- tibble(geneName = Scer_ORF_name$transcriptName,ORF=as.character(Scer_ORF),length=width(Scer_ORF)) %>% 
-  mutate(ORF = gsub("([ATCG]{3})([ATCG]{3})",'\\1,\\2,',as.character(ORF))) %>%
+# Count the number of each codon in each yeast ORF
+codon_count <- tibble(geneName = Scer_ORF_name$transcriptName,ORF=as.character(Scer_ORF),length=width(Scer_ORF)) %>%
   filter((length %% 3) == 0) %>%
-  separate_rows(ORF,sep = ",") %>% 
-  group_by(geneName,ORF) %>%
-  summarise(counts=n()) %>%
-  spread(key = ORF,value = counts,fill=0) %>%
-  select(-V1) %>%
-  inner_join(tibble(geneName = Scer_ORF_name$transcriptName, geneLength = width(Scer_ORF)),by="geneName") %>%
-  gather(key=codon,value=number,-geneLength,-geneName) %>%
-  mutate(number=number/geneLength) %>% 
+  group_by(geneName) %>%
+  mutate(data = map(ORF,count_codons)) %>%
+  unnest(data) %>%
+  pivot_wider(names_from = codon,values_from = counts, values_fill=0)
+
+# Convert to relative frequncy of each codon by dividing by gene length 
+codon_freq <- codon_count %>%
+  pivot_longer(names_to="codon",values_to="number",cols = c(-length,-geneName,-ORF)) %>%
+  mutate(number=number/length) %>% 
   spread(key=codon,value=number) %>%
-  select(-TTT, -geneLength) %>%
+  select(-TTT, -length) %>%
   dplyr::rename(transcriptName = geneName )
 
-# IUPAC to regex function
-iupac_to_regex <- function(iupac_string){
-  iupac_string %>% str_replace_all(c("U" = "T", "W" = "(A|T)", "S" = "(C|G)", "M" = "(A|C)", "K" = "(G|T)", "R" = "(A|G)", "Y" = "(C|T)", "B" = "(C|G|T)", "D" = "(A|G|T)", "H" = "(A|C|T)", "V" = "(A|C|G)", "N" = "(A|C|G|T)"))
-}
 
-# function to create all alternative version of motifs explicitally as strings
-regex_to_string <- function(motif_regex){
-  all_regex_as_string <- motif_regex
-  while(sum(str_detect(all_regex_as_string,"\\("))>0){
-    current_regex_as_string <- vector(mode = "character", length = 0)
-    for(i in 1:length(all_regex_as_string)){
-      current_regex <- all_regex_as_string[i]
-      extracted_alt_nuc <- substring(current_regex,str_locate(current_regex,"\\(")[1,1],str_locate(current_regex,"\\)")[1,1])
-      alternative_SNP <- str_remove(str_split(extracted_alt_nuc,"\\|")[[1]],"\\(|\\)")
-      extracted_alt_nuc <- str_replace(extracted_alt_nuc,"\\(","\\\\\\(") %>%
-        str_replace("\\)","\\\\\\)") %>%
-        str_replace_all("\\|","\\\\\\|")
-      temp_regex_as_string <- vector(mode="character")
-      for(j in 1:length(alternative_SNP)){
-        temp_regex_as_string[j] <- str_replace(current_regex,extracted_alt_nuc,alternative_SNP[j])
-      }
-      current_regex_as_string <- c(current_regex_as_string,temp_regex_as_string)
-    }
-    all_regex_as_string <- current_regex_as_string
-  }
-  all_regex_as_string
-}
 
 # Dictionary for converted IUPAC codes into machine readable regular expressions and converting U -> T
-motifs_dictionary <- iupac_to_regex(motifs_raw) 
-
-# Manipulations to remove double counting of motifs
-motifs_all_alternatives <- tibble(motifIUPAC = motifs_raw,motifsRegex = motifs_dictionary) %>% 
+motifs_dictionary <- tibble(motifIUPAC = motifs_raw,motifsRegex = iupac_to_regex(motifs_raw)) %>% 
   group_by(motifIUPAC) %>%
-  mutate(motifsStrings = map(motifsRegex,regex_to_string)) %>%
+  mutate(motifsStrings = map(motifsRegex,expand_regex_to_redundent_strings)) %>%
   unnest(motifsStrings) 
 
-motifs_unique_alternatives <- motifs_all_alternatives %>% 
+# check if any smaller motifs appear in other larger motifs
+motifs_duplication_match <- motifs_dictionary %>% 
   group_by(motifsStrings) %>%
-  mutate(pairedMotifString = list(pairedMotifString=motifs_all_alternatives$motifsStrings)) %>%
+  mutate(pairedMotifString = list(pairedMotifString=motifs_dictionary$motifsStrings)) %>%
   unnest(pairedMotifString) %>%
-  group_by(motifsRegex) %>%
-  filter(!(motifsStrings==pairedMotifString)) %>%
   ungroup() %>%
-  mutate(matchingMotif = str_detect(motifsStrings,pairedMotifString)) %>%
+  filter(!(motifsStrings==pairedMotifString))  %>%
+  mutate(matchingMotif = str_detect(motifsStrings,pairedMotifString))
+  
+# remove any versions of larger motifs that contain other motifs
+deduplicated_motifs <- motifs_duplication_match %>% 
   group_by(motifsStrings) %>%
   filter(sum(matchingMotif) == 0) %>%
   select(-matchingMotif,-pairedMotifString) %>%
@@ -101,11 +79,11 @@ single_count_median_3UTR_motifs_freq <-  yeast_3UTRs %>%
   filter(!is.na(threePrimeUTR))
 
 # Unduplicated motifs
-unique_IUPAC <- motifs_unique_alternatives %>% distinct(newMotifsRegex,.keep_all = TRUE) %>% pull(newMotifIUPAC)
+unique_IUPAC <- deduplicated_motifs %>% distinct(newMotifsRegex,.keep_all = TRUE) %>% pull(newMotifIUPAC)
 
 #Search and add frequency of each c(motif) as a column in ref dataset
 for (i in 1:length(unique_IUPAC)){
-  motif_count <- str_count(single_count_median_3UTR_motifs_freq$threePrimeUTR, str_c(motifs_unique_alternatives %>% filter(newMotifIUPAC == unique_IUPAC[i]) %>% pull(motifsStrings),collapse = "|"))
+  motif_count <- str_count(single_count_median_3UTR_motifs_freq$threePrimeUTR, str_c(deduplicated_motifs %>% filter(newMotifIUPAC == unique_IUPAC[i]) %>% pull(motifsStrings),collapse = "|"))
   if(sum(motif_count) > 5)  single_count_median_3UTR_motifs_freq <- mutate(single_count_median_3UTR_motifs_freq %>% ungroup(), !!unique_IUPAC[i] := motif_count)
 }
 

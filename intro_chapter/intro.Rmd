@@ -1,8 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
 # Introduction
 Saccharomyces cerevisiae is a well-established host platform for industrial production due to its traits as a robust organism under fermentation conditions, the wealth of molecular biology tools developed for its genetic manipulation and its status as a generally regarded as safe (GRAS) organism. Over the past two decades, it has been optimised for the production of antibiotics, painkillers, antioxidants and anti-cancer drugs (Siewers et al 2009, Gidijala et al. 2009, Yan et al. 2005, Koopman et al. 2012, Rodriguez et al. 2017). This process for pathway engineering is reliant on precise capabilities in modulating native and heterologous enzyme expression. Over the past few years, the development of an increasing number of modular toolkits containing standardised genetic parts for the rapid and combinatorial assembly of genes have expedited our capability to undergo multiple iterations of the design-build-test-learn cycle for pathway optimisatiion (Lee et al. 2015, Garcia-Ruiz et al. 2018, Andreou et al. 2018). 
 
