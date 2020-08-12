@@ -38,6 +38,7 @@ library(glmnet)
 library(stringi)
 library(broom)
 library(readxl)
+library(here)
 library(cowplot)
 library(tikzDevice)
 library(DECIPHER)
@@ -45,7 +46,7 @@ library(DECIPHER)
 # BiocManager::install("BSgenome.Scerevisiae.UCSC.sacCer3")
 
 # import Chan et al 2017 yeast mRNA decay dataset
-chan_decay_raw <-read_tsv(here("./methods_chapter/data/new_chan_dr_data.txt"))
+chan_decay_raw <-readr::read_tsv(here("./methods_chapter/data/new_chan_dr_data.txt"))
 
 # Calculate the mean over two decay rate replicates, remove NAs and rename column
 chan_decay_hlife <- chan_decay_raw %>%
