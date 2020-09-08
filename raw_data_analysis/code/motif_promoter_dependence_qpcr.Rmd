@@ -22,7 +22,22 @@ combined_data <- tTSA1_pTSA1_norm_qpcr %>%
   unite(experiment, promoter, terminator, remove = FALSE)
 ```
 
-```{r run_linear_model}
+```{r run_individual_linear_models}
+summary(lm(delta_cq ~ construct + exp_rep, tTSA1_pTSA1_norm_qpcr))
+
+summary(lm(delta_cq ~ construct + exp_rep, tPGK1_pTSA1_norm_qpcr))
+
+summary(lm(delta_cq ~ construct + exp_rep, tRPS3_pRPS3_norm_qpcr))
+
+summary(lm(delta_cq ~ construct + exp_rep, tPGK1_pRPS3_norm_qpcr))
+
+```
+
+```{r run_promoter_interaction_effects_linear_model}
+summary(lm(delta_cq ~ terminator + construct + promoter, combined_data))
 summary(lm(delta_cq ~ terminator + construct*promoter, combined_data))
+summary(lm(delta_cq ~ construct*terminator + promoter, combined_data))
+summary(lm(delta_cq ~ construct*terminator + construct*promoter, combined_data))
+step(lm(delta_cq ~ terminator + construct + promoter, combined_data), delta_cq ~ construct*terminator + construct*promoter)
 ```
 
