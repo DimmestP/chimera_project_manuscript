@@ -356,8 +356,17 @@ platesnorm <- plates  %>%
         filter(!SampleID %in% c("pPGK1-mCherry-tRPS3_WT_BioRep2"), !Strain %in% c("POT1-ccdB"), Type=="+RT") %>%    
         normalizeqPCR(normTargetIDs = c("PGK1-ORF", "RPS3-ORF")) 
 
-# to verify the calculation done 
-platesnorm %>% select(Strain, BioRep, TechRep, Value.norm, Value.normexp)
+platesnorm_summarise <- platesnorm%>%
+                    group_by(Strain, TargetID, BioRep, ExpRep)%>%
+                    summarize(Median_deltaCq = median(Value.norm, na.rm=TRUE),
+                              RNA_Abundance = (2^-Median_deltaCq), na.rm=FALSE)%>% 
+    separate(Strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator")) %>%
+    separate(Terminator, remove = FALSE, sep="_",into=c("Terminator","Construct")) %>%
+    mutate(Construct = factor(Construct,levels = c("modE","modD","modC","modB","modA","mod0","WT")),remove = FALSE)%>%
+    unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
+    unite(Ter_mod,Terminator,Construct,sep="_", remove=FALSE)
+
+
 
 ggplot(platesnorm, aes(Ter_mod,Value.norm))+
   geom_point(aes(color=BioRep),position=position_dodge(width = 0.85),size=1.2, alpha=0.7)+
@@ -371,7 +380,7 @@ ggplot(platesnorm, aes(Ter_mod,Value.norm))+
 ### 1) Exporting analysed delta Cq values data
 ```{r deltaCq_normdata, echo=TRUE}
 #exporting platesnorm dataframe
-write.csv(platesnorm,"analysed_data/pRPS3_pPGK1_tRPS3mod/deltaCq_platesnorm.csv", row.names = FALSE)
+write.csv(platesnorm_summarise,"analysed_data/pRPS3_pPGK1_tRPS3mod/deltaCq_platesnorm_summarise.csv", row.names = FALSE)
 ```
 
 Plot shows shifted distributions in normalised Cq values for pRPS3 samples between experimental replciates. This shift in distributions between experimental replicates is not seen for pPGK1 samples.
