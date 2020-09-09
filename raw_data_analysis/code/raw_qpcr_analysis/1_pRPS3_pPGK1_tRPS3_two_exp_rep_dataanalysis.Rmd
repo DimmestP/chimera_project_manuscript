@@ -18,6 +18,7 @@ knitr::opts_chunk$set(warning=FALSE,message=FALSE,echo=TRUE,cache=FALSE,
 library(tidyverse)
 library(cowplot)
 library(tidyqpcr)
+library(here)
 
  # set default theme for graphics
 theme_set(theme_cowplot(font_size=11) %+replace% 
@@ -103,20 +104,20 @@ plateplanP1_2 <-
 ## Load data and attribute sample information
 ```{r load_plates,dependson="label_plates",results="show"}
 # read my plates
-platesR3_1 <- read_tsv("data/JA_20200121-pRPS3-tRPS3mod-n1-ct.txt",skip=1) %>%
+platesR3_1 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200121-pRPS3-tRPS3mod-n1-ct.txt"),skip=1) %>%
     mutate(Well=Pos,Cq=Cp,ExpRep = 1,ExpRep=factor(ExpRep)) %>%
     left_join(plateplanR3_1)
 
 
-platesR3_2 <- read_tsv("data/JA_20200204-pRPS3-tRPS3mod-n2-ct.txt",skip=1) %>%
+platesR3_2 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200204-pRPS3-tRPS3mod-n2-ct.txt"),skip=1) %>%
     mutate(Well=Pos,Cq=Cp,ExpRep = 2,ExpRep=factor(ExpRep)) %>%
     left_join(plateplanR3_2)
 
-platesP1_1 <- read_tsv("data/JA_20200221_pPGK1-tRPS3mod-n1-ct.txt",skip=1) %>%
+platesP1_1 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200221_pPGK1-tRPS3mod-n1-ct.txt"),skip=1) %>%
     mutate(Well=Pos,Cq=Cp,ExpRep = 1, ExpRep=factor(ExpRep)) %>% 
     left_join(plateplanP1_1)
 
-platesP1_2 <- read_tsv("data/JA_20200311-pPGK1-tRPS3mod-n2-ct.txt",skip=1) %>%
+platesP1_2 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200311-pPGK1-tRPS3mod-n2-ct.txt"),skip=1) %>%
     mutate(Well=Pos,Cq=Cp,ExpRep = 2,ExpRep=factor(ExpRep)) %>%
     left_join(plateplanP1_2)
 
@@ -225,12 +226,12 @@ ggplot(data=platesPOT_PGK1, aes(x=TargetID,y=Cq)) +
 
 ```{r load_amp-melt_R3,dependson="label_plates", results="show"}
 
-platecurveR3_1 <- read_tsv("data/JA_20200121-pRPS3-tRPS3mod-n1.txt",skip=2,
+platecurveR3_1 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200121-pRPS3-tRPS3mod-n1.txt"),skip=2,
                            col_names=c("Well","SID","Program","Segment","Cycle","Time","Temperature","Fluor")) %>%
     debaseline() %>%left_join(plateplanR3_1)%>%
     mutate(ExpRep = 1,ExpRep=factor(ExpRep))
 
-platecurveR3_2 <- read_tsv("data/JA_20200204-pRPS3-tRPS3mod-n2.txt",skip=2,
+platecurveR3_2 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200204-pRPS3-tRPS3mod-n2.txt"),skip=2,
                            col_names=c("Well","SID","Program","Segment","Cycle","Time","Temperature","Fluor")) %>%
     debaseline() %>%left_join(plateplanR3_2)%>%
     mutate(ExpRep = 2,ExpRep=factor(ExpRep))
@@ -294,12 +295,12 @@ ggplot(data=platesmeltR3 %>% filter(Strain==c("pRPS3-mCherry-tRPS3_WT")),
 
 ```{r load_amp-melt_P1,dependson="label_plates"}
 
-platecurveP1_1 <- read_tsv("data/JA_20200221_pPGK1-tRPS3mod-n1.txt",skip=2,
+platecurveP1_1 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200221_pPGK1-tRPS3mod-n1.txt"),skip=2,
                            col_names=c("Well","SID","Program","Segment","Cycle","Time","Temperature","Fluor")) %>%
     debaseline() %>%left_join(plateplanP1_1)%>%
     mutate(ExpRep = 1,ExpRep=factor(ExpRep))
 
-platecurveP1_2 <- read_tsv("data/JA_20200204-pRPS3-tRPS3mod-n2.txt",skip=2,
+platecurveP1_2 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200204-pRPS3-tRPS3mod-n2.txt"),skip=2,
                            col_names=c("Well","SID","Program","Segment","Cycle","Time","Temperature","Fluor")) %>%
     debaseline() %>%left_join(plateplanP1_2)%>%
     mutate(ExpRep = 2,ExpRep=factor(ExpRep))
@@ -380,7 +381,8 @@ ggplot(platesnorm, aes(Ter_mod,Value.norm))+
 ### 1) Exporting analysed delta Cq values data
 ```{r deltaCq_normdata, echo=TRUE}
 #exporting platesnorm dataframe
-write.csv(platesnorm_summarise,"analysed_data/pRPS3_pPGK1_tRPS3mod/deltaCq_platesnorm_summarise.csv", row.names = FALSE)
+write.csv(platesnorm_summarise,here("raw_data_analysis/data/norm_qpcr/pRPS3_pPGK1_tRPS3_deltaCq_platesnorm_summarise.csv"), row.names = FALSE)
+
 ```
 
 Plot shows shifted distributions in normalised Cq values for pRPS3 samples between experimental replciates. This shift in distributions between experimental replicates is not seen for pPGK1 samples.
