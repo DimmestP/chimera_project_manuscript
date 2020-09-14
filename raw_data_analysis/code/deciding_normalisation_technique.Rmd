@@ -1,478 +1,223 @@
 ---
-title: "Analysis of pTSA1-mCh-tTSA1 RT-qPCR data sets with two experimental repllicates"
-author: "Jamie Auxillos"
+title: "Analysis of RT-qPCR data sets with two experimental replicates under different normalisation"
+author: "Sam Haynes"
 date: "22/07/2020"
 output:
   html_document:
     toc: true
     toc_depth: 2
 ---
+Comparing the normalistion of four qPCR datasets; pRPS3-tRPS3, pPGK1-tRPS3, pTSA1-tTSA1 and pPGK1-tTSA1, by three different normalisation genes; RPS3, PGK1, URA3.
 
-# Experimental information
-The strains used here are:  
-
-- pTSA1-mCherry-tTSA1 wild type (WT)
-
-- pTSA1-mCherry-tTSA1 mod0 (mod0)
-
-- pTSA1-mCherry-tTSA1 modA (modA)
-
-- pTSA1-mCherry-tTSA1 modB (modB)
-
-- pTSA1-mCherry-tTSA1 modC (modC)
-
-- pTSA1-mCherry-tTSA1 modD (modD)
-
-- pTSA1-mCherry-tTSA1 modE (modE)
-
-- POT1-ccdb
-
-For each strain three biological replicates were grown. Strains were grown overnight to saturation in a 24 well plate (1 ml) in a shaking incubator set at 250 rpm and at 30C. The next day, the OD600 of these cultures were measured and diluted down to an OD600 of 0.2 in an 8 ml culture in a 12 column deep well plate. The samples were grown to an OD600 of 0.5-0.6 for ~3-4 hours. Cells were harvested by centrifugation (3500 rpm for 3 minutes) in a 15 ml falcon tube. The cells were lysed and the RNA was extracted using the following RNA extraction protocol https://www.protocols.io/view/column-based-zymo-rna-extraction-bbcgiitw. The RNA was treated with TurboDNase and used as the template for reverse transcription and qPCR using the following protocol https://github.com/ewallace/protocols/blob/master/RTqPCR_Agilent_Lightcycler_Protocol.md. We are using the probes mCh-7, URA3-ORF, RPS3-ORF and PGK1-ORF for the qPCR experiment. For each +RT cDNA sample, we have three technical replicates, and one technical replicate for the -RT sample.
-
-```{r setup,warning=FALSE,message=FALSE,echo=FALSE}
-
-## knitr options for report generation
-knitr::opts_chunk$set(warning=FALSE,message=FALSE,echo=TRUE,cache=FALSE,
-                      #results="show",
-                      fig.path="figures_tTSA1mod_dataanalysis/")
-
+```{r read_in_normalised_datasets, echo=FALSE, include=FALSE}
+library(broom)
 library(tidyverse)
-library(cowplot)
-library(tidyqpcr)
 library(here)
+library(cowplot)
 
- # set default theme for graphics
-theme_set(theme_cowplot(font_size=11) %+replace% 
-              theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
-                    panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
-                    panel.grid.major = element_line(size = 0.25, linetype = 'solid',colour = "grey"),
-                    plot.title = element_text(family="Tahoma",size=11,vjust=3.3),
-                    strip.background = element_blank(),
-                    strip.text.x=element_text(family="Tahoma",size=9),
-                    axis.text=element_text(family="Tahoma", size=10),
-                    axis.title=element_text(family="Tahoma", size=10),
-                    legend.text=element_text(family="Tahoma", size=8),
-                    legend.title=element_text(family="Tahoma", size=9)))
+pPGK1_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tRPS3_n1_n2_norm_mean.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pPGK1_tRPS3_norm_median <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tRPS3_n1_n2_norm_median.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pPGK1_tRPS3_norm_RPS3 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tRPS3_n1_n2_norm_RPS3.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pPGK1_tRPS3_norm_URA3 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tRPS3_n1_n2_norm_URA3.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pPGK1_tRPS3_norm_PGK1 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tRPS3_n1_n2_norm_PGK1.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pRPS3_tRPS3_norm_median <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pRPS3_tRPS3_n1_n2_norm_median.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pRPS3_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pRPS3_tRPS3_n1_n2_norm_mean.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pRPS3_tRPS3_norm_RPS3 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pRPS3_tRPS3_n1_n2_norm_RPS3.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pRPS3_tRPS3_norm_URA3 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pRPS3_tRPS3_n1_n2_norm_URA3.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pRPS3_tRPS3_norm_PGK1 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pRPS3_tRPS3_n1_n2_norm_PGK1.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pPGK1_tTSA1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tTSA1_n1_n2_norm_mean.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pPGK1_tTSA1_norm_median <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tTSA1_n1_n2_norm_median.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pPGK1_tTSA1_norm_RPS3 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tTSA1_n1_n2_norm_RPS3.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pPGK1_tTSA1_norm_URA3 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tTSA1_n1_n2_norm_URA3.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pPGK1_tTSA1_norm_PGK1 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tTSA1_n1_n2_norm_PGK1.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pTSA1_tTSA1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pTSA1_tTSA1_n1_n2_norm_mean.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pTSA1_tTSA1_norm_median <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pTSA1_tTSA1_n1_n2_norm_median.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pTSA1_tTSA1_norm_RPS3 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pTSA1_tTSA1_n1_n2_norm_RPS3.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pTSA1_tTSA1_norm_URA3 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pTSA1_tTSA1_n1_n2_norm_URA3.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
+
+pTSA1_tTSA1_norm_PGK1 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pTSA1_tTSA1_n1_n2_norm_PGK1.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop")
 ```
 
+```{r run_linear_models, echo=FALSE, include=FALSE}
+pTSA1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + construct, pTSA1_tTSA1_norm_mean)
 
-```{r label_plates,dependson="plate_functions", echo=FALSE}
+pTSA1_tTSA1_norm_median_lm <- lm(delta_cq ~ exp_rep + construct, pTSA1_tTSA1_norm_median)
 
-# list Targets (Primer sets)
-target_id_levels <- c("mCh-7", "URA3-ORF", "RPS3-ORF", "PGK1-ORF")
-target_id_values <-factor(target_id_levels,levels=target_id_levels)
+pTSA1_tTSA1_norm_PGK1_lm <- lm(delta_cq ~ exp_rep + construct, pTSA1_tTSA1_norm_PGK1)
 
+pTSA1_tTSA1_norm_URA3_lm <- lm(delta_cq ~ exp_rep + construct, pTSA1_tTSA1_norm_URA3)
 
-# labelling of Sampleid attributes
-strain_levels <- c("pTSA1-mCherry-tTSA1_WT","pTSA1-mCherry-tTSA1_mod0","pTSA1-mCherry-tTSA1_modA","pTSA1-mCherry-tTSA1_modB","pTSA1-mCherry-tTSA1_modC", "pTSA1-mCherry-tTSA1_modD", "pTSA1-mCherry-tTSA1_modE","POT1-ccdB")
-strain_values <- factor(rep(strain_levels,each=3),levels=strain_levels)
+pTSA1_tTSA1_norm_RPS3_lm <- lm(delta_cq ~ exp_rep + construct, pTSA1_tTSA1_norm_RPS3)
 
-bio_rep_levels_exp_1 <- c("BioRep1","BioRep2","BioRep3")
-bio_rep_values_exp_1 <- factor(rep(bio_rep_levels_exp_1,times=8),levels=bio_rep_levels_exp_1)
+pPGK1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + construct, pPGK1_tTSA1_norm_mean)
 
+pPGK1_tTSA1_norm_median_lm <- lm(delta_cq ~ exp_rep + construct, pPGK1_tTSA1_norm_median)
 
-bio_rep_levels_exp_2 <- c("BioRep4","BioRep5","BioRep6")
-bio_rep_values_exp_2 <- factor(rep(bio_rep_levels_exp_2,times=8),levels=bio_rep_levels_exp_2)
+pPGK1_tTSA1_norm_RPS3_lm <- lm(delta_cq ~ exp_rep + construct, pPGK1_tTSA1_norm_RPS3)
 
+pPGK1_tTSA1_norm_URA3_lm <- lm(delta_cq ~ exp_rep + construct, pPGK1_tTSA1_norm_URA3)
 
-# Attribute labels to each row and column for each plate
-colkey_exp_1 <- tibble(well_col=1:24, strain=strain_values, bio_rep=bio_rep_values_exp_1, exp_rep = as.factor("ExpRep1"))
+pPGK1_tTSA1_norm_PGK1_lm <- lm(delta_cq ~ exp_rep + construct, pPGK1_tTSA1_norm_PGK1)
 
-colkey_exp_2 <- tibble(well_col=1:24, strain=strain_values, bio_rep=bio_rep_values_exp_2, exp_rep = as.factor("ExpRep2"))
+pRPS3_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + construct, pRPS3_tRPS3_norm_mean)
 
+pRPS3_tRPS3_norm_median_lm <- lm(delta_cq ~ exp_rep + construct, pRPS3_tRPS3_norm_median)
 
-rowkey <- create_rowkey_4_in_16(target_id=target_id_values) 
+pRPS3_tRPS3_norm_RPS3_lm <- lm(delta_cq ~ exp_rep + construct, pRPS3_tRPS3_norm_RPS3)
 
+pRPS3_tRPS3_norm_URA3_lm <- lm(delta_cq ~ exp_rep + construct, pRPS3_tRPS3_norm_URA3)
 
-# Combine all the information into 2 plate plans
-plateplan_exp_1 <-     
-    label_plate_rowcol(create_blank_plate(well_row = LETTERS[1:16], well_col=1:24),
-                       rowkey, 
-                       colkey_exp_1 %>%
-                         unite(sample_id, strain, bio_rep, exp_rep, remove=FALSE) %>% 
-                         separate(strain, remove = FALSE,sep="-", into=c("promoter","mCherry","terminator")) %>% 
-                         separate(terminator, remove = FALSE, sep="_", into=c("terminator","construct")) %>%
-                         mutate(construct = factor(construct, levels = c("modE","modD","modC","modB","modA","mod0","WT")), remove = FALSE) %>% 
-                         unite(pro_mCh,promoter,mCherry,sep="-", remove=FALSE)%>% 
-                         unite(ter_mod,terminator,construct,sep="_", remove=FALSE))
+pRPS3_tRPS3_norm_PGK1_lm <- lm(delta_cq ~ exp_rep + construct, pRPS3_tRPS3_norm_PGK1)
 
-plateplan_exp_2 <-     
-    label_plate_rowcol(create_blank_plate(well_row = LETTERS[1:16], well_col=1:24),
-                       rowkey, 
-                       colkey_exp_2 %>%
-                         unite(sample_id, strain, bio_rep, exp_rep, remove=FALSE) %>% 
-                         separate(strain, remove = FALSE,sep="-", into=c("promoter","mCherry","terminator")) %>% 
-                         separate(terminator, remove = FALSE, sep="_", into=c("terminator","construct")) %>%
-                         mutate(construct = factor(construct, levels = c("modE","modD","modC","modB","modA","mod0","WT")), remove = FALSE) %>% 
-                         unite(pro_mCh,promoter,mCherry,sep="-", remove=FALSE)%>% 
-                         unite(ter_mod,terminator,construct,sep="_", remove=FALSE))
-```
+pPGK1_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + construct, pPGK1_tRPS3_norm_mean)
 
-## Load plate and summarise information
+pPGK1_tRPS3_norm_median_lm <- lm(delta_cq ~ exp_rep + construct, pPGK1_tRPS3_norm_median)
 
-```{r load_plates,dependson="label_plates",results="show"}
-# read my plates
+pPGK1_tRPS3_norm_RPS3_lm <- lm(delta_cq ~ exp_rep + construct, pPGK1_tRPS3_norm_RPS3)
 
-plate_exp_1 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/20200731-pTSA1-tTSA1mod-n1-ct.txt"),skip=1) %>%
-    mutate(well=Pos,cq=Cp) %>%
-    left_join(plateplan_exp_1)
+pPGK1_tRPS3_norm_URA3_lm <- lm(delta_cq ~ exp_rep + construct, pPGK1_tRPS3_norm_URA3)
 
-plate_exp_2 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/20200801-pTSA1-tTSA1mod-n2-ct.txt"),skip=1) %>%
-    mutate(well=Pos,cq=Cp) %>%
-    left_join(plateplan_exp_2)
-
-plates <- bind_rows(plate_exp_1,plate_exp_2)
-
-summary(plates)
-```
-
-
-### Plotting unnormalised data for pTSA1 strains
-```{r unnorm_pTSA1,dependson="load_plates",fig.height=5,fig.width=10, echo=FALSE}
-platespTSA1 <- plates %>% filter(strain %in% c("pTSA1-mCherry-tTSA1_WT","pTSA1-mCherry-tTSA1_mod0","pTSA1-mCherry-tTSA1_modA","pTSA1-mCherry-tTSA1_modB",
-                                           "pTSA1-mCherry-tTSA1_modC","pTSA1-mCherry-tTSA1_modD","pTSA1-mCherry-tTSA1_modE"))%>%
-  mutate(strain = factor(strain,levels=c("pTSA1-mCherry-tTSA1_WT","pTSA1-mCherry-tTSA1_mod0","pTSA1-mCherry-tTSA1_modA","pTSA1-mCherry-tTSA1_modB",
-                                           "pTSA1-mCherry-tTSA1_modC","pTSA1-mCherry-tTSA1_modD","pTSA1-mCherry-tTSA1_modE")))
-
-ggplot(data=platespTSA1, aes(x=target_id,y=cq)) +
-    geom_point(aes(color=bio_rep, shape=prep_type),
-               position=position_dodge(width = 0.85),size=1.6, alpha=0.7) +
-    labs(y="Quantification cycle (cq)",x="Primers") +
-    scale_shape_manual(values=c(16,23)) +
-    scale_colour_hue(h = c(90, 360)+20,l=60,c=60)+
-    facet_wrap(~strain,ncol=4) +
-    theme(axis.text.x=element_text(angle=90,vjust=0.5),
-          axis.title.x=element_text(vjust=-2),
-          axis.title.y=element_text(vjust=3),
-          legend.position=c(0.85,0.01))
-```
-
-
-
-### Plotting unnormalised data for control strains (pTSA1-mCherry-tTSA1_WT and POT1-ccdB)
-```{r unnorm_POT_pTSA1, fig.height=3.5,fig.width=5.5, echo=FALSE}
-
-platesPOT <- plates %>% filter(strain %in% c("pTSA1-mCherry-tTSA1_WT","POT1-ccdB"))
-
-ggplot(data=platesPOT, aes(x=target_id,y=cq)) +
-  geom_point(aes(color=bio_rep, shape=prep_type),
-               position=position_dodge(width = 0.85),size=1.5, alpha=0.7) +
-  labs(title="Controls for pTSA1 strains - \n Comparing between experimental replicates",y="Quantification cycle (cq)",x="Primers") +
-  ylim(0,40)+
-  scale_shape_manual(values=c(16,23)) +
-  scale_colour_hue(h = c(90, 360)+20,l=60,c=60)+
-  facet_wrap(~strain,ncol=2)+
-  theme(axis.text.x=element_text(angle=90,vjust=0.5),
-          axis.title.x=element_text(vjust=-2),
-          axis.title.y=element_text(vjust=3))
-```
-
-
-## Loading amplification and melt curve pTSA1 data
-
-```{r load_amp-melt_R3,dependson="label_plates", results="show"}
-
-platecurve_exp_1 <- read_tsv(
-  here("raw_data_analysis/data/raw_qpcr/20200731-pTSA1-tTSA1mod-n1.txt"), 
-  skip=2,
-  col_names=c("well", "SID", "program_no", "segment", "cycle", "time", "temperature", "fluor_raw")) %>%
-  debaseline() %>%
-  left_join(plateplan_exp_1)
-
-platecurve_exp_2 <- read_tsv(
-  here("raw_data_analysis/data/raw_qpcr/20200801-pTSA1-tTSA1mod-n2.txt"), 
-  skip=2,
-  col_names=c("well", "SID", "program_no", "segment", "cycle", "time", "temperature", "fluor_raw")) %>%
-  debaseline() %>%
-  left_join(plateplan_exp_2)
-
-platecurve <- bind_rows(platecurve_exp_1, platecurve_exp_2)
-
-platesamp  <- platecurve %>% filter(program_no == 2)
-platesmelt <- platecurve %>% 
-  filter(program_no != 2) %>% 
-  getdRdTall() %>% 
-  filter(temperature >= 61)  
-
-head(platesamp)
-head(platesmelt)
-```
-
-
-## 1) Delta Cq calculation
-Normalisation of mCherry Cq values against PGK1-ORF, URA3-ORF and RPS3-ORF Cq values. This calculation takes the **median** of normTargetids (getNormCq function default is **median**)
-
-```{r deltaCq_norm,dependson="load_plates", echo=TRUE, fig.height=6, fig.width=9}
-
-platesnorm_1_stage <- plates  %>% filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%    
-        calculate_deltacq_bysampleid(ref_target_ids = c("PGK1-ORF"))
-
-platesnorm_2_stage <- plates  %>% 
-  filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%    
-        calculate_deltacq_bysampleid(ref_target_ids = "URA3-ORF") %>%
-  mutate(cq = delta_cq) %>%
-  select(-ref_cq, -delta_cq) %>%
-  filter(!(target_id %in% c("PGK1-ORF", "RPS3-ORF"))) %>%
-  bind_rows(plates %>% 
-              filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT", target_id %in% c("PGK1-ORF", "RPS3-ORF"))) %>%
-  calculate_deltacq_bysampleid(ref_target_ids = c("PGK1-ORF", "RPS3-ORF"))
-
-ggplot(platesnorm_1_stage, aes(ter_mod,delta_cq))+
-  geom_point(aes(color=bio_rep),position=position_dodge(width = 0.85),size=1.2, alpha=0.7)+
-  scale_colour_hue(h = c(90, 360)+20,l=60,c=60)+
-  labs(y="delta Cq", x="3'UTR-terminators")+
-  facet_wrap(~target_id)+
-  theme(axis.text.x=element_text(angle=90,vjust=0.5))+
-  geom_hline(yintercept = 0, color = "black", linetype= 'dotted', size=1)
-
-ggplot(plates  %>% filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT"), aes(ter_mod,cq))+
-  geom_point(aes(color=bio_rep),position=position_dodge(width = 0.85),size=1.2, alpha=0.7)+
-  scale_colour_hue(h = c(90, 360)+20,l=60,c=60)+
-  labs(y="Cq", x="3'UTR-terminators")+
-  facet_wrap(~target_id)+
-  theme(axis.text.x=element_text(angle=90,vjust=0.5))+
-  geom_hline(yintercept = 0, color = "black", linetype= 'dotted', size=1)
-
-ggplot(platesnorm_2_stage, aes(ter_mod,delta_cq))+
-  geom_point(aes(color=bio_rep),position=position_dodge(width = 0.85),size=1.2, alpha=0.7)+
-  scale_colour_hue(h = c(90, 360)+20,l=60,c=60)+
-  labs(y="delta Cq", x="3'UTR-terminators")+
-  facet_wrap(~target_id)+
-  theme(axis.text.x=element_text(angle=90,vjust=0.5))+
-  geom_hline(yintercept = 0, color = "black", linetype= 'dotted', size=1) 
-```
-
-```{r}
-genomic_norm_cq <- platesnorm_1_stage %>% 
-  select(strain, bio_rep, ter_mod, delta_cq, target_id, tech_rep) %>%
-  filter(!target_id %in% c("PGK1-ORF", "RPS3-ORF", "URA3-ORF")) %>%
-  bind_rows(plates %>% 
-              filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT", target_id %in% c("PGK1-ORF", "RPS3-ORF", "URA3-ORF")) %>% mutate(delta_cq = cq) %>% 
-  select(strain, bio_rep, ter_mod, delta_cq, target_id, tech_rep)) %>%
-  spread(key = target_id, value = delta_cq)
-
-plasmid_genomic_norm_cq <- platesnorm_2_stage %>% 
-  select(strain, bio_rep, ter_mod, delta_cq, target_id, tech_rep) %>%
-  filter(!target_id %in% c("PGK1-ORF", "RPS3-ORF", "URA3-ORF")) %>%
-  bind_rows(plates %>% 
-              filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT", target_id %in% c("PGK1-ORF", "RPS3-ORF", "URA3-ORF")) %>% mutate(delta_cq = cq) %>% 
-  select(strain, bio_rep, ter_mod, delta_cq, target_id, tech_rep)) %>%
-  spread(key = target_id, value = delta_cq)
-
-unnorm_cq <- plates %>% 
-              filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%
-  mutate(delta_cq = cq) %>% 
-  select(strain, bio_rep, ter_mod, delta_cq, target_id, tech_rep) %>%
-  spread(key = target_id, value = delta_cq)
-
-# compare normalisation by genomic set of genes only
-
-genomic_norm_cq_a <- ggplot(genomic_norm_cq %>% filter(!is.na(`PGK1-ORF`), !is.na(`mCh-7`))) +
-  geom_point(aes(x = `PGK1-ORF`, y = `mCh-7`)) +
-  annotate("text", x=9, y=2, label = signif(cor(genomic_norm_cq %>% filter(!is.na(`PGK1-ORF`), !is.na(`mCh-7`)) %>% pull(`PGK1-ORF`),  genomic_norm_cq %>% filter(!is.na(`PGK1-ORF`), !is.na(`mCh-7`)) %>% pull(`mCh-7`)), 3), colour = "red")
-
-genomic_norm_cq_b <- ggplot(genomic_norm_cq %>% filter(!is.na(`RPS3-ORF`), !is.na(`mCh-7`))) +
-  geom_point(aes(x = `RPS3-ORF`, y = `mCh-7`)) +
-  annotate("text", x=9.5, y=2, label = signif(cor(genomic_norm_cq %>% filter(!is.na(`RPS3-ORF`), !is.na(`mCh-7`)) %>% pull(`RPS3-ORF`),  genomic_norm_cq %>% filter(!is.na(`RPS3-ORF`), !is.na(`mCh-7`)) %>% pull(`mCh-7`)), 3), colour = "red")
-
-genomic_norm_cq_c <- ggplot(genomic_norm_cq %>% filter(!is.na(`URA3-ORF`), !is.na(`mCh-7`))) +
-  geom_point(aes(x = `URA3-ORF`, y = `mCh-7`)) +
-  annotate("text", x=11, y=2, label = signif(cor(genomic_norm_cq %>% filter(!is.na(`URA3-ORF`), !is.na(`mCh-7`)) %>% pull(`URA3-ORF`),  genomic_norm_cq %>% filter(!is.na(`URA3-ORF`), !is.na(`mCh-7`)) %>% pull(`mCh-7`)), 3), colour = "red")
-
-plot_grid(genomic_norm_cq_a,genomic_norm_cq_b,genomic_norm_cq_c)
-
-
-# compare normalisation by both sets of genes
-
-plasmid_genomic_norm_cq_a <- ggplot(plasmid_genomic_norm_cq %>% filter(!is.na(`PGK1-ORF`), !is.na(`mCh-7`))) +
-  geom_point(aes(x = `PGK1-ORF`, y = `mCh-7`)) +
-  annotate("text", x=8, y=-9.5, label = signif(cor(plasmid_genomic_norm_cq %>% filter(!is.na(`PGK1-ORF`), !is.na(`mCh-7`)) %>% pull(`PGK1-ORF`),  plasmid_genomic_norm_cq %>% filter(!is.na(`PGK1-ORF`), !is.na(`mCh-7`)) %>% pull(`mCh-7`)), 3), colour = "red")
-
-plasmid_genomic_norm_cq_b <- ggplot(plasmid_genomic_norm_cq %>% filter(!is.na(`RPS3-ORF`), !is.na(`mCh-7`))) +
-  geom_point(aes(x = `RPS3-ORF`, y = `mCh-7`)) +
-  annotate("text", x=8, y=-9.5, label = signif(cor(plasmid_genomic_norm_cq %>% filter(!is.na(`RPS3-ORF`), !is.na(`mCh-7`)) %>% pull(`RPS3-ORF`),  plasmid_genomic_norm_cq %>% filter(!is.na(`RPS3-ORF`), !is.na(`mCh-7`)) %>% pull(`mCh-7`)), 3), colour = "red")
-
-plasmid_genomic_norm_cq_c <- ggplot(plasmid_genomic_norm_cq %>% filter(!is.na(`URA3-ORF`), !is.na(`mCh-7`))) +
-  geom_point(aes(x = `URA3-ORF`, y = `mCh-7`)) +
-  annotate("text", x=10, y=-9.5, label = signif(cor(plasmid_genomic_norm_cq %>% filter(!is.na(`URA3-ORF`), !is.na(`mCh-7`)) %>% pull(`URA3-ORF`),  plasmid_genomic_norm_cq %>% filter(!is.na(`URA3-ORF`), !is.na(`mCh-7`)) %>% pull(`mCh-7`)), 3), colour = "red")
-
-plot_grid(plasmid_genomic_norm_cq_a,plasmid_genomic_norm_cq_b,plasmid_genomic_norm_cq_c)
-
-# compare to unnormalised plots
-
-unnorm_cq_a <- ggplot(unnorm_cq %>% filter(!is.na(`PGK1-ORF`), !is.na(`mCh-7`))) +
-  geom_point(aes(x = `PGK1-ORF`, y = `mCh-7`)) +
-  annotate("text", x=9, y=10, label = signif(cor(unnorm_cq %>% filter(!is.na(`PGK1-ORF`), !is.na(`mCh-7`)) %>% pull(`PGK1-ORF`),  unnorm_cq %>% filter(!is.na(`PGK1-ORF`), !is.na(`mCh-7`)) %>% pull(`mCh-7`)), 3), colour = "red")
-
-unnorm_cq_b <- ggplot(unnorm_cq %>% filter(!is.na(`RPS3-ORF`), !is.na(`mCh-7`))) +
-  geom_point(aes(x = `RPS3-ORF`, y = `mCh-7`)) +
-  annotate("text", x=10, y=10, label = signif(cor(unnorm_cq %>% filter(!is.na(`RPS3-ORF`), !is.na(`mCh-7`)) %>% pull(`RPS3-ORF`),  unnorm_cq %>% filter(!is.na(`RPS3-ORF`), !is.na(`mCh-7`)) %>% pull(`mCh-7`)), 3), colour = "red")
-
-unnorm_cq_c <- ggplot(unnorm_cq %>% filter(!is.na(`URA3-ORF`), !is.na(`mCh-7`))) +
-  geom_point(aes(x = `URA3-ORF`, y = `mCh-7`)) +
-  annotate("text", x=11, y=10, label = signif(cor(unnorm_cq %>% filter(!is.na(`URA3-ORF`), !is.na(`mCh-7`)) %>% pull(`URA3-ORF`),  unnorm_cq %>% filter(!is.na(`URA3-ORF`), !is.na(`mCh-7`)) %>% pull(`mCh-7`)), 3), colour = "red")
-
-plot_grid(unnorm_cq_a,unnorm_cq_b,unnorm_cq_c)
+pPGK1_tRPS3_norm_PGK1_lm <- lm(delta_cq ~ exp_rep + construct, pPGK1_tRPS3_norm_PGK1)
 
 ```
 
-## Determining the most appropriate form of qPCR normalisation
-There are three reference genes for normalising the qPCR results. Two of them, RPS3 and PGK1, are native genes commonly used for normalisation but one of them, URA3, is on the plasmid containing the constructs of interest. The question remains, how do you normalise between two different groups of control genes. The native genes remove qPCR batch effects but the plasmid gene removes multiple copy number effects. I believe the qPCR results should be normalised by the genomic reference genes first and then by the plasmid gene.
+# Comparison of transcript abundance linear models 
+Each qpcr data set normalised by each gene is fitted separately with construct and exp_rep as predicates.
 
-```{r reference_gene_correlation}
-plate_genomic_norm <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%    
-        calculate_deltacq_bysampleid(ref_target_ids = c("PGK1-ORF", "RPS3-ORF")) %>%
-  filter(target_id == "mCh-7", !is.na(delta_cq))
+```{r collate_lm_results, echo=FALSE}
+model_r_squares <- tibble(
+  ter_pro = c("pTSA1_tTSA1", "pTSA1_tTSA1", "pTSA1_tTSA1", "pTSA1_tTSA1", "pTSA1_tTSA1", "pPGK1_tTSA1", "pPGK1_tTSA1", "pPGK1_tTSA1", "pPGK1_tTSA1", "pPGK1_tTSA1", "pRPS3_tRPS3", "pRPS3_tRPS3", "pRPS3_tRPS3", "pRPS3_tRPS3", "pRPS3_tRPS3", "pPGK1_tRPS3", "pPGK1_tRPS3", "pPGK1_tRPS3", "pPGK1_tRPS3", "pPGK1_tRPS3"),
+  norm_by = c("median", "mean", "PGK1", "URA3", "RPS3", "median", "mean", "RPS3", "URA3", "PGK1", "median", "mean", "RPS3", "URA3", "PGK1", "median", "mean", "RPS3", "URA3", "PGK1"),
+  R_squared = c(summary(pTSA1_tTSA1_norm_median_lm)$r.squared,
+                summary(pTSA1_tTSA1_norm_mean_lm)$r.squared,
+                summary(pTSA1_tTSA1_norm_PGK1_lm)$r.squared,
+                summary(pTSA1_tTSA1_norm_URA3_lm)$r.squared,
+                summary(pTSA1_tTSA1_norm_RPS3_lm)$r.squared,
+                summary(pPGK1_tTSA1_norm_median_lm)$r.squared,
+                summary(pPGK1_tTSA1_norm_mean_lm)$r.squared,
+                summary(pPGK1_tTSA1_norm_RPS3_lm)$r.squared,
+                summary(pPGK1_tTSA1_norm_URA3_lm)$r.squared,
+                summary(pPGK1_tTSA1_norm_PGK1_lm)$r.squared,
+                summary(pRPS3_tRPS3_norm_median_lm)$r.squared,
+                summary(pRPS3_tRPS3_norm_mean_lm)$r.squared,
+                summary(pRPS3_tRPS3_norm_RPS3_lm)$r.squared,
+                summary(pRPS3_tRPS3_norm_URA3_lm)$r.squared,
+                summary(pRPS3_tRPS3_norm_PGK1_lm)$r.squared,
+                summary(pPGK1_tRPS3_norm_median_lm)$r.squared,
+                summary(pPGK1_tRPS3_norm_mean_lm)$r.squared,
+                summary(pPGK1_tRPS3_norm_RPS3_lm)$r.squared,
+                summary(pPGK1_tRPS3_norm_URA3_lm)$r.squared,
+                summary(pPGK1_tRPS3_norm_PGK1_lm)$r.squared))
 
-plate_plasmid_norm <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%    
-        calculate_deltacq_bysampleid(ref_target_ids = "URA3-ORF") %>%
-  filter(target_id == "mCh-7", !is.na(delta_cq))
+arrange(model_r_squares, ter_pro, desc(R_squared))
 
-plate_genomic_plasmid_norm <- plates  %>% 
-  filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%    
-        calculate_deltacq_bysampleid(ref_target_ids = "URA3-ORF") %>%
-  mutate(cq = delta_cq) %>%
-  select(-ref_cq, -delta_cq) %>%
-  filter(!(target_id %in% c("PGK1-ORF", "RPS3-ORF"))) %>%
-  bind_rows(plates %>% 
-              filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT", target_id %in% c("PGK1-ORF", "RPS3-ORF"))) %>%
-  calculate_deltacq_bysampleid(ref_target_ids = c("PGK1-ORF", "RPS3-ORF")) %>%
-  filter(target_id == "mCh-7", !is.na(delta_cq))
+model_r_coefficients <- tidy(pTSA1_tTSA1_norm_PGK1_lm) %>%
+  mutate(ter_pro = "pTSA1_tTSA1", norm_by = "PGK1") %>%
+  bind_rows(tidy(pTSA1_tTSA1_norm_URA3_lm) %>%
+  mutate(ter_pro = "pTSA1_tTSA1", norm_by = "URA3")) %>%
+  bind_rows(tidy(pTSA1_tTSA1_norm_RPS3_lm) %>%
+  mutate(ter_pro = "pTSA1_tTSA1", norm_by = "RPS3")) %>%
+  bind_rows(tidy(pPGK1_tTSA1_norm_RPS3_lm) %>%
+  mutate(ter_pro = "pPGK1_tTSA1", norm_by = "RPS3")) %>%
+  bind_rows(tidy(pPGK1_tTSA1_norm_URA3_lm) %>%
+  mutate(ter_pro = "pPGK1_tTSA1", norm_by = "URA3")) %>%
+  bind_rows(tidy(pPGK1_tTSA1_norm_PGK1_lm) %>%
+  mutate(ter_pro = "pPGK1_tTSA1", norm_by = "PGK1")) %>%
+  bind_rows(tidy(pRPS3_tRPS3_norm_RPS3_lm) %>%
+  mutate(ter_pro = "pRPS3_tRPS3", norm_by = "RPS3")) %>%
+  bind_rows(tidy(pRPS3_tRPS3_norm_URA3_lm) %>%
+  mutate(ter_pro = "pRPS3_tRPS3", norm_by = "URA3")) %>%
+  bind_rows(tidy(pRPS3_tRPS3_norm_PGK1_lm) %>%
+  mutate(ter_pro = "pRPS3_tRPS3", norm_by = "PGK1")) %>%
+  bind_rows(tidy(pPGK1_tRPS3_norm_RPS3_lm) %>%
+  mutate(ter_pro = "pPGK1_tRPS3", norm_by = "RPS3")) %>%
+  bind_rows(tidy(pPGK1_tRPS3_norm_URA3_lm) %>%
+  mutate(ter_pro = "pPGK1_tRPS3", norm_by = "URA3")) %>%
+  bind_rows(tidy(pPGK1_tRPS3_norm_PGK1_lm) %>%
+  mutate(ter_pro = "pPGK1_tRPS3", norm_by = "PGK1")) %>%
+  bind_rows(tidy(pPGK1_tRPS3_norm_mean_lm) %>%
+  mutate(ter_pro = "pPGK1_tRPS3", norm_by = "mean")) %>%
+  bind_rows(tidy(pRPS3_tRPS3_norm_mean_lm) %>%
+  mutate(ter_pro = "pRPS3_tRPS3", norm_by = "mean")) %>%
+  bind_rows(tidy(pPGK1_tTSA1_norm_mean_lm) %>%
+  mutate(ter_pro = "pPGK1_tTSA1", norm_by = "mean")) %>%
+  bind_rows(tidy(pTSA1_tTSA1_norm_mean_lm) %>%
+  mutate(ter_pro = "pTSA1_tTSA1", norm_by = "mean")) %>%
+  bind_rows(tidy(pTSA1_tTSA1_norm_median_lm) %>%
+  mutate(ter_pro = "pTSA1_tTSA1", norm_by = "median")) %>%
+  bind_rows(tidy(pPGK1_tTSA1_norm_median_lm) %>%
+  mutate(ter_pro = "pPGK1_tTSA1", norm_by = "median")) %>%
+  bind_rows(tidy(pPGK1_tRPS3_norm_median_lm) %>%
+  mutate(ter_pro = "pTSA1_tTSA1", norm_by = "median")) %>%
+  bind_rows(tidy(pRPS3_tRPS3_norm_median_lm) %>%
+  mutate(ter_pro = "pTSA1_tTSA1", norm_by = "median"))
 
-summary(lm("delta_cq ~ ter_mod + bio_rep * exp_rep", plate_genomic_norm))
+ggplot(model_r_coefficients) +
+  geom_point(aes(x=term, y=estimate, shape = norm_by, colour = (p.value < 0.05)), position = position_jitter(width = 0.1)) +
+  facet_wrap(~factor(ter_pro, levels =c("pRPS3_tRPS3", "pTSA1_tTSA1", "pPGK1_tRPS3", "pPGK1_tTSA1"))) + 
+  theme_cowplot() +
+  theme(axis.text.x = element_text(angle = 90), panel.grid.major.y = element_line(size = 0.1)) +
+  labs(x = "", y = "Coefficient")
 
-summary(lm("delta_cq ~ ter_mod + bio_rep * exp_rep", plate_plasmid_norm))
-
-summary(lm("delta_cq ~ ter_mod + bio_rep * exp_rep", plate_genomic_plasmid_norm))
-
-```
-
-## Compare linear models predicting mCherry abundance with different normalising genes
-```{r comparing_norm_models}
-normalisation_linear_model_data <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%
-  select(cq, ter_mod, bio_rep, tech_rep, target_id, exp_rep) %>%
-  spread(target_id, cq) %>%
-  group_by(ter_mod, bio_rep) %>%
-  mutate(`URA3-ORF` = median(`URA3-ORF`), `PGK1-ORF` = median(`PGK1-ORF`), `RPS3-ORF` = median(`RPS3-ORF`))
-
-#summary(lm(`mCh-7`~ter_mod + `URA3-ORF` + `PGK1-ORF` + `RPS3-ORF` + exp_rep, normalisation_linear_model_data))
-
-#summary(lm(`mCh-7`~ter_mod + `URA3-ORF` + `RPS3-ORF` + exp_rep, normalisation_linear_model_data))
-
-#summary(lm(`mCh-7`~ter_mod + `URA3-ORF` + `PGK1-ORF` + bio_rep, normalisation_linear_model_data))
-
-PGK1_genomic_normalisation_linear_model_data <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%    
-        calculate_deltacq_bysampleid(ref_target_ids = c("PGK1-ORF")) %>%
-  select(delta_cq, ter_mod, bio_rep, tech_rep, target_id, exp_rep) %>%
-  spread(target_id, delta_cq) %>%
-  group_by(ter_mod, bio_rep) %>%
-  mutate(`URA3-ORF` = median(`URA3-ORF`), `PGK1-ORF` = median(`PGK1-ORF`), `RPS3-ORF` = median(`RPS3-ORF`))
-
-PGK1_genomic_normalisation_linear_model_data_no_median <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%    
-        calculate_deltacq_bysampleid(ref_target_ids = c("PGK1-ORF", "RPS3-ORF")) %>%
-  select(delta_cq, ter_mod, bio_rep, tech_rep, target_id, exp_rep) %>%
-  spread(target_id, delta_cq) %>%
-  group_by(ter_mod, bio_rep)
-
-summary(lm(`mCh-7`~ter_mod + exp_rep, PGK1_genomic_normalisation_linear_model_data))
-
-#summary(lm(`mCh-7`~ter_mod + `URA3-ORF` + exp_rep, post_genomic_normalisation_linear_model_data_no_median))
-
-URA3_genomic_normalisation_linear_model_data <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%
-        calculate_deltacq_bysampleid(ref_target_ids = c("URA3-ORF")) %>%
-  select(delta_cq, ter_mod, bio_rep, tech_rep, target_id, exp_rep) %>%
-  spread(target_id, delta_cq) %>%
-  group_by(ter_mod, bio_rep) %>%
-  mutate(`URA3-ORF` = median(`URA3-ORF`), `PGK1-ORF` = median(`PGK1-ORF`), `RPS3-ORF` = median(`RPS3-ORF`))
-
-summary(lm(`mCh-7`~ter_mod + exp_rep, URA3_genomic_normalisation_linear_model_data))
-
-RPS3_genomic_normalisation_linear_model_data <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%
-        calculate_deltacq_bysampleid(ref_target_ids = c("RPS3-ORF")) %>%
-  select(delta_cq, ter_mod, bio_rep, tech_rep, target_id, exp_rep) %>%
-  spread(target_id, delta_cq) %>%
-  group_by(ter_mod, bio_rep) %>%
-  mutate(`URA3-ORF` = median(`URA3-ORF`), `PGK1-ORF` = median(`PGK1-ORF`), `RPS3-ORF` = median(`RPS3-ORF`))
-
-summary(lm(`mCh-7`~ter_mod + exp_rep, RPS3_genomic_normalisation_linear_model_data))
-
-RPS3_PGK1_genomic_normalisation_linear_model_data <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%
-        calculate_deltacq_bysampleid(ref_target_ids = c("RPS3-ORF","PGK1-ORF")) %>%
-  select(delta_cq, ter_mod, bio_rep, tech_rep, target_id, exp_rep) %>%
-  spread(target_id, delta_cq) %>%
-  group_by(ter_mod, bio_rep) %>%
-  mutate(`URA3-ORF` = median(`URA3-ORF`), `PGK1-ORF` = median(`PGK1-ORF`), `RPS3-ORF` = median(`RPS3-ORF`))
-
-summary(lm(`mCh-7`~ter_mod + exp_rep, RPS3_PGK1_genomic_normalisation_linear_model_data))
-
-URA3_PGK1_genomic_normalisation_linear_model_data <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%
-        calculate_deltacq_bysampleid(ref_target_ids = c("URA3-ORF","PGK1-ORF")) %>%
-  select(delta_cq, ter_mod, bio_rep, tech_rep, target_id, exp_rep) %>%
-  spread(target_id, delta_cq) %>%
-  group_by(ter_mod, bio_rep) %>%
-  mutate(`URA3-ORF` = median(`URA3-ORF`), `PGK1-ORF` = median(`PGK1-ORF`), `RPS3-ORF` = median(`RPS3-ORF`))
-
-summary(lm(`mCh-7`~ter_mod + exp_rep, URA3_PGK1_genomic_normalisation_linear_model_data))
-
-unnormalisation_linear_model_data <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%
-  select(cq, ter_mod, bio_rep, tech_rep, target_id, exp_rep) %>%
-  spread(target_id, cq) %>%
-  group_by(ter_mod, bio_rep) %>%
-  mutate(`URA3-ORF` = median(`URA3-ORF`), `PGK1-ORF` = median(`PGK1-ORF`), `RPS3-ORF` = median(`RPS3-ORF`))
-
-summary(lm(`mCh-7`~ter_mod + exp_rep, unnormalisation_linear_model_data))
-
-URA3_genomic_normalisation_linear_model_old_PGK1_data <- URA3_genomic_normalisation_linear_model_data %>% 
-  select(-`PGK1-ORF`) %>%
-  inner_join(plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT", target_id == "PGK1-ORF") %>%
-      select(ter_mod,bio_rep,tech_rep,cq) %>% 
-      rename("PGK1-ORF" = cq))
-
-summary(lm(`mCh-7`~ter_mod + exp_rep + `PGK1-ORF`, URA3_genomic_normalisation_linear_model_old_PGK1_data))
-
-```
-
-```{r compare_results}
-PGK1_genomic_normalisation_deltadelta_cq_data <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%    
-        calculate_deltacq_bysampleid(ref_target_ids = c("PGK1-ORF")) %>%
-  filter(target_id == "mCh-7") %>%
-  calculate_deltadeltacq_bytargetid(c("pTSA1-mCherry-tTSA1_mod0_BioRep1_ExpRep1", "pTSA1-mCherry-tTSA1_mod0_BioRep2_ExpRep1", "pTSA1-mCherry-tTSA1_mod0_BioRep3_ExpRep1", "pTSA1-mCherry-tTSA1_mod0_BioRep4_ExpRep2", "pTSA1-mCherry-tTSA1_mod0_BioRep5_ExpRep2", "pTSA1-mCherry-tTSA1_mod0_BioRep6_ExpRep2")) %>%
-  group_by(sample_id, ter_mod, bio_rep, exp_rep) %>%
-  summarise(deltadelta_cq=median(deltadelta_cq))
-
-RPS3_genomic_normalisation_deltadelta_cq_data <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%    
-        calculate_deltacq_bysampleid(ref_target_ids = c("RPS3-ORF")) %>%
-  filter(target_id == "mCh-7") %>%
-  calculate_deltadeltacq_bytargetid(c("pTSA1-mCherry-tTSA1_mod0_BioRep1_ExpRep1", "pTSA1-mCherry-tTSA1_mod0_BioRep2_ExpRep1", "pTSA1-mCherry-tTSA1_mod0_BioRep3_ExpRep1", "pTSA1-mCherry-tTSA1_mod0_BioRep4_ExpRep2", "pTSA1-mCherry-tTSA1_mod0_BioRep5_ExpRep2", "pTSA1-mCherry-tTSA1_mod0_BioRep6_ExpRep2")) %>%
-  group_by(sample_id, ter_mod, bio_rep, exp_rep) %>%
-  summarise(deltadelta_cq=median(deltadelta_cq))
-
-URA3_genomic_normalisation_deltadelta_cq_data <- plates %>% 
-    filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%    
-        calculate_deltacq_bysampleid(ref_target_ids = c("URA3-ORF")) %>%
-  filter(target_id == "mCh-7") %>%
-  calculate_deltadeltacq_bytargetid(c("pTSA1-mCherry-tTSA1_mod0_BioRep1_ExpRep1", "pTSA1-mCherry-tTSA1_mod0_BioRep2_ExpRep1", "pTSA1-mCherry-tTSA1_mod0_BioRep3_ExpRep1", "pTSA1-mCherry-tTSA1_mod0_BioRep4_ExpRep2", "pTSA1-mCherry-tTSA1_mod0_BioRep5_ExpRep2", "pTSA1-mCherry-tTSA1_mod0_BioRep6_ExpRep2")) %>%
-  group_by(sample_id, ter_mod, bio_rep, exp_rep) %>%
-  summarise(deltadelta_cq=median(deltadelta_cq))
-
-combined_genomic_normalisation_deltadelta_cq_data <- PGK1_genomic_normalisation_deltadelta_cq_data %>% mutate(normalisation = "Only PGK1") %>%
-  bind_rows(URA3_genomic_normalisation_deltadelta_cq_data %>% mutate(normalisation = "Only URA3")) %>%
-  bind_rows(RPS3_genomic_normalisation_deltadelta_cq_data %>% mutate(normalisation = "Only RPS3"))
-
-ggplot(combined_genomic_normalisation_deltadelta_cq_data, aes(x = deltadelta_cq, y = ter_mod, colour = bio_rep, shape = exp_rep)) +
-  geom_point() +
-  facet_wrap(~normalisation, ncol = 1)
+model_r_coefficients %>%
+  group_by(norm_by) %>%
+  summarise(no_sig_coef = sum(p.value < 0.05))
 ```
