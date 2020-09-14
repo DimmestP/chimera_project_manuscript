@@ -13,11 +13,12 @@ output:
 ## knitr options for report generation
 knitr::opts_chunk$set(warning=FALSE,message=FALSE,echo=TRUE,cache=FALSE,
                       #results="show",
-                      fig.path="figures/shortvslong/")
+                      fig.path="figures_shortvslong/")
 
 library(tidyverse)
 library(cowplot)
 library(tidyqpcr)
+library(here)
 
  # set default theme for graphics
 theme_set(theme_cowplot(font_size=11) %+replace% 
@@ -104,11 +105,11 @@ display_plate(plateplan_B %>%
 ## Load data and attribute sample information
 ```{r load_plates,dependson="label_plates",results="show"}
 # read my plates
-plates_1 <- read_tsv("data/JA_20200830-shortvslong_n1-ct.txt",skip=1) %>%
+plates_1 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200830-shortvslong_n1-ct.txt"),skip=1) %>%
     mutate(Well=Pos,Cq=Cp,ExpRep = 1,ExpRep=factor(ExpRep)) %>%
     left_join(plateplan_A)
 
-plates_2 <- read_tsv("data/JA_20200831-shortvslong_n2-ct.txt",skip=1) %>%
+plates_2 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200831-shortvslong_n2-ct.txt"),skip=1) %>%
     mutate(Well=Pos,Cq=Cp,ExpRep = 2,ExpRep=factor(ExpRep)) %>%
     left_join(plateplan_B)
 
@@ -184,11 +185,11 @@ ggplot(data=plates %>% filter(Strain %in% c("pRPS3-mCherry-tRPS3_WT-200bp","POT1
 ## Loading amplification and melt curve data
 ```{r load_amp-melt,dependson="label_plates", results="show"}
 
-platecurve_A <- read_tsv("data/JA_20200830-shortvslong_n1.txt",skip=2,
+platecurve_A <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200830-shortvslong_n1.txt"),skip=2,
                         col_names=c("Well","SID","Program","Segment","Cycle","Time","Temperature","Fluor")) %>%
                         debaseline() %>%left_join(plateplan_A)%>%
                         mutate(ExpRep = 1,ExpRep=factor(ExpRep))
-platecurve_B <- read_tsv("data/JA_20200831-shortvslong_n2.txt",skip=2,
+platecurve_B <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200831-shortvslong_n2.txt"),skip=2,
                         col_names=c("Well","SID","Program","Segment","Cycle","Time","Temperature","Fluor")) %>%
                         debaseline() %>%left_join(plateplan_B)%>%
                         mutate(ExpRep = 2,ExpRep=factor(ExpRep))
@@ -249,8 +250,8 @@ platesnorm <- plates  %>%
 
 platesnorm_summarise <- platesnorm%>%
                     group_by(Strain, TargetID, BioRep, ExpRep)%>%
-                    summarize(Median_deltaCq = median(Value.norm, na.rm=TRUE),
-                              RNA_Abundance = (2^-Median_deltaCq), na.rm=FALSE)%>% 
+                    summarize(deltaCq = median(Value.norm, na.rm=TRUE),
+                              rel_abund_deltaCq = (2^-deltaCq), na.rm=FALSE)%>% 
                     ungroup(Strain)%>%
     mutate(Strain = factor(Strain,levels = c("pRPS3-mCherry-tRPS3_WT-59bp", 
                                              "pRPS3-mCherry-tRPS3_WT-86bp", "pRPS3-mCherry-tRPS3_WT-200bp",
@@ -266,7 +267,7 @@ platesnorm_summarise <- platesnorm%>%
 ### 1) Exporting analysed data
 ```{r deltaCq_csv_export}
 #exporting platesnorm_summarise dataframe
-write.csv(platesnorm_summarise,"analysed_data/shortvslong/deltaCq_platesnorm_summarise.csv", row.names = FALSE)
+write.csv(platesnorm_summarise,here("raw_data_analysis/data/norm_qpcr/shortvslong_deltaCq_platesnorm_summarise.csv"), row.names = FALSE)
 ```
 
 ```{r deltaCq_plot-all, fig.height=6, fig.width=9}
@@ -323,7 +324,7 @@ ggplot(platesnorm %>% filter(TargetID %in% 'mCh-7'), aes(Ter_length,Value.norm))
 ```{r deltaCq_Exp_pRPS3, fig.width=6, fig.height=9.5}
 
 normalised_Exp_pRPS3 <- ggplot(data = platesnorm_summarise %>% filter(Promoter %in% 'pRPS3'))+
-    geom_point(aes(RNA_Abundance,TargetID,colour=TargetID, shape=BioRep)) +
+    geom_point(aes(rel_abund_deltaCq,TargetID,colour=TargetID, shape=BioRep)) +
     scale_x_log2nice(name="2^deltaCq (log2 scale)",omag = seq(-5,5),scilabels=TRUE) +
     labs(y="") +
     scale_shape_manual(values=c(19, 17, 15, 10, 7, 14)) +
@@ -335,7 +336,7 @@ normalised_Exp_pRPS3 <- ggplot(data = platesnorm_summarise %>% filter(Promoter %
           legend.position="right")+
     facet_wrap(~Strain,ncol = 1)
 
-normalised_Exp_pRPS3 + stat_summary(aes(RNA_Abundance,TargetID),
+normalised_Exp_pRPS3 + stat_summary(aes(rel_abund_deltaCq,TargetID),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
@@ -344,7 +345,7 @@ normalised_Exp_pRPS3 + stat_summary(aes(RNA_Abundance,TargetID),
 ```{r deltaCq_Exp_pSRO9, fig.width=6, fig.height=6.5}
 
 normalised_Exp_pRPS3 <- ggplot(data = platesnorm_summarise %>% filter(Promoter %in% 'pSRO9'))+
-    geom_point(aes(RNA_Abundance,TargetID,colour=TargetID, shape=BioRep)) +
+    geom_point(aes(rel_abund_deltaCq,TargetID,colour=TargetID, shape=BioRep)) +
     scale_x_log2nice(name="2^deltaCq (log2 scale)",omag = seq(-5,5),scilabels=TRUE) +
     labs(y="") +
     scale_shape_manual(values=c(19, 17, 15, 10, 7, 14)) +
@@ -356,7 +357,7 @@ normalised_Exp_pRPS3 <- ggplot(data = platesnorm_summarise %>% filter(Promoter %
           legend.position="right")+
     facet_wrap(~Strain,ncol = 1)
 
-normalised_Exp_pRPS3 + stat_summary(aes(RNA_Abundance,TargetID),
+normalised_Exp_pRPS3 + stat_summary(aes(rel_abund_deltaCq,TargetID),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
@@ -390,9 +391,9 @@ mean_platesnorm_S500bp_ExpRep2 <- platesnorm_pSRO9_ExpRep %>%
 
 # Calculates the delta delta Cq (subtracts mean(mean_tSRO9500bp$Value.norm) from every Value.norm))
 platesnorm_by_S500bp_pSRO9_ExpRep1 <- platesnorm_pSRO9_ExpRep %>% filter(ExpRep==1)%>%
-    mutate(Value.norm.S500bp = Value.norm - mean_platesnorm_S500bp_ExpRep1$mean_S500bp, remove=FALSE)
+    mutate(delta_deltaCq = Value.norm - mean_platesnorm_S500bp_ExpRep1$mean_S500bp, remove=FALSE)
 platesnorm_by_S500bp_pSRO9_ExpRep2 <- platesnorm_pSRO9_ExpRep %>% filter(ExpRep==2)%>%
-    mutate(Value.norm.S500bp = Value.norm - mean_platesnorm_S500bp_ExpRep2$mean_S500bp, remove=FALSE)
+    mutate(delta_deltaCq = Value.norm - mean_platesnorm_S500bp_ExpRep2$mean_S500bp, remove=FALSE)
 ```
 
 
@@ -424,9 +425,9 @@ mean_platesnorm_R200bp_ExpRep2 <- platesnorm_pRPS3_ExpRep %>%
 
 # Calculates the delta delta Cq (subtracts mean(mean_tSRO9500bp$Value.norm) from every Value.norm))
 platesnorm_by_R200bp_pRPS3_ExpRep1 <- platesnorm_pRPS3_ExpRep %>% filter(ExpRep==1)%>%
-    mutate(Value.norm.R200bp = Value.norm - mean_platesnorm_R200bp_ExpRep1$mean_R200bp, remove=FALSE)
+    mutate(delta_deltaCq = Value.norm - mean_platesnorm_R200bp_ExpRep1$mean_R200bp, remove=FALSE)
 platesnorm_by_R200bp_pRPS3_ExpRep2 <- platesnorm_pRPS3_ExpRep %>% filter(ExpRep==2)%>%
-    mutate(Value.norm.R200bp = Value.norm - mean_platesnorm_R200bp_ExpRep2$mean_R200bp, remove=FALSE)
+    mutate(delta_deltaCq = Value.norm - mean_platesnorm_R200bp_ExpRep2$mean_R200bp, remove=FALSE)
 ```
 
 ## 2) Summarise delta delta Cq (Mean delta delta Cq) and RNA abundance calculation
@@ -436,8 +437,8 @@ In the previous 2 chunks, we have calculated the delta-delta Cq value for each t
 
 platesnorm_S500bp_pSRO9_median <- bind_rows(platesnorm_by_S500bp_pSRO9_ExpRep1,platesnorm_by_S500bp_pSRO9_ExpRep2)%>%
                     group_by(Strain, TargetID, BioRep, ExpRep)%>%
-                    summarize(Median_delta_deltaCq = median(Value.norm.S500bp, na.rm=TRUE),
-                              RNA_Abundance = (2^-Median_delta_deltaCq), na.rm=FALSE)%>%
+                    summarize(median_delta_deltaCq = median(delta_deltaCq, na.rm=TRUE),
+                              rel_abund_delta_deltaCq = (2^-median_delta_deltaCq), na.rm=FALSE)%>%
                     separate(Strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator", "Length")) %>%
                     unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
                     unite(Ter_length,Terminator,Length,sep="_", remove=FALSE)
@@ -445,8 +446,8 @@ platesnorm_S500bp_pSRO9_median <- bind_rows(platesnorm_by_S500bp_pSRO9_ExpRep1,p
 
 platesnorm_R200bp_pRPS3_median <- bind_rows(platesnorm_by_R200bp_pRPS3_ExpRep1,platesnorm_by_R200bp_pRPS3_ExpRep2)%>%
                     group_by(Strain, TargetID, BioRep, ExpRep)%>%
-                    summarize(Median_delta_deltaCq = median(Value.norm.R200bp, na.rm=TRUE),
-                              RNA_Abundance = (2^-Median_delta_deltaCq), na.rm=FALSE)%>%
+                    summarize(median_delta_deltaCq = median(delta_deltaCq, na.rm=TRUE),
+                              rel_abund_delta_deltaCq = (2^-median_delta_deltaCq), na.rm=FALSE)%>%
                     ungroup(Strain)%>%
                     mutate(Strain = factor(Strain,levels = c("pRPS3-mCherry-tRPS3_WT-86bp", "pRPS3-mCherry-tRPS3_WT-59bp", 
                                              "pRPS3-mCherry-tRPS3_WT-200bp")))%>%
@@ -463,7 +464,7 @@ platesnorm_all_median <- bind_rows(platesnorm_S500bp_pSRO9_median,platesnorm_R20
 ```{r plot_delta_deltaCq_SRO9,fig.height=2.5,fig.width=6.5, echo=FALSE}
 
 normalised_plot_SRO9 <- ggplot(data = platesnorm_S500bp_pSRO9_median)+
-    geom_point(aes(RNA_Abundance,Strain,colour=Ter_length, shape=BioRep)) +
+    geom_point(aes(rel_abund_delta_deltaCq,Strain,colour=Ter_length, shape=BioRep)) +
     scale_x_log2nice(name="Fold change in RNA abundance relative to \n pSRO9-mCh-tSRO9_500bp (log2 scale)",
                      omag = seq(-5,5),scilabels=FALSE) +
       labs(y="") +
@@ -476,7 +477,7 @@ normalised_plot_SRO9 <- ggplot(data = platesnorm_S500bp_pSRO9_median)+
           legend.position="right")
   #facet_wrap(~Pro_mCh,ncol = 2)
 
-normalised_plot_SRO9 + stat_summary(aes(RNA_Abundance,Strain),
+normalised_plot_SRO9 + stat_summary(aes(rel_abund_delta_deltaCq,Strain),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
@@ -484,7 +485,7 @@ normalised_plot_SRO9 + stat_summary(aes(RNA_Abundance,Strain),
 ```{r plot_delta_deltaCq_RPS3,fig.height=3.5,fig.width=6.5, echo=FALSE}
 
 normalised_plot_RPS3 <- ggplot(data = platesnorm_R200bp_pRPS3_median)+
-    geom_point(aes(RNA_Abundance,Strain,colour=Ter_length, shape=BioRep)) +
+    geom_point(aes(rel_abund_delta_deltaCq,Strain,colour=Ter_length, shape=BioRep)) +
     scale_x_log2nice(name="Fold change in RNA abundance relative to \n pRPS3-mCh-tRPS3_200bp (log2 scale)",
                      omag = seq(-5,5),scilabels=FALSE) +
       labs(y="") +
@@ -496,7 +497,7 @@ normalised_plot_RPS3 <- ggplot(data = platesnorm_R200bp_pRPS3_median)+
           axis.title.x=element_text(vjust=-2),
           legend.position="right")
 
-normalised_plot_RPS3 + stat_summary(aes(RNA_Abundance,Strain),
+normalised_plot_RPS3 + stat_summary(aes(rel_abund_delta_deltaCq,Strain),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
