@@ -1,0 +1,159 @@
+---
+title: "Selecting a new 3'UTR (similar to SRO9)"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+```{r setup, warning=FALSE, message=FALSE, error=FALSE, echo=FALSE}
+library(tidyverse)
+library(Biostrings)
+library(DT)
+library(RColorBrewer)
+library(here)
+source(here("raw_data_analysis/linear_model_functions.R"))
+# Gather all yeast 3'UTRs
+yeast_3UTRs <- read_csv(here("methods_chapter/data/whole_genome_3UTR.csv"))
+
+# import list of collated 3'UTR motifs
+motifs_raw <- scan(here("methods_chapter/data/list_motifs.txt"), character())
+
+transcript_seq <- read_csv(here("raw_data_analysis/data/edward_motifs_UTR3_2xHWNCAUUWY_maxlength300.csv")) %>% 
+  select(-X1)
+
+# import yeast open reading frame dataset
+Scer_ORF <- readDNAStringSet("https://downloads.yeastgenome.org/sequence/S288C_reference/orf_dna/orf_coding_all.fasta.gz")
+Scer_ORF_name <- as_tibble(names(Scer_ORF)) %>%
+  separate(value,c("transcriptName",NA),extra="drop",sep=" ")
+
+# Import single cell RNA-seq dataset for transcript abundance
+nadal_ribelles_scRNA_seq <- read_tsv(here("./methods_chapter/data/nadal_ribelles_scRNA.tab"))
+
+# filter out genes with poor coverage
+nadal_ribelles_scRNA_seq_filter <- nadal_ribelles_scRNA_seq %>%
+  select(-comGeneName)%>%
+  group_by(geneName) %>%
+  sample_n(1) %>%
+  ungroup() %>%
+  gather(-geneName, key = cell, value = counts) %>%
+  group_by(geneName) %>%
+  mutate(totCount = sum(counts), totCell = sum(!(counts == 0))) %>%
+  filter(totCount > 5 & totCell >1) %>%
+  select(-totCount, -totCell) %>%
+  filter(geneName %in% Scer_ORF_name$transcriptName) %>%
+  arrange(geneName) %>%
+  summarize(meanCount = mean(counts))
+```
+## Compare characteristics of all 3'UTRs with 2 HWNCAUUWY motifs included
+Only PIR1 / YKL164C and NGL1 / YOL042W contain the correct numbers of motifs to conduct a motif deletion assay that matches the motif addition essay previously achieved with RPS3 (and TSA1). However, both of these 3'UTRs are much longer than RPS3/TSA1 which could introduce quite a lot of unexpected effects (such as complex secondary structures). The only other option is to ignore the stability motif UGUAHMNUA which we don't have much evidence for and concentrate on the other two decay motifs. NGL1 terminator overlaps slightly with an adjacent gene on the opposite strand. NGL1's function isnt entirely understood but ithas a domain similar to a magnesium-dependent endonuclease motif in mRNA deadenylase. PIR1 is a O-glycosylated protein required for cell wall stability.
+```{r table_summarising_3UTR,warning=FALSE,message=FALSE,error=FALSE, comment=FALSE, echo=FALSE}
+# Dictionary for converted IUPAC codes into machine readable regular expressions and converting U -> T
+motifs_dictionary <- tibble(motifIUPAC = motifs_raw,motifsRegex = iupac_to_regex(motifs_raw)) %>% 
+  group_by(motifIUPAC) %>%
+  mutate(motifsStrings = map(motifsRegex,expand_regex_to_redundent_strings)) %>%
+  unnest(motifsStrings) 
+
+# check if any smaller motifs appear in other larger motifs
+motifs_duplication_match <- motifs_dictionary %>% 
+  group_by(motifsStrings) %>%
+  mutate(pairedMotifString = list(pairedMotifString=motifs_dictionary$motifsStrings)) %>%
+  unnest(pairedMotifString) %>%
+  ungroup() %>%
+  filter(!(motifsStrings==pairedMotifString))  %>%
+  mutate(matchingMotif = str_detect(motifsStrings,pairedMotifString))
+  
+# remove any versions of larger motifs that contain other motifs
+deduplicated_motifs <- motifs_duplication_match %>% 
+  group_by(motifsStrings) %>%
+  filter(sum(matchingMotif) == 0) %>%
+  select(-matchingMotif,-pairedMotifString) %>%
+  distinct(motifsStrings,.keep_all = TRUE) %>%
+  group_by(motifIUPAC) %>%
+  mutate(newMotifIUPAC =as.character(DECIPHER::ConsensusSequence(DNAStringSet(motifsStrings)))) %>%
+  ungroup() %>%
+  mutate(newMotifsRegex = iupac_to_regex(newMotifIUPAC)) %>%
+  select(-motifIUPAC,-motifsRegex)
+
+full_motif_sequence_data <- motif_count_function( deduplicated_motifs %>% distinct(newMotifsRegex) %>% pull(newMotifsRegex),
+   transcript_seq$UTR3_seq,
+   min_count_filter = 0,
+   alt_motif_name = deduplicated_motifs %>% distinct(newMotifIUPAC) %>% pull(newMotifIUPAC)) %>%
+   select(-ATATTC, -TGTAHMNTA, -HWNCATTWY) %>% 
+  pivot_longer(cols = -transcriptSequence,names_to = "motif",values_to="count") %>%
+  filter(count>0) %>% 
+  select(-count) %>% 
+  group_by(transcriptSequence) %>% 
+  summarise(extra_motifs = str_c(motif,collapse=", "),.groups="keep") %>%
+  inner_join(transcript_seq, by = c("transcriptSequence" = "UTR3_seq")) %>%
+  relocate(geneName,transcriptSequence) %>%
+  inner_join(nadal_ribelles_scRNA_seq_filter) %>%
+  ungroup()
+
+datatable(full_motif_sequence_data %>% select(-transcriptSequence))
+#write_csv(full_motif_sequence_data,"full_summary_motifs_UTR3_2xHWNCAUUWY.csv")
+```
+
+## Compare PIR1 and NGL1 abundance
+
+PIR1 is much more abundant, about 10 times, than NGL1 but unfortunately is very cell cycle dependent. That being said, this appears to only have a detectable effect when cells are directly synchronised.
+
+![](./figures/SaccharomycesCellCycleKelliherGenePlot_TSA1_RPS3_NGL1_PIR1.png)
+
+## Exploring PIR1 and NGL1 3'UTR secondary structure
+
+### NGL1
+
+NGL1 seems to have a more bound and linear structure with a lower kcal/mol. Only changing UGUAHMNUA appears to introduce a new and highly stable structure to NGL1. The rest of the modification make small, uncertain changes.
+
+![](./figures/NGL1_secondary_structure.png)
+
+### PIR1
+
+PIR1 first needs to be altered to remove a site matching the BsmB1 restriction enzyme which would break the modular cloning essay. Overall PIR1 appears to have a less stable structure than NGL1 (as suggested by the kcal/mol). One of the three HWNCAUUWY motifs does appear in the one well defined and tightly bound region, however. Altering this particular motif does alter the structure quite significantly. Finally, changes to the stability motif UGUAHMNUA might cause some structural changes in the centre but not quite a certain as the HWNCAUUWY.
+
+![](./figures/PIR1_secondary_structure.png)
+
+## Alternative shorter 3'UTR without UGUAHMNUA
+
+Extending the search for a suitable 3'UTR by removing the UGUAHMNUA motif requirement. QCR8 is a shorter, only 168 nt long, 3'UTR but still highly abundant. Termintor does overlap slightly with ORF of adjacent gene on opposite strand. It doesn't have such a dependence on the cycle cycle. It is a component of the mitochondrial inner membrane electron transport chain.
+
+![](./figures/SaccharomycesCellCycleKelliherGenePlot_TSA1_RPS3_PIR1_QCR8.png)
+## Secondary structure of QCR8
+![](./figures/QCR8_secondary_structure.png)
+
+
+## Primary structure of selected 3'UTRs
+
+```{r colour_motifs, include=FALSE, eval=FALSE}
+#### INCOMPLETE
+chosen_motifs = tibble(shortName = c("QCR8", "PIR1", "NGL1"), 
+                       longName = c("YJL166W", "YKL164C", "YOL042W")) %>%
+  inner_join(transcript_seq, by = c("longName" = "geneName"))
+
+find_motif_position <- function(regex_motifs, transcript_seq){
+  all_motifs_locations <- tibble(motifs = NULL, start = NULL, end = NULL)
+  for (i in 1:length(regex_motifs)){
+    motif_locations <- as_tibble(str_locate_all(transcript_seq, regex_motifs[i])[[1]])
+    if(nrow(motif_locations) > 0)  all_motifs_locations <- bind_rows(all_motifs_locations, motif_locations %>% mutate(motifs = regex_motifs[i]))
+  }
+  return(all_motifs_locations)
+}
+
+find_motif_position(deduplicated_motifs %>% distinct(newMotifsRegex) %>% pull(newMotifsRegex),"TATTGTTTCCATGCCTCTACATTACATCGATCTTTTGATCTTCTAAAAACTTACATATATATTCTGTTTATAAAACAAGAGCAAATAACCCCCATATATTTATTCAGTCAGTCTATTTATTTACTTACAGTATCAGTAATAATAAATACTTAAGCATTTTTTGTTTTGT")
+
+```
+
+## QCR8 or PIR1
+
+QCR8 appears to be similar to TSA1 and RPS3 in terms of expression and length. This could make is more likely to behave similarly to the UTRs already tested. However, despite PIR1 being quite different it holds the possibility of exploring the effects of motif position and unpicking the effects of some of the motifs.
+
+Conversations with Edward suggest the cell cycle variability is not an issue for PIR1 (in fact it suggests tight regulation which could be good for motifs!). Picking between PIR1 and QCR8 is a weigh up between the possible effects of having a long 3'UTR on motifs. Risking it for a biscuit and selecting PIR1 because it holds all the motifs needed and can be used to checkout positional effects.
+
+## Final PIR1 constructs
+We can go for a total of 7 constructs as this fits on one qPCR plate. First 5 just complement the addition experiments conducted with TSA1 and RPS1 by compaing WT to no ATATTC, to no UGUAHMNUA, to no HWNCAUUWY and finally to no UGUAHMNUA and HWNCAUUWY. 
+
+![](./figures/final_PIR1_constructs_pt1.png)
+For the two remaining possible constructs we are looking into positional effects on HWNCAUUWY. As PIR1 has three of these motifs in total we are going with the two closest and two furthest away (both in terms of primary and secondary structure).
+
+![](./figures/final_PIR1_constructs_pt2.png)

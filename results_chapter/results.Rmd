@@ -11,13 +11,14 @@ Initially, to test the effects of 3'UTRs on RNA abundance, promoter-terminator s
 - pPGK1 withh 12x terminator swaps
 - pSRO9 withh 12x terminator swaps
 
-## Predicting mRNA abundance with linear combinations of sequences features using RNA half life datasets
+## Selecting cis-regulatory elements by their contributions to linear models of transcript half life
 
 Potential cis-regulatory elements to test for context dependence were initially identified through a literature search. We focused on cis-regulatory elements associated with post-transcriptional regulation only. This was in order to a) enable confirmation of each element's regulatory role by predicting their contributions to transcript degradation and b) minimise the possibility of selecting motifs with confounding transcriptional, post-transcriptional and translational roles. 69 suspected post-transcriptional, cis-regulatory elements were collated from three separate studies; Hogan et al (2008), Shalgi et al (2005) and Cheng et al (2017). All collated cis-regulatory elements were sequence motifs found in transcript 3' untranslated regions (3'UTR) as confirmed either in vivo, with RNA-protein binding assays (Hogan et al., 2008), or in silico, by comparing the sequences of transcripts with similar half lives (Shalgi et al., 2005; Cheng et al., 2017).
 
 We shortlisted the collated 3'UTR motifs by determining their contributions to a linear model predicting native transcript half lives.  The linear model used the counts of the motifs in the median length 3'UTR of a gene's transcript as a predicate. A transcript's median length 3'UTR was determined either as reported by Pelechano et al. (2013) or, for genes missing in the TIF-seq dataset, inferred by taking the first 200 nucleotides downstream of the gene's stop codon. 31 of the original 69 motifs occurred 5 or fewer times in the 3'UTRs as defined above and were subsequently removed. The linear model also included terms for the relative codon usage in each transcript's ORF as this has previously been shown to be the most significant determinate of decay rate (Cheng et al., 2017; Presnyak et al., 2015), see Material and Methods. 
 
 The linear model was trained separately on two independent, genome-wide studies of yeast mRNA decay rates, Sun et al. (2013) and Chan et al. (2017). The two data sets are loosely correlated, R = 0.63 Figure \@ref(fig:chan-vs-sun), with both using non-invasive pulse labeling assays to measure decay rates. However, only Chan et al. (2017) used multiple time points to determine transcript half lives. The motifs were then selected for their contribution to half life by using a greedy algorithm to determine the combination of motifs that maximised the Akaike information criterion (AIC) of the model. The predictive power of the models with the maximum AIC can be seen in Figure \@ref(fig:model-predictive-power); ??% and 51% of the variability in half lives was explained for the Sun et al (2013) and Chan et al (2017) data sets respectively. Motifs predicted to be significant in both decay data sets are plotted in Figure \@ref(fig:motif-coefficient-comparison) with their magnitudes calculated according to the data sets plotted against each other. Interestingly, the TGTAAATA motif was predicted to be stabilising in the Sun et al (2013) data set but destabilising in the Chan et al (2017) data set. The puf3 protein associated with motif is known to change function in carbon deficient condition which were likely present due to the bespoke CSM-lowURA media the cultures were grown in overnight, Sun et al (2013) used standard YPD media. 
+
 
 ```{r chan-vs-sun, fig.cap="Comparison of Sun et al (2013) and Chan et al (2017) genome wide transcipt half lives.", out.width='40%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/chan_vs_sun_plot.png"))
@@ -26,6 +27,7 @@ knitr::include_graphics(here("results_chapter/figures/chan_vs_sun_plot.png"))
 ```{r model-predictive-power, fig.cap="Performance of codon and motif linear model predicting the transcript half lives as reported in the Chan et al (2017) and Sun et al (2013).", out.width='80%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/model_predictive_power.png"))
 ```
+
 
 ```{r motif-coefficient-comparison, fig.cap="Predicted coefficients of motifs with significant regulartory effects in both Sun et al (2013) and Chan et al (2017) datasets.", out.width='80%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/motif_coefficient_comparison.png"))
