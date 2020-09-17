@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 2
 ---
-Comparing the normalistion of four qPCR datasets; pRPS3-tRPS3, pPGK1-tRPS3, pTSA1-tTSA1 and pPGK1-tTSA1, by three different normalisation genes; RPS3, PGK1, URA3.
+Comparing the normalistion of four qPCR datasets; pRPS3-tRPS3, pPGK1-tRPS3, pTSA1-tTSA1 and pPGK1-tTSA1, by three different normalisation genes; RPS3, PGK1, URA3. First, only one normalisation gene is used for each construct and then the mean/median of all genes is used. pPGK1_tRPS3 and pRPS3_tRPS3 appear both to be normalised best by PGK1/RPS3 but pPGK1_tTSA1 and pTSA1_tTSA1 are normalised by URA3. Comparing mean and median seems to show that those construct most effected by URA3 effects are best normalised by mean else median is better. When a group linear model to ran the best results are found with PGK1 normalisation closely followed by mean. Overall however, there doesn't seem to be a consistent winner between mean and median!
 
 ```{r read_in_normalised_datasets, echo=FALSE, include=FALSE}
 library(broom)
@@ -96,6 +96,33 @@ pTSA1_tTSA1_norm_PGK1 <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pTSA1
   summarise(delta_cq = median(delta_cq), .groups = "drop")
 ```
 
+```{r combine_same_norm_data, echo=FALSE}
+collated_norm_mean_data <- pPGK1_tRPS3_norm_mean %>%
+  bind_rows(pRPS3_tRPS3_norm_mean) %>%
+  bind_rows(pPGK1_tTSA1_norm_mean) %>%
+  bind_rows(pTSA1_tTSA1_norm_mean)
+
+collated_norm_median_data <- pPGK1_tRPS3_norm_median %>%
+  bind_rows(pRPS3_tRPS3_norm_median) %>%
+  bind_rows(pPGK1_tTSA1_norm_median) %>%
+  bind_rows(pTSA1_tTSA1_norm_median)
+
+collated_norm_PGK1_data <- pPGK1_tRPS3_norm_PGK1 %>%
+  bind_rows(pRPS3_tRPS3_norm_PGK1) %>%
+  bind_rows(pPGK1_tTSA1_norm_PGK1) %>%
+  bind_rows(pTSA1_tTSA1_norm_PGK1)
+
+collated_norm_RPS3_data <- pPGK1_tRPS3_norm_RPS3 %>%
+  bind_rows(pRPS3_tRPS3_norm_RPS3) %>%
+  bind_rows(pPGK1_tTSA1_norm_RPS3) %>%
+  bind_rows(pTSA1_tTSA1_norm_RPS3)
+
+collated_norm_URA3_data <- pPGK1_tRPS3_norm_URA3 %>%
+  bind_rows(pRPS3_tRPS3_norm_URA3) %>%
+  bind_rows(pPGK1_tTSA1_norm_URA3) %>%
+  bind_rows(pTSA1_tTSA1_norm_URA3)
+```
+
 ```{r run_linear_models, echo=FALSE, include=FALSE}
 pTSA1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + construct, pTSA1_tTSA1_norm_mean)
 
@@ -137,12 +164,23 @@ pPGK1_tRPS3_norm_URA3_lm <- lm(delta_cq ~ exp_rep + construct, pPGK1_tRPS3_norm_
 
 pPGK1_tRPS3_norm_PGK1_lm <- lm(delta_cq ~ exp_rep + construct, pPGK1_tRPS3_norm_PGK1)
 
+collated_norm_mean_lm <- lm(delta_cq ~ exp_rep + construct + terminator + promoter + terminator:construct + promoter:construct, collated_norm_mean_data)
+
+collated_norm_median_lm <- lm(delta_cq ~ exp_rep + construct + terminator + promoter + terminator:construct + promoter:construct, collated_norm_median_data)
+
+collated_norm_URA3_lm <- lm(delta_cq ~ exp_rep + construct + terminator + promoter + terminator:construct + promoter:construct, collated_norm_URA3_data)
+
+collated_norm_RPS3_lm <- lm(delta_cq ~ exp_rep + construct + terminator + promoter + terminator:construct + promoter:construct, collated_norm_RPS3_data)
+
+collated_norm_PGK1_lm <- lm(delta_cq ~ exp_rep + construct + terminator + promoter + terminator:construct + promoter:construct, collated_norm_PGK1_data)
+
+
 ```
 
 # Comparison of transcript abundance linear models 
 Each qpcr data set normalised by each gene is fitted separately with construct and exp_rep as predicates.
 
-```{r collate_lm_results, echo=FALSE}
+```{r collate_individual_lm_results, echo=FALSE}
 model_r_squares <- tibble(
   ter_pro = c("pTSA1_tTSA1", "pTSA1_tTSA1", "pTSA1_tTSA1", "pTSA1_tTSA1", "pTSA1_tTSA1", "pPGK1_tTSA1", "pPGK1_tTSA1", "pPGK1_tTSA1", "pPGK1_tTSA1", "pPGK1_tTSA1", "pRPS3_tRPS3", "pRPS3_tRPS3", "pRPS3_tRPS3", "pRPS3_tRPS3", "pRPS3_tRPS3", "pPGK1_tRPS3", "pPGK1_tRPS3", "pPGK1_tRPS3", "pPGK1_tRPS3", "pPGK1_tRPS3"),
   norm_by = c("median", "mean", "PGK1", "URA3", "RPS3", "median", "mean", "RPS3", "URA3", "PGK1", "median", "mean", "RPS3", "URA3", "PGK1", "median", "mean", "RPS3", "URA3", "PGK1"),
@@ -218,6 +256,39 @@ ggplot(model_r_coefficients) +
   labs(x = "", y = "Coefficient")
 
 model_r_coefficients %>%
+  group_by(norm_by) %>%
+  summarise(no_sig_coef = sum(p.value < 0.05))
+```
+
+```{r collate_combined_lm_results, echo=FALSE}
+model_r_squares_combined <- tibble(
+  norm_by = c("median", "mean", "PGK1", "URA3", "RPS3"),
+  R_squared = c(summary(collated_norm_median_lm)$r.squared,
+                summary(collated_norm_mean_lm)$r.squared,
+                summary(collated_norm_PGK1_lm)$r.squared,
+                summary(collated_norm_URA3_lm)$r.squared,
+                summary(collated_norm_RPS3_lm)$r.squared))
+
+arrange(model_r_squares_combined, desc(R_squared))
+
+model_r_coefficients_combined <- tidy(collated_norm_PGK1_lm) %>%
+  mutate(norm_by = "PGK1") %>%
+  bind_rows(tidy(collated_norm_URA3_lm) %>%
+  mutate(norm_by = "URA3")) %>%
+  bind_rows(tidy(collated_norm_RPS3_lm) %>%
+  mutate(norm_by = "RPS3")) %>%
+  bind_rows(tidy(collated_norm_mean_lm) %>%
+  mutate(norm_by = "mean")) %>%
+  bind_rows(tidy(collated_norm_median_lm) %>%
+  mutate(norm_by = "median"))
+
+ggplot(model_r_coefficients_combined) +
+  geom_point(aes(x=term, y=estimate, shape = norm_by, colour = (p.value < 0.05)), position = position_jitter(width = 0.1)) + 
+  theme_cowplot() +
+  theme(axis.text.x = element_text(angle = 90), panel.grid.major.y = element_line(size = 0.1)) +
+  labs(x = "", y = "Coefficient")
+
+model_r_coefficients_combined %>%
   group_by(norm_by) %>%
   summarise(no_sig_coef = sum(p.value < 0.05))
 ```

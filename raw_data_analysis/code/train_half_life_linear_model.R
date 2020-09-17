@@ -178,35 +178,35 @@ combined_hlife_data_sets <- inner_join(sun_decay_hlife,
 
 decay_data_set_cor <- cor(combined_hlife_data_sets$hlife_S, combined_hlife_data_sets$hlife_C)
 
-ggsave2(here("./results_chapter/figures/chan_vs_sun_plot.png"), 
-        ggplot(combined_hlife_data_sets, aes(x=hlife_C, y=hlife_S)) +
-           geom_bin2d( bins=70) + 
-           theme_bw(base_size = 20) + 
-           theme(panel.grid.minor = element_blank(), legend.position = "none") +
-           labs(y = TeX("$\\lambda^^{1/2}$ (min) Sun \\textit{et al}"), 
-                x = TeX("$\\lambda^{1/2}$ (min) Chan \\textit{et al}")) +
-           annotate("text",label = paste0("R = ",signif(decay_data_set_cor,2)),size=6,x=40,y=2) +
-           scale_y_log10(limits = c(0.9,200)) +
-           scale_x_log10(breaks=c(1,10,100),limits = c(0.9,200)) +
-           coord_fixed())
+#ggsave2(here("./results_chapter/figures/chan_vs_sun_plot.png"), 
+#        ggplot(combined_hlife_data_sets, aes(x=hlife_C, y=hlife_S)) +
+#           geom_bin2d( bins=70) + 
+#           theme_bw(base_size = 20) + 
+#           theme(panel.grid.minor = element_blank(), legend.position = "none") +
+#           labs(y = TeX("$\\lambda^^{1/2}$ (min) Sun \\textit{et al}"), 
+#                x = TeX("$\\lambda^{1/2}$ (min) Chan \\textit{et al}")) +
+#          annotate("text",label = paste0("R = ",signif(decay_data_set_cor,2)),size=6,x=40,y=2) +
+#           scale_y_log10(limits = c(0.9,200)) +
+#           scale_x_log10(breaks=c(1,10,100),limits = c(0.9,200)) +
+#           coord_fixed())
 
 # output model predictive power graph
 
-ggsave2(here("./results_chapter/figures/model_predictive_power.png"), cowplot::plot_grid(chan_pred_vs_obvs_plot,sun_pred_vs_obvs_plot, rel_widths = c(0.58,0.42)))
+#ggsave2(here("./results_chapter/figures/model_predictive_power.png"), cowplot::plot_grid(chan_pred_vs_obvs_plot,sun_pred_vs_obvs_plot, rel_widths = c(0.58,0.42)))
 
 # output motif coefficients graph
-ggsave2(here("./results_chapter/figures/motif_coefficient_comparison.png"), ggplot(combined_motif_coefficients, aes(x = estimate_C, y = estimate_S, xmin=estimate_C - std.error_C ,xmax=estimate_C + std.error_C, ymin=estimate_S - std.error_S, ymax=estimate_S + std.error_S, colour=term)) +
-  geom_errorbar() +
-  geom_errorbarh() +
-  theme_bw(base_size = 15) +
-  theme(axis.text.x=element_text(angle=90,vjust = 0.5),panel.grid.minor=element_blank()) +
-  labs(y=TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Sun}$"),x=TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Chan}$")) +
-  scale_shape_manual(values=1:7) +
-  geom_hline(yintercept = 0,size = 0.2) +
-  geom_vline(xintercept = 0,size = 0.2))
+#ggsave2(here("./results_chapter/figures/motif_coefficient_comparison.png"), ggplot(combined_motif_coefficients, aes(x = estimate_C, y = estimate_S, xmin=estimate_C - std.error_C ,xmax=estimate_C + std.error_C, ymin=estimate_S - std.error_S, ymax=estimate_S + std.error_S, colour=term)) +
+#  geom_errorbar() +
+#  geom_errorbarh() +
+#  theme_bw(base_size = 15) +
+#  theme(axis.text.x=element_text(angle=90,vjust = 0.5),panel.grid.minor=element_blank()) +
+#  labs(y=TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Sun}$"),x=TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Chan}$")) +
+#  scale_shape_manual(values=1:7) +
+#  geom_hline(yintercept = 0,size = 0.2) +
+#  geom_vline(xintercept = 0,size = 0.2))
 
 # output list of chan motif coefficients 
-write_csv( chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./results_chapter/data/chan_motif_coefficients.csv"))
+# write_csv( chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./results_chapter/data/chan_motif_coefficients.csv"))
 
 # check for co-occurrences of motifs in native 3'UTR
 TGTAHMNTA_co_occurrences <- single_count_median_3UTR_motifs_freq %>% 
