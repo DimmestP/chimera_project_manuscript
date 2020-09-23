@@ -13,8 +13,12 @@ The data and code (including ALL analysis referred to in the paper) required to 
 
     # In console at the bottom of RStudio
     setwd( <local repo address> )
-    source("./library_setup.R") # check all required libraries are installed
     bookdown::render_book("abstract.Rmd") # this will take a little while
+    
+    # If you get an error similar to 
+    Error: Input files not all in same directory, please supply explicit wd
+    # then run this code in your console and and try to render book again
+    options(bookdown.render.file_scope = FALSE)
 
     # The pdf version of the manuscript will be created in a _book folder.
 ```
