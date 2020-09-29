@@ -83,6 +83,14 @@ knitr::include_graphics(here("results_chapter/figures/motif_coeff_RNA_abundance.
 
 ## Comparison of motif effects from qPCR and half-life dataset models
 
+```{r motif-context-dependence, fig.cap="Experimental transcript abundance vs predicted abundance for all constructs according to predicted changes in decay rate due to the presence of 3'UTR motifs. Confidence intervals are within a standard error.", out.width='80%', fig.align='center'}
+knitr::include_graphics(here("results_chapter/figures/pred_vs_actual_abundance.png"))
+```
+
+```{r motif-context-dependence, fig.cap="Motif contributions to fold changes in RNA abundance for different promoter and terminator contexts, with each promoter-terminators pairing's mod0 construct as base value. Confidence intervals are within a standard error.", out.width='80%', fig.align='center'}
+knitr::include_graphics(here("results_chapter/figures/motif_multi_context_coefficient.png"))
+```
+
 ## Investigating the effects of cis-regulatory motifs in the 3'UTR using 5PSeq
 We used high-throughput 5PSeq (HT-5Pseq) technique to investigate whether modifications of 3’ UTRs influence the process of 5’-3’ co-translational degradation of mRNA, which can also serve as a proxy of translation process (Zhang & Pelechano 2020), and modify ribosome stalling in the 3’-end region of coding sequence. The 5PSeq method allows to investigate the process of  5’-3’ degradation of mRNA by capturing only de-capped 5’ ends of mRNA molecules, and at the same time – the polyadenylated 3’ ends. We generated sequencing reads with insert sizes up to 600 bp, which included entire 3’UTRs and up to 400 bp of coding sequence.  
 
