@@ -83,9 +83,15 @@ knitr::include_graphics(here("results_chapter/figures/motif_coeff_RNA_abundance.
 
 ## Comparison of motif effects from qPCR and half-life dataset models
 
-```{r motif-context-dependence, fig.cap="Experimental transcript abundance vs predicted abundance for all constructs according to predicted changes in decay rate due to the presence of 3'UTR motifs. Confidence intervals are within a standard error.", out.width='80%', fig.align='center'}
+Using a simple model of transcript production and decay the predicted effects of motifs on half lives can be used to infer predicted changes in overall RNA abundance. Figure \@ref(fig:hlife-predict-vs-abundance) shows the inferred predicted fold changes in abundance to compared to the experimentally verified changes from the qPCR experiments. Constructs with TSA1 terminators have highing $R^2$ values than those in RPS3 terminators suggesting that motif TSA1. It is also interesting that the SRO9 promoter pairing has the greatest correlation to the decay model suggesting that the less expressing promoter is more influenced by decay pathways. 
+
+```{r hlife-predict-vs-abundance, fig.cap="Experimental transcript abundance vs predicted abundance for all constructs according to predicted changes in decay rate due to the presence of 3'UTR motifs. Confidence intervals are within a standard error.", out.width='80%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/pred_vs_actual_abundance.png"))
 ```
+
+## Motif effects on gene expression are dependant on termintor context and promoter pairing
+
+A linear model to predict the $\Delta Cq$ values from the qPCR using only motif presence was trained on each promoter-terminator construct library separately. The inferred coefficients for each of the motifs, together with an additional interactive term for the linear combination of TTTCATTTC and TGTACAATA, in all of the promoter-terminator pairs are shown in Figure  \@ref(fig:motif-context-dependence). The significance of terminator context on motif effect can be seen in both ATATTCA and TGTACAATA constructs. ATATTCA is only effective in RPS3 terminators, whichever promoter is chosen, meanwhile TGTACAATA is only effective in the TSA1 terminator, irrespective of promoter. The significance of promoter choice is shown with the stability motif GTATACCTA which only appear to imbue an increase in RNA abundance for the weakest promoter SRO9.IN addition, the implications of inserting two different motifs into the terminator also changes with promoter selection. For the PGK1 promoter, the combination of TGTACAATA and TTTCATTTC together either has no added effect, or in fact a reduce efficiency, when compare to the addition of the reductions in abundance when each motif is present separately. However with native or SRO9 promoter pairing the combined effect is actually greater than the sum of their individual effects.
 
 ```{r motif-context-dependence, fig.cap="Motif contributions to fold changes in RNA abundance for different promoter and terminator contexts, with each promoter-terminators pairing's mod0 construct as base value. Confidence intervals are within a standard error.", out.width='80%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/motif_multi_context_coefficient.png"))
