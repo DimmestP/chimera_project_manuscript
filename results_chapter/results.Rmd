@@ -11,6 +11,8 @@ Initially, to test the effects of 3'UTRs on RNA abundance, promoter-terminator s
 - pPGK1 withh 12x terminator swaps
 - pSRO9 withh 12x terminator swaps
 
+## Short vs long terminator experiment
+
 ## Selecting cis-regulatory elements by their contributions to linear models of transcript half life
 
 Potential cis-regulatory elements to test for context dependence were initially identified through a literature search. We focused on cis-regulatory elements associated with post-transcriptional regulation only. This was in order to a) enable confirmation of each element's regulatory role by predicting their contributions to transcript degradation and b) minimise the possibility of selecting motifs with confounding transcriptional, post-transcriptional and translational roles. 69 suspected post-transcriptional, cis-regulatory elements were collated from three separate studies; Hogan et al (2008), Shalgi et al (2005) and Cheng et al (2017). All collated cis-regulatory elements were sequence motifs found in transcript 3' untranslated regions (3'UTR) as confirmed either in vivo, with RNA-protein binding assays (Hogan et al., 2008), or in silico, by comparing the sequences of transcripts with similar half lives (Shalgi et al., 2005; Cheng et al., 2017).
@@ -48,7 +50,7 @@ To comprehensively investigate the context dependence of the chosen cis-regulato
 
 Candidate cis-regulatory motifs on the 3'UTR (UGUAHMNUA, HWNCAUUWY, ATATTC, GTATACCTA) previously predicted with large contribution on RNA half life from the linear model trained on the Chan et al. (2017) half life dataset were tested for their modularity in different 3'UTR contexts and combined linearly to determiine their effects on RNA abundance. These sequence motifs were introduced to two 3'UTRs (tRPS3 and tTSA1) devoid of the candidate consensus motifs of interest and functionally characterised for their effect on RNA abundance by RT-qPCR. The TGTACAATA and TTTCATTTC sequences that satisfy the UGUAHMNUA and HWNCAUUWY consensus motifs respectively were chosen and used for subsequent experimental validation. **[Check why specifically these sequencces were chosen - out of all combinations of the consensus motifs]**
 
-#### Effects of candidate cis-regulatory motifs in tRPS3 3'UTR-terminator in combination with different promoters
+## Effects of candidate cis-regulatory motifs in tRPS3 3'UTR-terminator in combination with different promoters
 
 tRPS3 3'UTR-terminator were modified to incorporate three 9 bp cloning sites for motifs (M1, M2 and M3). The M1 was designed 24 bp downstream of the stop codon. Between M1 and M2 is a 15 bp spacer. M3 is located 4 bp downstream of M2 (Figure \@ref(fig:tRPS3-design-and-qpcr)). **[Supplementary figure - rationale for spacing]** A control tRPS3 3'UTR (mod0) was designed to incorporate scrambled/random bases in each cloning site, each with a GC content of 56% (Figure 1A). Two copies of the candidate decay motif ATATTC were incorporated to tRPS3-modB at sites M2 and M3. Similarly, two copies of the candidate stability motif (GTATACCTA) were introduced in tRPS3-modC 3'UTR. One copy of the putative decay motif (UGUAHMNUA) was introduced to tRPS3-modA at site M2 while two copies of another putative decay motif HWNCAUUWY motif were introduced to tRPS3-modD at sites M1 and M3. In order to test the effect of linear combinations of putative decay motifs  on mRNA abundance, the final design incorporated a combination of UGUAHMNUA at site M2 and HWNCAUUWY at sites M1 and M3. These 3'UTR/terminators were asssembled with either pRPS3 or pPGK1 promoters driving the expression of an mCherry reporter gene in a plasmid and expressed in yeast.
 
@@ -62,7 +64,7 @@ Analysis of RNA abundance by RT-qPCR was carried out on these strains showed a d
 ```{r tRPS3-design-and-qpcr, fig.cap="Design of modified tRPS3 3'UTRs and RT-qPCR measurement of RNA abundance in each reporter construct.", out.width='85%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/tRPS3_design_and_qpcr.png"))
 ```
-#### Effects of candidate cis-regulatory motifs in tTSA1 3'UTR-terminator in combination with different promoters
+## Effects of candidate cis-regulatory motifs in tTSA1 3'UTR-terminator in combination with different promoters
 
 tTSA1 3'UTR-terminator were modified to also incorporate three 9 bp cloning sites for motifs (M1, M2 and M3). The M1 was designed 21 bp downstream of the stop codon. M2 is designed 20 bp downstream of M1 and M3 is designed 24 bp downstream of M2. **[Supplementary figure - rationale for spacing.]** The tTSA1 mod0 control scrambled sequences inserted into the M1, M2 and M3 sites contained scrambled/random bases with GC contents of 33%, 22% and 33% respectively (Figure \@ref(fig:tRPS3-design-and-qpcr)). Similar to tRPS3 constructs, two copies of the candidate decay motif ATATTC were incorporated to tTSA1-modB at sites M2 and M3. Similarly, Two copies of the candidate stability motif (GTATACCTA) were introduced in tTSA1-modC 3'UTR. One copy of the putative decay motif (UGUAHMNUA) was introduced to tTSA1-modA at site M2 while two copies of another putative decay motif HWNCAUUWY motif were introduced to tRPS3-modD at sites M1 and M3. In order to test the effect of linear combinations of putative decay motifs  on mRNA abundance, the final design incorporated a combination of UGUAHMNUA at site M2 and HWNCAUUWY at sites M1 and M3. These 3'UTR/terminators were asssembled with either pTSA1 or pPGK1 promoters driving the expression of an mCherry reporter gene in a plasmid and expressed in yeast.
 
@@ -72,7 +74,7 @@ tTSA1 3'UTR-terminator were modified to also incorporate three 9 bp cloning site
 knitr::include_graphics(here("results_chapter/figures/tTSA1_design_and_qpcr.png"))
 ```
 
-#### Modelling the relationship of cis-regulatory motifs on RNA abundance
+## Modelling the relationship of cis-regulatory motifs on RNA abundance
 
 We fitted a linear model to each dataset (based on promoter - pRPS3 or pPGK1) to determine the contribution of each motif on RNA abundance. The linear model explains ~70% of the variability in RNA abundance due to cis-regulatory motifs in the 3'UTR. With both promoters, the putative stability (GTATACCTA) sequence show no significant effect on RNA abundance. The ATATTC and TTTACTTTC cis-regulatory sequences contribute to a moderate but significant decrease RNA abundance (p<0.001 wth both promoters). Interestingly, the decay (TGTACAATA) motif shows variable effects when in combination with different promooters (p<0.01 with pRPS3, n.s with pPGK1). The combination of both TGTACAATA and TTTCATTTC is not additive, with no significant downregulation of gene expression when present in combination within a 3'UTR with both promooters.
 
@@ -97,6 +99,12 @@ A linear model to predict the $\Delta Cq$ values from the qPCR using only motif 
 knitr::include_graphics(here("results_chapter/figures/motif_multi_context_coefficient.png"))
 ```
 
+## Motif effects on transcript expression is repeated in protein expression data
+
+```{r protein-verse-RNA-plot, fig.cap="Motif contributions to fold changes in RNA abundance and protein fluorescence for RPS3 and TSA1 native paring constructs.", out.width='80%', fig.align='center'}
+knitr::include_graphics(here("results_chapter/figures/combined_TSA1_RPSA_protein_RNA_plot_error_bar.png"))
+```
+
 ## Investigating the effects of cis-regulatory motifs in the 3'UTR using 5PSeq
 We used high-throughput 5PSeq (HT-5Pseq) technique to investigate whether modifications of 3’ UTRs influence the process of 5’-3’ co-translational degradation of mRNA, which can also serve as a proxy of translation process (Zhang & Pelechano 2020), and modify ribosome stalling in the 3’-end region of coding sequence. The 5PSeq method allows to investigate the process of  5’-3’ degradation of mRNA by capturing only de-capped 5’ ends of mRNA molecules, and at the same time – the polyadenylated 3’ ends. We generated sequencing reads with insert sizes up to 600 bp, which included entire 3’UTRs and up to 400 bp of coding sequence.  
 
@@ -112,7 +120,3 @@ The distributions of 5’ ends did not differ significantly between the samples 
 
 ## Comparison of whole-genome ATATTC motif effect vs. reporter-gene ATATTC motif effect
 - Comparison of our qPCR data of modB with that of Cheng et al. (2017)
-
-## Effect of motif copy number and position in the 3'UTR on RNA abundance
-- increasing number of ATATTC motifs
-- increasing number of TTTCATTTC motifs (interesting because this often occurs in 2x)
