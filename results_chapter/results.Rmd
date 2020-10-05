@@ -4,12 +4,8 @@
 library(here)
 ```
 
-## Initial characterisation of promoter-terminator swaps and determining their effects on RNA abundance
-Initially, to test the effects of 3'UTRs on RNA abundance, promoter-terminator swaps consisting of a collection of 12 (**10 ?**) terminators and 3 promoters driving the expression of an mCherry CDS in a plasmid were constructed. Unlike in previous studies where expression enhancing terminators were identified for further investigation, we selected terminators of from genes of varying expression profiles (Curran et al. 2013, Ito et al. 2013, Ito et al. 2016)
-
-- pRPS3 with 12x terminator swaps
-- pPGK1 withh 12x terminator swaps
-- pSRO9 withh 12x terminator swaps
+## Initial characterisation of terminators on RNA abundance and protein production
+Initially, to test the effects of terminator selection on mRNA and protein production, we selected a set of 10 terminators from transcripts with of varying expresssion levels. These terminatorswere cloned into a pRS415-derived plasmid along with mCherry or mTurquoise2 and a promoter. The effect of terminator choice was tested with 5 promoters (pPGK1, pRPS3, pRPS13, pCLN2 and pSRO9) to determine any differring effects protein production. Terminator choice on protein output was evaluated by measuring the fluorescence over time from these expression casssettes in S. cerevisiae BY4741.
 
 ## Short vs long terminator experiment
 
