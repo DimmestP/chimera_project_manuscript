@@ -75,7 +75,7 @@ knitr::include_graphics(here("results_chapter/figures/motif_multi_context_coeffi
 The effects of motif presence on protein expression was investigate with a platereader assay detecting the fluorescence of the mCherry reporter gene on the pRPS3-tRPS3 and pTSA1-tTSA1 constructs. The right column in Figure \@ref(fig:protein-verse-RNA-plot) confirms that motif effects can be detected in protein expression expression alone. Comparing the corresponding RNA abundance levels, left column of Figure \@ref(fig:protein-verse-RNA-plot), the same effects of the motifs on transcript abundance are seen in protein expression, together with the same context dependence. 
 
 ```{r protein-verse-RNA-plot, fig.cap="Motif contributions to fold changes in RNA abundance and protein fluorescence for RPS3 and TSA1 native paring constructs.", out.width='80%', fig.align='center'}
-knitr::include_graphics(here("results_chapter/figures/combined_TSA1_RPSA_protein_RNA_plot_error_bar.png"))
+knitr::include_graphics(here("results_chapter/figures/combined_TSA1_RPSA_protein_RNA_plot.png"))
 ```
 
 ## Investigating the effects of cis-regulatory motifs in the 3'UTR using 5PSeq
