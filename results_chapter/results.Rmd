@@ -54,15 +54,6 @@ These motifs were also tested in a different 3'UTR context to determine if effec
 knitr::include_graphics(here("results_chapter/figures/tTSA1_design_and_qpcr.png"))
 ```
 
-## Modelling the relationship of cis-regulatory motifs on RNA abundance
-
-We fitted a linear model to each dataset (based on promoter - pRPS3 or pPGK1) to determine the contribution of each motif on RNA abundance. The linear model explains ~70% of the variability in RNA abundance due to cis-regulatory motifs in the 3'UTR. With both promoters, the putative stability (GTATACCTA) sequence show no significant effect on RNA abundance. The ATATTC and TTTACTTTC cis-regulatory sequences contribute to a moderate but significant decrease RNA abundance (p<0.001 wth both promoters). Interestingly, the decay (TGTACAATA) motif shows variable effects when in combination with different promooters (p<0.01 with pRPS3, n.s with pPGK1). The combination of both TGTACAATA and TTTCATTTC is not additive, with no significant downregulation of gene expression when present in combination within a 3'UTR with both promooters.
-
-```{r motif-coeff-RNA-abundance, fig.cap="Modelling the relationship of genetic elements on RNA abundance (using experimental data). Confidence intervals are within two standard errors.", out.width='80%', fig.align='center'}
-knitr::include_graphics(here("results_chapter/figures/motif_coeff_RNA_abundance.png"))
-```
-
-
 ## Comparison of motif effects from qPCR and half-life dataset models
 
 Using a simple model of transcript production and decay the predicted effects of motifs on half lives can be used to infer predicted changes in overall RNA abundance. Figure \@ref(fig:hlife-predict-vs-abundance) shows the inferred predicted fold changes in abundance to compared to the experimentally verified changes from the qPCR experiments. Constructs with TSA1 terminators have highing $R^2$ values than those in RPS3 terminators suggesting that motif TSA1. It is also interesting that the SRO9 promoter pairing has the greatest correlation to the decay model suggesting that the less expressing promoter is more influenced by decay pathways. 
