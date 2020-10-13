@@ -4,7 +4,7 @@
 library(here)
 ```
 
-## Terminator effects on RNA abundance and protein production are dependendent are context dependent
+## Terminator effects on RNA abundance and protein production are context dependent
 Initially, to test the effects of terminator selection on mRNA and protein production, we selected a set of 10 terminators from transcripts with of varying expresssion levels. These terminators were cloned into a pRS415-derived plasmid along with mCherry or mTurquoise2 and a promoter. The effect of terminator choice was tested with 5 promoters (pPGK1, pRPS3, pRPS13, pCLN2 and pSRO9) to determine any differring effects protein production. Terminator choice on protein output was evaluated by measuring the fluorescence over time from these expression casssettes in S. cerevisiae BY4741.
 
 ## Short vs long terminator experiment
