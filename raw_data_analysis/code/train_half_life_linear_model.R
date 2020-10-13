@@ -210,7 +210,7 @@ ggsave2(here("./results_chapter/figures/motif_coefficient_comparison.png"), ggpl
 write_csv( chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./results_chapter/data/chan_motif_coefficients.csv"))
 
 # check for co-occurrences of motifs in native 3'UTR
-TGTAHMNTA_co_occurrences <- single_count_median_3UTR_motifs_freq %>% 
+  TGTAHMNTA_co_occurrences <- single_count_median_3UTR_motifs_freq %>% 
   filter(TGTAHMNTA > 0) %>% 
   select(-threePrimeUTR) %>% 
   gather(key = "motif", value = "count", - transcriptName) %>% 
