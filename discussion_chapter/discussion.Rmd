@@ -1,6 +1,6 @@
 # Discussion
 
-We have confirmed that promoter-terminator pairings change the effectiveness of each region's contribution to gene expression. This supports previous work by Curran et al. 2013 and  Wei et al. 2017 showing that promoter and terminator regions are not entirely modular when regulating gene expression. We explored whether the changes in regulatory behavior according to overall context is explained by changes in the regulatory effects of individual cis-regulatory elements within these regions. We have gone on to shhow that 3'UTR sequence motifs, confirmed to to have a statistically significant contributions to transcript decay rates, have effects on gene expression that are dependent on overall terminator context and promoter pairing. 
+We have confirmed that promoter-terminator pairings change the effectiveness of each region's contribution to gene expression. This supports previous work by Curran et al. 2013 and  Wei et al. 2017 showing that promoter and terminator regions are not entirely modular when regulating gene expression. We explored whether the changes in regulatory behavior according to overall context is explained by changes in the regulatory effects of individual cis-regulatory elements within these regions. We have gone on to show that 3'UTR sequence motifs, confirmed to to have a statistically significant contributions to transcript decay rates, have effects on gene expression that are dependent on overall terminator context and promoter pairing. 
 
 ## Mechanisms for motif termintor context dependence
 
