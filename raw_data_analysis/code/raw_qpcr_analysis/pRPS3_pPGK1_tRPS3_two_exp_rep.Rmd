@@ -1,5 +1,5 @@
 ---
-title: "RT-qPCR of pRPS3-mCh-tRPS3mod (2 reps) and pPGK1-mCh-tRPS3mod (2 reps)"
+title: "RT-qPCR of pRPS3-mCh-tRPS3mod (2 reps), pPGK1-mCh-tRPS3mod (2 reps) and pSRO9-mCh-tRPS3mod (2 reps)"
 author: "Jamie Auxillos"
 date: "06/05/2020"
 output:
@@ -13,7 +13,7 @@ output:
 ## knitr options for report generation
 knitr::opts_chunk$set(warning=FALSE,message=FALSE,echo=TRUE,cache=FALSE,
                       #results="show",
-                      fig.path="figures_pRPS3_pPGK1_tRPS3mod/")
+                      fig.path="figures_pRPS3_pPGK1_pSRO9_tRPS3mod/")
 
 library(tidyverse)
 library(cowplot)
@@ -34,7 +34,7 @@ theme_set(theme_cowplot(font_size=11) %+replace%
                     legend.title=element_text(family="Tahoma", size=9)))
 ```
 
-```{r label_plates,dependson="plate_functions", echo=FALSE}
+```{r label_plates, echo=FALSE}
 
 # list Targets (Primer sets)
 target_id <- c("mCh-7", "URA3-ORF", "RPS3-ORF", "PGK1-ORF")
@@ -46,6 +46,8 @@ strainlevelsR3 <- c("pRPS3-mCherry-tRPS3_WT","pRPS3-mCherry-tRPS3_mod0","pRPS3-m
 strainvaluesR3 <- factor(rep(strainlevelsR3,each=3),levels=strainlevelsR3)
 strainlevelsP1 <- c("pPGK1-mCherry-tRPS3_WT","pPGK1-mCherry-tRPS3_mod0","pPGK1-mCherry-tRPS3_modA","pPGK1-mCherry-tRPS3_modB","pPGK1-mCherry-tRPS3_modC", "pPGK1-mCherry-tRPS3_modD", "pPGK1-mCherry-tRPS3_modE","POT1-ccdB")
 strainvaluesP1 <- factor(rep(strainlevelsP1,each=3),levels=strainlevelsP1)
+strainlevelsS9 <- c("pSRO9-mCherry-tRPS3_WT","pSRO9-mCherry-tRPS3_mod0","pSRO9-mCherry-tRPS3_modA","pSRO9-mCherry-tRPS3_modB","pSRO9-mCherry-tRPS3_modC", "pSRO9-mCherry-tRPS3_modD", "pSRO9-mCherry-tRPS3_modE","POT1-ccdB")
+strainvaluesS9 <- factor(rep(strainlevelsS9,each=3),levels=strainlevelsS9)
 bio_replevels_A <- c("bio_rep1","bio_rep2","bio_rep3")
 bio_repvalues_A <- factor(rep(bio_replevels_A,times=8),levels=bio_replevels_A)
 bio_replevels_B <- c("bio_rep4","bio_rep5","bio_rep6")
@@ -56,6 +58,8 @@ colkeyR3_1 <- tibble(well_col=1:24, strain=strainvaluesR3, bio_rep=bio_repvalues
 colkeyR3_2 <- tibble(well_col=1:24, strain=strainvaluesR3, bio_rep=bio_repvalues_B) 
 colkeyP1_1 <- tibble(well_col=1:24, strain=strainvaluesP1, bio_rep=bio_repvalues_A) 
 colkeyP1_2 <- tibble(well_col=1:24, strain=strainvaluesP1, bio_rep=bio_repvalues_B) 
+colkeyS9_1 <- tibble(well_col=1:24, strain=strainvaluesS9, bio_rep=bio_repvalues_A) 
+colkeyS9_2 <- tibble(well_col=1:24, strain=strainvaluesS9, bio_rep=bio_repvalues_B) 
 rowkey <- create_rowkey_4_in_16(target_id=target_idvalues) 
 
 
@@ -99,29 +103,59 @@ plateplanP1_2 <-
     mutate(construct = factor(construct,levels = c("modE","modD","modC","modB","modA","mod0","WT")),remove = FALSE)%>%
     unite(pro_mCh,promoter,mCherry,sep="-", remove=FALSE)%>%
     unite(ter_mod,terminator,construct,sep="_", remove=FALSE))
+
+plateplanS9_1 <-     
+    label_plate_rowcol(create_blank_plate(well_row = LETTERS[1:16],well_col=1:24),
+                       rowkey,colkeyS9_1%>% 
+    unite(sample_id,strain,bio_rep,remove=FALSE)%>%
+    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","terminator")) %>%
+    separate(terminator, remove = FALSE, sep="_",into=c("terminator","construct")) %>%
+    mutate(construct = factor(construct,levels = c("modE","modD","modC","modB","modA","mod0","WT")),remove = FALSE)%>%
+    unite(pro_mCh,promoter,mCherry,sep="-", remove=FALSE)%>%
+    unite(ter_mod,terminator,construct,sep="_", remove=FALSE))
+
+plateplanS9_2 <-     
+    label_plate_rowcol(create_blank_plate(well_row = LETTERS[1:16],well_col=1:24),
+                       rowkey,colkeyS9_2%>% 
+    unite(sample_id,strain,bio_rep,remove=FALSE)%>%
+    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","terminator")) %>%
+    separate(terminator, remove = FALSE, sep="_",into=c("terminator","construct")) %>%
+    mutate(construct = factor(construct,levels = c("modE","modD","modC","modB","modA","mod0","WT")),remove = FALSE)%>%
+    unite(pro_mCh,promoter,mCherry,sep="-", remove=FALSE)%>%
+    unite(ter_mod,terminator,construct,sep="_", remove=FALSE))
 ```
 
 ## Load data and attribute sample information
 ```{r load_plates,dependson="label_plates",results="show"}
 # read my plates
-platesR3_1 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200121-pRPS3-tRPS3mod-n1-ct.txt"),skip=1) %>%
-    mutate(well=Pos,cq=Cp,exp_rep = 1,exp_rep=factor(exp_rep)) %>%
+
+platesR3_1 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/JA_20200121-pRPS3-tRPS3mod-n1-ct.txt")) %>%
+    mutate(exp_rep = 1,exp_rep=factor(exp_rep)) %>%
     left_join(plateplanR3_1)
 
 
-platesR3_2 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200204-pRPS3-tRPS3mod-n2-ct.txt"),skip=1) %>%
-    mutate(well=Pos,cq=Cp,exp_rep = 2,exp_rep=factor(exp_rep)) %>%
+platesR3_2 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/JA_20200204-pRPS3-tRPS3mod-n2-ct.txt")) %>%
+    mutate(exp_rep = 2,exp_rep=factor(exp_rep)) %>%
     left_join(plateplanR3_2)
 
-platesP1_1 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200221_pPGK1-tRPS3mod-n1-ct.txt"),skip=1) %>%
-    mutate(well=Pos,cq=Cp,exp_rep = 1, exp_rep=factor(exp_rep)) %>% 
+platesP1_1 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/JA_20200221_pPGK1-tRPS3mod-n1-ct.txt")) %>%
+    mutate(exp_rep = 1, exp_rep=factor(exp_rep)) %>% 
     left_join(plateplanP1_1)
 
-platesP1_2 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/JA_20200311-pPGK1-tRPS3mod-n2-ct.txt"),skip=1) %>%
-    mutate(well=Pos,cq=Cp,exp_rep = 2,exp_rep=factor(exp_rep)) %>%
+platesP1_2 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/JA_20200311-pPGK1-tRPS3mod-n2-ct.txt")) %>%
+    mutate(exp_rep = 2,exp_rep=factor(exp_rep)) %>%
     left_join(plateplanP1_2)
 
-plates <- bind_rows(platesR3_1,platesR3_2,platesP1_1,platesP1_2) 
+platesS9_1 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/JA_20200814-pSRO9-tRPS3mod-n1-ct.txt")) %>%
+    mutate(exp_rep = 1,exp_rep=factor(exp_rep)) %>%
+    left_join(plateplanS9_1)
+
+platesS9_2 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/JA_20200924-pSRO9-tRPS3mod_n2rep-ct.txt")) %>%
+    mutate(exp_rep = 2,exp_rep=factor(exp_rep)) %>%
+    left_join(plateplanS9_2)
+
+
+plates <- bind_rows(platesR3_1,platesR3_2,platesP1_1,platesP1_2, platesS9_1, platesS9_2) 
 
 summary(plates)
 ```
@@ -164,6 +198,27 @@ platespPGK1 <- plates%>% filter(strain %in% c("pPGK1-mCherry-tRPS3_WT","pPGK1-mC
   mutate(strain = factor(strain,levels=c("pPGK1-mCherry-tRPS3_WT","pPGK1-mCherry-tRPS3_mod0","pPGK1-mCherry-tRPS3_modA","pPGK1-mCherry-tRPS3_modB",
                                            "pPGK1-mCherry-tRPS3_modC","pPGK1-mCherry-tRPS3_modD","pPGK1-mCherry-tRPS3_modE")))
 ggplot(data=platespPGK1, aes(x=target_id,y=cq)) +
+    geom_point(aes(color=bio_rep, shape=prep_type),
+               position=position_dodge(width = 0.85),size=1.6, alpha=0.7) +
+    labs(y="Quantification cycle (cq)",x="Primers") +
+    scale_shape_manual(values=c(16,23)) +
+    scale_colour_hue(h = c(90, 360)+20,l=60,c=60)+
+    facet_wrap(~strain,ncol=4) +
+    theme(axis.text.x=element_text(angle=90,vjust=0.5),
+          axis.title.x=element_text(vjust=-2),
+          axis.title.y=element_text(vjust=3),
+          legend.position=c(0.85,0.01))
+```
+
+### Plotting unnormalised data for pSRO9 strains
+
+```{r unnorm_pSRO9,fig.height=5,fig.width=10, echo=FALSE}
+
+platespSRO9 <- plates%>% filter(strain %in% c("pSRO9-mCherry-tRPS3_WT","pSRO9-mCherry-tRPS3_mod0","pSRO9-mCherry-tRPS3_modA","pSRO9-mCherry-tRPS3_modB",
+                                           "pSRO9-mCherry-tRPS3_modC","pSRO9-mCherry-tRPS3_modD","pSRO9-mCherry-tRPS3_modE"))%>%
+  mutate(strain = factor(strain,levels=c("pSRO9-mCherry-tRPS3_WT","pSRO9-mCherry-tRPS3_mod0","pSRO9-mCherry-tRPS3_modA","pSRO9-mCherry-tRPS3_modB",
+                                           "pSRO9-mCherry-tRPS3_modC","pSRO9-mCherry-tRPS3_modD","pSRO9-mCherry-tRPS3_modE")))
+ggplot(data=platespSRO9, aes(x=target_id,y=cq)) +
     geom_point(aes(color=bio_rep, shape=prep_type),
                position=position_dodge(width = 0.85),size=1.6, alpha=0.7) +
     labs(y="Quantification cycle (cq)",x="Primers") +
@@ -348,14 +403,14 @@ ggplot(data=platesmeltP1 %>% filter(strain==c("pPGK1-mCherry-tRPS3_WT")),
 ```
 
 ## 1) Delta cq calculation
-Normalisation of mCherry cq values against PGK1-ORF and RPS3-ORF cq values. This calculation takes the **median** of normtarget_ids (getNormcq function default is **median**)
+norm_function changed to **mean**
 
 ```{r deltacq_norm, echo=TRUE, fig.height=6, fig.width=9}
 
 # platesnorm first excludes pPGK1-mCherry-tRPS3_WT_bio_rep2, and all POT1-ccdB strains, then takes all +RT results, then normalises the cq values by the median of normtarget_ids, then filters cq values for mCh-7
 platesnorm <- plates  %>% 
         filter(!sample_id %in% c("pPGK1-mCherry-tRPS3_WT_bio_rep2"), !strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%    
-        calculate_deltacq_bysampleid(ref_target_ids = c("PGK1-ORF", "RPS3-ORF")) 
+        calculate_deltacq_bysampleid(ref_target_ids = c("PGK1-ORF", "RPS3-ORF", "URA3-ORF"), norm_function = mean)
 
 platesnorm_summarise <- platesnorm%>%
                     group_by(strain, target_id, bio_rep, exp_rep)%>%
@@ -381,7 +436,7 @@ ggplot(platesnorm, aes(ter_mod,delta_cq))+
 ### 1) Exporting analysed delta cq values data
 ```{r deltacq_normdata, echo=TRUE}
 #exporting platesnorm dataframe
-write.csv(platesnorm_summarise,here("raw_data_analysis/data/norm_qpcr/pRPS3_pPGK1_tRPS3_deltacq_platesnorm_summarise.csv"), row.names = FALSE)
+write.csv(platesnorm_summarise,here("raw_data_analysis/data/norm_qpcr/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv"), row.names = FALSE)
 
 ```
 
@@ -445,7 +500,7 @@ pPGK1 datapoints were subdivided based on exp_rep. Delta delta cq is calculated 
 
 ```{r delta-deltacq_norm_PGK1_exp_rep, echo=TRUE}
 
-# Extracts the pRPS3 strains
+# Extracts the pPGK1 strains
 platesnorm_pPGK1_exp_rep <- platesnorm %>% filter(promoter %in% "pPGK1", target_id %in% "mCh-7")
   
 # Calculates the mean cq value of pPGK1-mCherry-tRPS3_mod0 Samples (-2.158333)
@@ -475,13 +530,47 @@ platesnorm_mod0_pPGK1_exp_rep2 <- platesnorm_pPGK1_exp_rep %>% filter(exp_rep==2
     mutate(delta_cq.mod0 = delta_cq - mean_platesnorm_pPGK1mod0_exp_rep2$mean_mod0, remove=FALSE)
 ```
 
+```{r delta-deltacq_norm_SRO9_exp_rep, echo=TRUE}
+
+# Extracts the SRO9 strains
+platesnorm_pSRO9_exp_rep <- platesnorm %>% filter(promoter %in% "pSRO9", target_id %in% "mCh-7")
+  
+# Calculates the mean cq value of pSRO9-mCherry-tRPS3_mod0 Samples (4.245926)
+mean_platesnorm_pSRO9mod0_exp_rep1 <- platesnorm_pSRO9_exp_rep  %>% filter(exp_rep==1)%>%
+    select(c("strain","delta_cq", "bio_rep", "tech_rep")) %>% 
+    filter(strain %in% c("pSRO9-mCherry-tRPS3_mod0")) %>%
+    group_by(strain, bio_rep)%>%
+    summarize(median_bio_rep_mod0 = median(delta_cq)) %>%
+    ungroup()%>%
+    group_by(strain)%>%
+    summarize(mean_mod0 = mean(median_bio_rep_mod0))
+
+# Calculates the mean cq value of pSRO9-mCherry-tRPS3_mod0 Samples (3.887037)
+mean_platesnorm_pSRO9mod0_exp_rep2 <- platesnorm_pSRO9_exp_rep  %>% filter(exp_rep==2)%>%
+    select(c("strain","delta_cq", "bio_rep", "tech_rep")) %>% 
+    filter(strain %in% c("pSRO9-mCherry-tRPS3_mod0")) %>%
+    group_by(strain, bio_rep)%>%
+    summarize(median_bio_rep_mod0 = median(delta_cq)) %>%
+    ungroup()%>%
+    group_by(strain)%>%
+    summarize(mean_mod0 = mean(median_bio_rep_mod0))
+
+# Calculates the delta delta cq (subtracts mean(pPGK1mod0$delta_cq) from every delta_cq))
+platesnorm_mod0_pSRO9_exp_rep1 <- platesnorm_pSRO9_exp_rep %>% filter(exp_rep==1)%>%
+    mutate(delta_cq.mod0 = delta_cq - mean_platesnorm_pSRO9mod0_exp_rep1$mean_mod0, remove=FALSE)
+platesnorm_mod0_pSRO9_exp_rep2 <- platesnorm_pSRO9_exp_rep %>% filter(exp_rep==2)%>%
+    mutate(delta_cq.mod0 = delta_cq - mean_platesnorm_pSRO9mod0_exp_rep2$mean_mod0, remove=FALSE)
+```
+
 ## 2) Mean delta delta cq and RNA abundance calculation
 In the previous 2 chunks, we have calculated the delta-delta cq value for each techrep. Here, we are summarising that information by calculating the median cq for each biorep and calculating the RNA abundance (2^-Median_cq).  
 
 ```{r mean_rna_abund_exp_rep, echo=TRUE}
 
 # Combining the calculated delta-delta cq from the two dataframes then calculating the Median delta-delta cq. RNA abundance is calculated by the following formula 2^(- Median_cq). 
-platesnorm_mod0_median_exp_rep <- bind_rows(platesnorm_mod0_pRPS3_exp_rep1, platesnorm_mod0_pRPS3_exp_rep2, platesnorm_mod0_pPGK1_exp_rep1, platesnorm_mod0_pPGK1_exp_rep2)%>%
+platesnorm_mod0_median_exp_rep <- bind_rows(platesnorm_mod0_pRPS3_exp_rep1, platesnorm_mod0_pRPS3_exp_rep2,
+                                            platesnorm_mod0_pPGK1_exp_rep1, platesnorm_mod0_pPGK1_exp_rep2,
+                                            platesnorm_mod0_pSRO9_exp_rep1, platesnorm_mod0_pSRO9_exp_rep2)%>%
                     group_by(strain, target_id, bio_rep, exp_rep)%>%
                     summarize(delta_deltacq = median(delta_cq.mod0, na.rm=TRUE),
                               rel_abund_delta_deltacq = (2^-delta_deltacq), na.rm=FALSE)%>%
@@ -490,7 +579,7 @@ platesnorm_mod0_median_exp_rep <- bind_rows(platesnorm_mod0_pRPS3_exp_rep1, plat
                     mutate(construct = factor(construct,levels = c("modE","modD","modC","modB","modA","mod0","WT")),remove = FALSE)%>%
                     unite(pro_mCh,promoter,mCherry,sep="-", remove=FALSE)%>%
                     unite(ter_mod,terminator,construct,sep="_", remove=FALSE) %>%
-                    mutate(pro_mCh = factor(pro_mCh,levels = c("pRPS3-mCherry","pPGK1-mCherry"))) %>% 
+                    mutate(pro_mCh = factor(pro_mCh,levels = c("pRPS3-mCherry","pPGK1-mCherry", "pSRO9-mCherry"))) %>% 
                     mutate(ter_mod = factor(ter_mod,levels=c("tRPS3_modC","tRPS3_modE","tRPS3_modD","tRPS3_modA",
                                            "tRPS3_modB","tRPS3_mod0","tRPS3_WT")))
 ```
@@ -500,7 +589,7 @@ platesnorm_mod0_median_exp_rep <- bind_rows(platesnorm_mod0_pRPS3_exp_rep1, plat
 ```{r plot_delta_deltacq_exp_rep_1,fig.height=5,fig.width=9, echo=FALSE}
 
 normalised_plot_exp_rep <- ggplot(data = platesnorm_mod0_median_exp_rep %>% 
-    filter(!strain %in% c("pPGK1-mCherry-tRPS3_WT","pRPS3-mCherry-tRPS3_WT")))+
+    filter(!strain %in% c("pSRO9-mCherry-tRPS3_WT" ,"pPGK1-mCherry-tRPS3_WT","pRPS3-mCherry-tRPS3_WT")))+
     geom_point(aes(rel_abund_delta_deltacq,ter_mod,colour=ter_mod, shape=bio_rep)) +
     #scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 (log2 scale)",omag = seq(-5,5),scilabels=TRUE) +
     scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 (log2 scale)",omag = seq(-5,5),scilabels=FALSE) +
@@ -513,7 +602,7 @@ normalised_plot_exp_rep <- ggplot(data = platesnorm_mod0_median_exp_rep %>%
           axis.title.x=element_text(vjust=-2),
           legend.position="bottom",
           legend.box.margin=margin(20,10,10,180))+
-  facet_wrap(~pro_mCh,ncol = 2)
+  facet_wrap(~pro_mCh,ncol = 3)
 
 normalised_plot_exp_rep + stat_summary(aes(rel_abund_delta_deltacq,ter_mod),
     fun="mean",colour="black",
@@ -523,7 +612,7 @@ normalised_plot_exp_rep + stat_summary(aes(rel_abund_delta_deltacq,ter_mod),
 ```{r plot_delta_deltacq_exp_rep_2,fig.height=9,fig.width=5, echo=FALSE}
 
 normalised_plot1_exp_rep <- ggplot(data = platesnorm_mod0_median_exp_rep %>% 
-    filter(!strain %in% c("pPGK1-mCherry-tRPS3_WT","pRPS3-mCherry-tRPS3_WT")))+
+    filter(!strain %in% c("pSRO9-mCherry-tRPS3_WT", "pPGK1-mCherry-tRPS3_WT","pRPS3-mCherry-tRPS3_WT")))+
     geom_point(aes(rel_abund_delta_deltacq,ter_mod,colour=ter_mod, shape=bio_rep)) +
     scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 \n (log2 scale)",omag = seq(-5,5),scilabels=FALSE) +
     labs(y="") +
@@ -535,7 +624,7 @@ normalised_plot1_exp_rep <- ggplot(data = platesnorm_mod0_median_exp_rep %>%
           axis.title.x=element_text(size=10,vjust=-2),
           legend.position="bottom",
           legend.box.margin=margin(20,0,0,30))+
-    facet_wrap(~pro_mCh,nrow = 2)
+    facet_wrap(~pro_mCh,nrow = 3)
 
 normalised_plot1_exp_rep + stat_summary(aes(rel_abund_delta_deltacq,ter_mod),
     fun="mean",colour="black",
