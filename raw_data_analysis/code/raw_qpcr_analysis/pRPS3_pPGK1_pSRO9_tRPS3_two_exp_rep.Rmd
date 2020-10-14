@@ -580,24 +580,23 @@ platesnorm_mod0_median_exp_rep <- bind_rows(platesnorm_mod0_pRPS3_exp_rep1, plat
                     unite(pro_mCh,promoter,mCherry,sep="-", remove=FALSE)%>%
                     unite(ter_mod,terminator,construct,sep="_", remove=FALSE) %>%
                     mutate(pro_mCh = factor(pro_mCh,levels = c("pRPS3-mCherry","pPGK1-mCherry", "pSRO9-mCherry"))) %>% 
-                    mutate(ter_mod = factor(ter_mod,levels=c("tRPS3_modC","tRPS3_modE","tRPS3_modD","tRPS3_modA",
-                                           "tRPS3_modB","tRPS3_mod0","tRPS3_WT")))
+                    mutate(ter_mod = factor(ter_mod,levels=c("tRPS3_WT", "tRPS3_modC","tRPS3_modE","tRPS3_modD","tRPS3_modA",
+                                           "tRPS3_modB","tRPS3_mod0")))
 ```
 
 ### 2) Plotting the results in a scatter plot
 
 ```{r plot_delta_deltacq_exp_rep_1,fig.height=5,fig.width=9, echo=FALSE}
 
-normalised_plot_exp_rep <- ggplot(data = platesnorm_mod0_median_exp_rep %>% 
-    filter(!strain %in% c("pSRO9-mCherry-tRPS3_WT" ,"pPGK1-mCherry-tRPS3_WT","pRPS3-mCherry-tRPS3_WT")))+
+normalised_plot_exp_rep <- ggplot(data = platesnorm_mod0_median_exp_rep)+
     geom_point(aes(rel_abund_delta_deltacq,ter_mod,colour=ter_mod, shape=bio_rep)) +
     #scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 (log2 scale)",omag = seq(-5,5),scilabels=TRUE) +
     scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 (log2 scale)",omag = seq(-5,5),scilabels=FALSE) +
       labs(y="") +
     scale_shape_manual(values=c(19, 17, 15, 10, 7, 14)) +
-    scale_colour_manual(values=c("#288a2e","#a84a9a","#6f3ba1","#416db0","#CC6666","black")) +
+    scale_colour_manual(values=c( "grey50", "#288a2e","#a84a9a","#6f3ba1","#416db0","#CC6666","black")) +
     guides(colour=FALSE) +
-    theme(axis.text.y=element_text(colour=c("#288a2e","#a84a9a","#6f3ba1","#416db0","#CC6666","black")),
+    theme(axis.text.y=element_text(colour=c("grey50", "#288a2e","#a84a9a","#6f3ba1","#416db0","#CC6666","black")),
           axis.text.x=element_text(angle=0,vjust=0.5),
           axis.title.x=element_text(vjust=-2),
           legend.position="bottom",
