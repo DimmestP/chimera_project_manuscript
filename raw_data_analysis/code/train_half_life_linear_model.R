@@ -3,6 +3,7 @@ library(Biostrings)
 library(DECIPHER)
 library(latex2exp)
 library(here)
+library(cowplot)
 
 source(here("raw_data_analysis/code/linear_model_functions.R"))
 
@@ -154,20 +155,20 @@ sun_step_model_r_squared <- summary(single_motif_chan_decay_step_model_sun)$r.sq
 chan_pred_vs_obvs_plot <- ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Chan")) +
   geom_bin2d(aes(x=Predicted_Half_Life,y=Measured_Half_Life), bins = 70) +
   labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obs}$"),title = TeX("Chan $\\textit{et al}$")) +
-  theme_bw(base_size = 25) +
+  theme_bw(base_size = 20) +
   scale_y_log10(limits = c(0.9,200)) +
   scale_x_log10(breaks=c(1,10),minor_breaks = c(3,30),limits = c(1,60)) +
   theme(legend.position = "none",panel.grid.minor.y = element_blank(),plot.title = element_text(hjust=0.5)) +
-  annotate("text",label = TeX(paste0("$R^2=$",signif(chan_step_model_r_squared,2))),size=9,x=3,y=130)
+  annotate("text",label = TeX(paste0("$R^2=$",signif(chan_step_model_r_squared,2))),size=7,x=3,y=130)
 
 sun_pred_vs_obvs_plot <- ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Sun")) +
   geom_bin2d(aes(x=Predicted_Half_Life,y=Measured_Half_Life), bins = 70) +
   labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obvs}$"),title = TeX("Sun $\\textit{et al}$")) +
-  theme_bw(base_size = 25) +
+  theme_bw(base_size = 20) +
   scale_y_log10(limits = c(0.9,200)) +
   scale_x_log10(breaks=c(1,10),minor_breaks = c(3,30),limits = c(1,60)) +
   theme(legend.position = "none",panel.grid.minor.y = element_blank(),plot.title = element_text(hjust=0.5),axis.title.y=element_blank(), axis.text.y = element_blank(),axis.ticks.y = element_blank()) +
-  annotate("text",label = TeX(paste0("$R^2=$",signif(sun_step_model_r_squared,2))),size=9,x=3,y=130)
+  annotate("text",label = TeX(paste0("$R^2=$",signif(sun_step_model_r_squared,2))),size=7,x=3,y=130)
 
 # output chan vs sun comparison graph
 combined_hlife_data_sets <- inner_join(sun_decay_hlife, 
@@ -192,7 +193,8 @@ decay_data_set_cor <- cor(combined_hlife_data_sets$hlife_S, combined_hlife_data_
 
 # output model predictive power graph
 
-#ggsave2(here("./results_chapter/figures/model_predictive_power.png"), cowplot::plot_grid(chan_pred_vs_obvs_plot,sun_pred_vs_obvs_plot, rel_widths = c(0.58,0.42)))
+ggsave2(here("./results_chapter/figures/model_predictive_power.png"), cowplot::plot_grid(chan_pred_vs_obvs_plot,sun_pred_vs_obvs_plot, rel_widths = c(0.58,0.42)), height = 5, width = 7)
+
 
 # output motif coefficients graph
 #ggsave2(here("./results_chapter/figures/motif_coefficient_comparison.png"), ggplot(combined_motif_coefficients, aes(x = estimate_C, y = estimate_S, xmin=estimate_C - std.error_C ,xmax=estimate_C + std.error_C, ymin=estimate_S - std.error_S, ymax=estimate_S + std.error_S, colour=term)) +
@@ -209,7 +211,7 @@ decay_data_set_cor <- cor(combined_hlife_data_sets$hlife_S, combined_hlife_data_
 # write_csv( chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./results_chapter/data/chan_motif_coefficients.csv"))
 
 # check for co-occurrences of motifs in native 3'UTR
-TGTAHMNTA_co_occurrences <- single_count_median_3UTR_motifs_freq %>% 
+  TGTAHMNTA_co_occurrences <- single_count_median_3UTR_motifs_freq %>% 
   filter(TGTAHMNTA > 0) %>% 
   select(-threePrimeUTR) %>% 
   gather(key = "motif", value = "count", - transcriptName) %>% 
