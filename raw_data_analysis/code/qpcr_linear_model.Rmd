@@ -1,18 +1,203 @@
 ---
-title: "R Notebook"
+title: "qPCR linear models"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
 ```{r}
-plot(cars)
+library(broom)
+library(tidyverse)
+library(here)
+library(cowplot)
+library(ggpattern)
+library(latex2exp)
+
+construct_to_motif_dictionary <- tibble (construct = rep(c("WT", "mod0", "modA", "modB", "modC", "modD", "modE"), times = 4), motif = rep(c("ATATTC", "GTATACCTA","TGTACAATA","TTTCATTTC"), each = 7), count = c(0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,0,1,0,0,0,1,0,0,0,0,0,2,2))
+
+pPGK1_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tRPS3_n1_n2_norm_mean.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop") %>%
+  inner_join(construct_to_motif_dictionary) %>%
+  spread(key= motif, value = count) %>%
+  mutate(native = (construct == "WT"))
+
+pRPS3_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pRPS3_tRPS3_n1_n2_norm_mean.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop") %>%
+  inner_join(construct_to_motif_dictionary) %>%
+  spread(key= motif, value = count) %>%
+  mutate(native = (construct == "WT"))
+
+pSRO9_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pSRO9_tRPS3_n1_n2_norm_mean.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop") %>%
+  inner_join(construct_to_motif_dictionary) %>%
+  spread(key= motif, value = count) %>%
+  mutate(native = (construct == "WT"))
+
+pPGK1_tTSA1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tTSA1_n1_n2_norm_mean.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop") %>%
+  inner_join(construct_to_motif_dictionary) %>%
+  spread(key= motif, value = count) %>%
+  mutate(native = (construct == "WT"))
+
+pTSA1_tTSA1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pTSA1_tTSA1_n1_n2_norm_mean.csv")) %>%
+  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
+  summarise(delta_cq = median(delta_cq), .groups = "drop") %>%
+  inner_join(construct_to_motif_dictionary) %>%
+  spread(key= motif, value = count) %>%
+  mutate(native = (construct == "WT"))
+
+collated_norm_mean_data <- pPGK1_tRPS3_norm_mean %>%
+  bind_rows(pRPS3_tRPS3_norm_mean) %>%
+  bind_rows(pPGK1_tTSA1_norm_mean) %>%
+  bind_rows(pTSA1_tTSA1_norm_mean) %>%
+  bind_rows(pSRO9_tRPS3_norm_mean) %>%
+  inner_join(construct_to_motif_dictionary) %>%
+  spread(key= motif, value = count)
+
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+```{r run_linear_models, echo=FALSE, include=FALSE}
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+pTSA1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pTSA1_tTSA1_norm_mean)
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+pPGK1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pPGK1_tTSA1_norm_mean)
+
+pRPS3_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pRPS3_tRPS3_norm_mean)
+
+pPGK1_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pPGK1_tRPS3_norm_mean)
+
+pSRO9_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pSRO9_tRPS3_norm_mean)
+
+collated_norm_mean_lm_comparison <- step(lm(delta_cq ~ exp_rep + exp_rep:promoter + exp_rep:terminator + native + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TGTACAATA:TTTCATTTC + terminator + promoter, collated_norm_mean_data), delta_cq ~ exp_rep + exp_rep:promoter + exp_rep:terminator + native + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + terminator + promoter + terminator:ATATTC + promoter:ATATTC + terminator:GTATACCTA + promoter:GTATACCTA + terminator:TGTACAATA + promoter:TGTACAATA + terminator:TTTCATTTC + promoter:TTTCATTTC + TTTCATTTC:TGTACAATA:terminator + TTTCATTTC:TGTACAATA:promoter + native:terminator + native:promoter)
+
+collated_norm_mean_lm <- lm(delta_cq ~ exp_rep + native + ATATTC + TGTACAATA + TTTCATTTC + GTATACCTA + terminator + promoter + exp_rep:promoter + exp_rep:terminator + TGTACAATA:TTTCATTTC + ATATTC:terminator + TGTACAATA:promoter + ATATTC:promoter + native:promoter + TGTACAATA:terminator + TTTCATTTC:terminator + TTTCATTTC:promoter + TGTACAATA:TTTCATTTC:terminator + TGTACAATA:TTTCATTTC:promoter, collated_norm_mean_data)
+```
+
+## Combined linear model results
+A greedy algorithm for maximising AIC was used to select for the best combination of terms. First the basic model predicting delta_cq using motif presence, terminator, promoter and exp_rep (with interactive term for exp_rep according to promoter/terminator pairing) was ran giving an adjusted R-squared of 0.7816. Then interactive terms for motif contributions in differing contexts and the linear combination of motifs was added increasing the AIC from  AIC=-197.29 to a maximum of -332.62. The final model after selection is summarised below with an adjusted R-squared of 0.90976.
+
+ATATTC has a strong destabilising effect in RPS3 terminators but not TSA1 terminators, irrespective of promoter but even greater with pRPS3 than pPGK1. TGTACAATA only has a significant effect on its own in TSA terminators. GTATACCTA does not have a significant effect in any context. TTTCATTTC has an significant effect in all context on its own. TTTCATTTC and TGTACAATA have an effect when they appear together in the TSA1 terminators only.
+```{r combined_linear_model}
+summary(collated_norm_mean_lm)
+```
+
+```{r}
+
+model_r_squares <- tibble(
+  ter_pro = c("pTSA1_tTSA1", "pPGK1_tTSA1", "pRPS3_tRPS3", "pPGK1_tRPS3", "pSRO9_tRPS3"),
+  R_squared = c(summary(pTSA1_tTSA1_norm_mean_lm)$r.squared,
+                summary(pPGK1_tTSA1_norm_mean_lm)$r.squared,
+                summary(pRPS3_tRPS3_norm_mean_lm)$r.squared,
+                summary(pPGK1_tRPS3_norm_mean_lm)$r.squared,
+                summary(pSRO9_tRPS3_norm_mean_lm)$r.squared))
+
+model_coefficients <- tidy(pPGK1_tRPS3_norm_mean_lm) %>%
+  mutate(ter_pro = "pPGK1_tRPS3", norm_by = "mean") %>%
+  bind_rows(tidy(pRPS3_tRPS3_norm_mean_lm) %>%
+  mutate(ter_pro = "pRPS3_tRPS3", norm_by = "mean")) %>%
+  bind_rows(tidy(pPGK1_tTSA1_norm_mean_lm) %>%
+  mutate(ter_pro = "pPGK1_tTSA1", norm_by = "mean")) %>%
+  bind_rows(tidy(pTSA1_tTSA1_norm_mean_lm) %>%
+  mutate(ter_pro = "pTSA1_tTSA1", norm_by = "mean")) %>%
+  bind_rows(tidy(pSRO9_tRPS3_norm_mean_lm) %>%
+  mutate(ter_pro = "pSRO9_tRPS3", norm_by = "mean"))
+
+ggplot(model_coefficients) +
+  geom_point(aes(x=term, y=estimate, shape = factor(ter_pro, levels =c("pRPS3_tRPS3", "pTSA1_tTSA1", "pPGK1_tRPS3", "pPGK1_tTSA1")), colour = (p.value < 0.05)), size = 3, position = position_jitter(width = 0.1)) +
+  theme_cowplot() +
+  theme(axis.text.x = element_text(angle = 90), panel.grid.major.y = element_line(size = 0.1)) +
+  labs(x = "", y = "Coefficient", shape = "Promoter/Terminator", colour = "Significant")
+
+
+motif_term_dictionary <- model_coefficients %>% 
+  distinct(term) %>%
+  mutate(new_term = c("Construct", "exp_repExpRep2", "ATATTC", "GTATACCTA", "TGTACAATA", "TTTCATTTC", "Wildtype\n vs Mod0", "TGTACAATA\n+\nTTTCATTTC"))
+
+construct_dictionary <- model_coefficients %>% 
+  distinct(ter_pro) %>%
+  mutate(promoter_type = c("PGK1", "Native", "PGK1", "Native", "SRO9"))
+
+individual_linear_model_coefficients_bar_chart <- ggplot(model_coefficients %>% 
+         inner_join(motif_term_dictionary) %>%
+         separate(ter_pro, into=c("promoter","terminator"), sep = "_", remove = FALSE) %>%
+         filter(!term %in% c("exp_repExpRep2")) %>%
+         arrange(term,promoter),
+       aes(x=factor(ter_pro, levels = c("pRPS3_tRPS3","pPGK1_tRPS3","pPGK1_tTSA1", "pTSA1_tTSA1")), y=estimate, fill = promoter, alpha = (p.value < 0.05))) +
+  ggpattern::geom_bar_pattern(
+    aes(pattern_alpha = terminator), 
+    pattern = 'stripe',
+    colour  = NA,
+    pattern_colour = "white",
+    pattern_fill = "white",
+    position = position_dodge2(padding = 0),
+    pattern_density = 0.1,
+    stat = "identity",
+    pattern_key_scale_factor = 0.3,
+    width = 1
+  ) +
+  labs(y = "Coefficient") + 
+  theme_bw(base_size = 16) +
+  theme(strip.placement = "outside", 
+        strip.background = element_rect(fill = "white", colour = "white"), 
+        axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.spacing = unit(0, units = "cm"),
+        panel.grid.major.x = element_blank(),
+        axis.line.x = element_blank()) +
+  guides(fill = guide_legend(override.aes = list(pattern_alpha = 0)),
+         alpha = guide_legend(override.aes = list(pattern_alpha = 0))) +
+  labs(pattern_alpha = "Terminator", 
+       fill = "Promoter", 
+       alpha = "Significant") + 
+  scale_fill_manual(values = c("pPGK1" = "#56B4E9", "pTSA1" = "#009E73", "pRPS3" = "#D55E00"), 
+                    labels = c("PGK1", "TSA1", "RPS3"), breaks = c("pPGK1", "pTSA1", "pRPS3")) +
+  scale_pattern_alpha_manual(values = c("tRPS3"=0,"tTSA1"=255), 
+                             labels = c("RPS3", "TSA1")) +
+  scale_alpha_manual(values = c("TRUE"=1,"FALSE"=0.2)) +
+  facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "TGTACAATA", "TTTCATTTC", "TGTACAATA\n+\nTTTCATTTC")), 
+             scales = "free_x", 
+             space = "free_x", 
+             switch = "x") +
+  geom_hline(yintercept = 0)
+
+
+
+individual_linear_model_coefficients_points <- ggplot(model_coefficients %>% 
+         inner_join(motif_term_dictionary) %>%
+         inner_join(construct_dictionary) %>%
+         separate(ter_pro, into=c("promoter","terminator"), sep = "_", remove = FALSE) %>%
+         filter(!term %in% c("(Intercept)", "nativeTRUE", "exp_repExpRep2")) %>%
+         arrange(term,promoter),
+       aes(x=factor(promoter_type, levels = c("Native","PGK1","SRO9")), y=-estimate, colour = terminator, alpha = (p.value < 0.05)),
+    position = position_dodge2()) +
+  geom_point(
+    size = 5
+  ) +
+  geom_errorbar(aes(ymax = -estimate + std.error, ymin = -estimate - std.error),
+                size =1) +
+  labs(y = TeX("Log_2 Fold Change in RNA Abundance"), 
+       colour = "Terminator",
+       alpha = "Significant") + 
+  theme_bw(base_size = 16) +
+  theme(strip.placement = "outside", 
+        strip.background = element_rect(fill = "white", colour = "white"), 
+        axis.title.x = element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 0, vjust = 0.5),
+        axis.ticks.x = element_blank(),
+        panel.spacing = unit(0, units = "cm"),
+        panel.grid.major.x = element_blank(),
+        axis.line.x = element_blank()) +
+  scale_colour_manual(breaks = c("tTSA1", "tRPS3"), labels = c("TSA1", "RPS3"), values = c("#56B4E9", "#D55E00")) +
+  scale_alpha_manual(values = c("TRUE"=1,"FALSE"=0.3)) +
+  facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "TGTACAATA", "TTTCATTTC", "TGTACAATA\n+\nTTTCATTTC")), 
+             scales = "free_x", 
+             space = "free_x", 
+             switch = "x") +
+  geom_hline(yintercept = 0)
+
+ggsave(here("results_chapter/figures/motif_multi_context_coefficient.png"), individual_linear_model_coefficients_points, width = 12, height = 9)
+
+```

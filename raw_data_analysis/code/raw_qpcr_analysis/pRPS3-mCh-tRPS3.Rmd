@@ -247,8 +247,14 @@ Normalisation of mCherry Cq values against URA3-ORF Cq values. This calculation 
 
 ```{r deltaCq_norm,dependson="load_plates", echo=TRUE, fig.height=6, fig.width=9}
 
-platesnorm <- plates  %>% filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT") %>%    
-        calculate_deltacq_bysampleid(ref_target_ids = c("URA3-ORF"))
+platesnorm_1 <- plates  %>% filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT", exp_rep == "ExpRep1") %>%    
+        calculate_deltacq_bysampleid(ref_target_ids = c("URA3-ORF", "PGK1-ORF", "RPS3_ORF"), norm_function = mean)
+
+platesnorm_2 <- plates  %>% filter(!strain %in% c("POT1-ccdB"), prep_type=="+RT", exp_rep == "ExpRep2") %>%    
+        calculate_deltacq_bysampleid(ref_target_ids = c("URA3-ORF", "PGK1-ORF", "RPS3_ORF"), norm_function = mean)
+
+platesnorm <- platesnorm_1 %>%
+  bind_rows(platesnorm_2)
 
 
 ggplot(platesnorm, aes(ter_mod,delta_cq))+
@@ -275,7 +281,7 @@ This value is used to then calculate the delta-delta Cq for all other strains. D
 platesnorm_pRPS3 <- platesnorm %>% filter(promoter %in% "pRPS3", target_id %in% "mCh-7")
 
 # Save normalised RPS3 constructs
-write_csv(platesnorm_pRPS3, here("raw_data_analysis/data/norm_qpcr/pRPS3_tRPS3_n1_n2_norm.csv"))
+#write_csv(platesnorm_pRPS3, here("raw_data_analysis/data/norm_qpcr/pRPS3_tRPS3_n1_n2_norm_RPS3.csv"))
   
 # Extracting datapoints for pRPS3-mCherry-tRPS3_mod0 Samples. Calculates the median of each BioRep (collapses TechReps) then the mean Cq  of the mod0 strain (collapses BioReps) (-0.865)
 mean_platesnorm_pRPS3mod0 <- platesnorm_pRPS3 %>% 
@@ -322,12 +328,12 @@ platesnorm_mod0_median %>% select(strain, bio_rep, median_cq, RNA_abundance)
 ```{r norm_plot,fig.height=5,fig.width=4.5, echo=FALSE}
 
 # Plotting the normalsied data (horizontal arrangement)
-normalised_plot <- ggplot(data = platesnorm_mod0_median %>% 
+normalised_plot_pRPS3_tRPS3 <- ggplot(data = platesnorm_mod0_median %>% 
     filter(!strain %in% c("pPGK1-mCherry-tRPS3_WT","pRPS3-mCherry-tRPS3_WT")))+
     geom_point(aes(RNA_abundance,ter_mod,colour=ter_mod, shape=bio_rep)) +
     #scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 (log2 scale)",omag = seq(-5,5),scilabels=TRUE) +
-    scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 \n (log2 scale)",omag = seq(-5,5),scilabels=FALSE) +
-    labs(y="") +
+    scale_x_log2nice(omag = seq(-5,5),scilabels=FALSE) +
+    labs(y="", title = "pRPS3-tRPS3") +
     scale_shape_manual(values=c(19, 17, 15, 10, 7, 14)) +
     scale_colour_manual(values=c("#288a2e","#a84a9a","#6f3ba1","#416db0","#CC6666","black")) +
     guides(colour=FALSE) +
@@ -338,7 +344,7 @@ normalised_plot <- ggplot(data = platesnorm_mod0_median %>%
           #legend.box.margin=margin(20,10,10,180))+
   facet_wrap(~pro_mCh,ncol = 2)
 
-normalised_plot + stat_summary(aes(RNA_abundance,ter_mod),
+normalised_plot_pRPS3_tRPS3 + stat_summary(aes(RNA_abundance,ter_mod),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
