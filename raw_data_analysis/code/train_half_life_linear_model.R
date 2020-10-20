@@ -220,18 +220,22 @@ decay_data_set_cor <- cor(combined_hlife_data_sets$hlife_S, combined_hlife_data_
        (dataset_comparison | model_coefficients) ) | 
      gridExtra::tableGrob(chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), rows = NULL)
    
-   ggsave2("results_chapter/figures/hlife_model_multi_fig.png", plot_grid(chan_pred_vs_obvs_plot,
-             sun_pred_vs_obvs_plot,dataset_comparison,
-             model_coefficients, 
-             labels = c("A", "", "B", "C"),
-             label_size = 20,
-             align = "hv",
-             axis = "t",
-             scale = c(0.9,0.9,1,0.9)), width = 12, height = 9)
+  # ggsave2("results_chapter/figures/hlife_model_multi_fig.png", plot_grid(chan_pred_vs_obvs_plot,
+  #           sun_pred_vs_obvs_plot,dataset_comparison,
+  #          model_coefficients, 
+  #           labels = c("A", "", "B", "C"),
+  #           label_size = 20,
+  #           align = "hv",
+  #           axis = "t",
+  #           scale = c(0.9,0.9,1,0.9)), width = 12, height = 9)
    
 # output list of chan motif coefficients 
 # write_csv( chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./results_chapter/data/chan_motif_coefficients.csv"))
 
+# output list of chan motif coefficients with error
+# write_csv( chan_motif_coefficients %>% select(term, estimate, std.error) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv"))
+   
+   
 # check for co-occurrences of motifs in native 3'UTR
   TGTAHMNTA_co_occurrences <- single_count_median_3UTR_motifs_freq %>% 
   filter(TGTAHMNTA > 0) %>% 
