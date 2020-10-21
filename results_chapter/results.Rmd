@@ -5,6 +5,11 @@ library(here)
 ```
 
 ## Terminator effects on RNA abundance and protein production are context dependent
+
+```{r pro_ter_platereader, fig.cap="Analysis of protein production in promoter terminator swaps.", out.width='85%', fig.align='center'}
+knitr::include_graphics(here("results_chapter/figures/pro_ter_platereader.png"))
+```
+
 Initially, to test the effects of terminator selection on mRNA and protein production, we selected a set of 10 terminators from transcripts with of varying expresssion levels. These terminators were cloned into a pRS415-derived plasmid along with mCherry or mTurquoise2 and a promoter. The effect of terminator choice was tested with 5 promoters (pPGK1, pRPS3, pRPS13, pCLN2 and pSRO9) to determine any differring effects protein production. Terminator choice on protein output was evaluated by measuring the fluorescence over time from these expression casssettes in S. cerevisiae BY4741.
 
 ## Short vs long terminator experiment
@@ -44,6 +49,11 @@ These motifs were also tested in a different 3'UTR context to determine if effec
 ```{r tTSA1-design-and-qpcr, fig.cap="Design of modified tTSA1 3'UTRs and RT-qPCR measurement of RNA abundance in each reporter construct.", out.width='85%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/tTSA1_design_and_qpcr.png"))
 ```
+
+```{r tPIR1-design-and-qpcr, fig.cap="Design of modified tPIR1 3'UTRs and RT-qPCR measurement of RNA abundance in each reporter construct.", out.width='85%', fig.align='center'}
+knitr::include_graphics(here("results_chapter/figures/tPIR1_design_and_qpcr.png"))
+```
+
 
 ## Comparison of motif effects from qPCR and half-life dataset models
 
