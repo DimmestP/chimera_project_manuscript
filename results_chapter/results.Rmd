@@ -6,7 +6,7 @@ library(here)
 
 ## Terminator effects on RNA abundance and protein production are context dependent
 
-```{r pro_ter_platereader, fig.cap="Analysis of protein production in promoter terminator swaps.", out.width='85%', fig.align='center'}
+```{r pro-ter-platereader, fig.cap="Analysis of protein production in promoter terminator swaps.", out.width='50%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/pro_ter_platereader.png"))
 ```
 
