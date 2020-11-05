@@ -9,30 +9,68 @@ output:
 
 Following the methodology presented in Cheng et al (2017), a linear model predicting transcript half life using codon usage and 3'UTR motif frequency was used to determine motif significance. 
 $$log_2(\lambda_g^{1/2}) = \sum_c\beta_cp_{cg} + \sum_m\alpha_mn_{mg} + \epsilon_g$$
-where $\lambda_g^{1/2}$ is the half life of gene g, $\beta_c$ is the coefficient associate with codon c, $p_{cg}$ is the proportion of gene g's ORF that corresponds to codon c, $\alpha_m$ is the coefficient associated with motif m, $n_{mg}$ is number of counts of motif m in gene g's 3'UTR and $\epsilon_g$ is the noise term. The original list of 69 3'UTR motifs to investigate was collated from three separate studies of cis-regulatory sequences suspected to regulate mRNA decay: Hogan et al (2008), Shalgi et al (2005) and Cheng et al (2017). The Pelechano et al (2013) 3'UTR data set of median length yeast 3'UTR's was used to calculate the frequency of each of the 69 motifs in every gene across the whole yeast genome. Our analysis was performed separately on two independent, genome-wide studies of yeast mRNA decay rates to confirm motif significance, Sun et al (2013) and Chan et al (2017).
+where $\lambda_g^{1/2}$ is the half life of gene g, $\beta_c$ is the coefficient associate with codon c, $p_{cg}$ is the proportion of gene g's ORF that corresponds to codon c, $\alpha_m$ is the coefficient associated with motif m, $n_{mg}$ is number of counts of motif m in gene g's 3'UTR and $\epsilon_g$ is the noise term.
+The original list of 69 3'UTR motifs to investigate was collated from three separate studies of cis-regulatory sequences suspected to regulate mRNA decay: Hogan et al (2008), Shalgi et al (2005) and Cheng et al (2017).
+The Pelechano et al (2013) 3'UTR data set of median length yeast 3'UTR's was used to calculate the frequency of each of the 69 motifs in every gene across the whole yeast genome.
+Our analysis was performed separately on two independent, genome-wide studies of yeast mRNA decay rates to confirm motif significance, Sun et al (2013) and Chan et al (2017).
 
 ## Design of modified 3'UTRs for testing the effects of inserted motifs
 
-A pair of suitable 3'UTR's from the Pelechano et al (2013) median length 3'UTR dataset were chosen for testing the effect of  introducing the selected motifs of interest on gene expression. The primary selection criteria for these 3'UTRs were; 1) that they do not contain any motif of interest, 2) possess a length of less than 300 nt (including terminator sequence), 3) are from the top 5% most abundant mRNAs in the Nadal-Ribelles et al (2019) scRNA-seq dataset. The selection process is summarised in supplementary figure 1 with supplementary table 1 containing the shortlist of genes. The positions for inserting the motifs of interest were selected by first avoiding any efficiency elements or polyadenylaton sites in the chosen 3'UTRs. Then, the position was matched to the average position of the motifs in the 3'UTR's in which they appear natively. The final position selection also considered regions that minimally disrupt the 3'UTR secondary structure compared to wild type 3'UTR.
+A pair of suitable 3'UTR's from the Pelechano et al (2013) median length 3'UTR dataset were chosen for testing the effect of  introducing the selected motifs of interest on gene expression.
+The primary selection criteria for these 3'UTRs were; 1) that they do not contain any motif of interest, 2) possess a length of less than 300 nt (including terminator sequence), 3) are from the top 5% most abundant mRNAs in the Nadal-Ribelles et al (2019) scRNA-seq dataset.
+The selection process is summarised in supplementary figure 1 with supplementary table 1 containing the shortlist of genes.
+The positions for inserting the motifs of interest were selected by first avoiding any efficiency elements or polyadenylaton sites in the chosen 3'UTRs.
+Then, the position was matched to the average position of the motifs in the 3'UTR's in which they appear natively.
+The final position selection also considered regions that minimally disrupt the 3'UTR secondary structure compared to wild type 3'UTR.
 
 ### Design of modified 3'UTRs for testing the effects of mutated motifs
-3'UTR was selected for screening the effect of removing motifs of interest individually or in combination to determine their impact on RNA abundance. To this end, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following critera; 1) contains all 3 motifs of motifs of interest (ATATTC, UGUAMNUA, HWNCAUUWY) and 2) < 300 nt in length (**abundance criteria?**). The resulting candidates are summarised in the supplementary table. The mutation of motifs for their removal from the 3'UTR were carried out according to the following criteria: 1) at least 50% of the motif sequence (specifically the motif consensus sequence) was mutated to a base that does not correspond to the consensus sequence. 2) GC content was minimally altered. 3) Mutations that resulted in a limited change in the prediicted secondary structure and minimum free energy (MFE) (according to the RNAfold - http://rna.tbi.univie.ac.at//cgi-bin/RNAWebSuite/RNAfold.cgi). 
+3'UTR was selected for screening the effect of removing motifs of interest individually or in combination to determine their impact on RNA abundance.
+To this end, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following critera; 1) contains all 3 motifs of motifs of interest (ATATTC, UGUAMNUA, HWNCAUUWY) and 2) < 300 nt in length (**abundance criteria?**).
+The resulting candidates are summarised in the supplementary table.
+The mutation of motifs for their removal from the 3'UTR were carried out according to the following criteria: 1) at least 50% of the motif sequence (specifically the motif consensus sequence) was mutated to a base that does not correspond to the consensus sequence.
+2) GC content was minimally altered.
+3) Mutations that resulted in a limited change in the prediicted secondary structure and minimum free energy (MFE) (according to the RNAfold - http://rna.tbi.univie.ac.at//cgi-bin/RNAWebSuite/RNAfold.cgi). 
 
-The native and modified candidate 3'UTRs were screened for the presesnce of Esp31 and Bsa1 sites within the sequence. 100 nt downstream of the native 3'UTR was added to the candidate and verified for whether they can be synthesised by IDT using the gBlock entry form (https://eu.idtdna.com/site/order/gblockentry). The sequence 'agcgtgCGTCTCgTAGC' was added to the 5'-end of the 3'UTR and the sequence 'CCTCcGAGACGcagcac' was added to the 3'-end of the 3'UTR.
+The native and modified candidate 3'UTRs were screened for the presesnce of Esp31 and Bsa1 sites within the sequence.
+100 nt downstream of the native 3'UTR was added to the candidate and verified for whether they can be synthesised by IDT using the gBlock entry form (https://eu.idtdna.com/site/order/gblockentry).
+The sequence 'agcgtgCGTCTCgTAGC' was added to the 5'-end of the 3'UTR and the sequence 'CCTCcGAGACGcagcac' was added to the 3'-end of the 3'UTR.
 
 ## Strains and media
 The BY4741 (*MATa his3$\Delta1$ leu2$\Delta0$ met15$\Delta0$ ura3$\Delta0$*) wild type strain was used in this study and grown in either synthetic complete medium without uracil (SC -URA medium), containing 0.69% yeast nitrogen base without amino acids and with ammonium sulfate (Formedium, Norfolk, UK), 0.193% amino acid drop-out supplement mixture (Formedium, Norfolk, UK) and 2% glucose, or YPDA medium, containing 2% peptone, 1% yeast extract, 2% glucose and 0.004% adenine. 
 
 ## Construction of chimera strains
-All fluorescence reporter plasmids were constructed by Golden Gate assembly as described in Garcia-Ruiz et al. 2018. Promoters, ORFs and terminators were either amplified from the yeast genome or synthesised by a commercial vendor (IDT) then cloned into a parts accepting vector (HcKan_P for promoters, HcKan_O for ORFs and HcKan_T for terminators) by Golden Gate assembly using Bsa1-HFv2 (NEB). The promoter, ORF and terminators were asssembled together into the transcription unit acceptor vector (POT1-ccdB) by Golden Gate assembly using Esp31 (NEB). Plasmids were confrmed by PCR and Sanger sequencing (MRC PPU DNA Sequencing and Services, Dundee). These plasmids were transformed into BY4741 and selecting in Sc-URA plates for isolating yeast containing the reporter plasmids. DNA sequences used in this study are summarised in Supplementary table. 
+All fluorescence reporter plasmids were constructed by Golden Gate assembly as described in Garcia-Ruiz et al. 2018.
+Promoters, ORFs and terminators were either amplified from the yeast genome or synthesised by a commercial vendor (IDT) then cloned into a parts accepting vector (HcKan_P for promoters, HcKan_O for ORFs and HcKan_T for terminators) by Golden Gate assembly using Bsa1-HFv2 (NEB).
+The promoter, ORF and terminators were asssembled together into the transcription unit acceptor vector (POT1-ccdB) by Golden Gate assembly using Esp31 (NEB).
+Plasmids were confrmed by PCR and Sanger sequencing (MRC PPU DNA Sequencing and Services, Dundee).
+These plasmids were transformed into BY4741 and selecting in Sc-URA plates for isolating yeast containing the reporter plasmids.
+DNA sequences used in this study are summarised in Supplementary table. 
 
 ### Strain growth, RNA extraction and reverse transcription
-BY4741 yeast strains containing the chimeric reporter plasmid were pre-cultured in a 12 column deep well plate containing 7 ml of SC -URA medium containing 2% glucose and grown for ~20 hours at 30&deg;C in a shaking incbator. Following the overnight growth, the OD~600~ was measured using a spectrophotometer and diluted in a 12 column deep well plate to a starting OD~600~ of 0.2. Diluted cultures were grown at 30&deg;C in a shaking incbator to an OD~600~ of 0.5-0.6 then pelleted by centrifugation. All remaining media was removed with an aspirator. 
+BY4741 yeast strains containing the chimeric reporter plasmid were pre-cultured in a 12 column deep well plate containing 7 ml of SC -URA medium containing 2% glucose and grown for ~20 hours at 30&deg;C in a shaking incbator.
+Following the overnight growth, the OD~600~ was measured using a spectrophotometer and diluted in a 12 column deep well plate to a starting OD~600~ of 0.2.
+Diluted cultures were grown at 30&deg;C in a shaking incbator to an OD~600~ of 0.5-0.6 then pelleted by centrifugation.
+All remaining media was removed with an aspirator. 
 
-The pelleted cells were resuspended in 400 $\mu$l RNA binding buffer (Zymo cat #R1013-2) transerred to 2 ml screw cap tubes containing zirconia beads, lysed using the Precellys Evolution homogeniser then pelleted by centrifugation. The supernatant was transferred to a Zymo Spin IIICG column (Zymo cat #C1006) then centrifuged. The flow through is mixed with 1 volume of ethanol then transferred to a Zymo Spin IIC column (Zymo cat #C1011) and centrifuged. The flow through was discarded and 1 volume of DNA/RNA Prep buffer (Zymo cat #D7010-2) was added then centrifuged. The column was washed with 700 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo cat #D7010-3) then centrifuged. The column was washed a second time, but with 400 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo cat #D7010-3). The column was centrifuged once more to remove residual wash buffer in the column. 30 $\mu$l of nuclease free water was added to the column then eluted.
+The pelleted cells were resuspended in 400 $\mu$l RNA binding buffer (Zymo cat #R1013-2) transerred to 2 ml screw cap tubes containing zirconia beads, lysed using the Precellys Evolution homogeniser then pelleted by centrifugation.
+The supernatant was transferred to a Zymo Spin IIICG column (Zymo cat #C1006) then centrifuged.
+The flow through is mixed with 1 volume of ethanol then transferred to a Zymo Spin IIC column (Zymo cat #C1011) and centrifuged.
+The flow through was discarded and 1 volume of DNA/RNA Prep buffer (Zymo cat #D7010-2) was added then centrifuged.
+The column was washed with 700 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo cat #D7010-3) then centrifuged.
+The column was washed a second time, but with 400 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo cat #D7010-3).
+The column was centrifuged once more to remove residual wash buffer in the column. 30 $\mu$l of nuclease free water was added to the column then eluted.
 
-The quantity and quality of the RNA was measured using both the nanodrop and Fragment Analyser (Agilent). 4 $\mu$g of RNA is treated with Turbo DNAse (Invitrogen cat #AM2238). 2.5 $\mu$l of Random primer mix (NEB cat #S1330S) was added to the mixture then separated into 2 PCR tubes, one for -RT and one for +RT). The RNA is denatured at 70&deg;C then cooled on ice. Reverse transcription (RT) master mix was prepared, containing 2 $\mu$l of First Strand synthesis buffer, 0.75 $\mu$l of 10mM dNTP mix, 1.5 $\mu$l of nuclease free water, 0.25 $\mu$l of RNase inhibitor and 0.5 $\mu$l of SuperScript IV Reverse Transcriptase (Invitrogen cat #18091050) per reactioon. 5 $\mu$l of the RT master mix was added to the denatured RNA then incubated at 25&deg;C for 5 minutes then 55&deg;C for 1 hour. The cDNA was diluted with 180 $\mu$l of nuclease free water.
+The quantity and quality of the RNA was measured using both the nanodrop and Fragment Analyser (Agilent).
+4 $\mu$g of RNA is treated with Turbo DNAse (Invitrogen cat #AM2238). 
+2.5 $\mu$l of Random primer mix (NEB cat #S1330S) was added to the mixture then separated into 2 PCR tubes, one for -RT and one for +RT).
+The RNA is denatured at 70&deg;C then cooled on ice.
+Reverse transcription (RT) master mix was prepared, containing 2 $\mu$l of First Strand synthesis buffer, 0.75 $\mu$l of 10mM dNTP mix, 1.5 $\mu$l of nuclease free water, 0.25 $\mu$l of RNase inhibitor and 0.5 $\mu$l of SuperScript IV Reverse Transcriptase (Invitrogen cat #18091050) per reactioon.
+5 $\mu$l of the RT master mix was added to the denatured RNA then incubated at 25&deg;C for 5 minutes then 55&deg;C for 1 hour.
+The cDNA was diluted with 180 $\mu$l of nuclease free water.
 
 
 ### Quantitative PCR analysis
-Quantification of target cDNAs were measured by quantitative PCR with Brilliant II Fast SYBR Green QPCR Master Mix (Agilent) using a Lightcycler 480 qPCR machine (Roche). RPS3, PGK1 and URA3 were used as the internal standard. qPCR data was analysed using the tidyqPCR R package. $\Delta$Cq values calculated by normalising the mCherry Cq values by the median Cq values of the internal standards (RPS3, PGK1). $\Delta\Delta$Cq values were calculated by normalising mCherry $\Delta$Cq the by the control mod0 strain. 
+Quantification of target cDNAs were measured by quantitative PCR with Brilliant II Fast SYBR Green QPCR Master Mix (Agilent) using a Lightcycler 480 qPCR machine (Roche).
+RPS3, PGK1 and URA3 were used as the internal standard.
+qPCR data was analysed using the tidyqPCR R package. $\Delta$Cq values calculated by normalising the mCherry Cq values by the median Cq values of the internal standards (RPS3, PGK1).
+$\Delta\Delta$Cq values were calculated by normalising mCherry $\Delta$Cq the by the control mod0 strain. 
