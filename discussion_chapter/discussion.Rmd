@@ -1,6 +1,9 @@
 # Discussion
 
-We have confirmed that promoter-terminator pairings change the effectiveness of each region's contribution to gene expression. This supports previous work by Curran et al. 2013 and  Wei et al. 2017 showing that promoter and terminator regions are not entirely modular when regulating gene expression. We explored whether the changes in regulatory behavior according to overall context is explained by changes in the regulatory effects of individual cis-regulatory elements within these regions. We have gone on to show that 3'UTR sequence motifs, confirmed to to have a statistically significant contributions to transcript decay rates, have effects on gene expression that are dependent on overall terminator context and promoter pairing. 
+We have confirmed that promoter-terminator pairings change the effectiveness of each region's contribution to gene expression.
+This supports previous work by Curran et al. 2013 and  Wei et al. 2017 showing that promoter and terminator regions are not entirely modular when regulating gene expression.
+We explored whether the changes in regulatory behavior according to overall context is explained by changes in the regulatory effects of individual cis-regulatory elements within these regions.
+We have gone on to show that 3'UTR sequence motifs, confirmed to to have a statistically significant contributions to transcript decay rates, have effects on gene expression that are dependent on overall terminator context and promoter pairing. 
 
 ## Mechanisms for motif terminator context dependence
 
@@ -14,12 +17,15 @@ The presence of multiple motifs can also have a negative effect on binding affin
 
 ## Implications for novel cis-regulatory element searches
 
-The qPCR results for RPS3, TSA1 and PIR1 show motifs vary their contribution to gene expression, but further high-throughput results are required to confirm the extent to which this behavior is reflected across the genome. Nevertheless, these results cast doubt on whether future computational and experimental searches can continue to assume modularity if more complex regulatory elements are to be found.
+The qPCR results for RPS3, TSA1 and PIR1 show motifs vary their contribution to gene expression, but further high-throughput results are required to confirm the extent to which this behavior is reflected across the genome.
+Nevertheless, these results cast doubt on whether future computational and experimental searches can continue to assume modularity if more complex regulatory elements are to be found.
 
-Determining co-dependent motifs is further complicated by the fact that distances of varying number of nucleotides can separate motifs (Wilinski et al., 2015). Incorporating transcript secondary structures into motif searching algorithms has been conducted with limited success, such as the MEMERIS extension to MEME, but only simple conformaties are considered and the effects of protein binding are ignored (Hiller et al., 2006; Achar and Seatrom, 2015). 
+Determining co-dependent motifs is further complicated by the fact that distances of varying number of nucleotides can separate motifs (Wilinski et al., 2015).
+Incorporating transcript secondary structures into motif searching algorithms has been conducted with limited success, such as the MEMERIS extension to MEME, but only simple conformaties are considered and the effects of protein binding are ignored (Hiller et al., 2006; Achar and Seatrom, 2015). 
 
 ## Implications for experimental biology
 
-Our results show that sequence motifs within the 3'UTR have a significant effect on gene expression. However it is important to note that there is evidence of dependence between the motifs and the sequence context suggesting that post-transcriptional cross-talk between RNA binding proteins can result in the fine-tuning of mRNA stability and translation. 
+Our results show that sequence motifs within the 3'UTR have a significant effect on gene expression.
+However it is important to note that there is evidence of dependence between the motifs and the sequence context suggesting that post-transcriptional cross-talk between RNA binding proteins can result in the fine-tuning of mRNA stability and translation. 
 
 Further, these different UTR compositions can enable more rapid, dynamic post-transcriptional modulations of expression to be achieved with improved understanding of how different combinations of motifs and secondary structures lead to modulations in expression under different cell conditions, facilitating the generation of more complex phenotypes and enabling more predictable control of flux through metabolic pathway circuits.
