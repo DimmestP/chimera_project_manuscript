@@ -14,15 +14,6 @@ The original list of 69 3'UTR motifs to investigate was collated from three sepa
 The Pelechano et al (2013) 3'UTR data set of median length yeast 3'UTR's was used to calculate the frequency of each of the 69 motifs in every gene across the whole yeast genome.
 Our analysis was performed separately on two independent, genome-wide studies of yeast mRNA decay rates to confirm motif significance, Sun et al (2013) and Chan et al (2017).
 
-## Design of modified 3'UTRs for testing the effects of inserted motifs
-
-A pair of suitable 3'UTR's from the Pelechano et al (2013) median length 3'UTR dataset were chosen for testing the effect of  introducing the selected motifs of interest on gene expression.
-The primary selection criteria for these 3'UTRs were; 1) that they do not contain any motif of interest, 2) possess a length of less than 300 nt (including terminator sequence), 3) are from the top 5% most abundant mRNAs in the Nadal-Ribelles et al (2019) scRNA-seq dataset.
-The selection process is summarised in supplementary figure 1 with supplementary table 1 containing the shortlist of genes.
-The positions for inserting the motifs of interest were selected by first avoiding any efficiency elements or polyadenylaton sites in the chosen 3'UTRs.
-Then, the position was matched to the average position of the motifs in the 3'UTR's in which they appear natively.
-The final position selection also considered regions that minimally disrupt the 3'UTR secondary structure compared to wild type 3'UTR.
-
 ## Design of modified 3'UTRs for testing the effects of mutated motifs
 3'UTR was selected for screening the effect of removing motifs of interest individually or in combination to determine their impact on RNA abundance.
 To this end, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following critera; 1) contains all 3 motifs of motifs of interest (ATATTC, UGUAMNUA, HWNCAUUWY) and 2) < 300 nt in length (**abundance criteria?**).
@@ -74,6 +65,11 @@ Quantification of target cDNAs were measured by quantitative PCR with Brilliant 
 RPS3, PGK1 and URA3 were used as the internal standard.
 qPCR data was analysed using the tidyqPCR R package. $\Delta$Cq values calculated by normalising the mCherry Cq values by the median Cq values of the internal standards (RPS3, PGK1).
 $\Delta\Delta$Cq values were calculated by normalising mCherry $\Delta$Cq the by the control mod0 strain. 
+
+## Determining motif effect on abundance
+A linear model predicting construct $\Delta$Cq's using the presence or absence of the four selected motifs was trained on each promoter-terminator pairing separately. The linear model also included a term for batch effects, between the two experimental replicates for each set of constructs, and a term to account for interactions between the UGUAMNUA and HWNCAUUWY motifs.
+$$\Delta Cq = \sum_{m=1}^4\alpha_mn_{m} + \beta \space e_{rep} + \gamma \space n_{int}+ \epsilon$$
+where $n_m$ is the number of motif m in the construct, $e_{rep}$ is which experimental replicate the construct was part of and $n_{int}$ is interaction term for the UGUAMNUA and HWNCAUUWY motifs.
 
 ## Predicting transcript abundance from changes in half life
 A simple stochastic model of transcription was used allowing for the production and decay of transcripts.

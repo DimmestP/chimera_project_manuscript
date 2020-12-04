@@ -13,62 +13,36 @@ library(latex2exp)
 
 construct_to_motif_dictionary <- tibble (construct = rep(c("WT", "mod0", "modA", "modB", "modC", "modD", "modE"), times = 4), motif = rep(c("ATATTC", "GTATACCTA","TGTACAATA","TTTCATTTC"), each = 7), count = c(0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,0,1,0,0,0,1,0,0,0,0,0,2,2))
 
-pPGK1_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tRPS3_n1_n2_norm_mean.csv")) %>%
-  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
-  summarise(delta_cq = median(delta_cq), .groups = "drop") %>%
+pRPS3_pPGK1_pSRO9_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv")) %>%
   inner_join(construct_to_motif_dictionary) %>%
+  filter( target_id == "mCh-7") %>%
   spread(key= motif, value = count) %>%
-  mutate(native = (construct == "WT"))
+  mutate(native = (construct == "WT"), delta_cq = deltacq)
 
-pRPS3_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pRPS3_tRPS3_n1_n2_norm_mean.csv")) %>%
-  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
-  summarise(delta_cq = median(delta_cq), .groups = "drop") %>%
+pTSA1_pPGK1_pSRO9_tTSA1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pTSA1_pPGK1_pSRO9_tTSA1_deltacq_platesnorm_summarise.csv")) %>%
   inner_join(construct_to_motif_dictionary) %>%
+  filter(target_id == "mCh-7") %>%
   spread(key= motif, value = count) %>%
-  mutate(native = (construct == "WT"))
+  mutate(native = (construct == "WT"), delta_cq = deltacq)
 
-pSRO9_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pSRO9_tRPS3_n1_n2_norm_mean.csv")) %>%
-  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
-  summarise(delta_cq = median(delta_cq), .groups = "drop") %>%
-  inner_join(construct_to_motif_dictionary) %>%
-  spread(key= motif, value = count) %>%
-  mutate(native = (construct == "WT"))
-
-pPGK1_tTSA1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pPGK1_tTSA1_n1_n2_norm_mean.csv")) %>%
-  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
-  summarise(delta_cq = median(delta_cq), .groups = "drop") %>%
-  inner_join(construct_to_motif_dictionary) %>%
-  spread(key= motif, value = count) %>%
-  mutate(native = (construct == "WT"))
-
-pTSA1_tTSA1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pTSA1_tTSA1_n1_n2_norm_mean.csv")) %>%
-  group_by(construct, bio_rep, exp_rep, terminator, promoter) %>%
-  summarise(delta_cq = median(delta_cq), .groups = "drop") %>%
-  inner_join(construct_to_motif_dictionary) %>%
-  spread(key= motif, value = count) %>%
-  mutate(native = (construct == "WT"))
-
-collated_norm_mean_data <- pPGK1_tRPS3_norm_mean %>%
-  bind_rows(pRPS3_tRPS3_norm_mean) %>%
-  bind_rows(pPGK1_tTSA1_norm_mean) %>%
-  bind_rows(pTSA1_tTSA1_norm_mean) %>%
-  bind_rows(pSRO9_tRPS3_norm_mean) %>%
-  inner_join(construct_to_motif_dictionary) %>%
-  spread(key= motif, value = count)
+collated_norm_mean_data <- pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>%
+  bind_rows(pTSA1_pPGK1_pSRO9_tTSA1_norm_mean)
 
 ```
 
 ```{r run_linear_models, echo=FALSE, include=FALSE}
 
-pTSA1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pTSA1_tTSA1_norm_mean)
+pTSA1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pTSA1"))
 
-pPGK1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pPGK1_tTSA1_norm_mean)
+pPGK1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pPGK1"))
 
-pRPS3_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pRPS3_tRPS3_norm_mean)
+pSRO9_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pSRO9"))
 
-pPGK1_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pPGK1_tRPS3_norm_mean)
+pRPS3_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pRPS3"))
 
-pSRO9_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pSRO9_tRPS3_norm_mean)
+pPGK1_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pPGK1"))
+
+pSRO9_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pSRO9"))
 
 collated_norm_mean_lm_comparison <- step(lm(delta_cq ~ exp_rep + exp_rep:promoter + exp_rep:terminator + native + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TGTACAATA:TTTCATTTC + terminator + promoter, collated_norm_mean_data), delta_cq ~ exp_rep + exp_rep:promoter + exp_rep:terminator + native + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + terminator + promoter + terminator:ATATTC + promoter:ATATTC + terminator:GTATACCTA + promoter:GTATACCTA + terminator:TGTACAATA + promoter:TGTACAATA + terminator:TTTCATTTC + promoter:TTTCATTTC + TTTCATTTC:TGTACAATA:terminator + TTTCATTTC:TGTACAATA:promoter + native:terminator + native:promoter)
 
@@ -86,9 +60,10 @@ summary(collated_norm_mean_lm)
 ```{r}
 
 model_r_squares <- tibble(
-  ter_pro = c("pTSA1_tTSA1", "pPGK1_tTSA1", "pRPS3_tRPS3", "pPGK1_tRPS3", "pSRO9_tRPS3"),
+  ter_pro = c("pTSA1_tTSA1", "pPGK1_tTSA1", "pSRO9_tTSA1", "pRPS3_tRPS3", "pPGK1_tRPS3", "pSRO9_tRPS3"),
   R_squared = c(summary(pTSA1_tTSA1_norm_mean_lm)$r.squared,
                 summary(pPGK1_tTSA1_norm_mean_lm)$r.squared,
+                summary(pSRO9_tTSA1_norm_mean_lm)$r.squared,
                 summary(pRPS3_tRPS3_norm_mean_lm)$r.squared,
                 summary(pPGK1_tRPS3_norm_mean_lm)$r.squared,
                 summary(pSRO9_tRPS3_norm_mean_lm)$r.squared))
@@ -102,7 +77,10 @@ model_coefficients <- tidy(pPGK1_tRPS3_norm_mean_lm) %>%
   bind_rows(tidy(pTSA1_tTSA1_norm_mean_lm) %>%
   mutate(ter_pro = "pTSA1_tTSA1", norm_by = "mean")) %>%
   bind_rows(tidy(pSRO9_tRPS3_norm_mean_lm) %>%
-  mutate(ter_pro = "pSRO9_tRPS3", norm_by = "mean"))
+  mutate(ter_pro = "pSRO9_tRPS3", norm_by = "mean")) %>%
+  bind_rows(tidy(pSRO9_tTSA1_norm_mean_lm) %>%
+  mutate(ter_pro = "pSRO9_tTSA1", norm_by = "mean"))
+  
 
 ggplot(model_coefficients) +
   geom_point(aes(x=term, y=estimate, shape = factor(ter_pro, levels =c("pRPS3_tRPS3", "pTSA1_tTSA1", "pPGK1_tRPS3", "pPGK1_tTSA1")), colour = (p.value < 0.05)), size = 3, position = position_jitter(width = 0.1)) +
@@ -117,59 +95,13 @@ motif_term_dictionary <- model_coefficients %>%
 
 construct_dictionary <- model_coefficients %>% 
   distinct(ter_pro) %>%
-  mutate(promoter_type = c("PGK1", "Native", "PGK1", "Native", "SRO9"))
-
-individual_linear_model_coefficients_bar_chart <- ggplot(model_coefficients %>% 
-         inner_join(motif_term_dictionary) %>%
-         separate(ter_pro, into=c("promoter","terminator"), sep = "_", remove = FALSE) %>%
-         filter(!term %in% c("exp_repExpRep2")) %>%
-         arrange(term,promoter),
-       aes(x=factor(ter_pro, levels = c("pRPS3_tRPS3","pPGK1_tRPS3","pPGK1_tTSA1", "pTSA1_tTSA1")), y=estimate, fill = promoter, alpha = (p.value < 0.05))) +
-  ggpattern::geom_bar_pattern(
-    aes(pattern_alpha = terminator), 
-    pattern = 'stripe',
-    colour  = NA,
-    pattern_colour = "white",
-    pattern_fill = "white",
-    position = position_dodge2(padding = 0),
-    pattern_density = 0.1,
-    stat = "identity",
-    pattern_key_scale_factor = 0.3,
-    width = 1
-  ) +
-  labs(y = "Coefficient") + 
-  theme_bw(base_size = 16) +
-  theme(strip.placement = "outside", 
-        strip.background = element_rect(fill = "white", colour = "white"), 
-        axis.title.x = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        panel.spacing = unit(0, units = "cm"),
-        panel.grid.major.x = element_blank(),
-        axis.line.x = element_blank()) +
-  guides(fill = guide_legend(override.aes = list(pattern_alpha = 0)),
-         alpha = guide_legend(override.aes = list(pattern_alpha = 0))) +
-  labs(pattern_alpha = "Terminator", 
-       fill = "Promoter", 
-       alpha = "Significant") + 
-  scale_fill_manual(values = c("pPGK1" = "#56B4E9", "pTSA1" = "#009E73", "pRPS3" = "#D55E00"), 
-                    labels = c("PGK1", "TSA1", "RPS3"), breaks = c("pPGK1", "pTSA1", "pRPS3")) +
-  scale_pattern_alpha_manual(values = c("tRPS3"=0,"tTSA1"=255), 
-                             labels = c("RPS3", "TSA1")) +
-  scale_alpha_manual(values = c("TRUE"=1,"FALSE"=0.2)) +
-  facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "TGTACAATA", "TTTCATTTC", "TGTACAATA\n+\nTTTCATTTC")), 
-             scales = "free_x", 
-             space = "free_x", 
-             switch = "x") +
-  geom_hline(yintercept = 0)
-
-
+  mutate(promoter_type = c("PGK1", "Native", "PGK1", "Native", "SRO9", "SRO9"))
 
 individual_linear_model_coefficients_points <- ggplot(model_coefficients %>% 
          inner_join(motif_term_dictionary) %>%
          inner_join(construct_dictionary) %>%
          separate(ter_pro, into=c("promoter","terminator"), sep = "_", remove = FALSE) %>%
-         filter(!term %in% c("(Intercept)", "nativeTRUE", "exp_repExpRep2")) %>%
+         filter(!term %in% c("(Intercept)", "nativeTRUE", "exp_rep")) %>%
          arrange(term,promoter),
        aes(x=factor(promoter_type, levels = c("Native","PGK1","SRO9")), y=-estimate, colour = terminator),
     position = position_dodge2()) +
