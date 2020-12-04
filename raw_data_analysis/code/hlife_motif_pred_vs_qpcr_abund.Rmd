@@ -1,0 +1,102 @@
+---
+title: "Comparison of hlife predicted abundance changes and qPCR results"
+output: html_document
+---
+
+```{r load_data}
+library(here)
+library(tidyverse)
+library(latex2exp)
+library(RColorBrewer)
+
+construct_to_motif_dictionary <- tibble (construct = rep(c("WT", "mod0", "modA", "modB", "modC", "modD", "modE"), times = 4), Motif = rep(c("ATATTC", "GTATACCTA","TGTAHMNTA","HWNCATTWY"), each = 7), count = c(0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,0,1,0,0,0,1,0,0,0,0,0,2,2))
+ 
+hlife_coefficients <- read_csv(here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv")) %>% 
+  inner_join(construct_to_motif_dictionary) %>%
+  group_by(construct) %>%
+  mutate(predict_motif_error = sum(count * std.error)) %>%
+  group_by(construct, predict_motif_error) %>%
+  summarise(predict_motif_effect = sum(count * Coefficient), .groups = "drop")
+
+pRPS3_pPGK1_pSRO9_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv")) %>%
+  filter( target_id == "mCh-7") %>%
+  group_by(promoter) %>%
+  mutate(mod0_delta_cq = filter(., construct == "mod0") %>% pull(deltacq) %>% mean()) %>%
+  group_by(construct, promoter) %>%
+  mutate( delta_delta_cq = deltacq - mod0_delta_cq) %>%
+  ungroup() 
+
+pTSA1_pPGK1_pSRO9_tTSA1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pTSA1_pPGK1_pSRO9_tTSA1_deltacq_platesnorm_summarise.csv")) %>%
+  filter( target_id == "mCh-7") %>%
+  group_by(promoter) %>%
+  mutate(mod0_delta_cq = filter(., construct == "mod0") %>% pull(deltacq) %>% mean()) %>%
+  group_by(construct, promoter) %>%
+  mutate( delta_delta_cq = deltacq - mod0_delta_cq) %>%
+  ungroup() 
+
+combined_pred_vs_actual_abund <- pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>%
+  bind_rows(pTSA1_pPGK1_pSRO9_tTSA1_norm_mean)
+
+combined_pred_vs_actual_abund %>%
+  group_by(promoter,terminator, construct) %>%
+  summarise(delta_delta_cq = median(delta_delta_cq)) %>%
+  inner_join(hlife_coefficients) %>%
+  group_by(promoter, terminator) %>%
+  mutate(r_squared = cor(predict_motif_effect, delta_delta_cq)^2) %>%
+  ungroup()
+
+```
+
+```{r plot_pred_vs_actual}
+construct_dictionary <- tibble( pro = c("PGK1", "Native", "PGK1", "Native", "SRO9"), ter = c("TSA1", "TSA1", "RPS3", "RPS3", "RPS3"), ter_pro = c("pPGK1_tTSA1", "pTSA1_tTSA1", "pPGK1_tRPS3", "pRPS3_tRPS3", "pSRO9_tRPS3"))
+
+r_squared_data <- combined_pred_vs_actual_abund %>% 
+  group_by(construct, ter_pro) %>% 
+  summarise(delta_delta_cq = mean(delta_delta_cq), .groups = "drop") %>%
+  inner_join(hlife_coefficients) %>% 
+  group_by(ter_pro) %>% 
+  summarise(r_squared = cor(delta_delta_cq, predict_motif_effect)^2, .groups = "drop") %>%
+  mutate(r_squared_label = paste(TeX(paste0("R^2 = ", signif(r_squared,digits = 3))))) %>% 
+  inner_join(construct_dictionary)
+
+
+combined_pred_vs_actual_plot_data <- combined_pred_vs_actual_abund %>%
+  inner_join(construct_dictionary) %>% 
+  group_by(construct, ter_pro) %>% 
+  mutate(mean_delta_delta_cq = mean(delta_delta_cq)) %>% 
+  group_by(construct, mean_delta_delta_cq, ter, pro) %>% 
+  summarise(sd_ddcq = sd(delta_delta_cq), .groups = "drop") %>%
+  inner_join(hlife_coefficients)
+
+pred_vs_abundance <- ggplot(combined_pred_vs_actual_plot_data) + 
+  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = construct), show.legend = FALSE, size = 3) +
+  geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = construct), size = 1) +
+  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = construct), size = 1) +
+  theme_bw(base_size = 16) +
+  facet_grid(ter~pro) +
+  coord_fixed(ratio = 1 , xlim = c(-2.5, 1.5) ,ylim = c(-2.5, 1.5)) +
+  geom_abline(slope = 1, intercept = 0, colour = "grey")  +
+  labs(x=TeX("Predicted log_2 Fold Change"), y=TeX("Experimental log_2 Fold Change"), colour = "Construct") +
+  geom_text(aes(label = r_squared_label), data = r_squared_data, x = -1.3, y= 0.7, parse = TRUE, size = 5) +
+  theme(panel.grid.minor = element_blank(), legend.position = "right") +
+  scale_color_brewer(palette = "Paired")
+
+#ggsave(here("./results_chapter/figures/pred_vs_actual_abundance.png"), cowplot::plot_grid(pPGK1_tRPS3_pred_vs_actual, pPGK1_tTSA1_pred_vs_actual, pTSA1_tTSA1_pred_vs_actual, pRPS3_tRPS3_pred_vs_actual, pSRO9_tRPS3_pred_vs_actual, ncol = 1, labels = c("pPGK1- \n tRPS3", "pPGK1- \n tTSA1", "pTSA1- \n tTSA1", "pRPS3- \n tRPS3", "pSRO9- \n tRPS3"), label_x = -0.035), width = 7, height = 12)
+
+#ggsave(here("./results_chapter/figures/pred_vs_actual_abundance.png"), pred_vs_abundance, width = 12, height = 9)
+
+# combine with motif_multi_context_coefficient figure to make two panel image
+   
+load(here("raw_data_analysis/data/motif_multi_context_coefficient.Rdata"))
+
+ggsave(plot_grid(pred_vs_abundance, 
+                 individual_linear_model_coefficients_points, 
+                 ncol = 1, 
+                 labels = c("A", "B"),
+                 label_size = 20,
+                 align = "hv",
+                 axis = "t"), 
+       file = here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"), 
+       width = 9, 
+       height = 12)
+```
