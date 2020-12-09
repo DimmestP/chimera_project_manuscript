@@ -511,7 +511,7 @@ normalised_plot_SRO9 <- ggplot(data = platesnorm_S500bp_pSRO9_median)+
           legend.position="right")
   #facet_wrap(~Pro_mCh,ncol = 2)
 
-normalised_plot_SRO9 + stat_summary(aes(Ter_length,rel_abund_delta_deltacq),
+combined_SRO9_graph <- normalised_plot_SRO9 + stat_summary(aes(Ter_length,rel_abund_delta_deltacq),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
@@ -529,7 +529,9 @@ normalised_plot_RPS3 <- ggplot(data = platesnorm_R200bp_pRPS3_median)+
           axis.title.x=element_text(vjust=-2),
           legend.position="right")
 
-normalised_plot_RPS3 + stat_summary(aes(Ter_length, rel_abund_delta_deltacq),
+combined_RPS3_graph <- normalised_plot_RPS3 + stat_summary(aes(Ter_length, rel_abund_delta_deltacq),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
+
+ggsave( here("./results_chapter/figures/RPS3_SRO9_short_vs_long.png"),plot_grid(combined_RPS3_graph, combined_SRO9_graph, ncol=1), height = 10, width = 7)
 ```

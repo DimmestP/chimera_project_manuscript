@@ -12,6 +12,24 @@ We have gone on to show that 3'UTR sequence motifs, confirmed to to have a stati
 
 ## Mechanisms for motif terminator context dependence
 
+The regulatory behavior of a motif can be explained by its internal and external context. 
+A motif's external context refers to characteristics outside of the host transcript.
+It includes transcriptional control, such a differential expression or alternative polyadenylation, and the presence of trans-regulatory elements (TRE), such as RBPs.
+A motif's internal context refers to the characteristics of the host transcript.
+It includes the secondary structure of the host transcript and the presence of other motifs concurrently.
+
+The external context of a motif can be controlled by spatiotemporal regulation.
+Motifs that act as binding sites, as focused on in our study, are dependent on the presence of TREs in their external context.
+The availability of a required TRE can be spatially regulated through the localisation of a host transcript or a TRE to a specific organelle.
+ASH1 is a DNA-binding protein localised to the bud tip that facilitates mate-type switching between mother and daughter cells in S.cer. 
+A SHE2 binding motif inside the ASH1 mRNA transcript's 3'UTR inhibits translation in the cytoplasm as SHE2 recruits available PUF6 proteins. 
+As the ASH1 transcript localises to the bud tip, PUF6 proteins are phosphorylated which interferes with SHE2 binding.
+Without PUF6 the SHE2 binding motif is no longer associated with translation inhibition and ASH1 proteins are formed.
+Alternatively, TRE availability can be temporally regulated as transcript and TRE need to be expressed simultaneously in order to function.
+
+
+
+
 Detecting motifs using functional genomics data sets requires that effector proteins are able to a) bind to target transcripts and b) function effectively once bound. 
 The behavior of both protein and target mRNA, such as localisation to specific cellular compartments, regulation by cell cycle or reaction to stress, may effect protein function and protein binding concurrently. 
 Outside of global behavior, motifs will also be dependent on the secondary structure and presence (or absence) of other regulatory elements within the host transcript. 

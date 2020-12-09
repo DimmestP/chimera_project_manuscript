@@ -17,6 +17,10 @@ Terminator choice on protein output was evaluated by measuring the fluorescence 
 
 ## Short vs long terminator experiment
 
+```{r RPS3-SRO9-short-vs-long, fig.cap="Comparison of short verses long terminators for RPS3 and SRO9.", out.width='60%', fig.align='center'}
+knitr::include_graphics(here("results_chapter/figures/RPS3_SRO9_short_vs_long.png"))
+```
+
 ## Selecting cis-regulatory elements by their contributions to linear models of transcript half life
 
 Potential cis-regulatory elements to test for context dependence were initially identified through a literature search.
