@@ -27,7 +27,13 @@ The data and code (including ALL analysis referred to in the paper) required to 
 The way bookdown works is that it runs all the code in all files, catches any code/graphs outputed then inserts it all into one massive latex document. Therefore, all of the text between code chunks is parsed through a latex compiler, so all latex functionality is availiable. There are many good latex tutorials out there but I recommend (this)[https://www.youtube.com/playlist?list=PLnC5h3PY-znyDQKn3knfXfekZLgWyL7QW] YouTube series for beginners, (this)[https://www.overleaf.com/learn/latex/Main_Page] wiki for more details and finally (this)[https://wch.github.io/latexsheet/] cheatsheet to refresh your memory on syntax.
 
 ## Structure
-There are five main .Rmd files that hold the chapter text and analysis code;
+The main text of the manuscript is held in five folders, denoted by chapter title; intro_chapter, results_chapter, methods_chapter, discussion_chapter and supplimentary_data_chapter.
+Each of these folders hold an .Rmd file containing text and formating information and a figure/data folder for all of the figures/data used in that chapter.
+In addition to these chapter files the abstract is in its own .Rmd file in the main repository, the author names and affiliations are held in the author.tex file and all the references used in the paper are held in the reference folder.
+The files described above contain all the information required to recreate the manuscript.
+The bookdown library simply needs to know where all these files are, which is outlined in the _bookdown.yaml file, and how to format them, as descriped in the latex files in the formatting folder.
+
+For reproducability, the code actually producing the figures and running the data analysis is contained within the raw_data_analysis folder, together with the raw data itself.
 
 
 ## Tips 

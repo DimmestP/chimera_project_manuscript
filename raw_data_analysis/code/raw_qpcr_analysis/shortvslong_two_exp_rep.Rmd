@@ -105,12 +105,12 @@ display_plate(plateplan_B %>%
 ## Load data and attribute sample information
 ```{r load_plates,dependson="label_plates",results="show"}
 # read my plates
-plates_1 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/JA_20200830-shortvslong_n1-ct.txt")) %>%
+plates_1 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/RPS3_SRO9_short_vs_long/JA_20200830-shortvslong_n1-ct.txt")) %>%
   left_join(plateplan_A) %>%
   mutate(ExpRep = 1,ExpRep=factor(ExpRep))
 
 
-plates_2 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/JA_20200831-shortvslong_n2-ct.txt")) %>%
+plates_2 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/RPS3_SRO9_short_vs_long/JA_20200831-shortvslong_n2-ct.txt")) %>%
   left_join(plateplan_B) %>%
   mutate(ExpRep = 2,ExpRep=factor(ExpRep))
 
@@ -187,12 +187,12 @@ ggplot(data=plates %>% filter(strain %in% c("pRPS3-mCherry-tRPS3_WT-200bp","POT1
 ## Loading amplification and melt curve data
 ```{r load_amp-melt,dependson="label_plates", results="show"}
 
-platecurve_A <- read_lightcycler_1colour_raw(here("raw_data_analysis/data/raw_qpcr/JA_20200830-shortvslong_n1.txt")) %>%
+platecurve_A <- read_lightcycler_1colour_raw(here("raw_data_analysis/data/raw_qpcr/RPS3_SRO9_short_vs_long/JA_20200830-shortvslong_n1.txt")) %>%
   debaseline() %>%
   left_join(plateplan_A) %>%
   mutate(ExpRep = 1,ExpRep=factor(ExpRep))
 
-platecurve_B <- read_lightcycler_1colour_raw(here("raw_data_analysis/data/raw_qpcr/JA_20200831-shortvslong_n2.txt")) %>%
+platecurve_B <- read_lightcycler_1colour_raw(here("raw_data_analysis/data/raw_qpcr/RPS3_SRO9_short_vs_long/JA_20200831-shortvslong_n2.txt")) %>%
   debaseline() %>%
   left_join(plateplan_B) %>%
   mutate(ExpRep = 2,ExpRep=factor(ExpRep))
