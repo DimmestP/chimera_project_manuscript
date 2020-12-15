@@ -1,3 +1,5 @@
+# Takes several minutes to run
+
 library(tidyverse)
 library(Biostrings)
 library(DECIPHER)
@@ -233,7 +235,7 @@ decay_data_set_cor <- cor(combined_hlife_data_sets$hlife_S, combined_hlife_data_
 # write_csv( chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./results_chapter/data/chan_motif_coefficients.csv"))
 
 # output list of chan motif coefficients with error
-# write_csv( chan_motif_coefficients %>% select(term, estimate, std.error) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv"))
+write_csv( chan_motif_coefficients %>% select(term, estimate, std.error) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv"))
    
    
 # check for co-occurrences of motifs in native 3'UTR

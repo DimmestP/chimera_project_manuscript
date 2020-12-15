@@ -35,6 +35,8 @@ The bookdown library simply needs to know where all these files are, which is ou
 
 For reproducability, the code actually producing the figures and running the data analysis is contained within the raw_data_analysis folder, together with the raw data itself.
 
+The sessionInfo.txt file contains all the libraries (and their versions) used to run the analysis code
+
 
 ## Tips 
 

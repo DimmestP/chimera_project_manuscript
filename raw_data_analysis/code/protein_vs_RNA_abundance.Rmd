@@ -8,37 +8,39 @@ output: html_document
 library(tidyverse)
 library(here)
 
-RPS3_protein <- read.csv(here("raw_data_analysis/data/platereader/pRPS3-mCh-tRPS3/refurbished_platereader_20200912-tRPS3mod200/refurb_fluorescence_per_od_200bp_pRPS3_tRPS3_n2.csv")) %>%
+RPS3_protein <- read.csv(here("raw_data_analysis/data/platereader/motif_context_dependence/pRPS3-mCh-tRPS3/refurbished_platereader_20200912-tRPS3mod200/refurb_fluorescence_per_od_200bp_pRPS3_tRPS3_n2.csv")) %>%
   filter(strain != "null") %>%
   separate(strain,into = c("strain","biorep"),sep = "_clone_") %>%
   mutate(exp = "1") %>% 
   bind_rows(
-    read.csv(here("raw_data_analysis/data/platereader/pRPS3-mCh-tRPS3/refurbished_platereader_20200924-tRPS3mod200/refurb_fluorescence_per_od_200bp_pRPS3_tRPS3_n4.csv")) %>%
+    read.csv(here("raw_data_analysis/data/platereader/motif_context_dependence/pRPS3-mCh-tRPS3/refurbished_platereader_20200924-tRPS3mod200/refurb_fluorescence_per_od_200bp_pRPS3_tRPS3_n4.csv")) %>%
       filter(strain != "null") %>%
       separate(strain,into = c("strain","biorep"),sep = "_clone_") %>%
       mutate(exp = "2"))
 
-TSA1_protein <- read.csv(here("raw_data_analysis/data/platereader/pTSA1-mCh-tTSA1/20201028_pTSA1_tTSA1_n1/fluorescence_per_od_exp_rep_1_fixed_old_platereader.csv")) %>%
+TSA1_protein <- read.csv(here("raw_data_analysis/data/platereader/motif_context_dependence/pTSA1-mCh-tTSA1/20201028_pTSA1_tTSA1_n1/fluorescence_per_od_exp_rep_1_fixed_old_platereader.csv")) %>%
   filter(strain != "null") %>%
   separate(strain,into = c("strain","biorep"),sep = " clone ") %>%
   mutate(exp = "1") %>% 
   bind_rows(
-    read.csv(here("raw_data_analysis/data/platereader/pTSA1-mCh-tTSA1/20201104_pTSA1_tTSA1_n2/fluorescence_per_od_exp_rep_2_fixed_old_platereader.csv")) %>%
+    read.csv(here("raw_data_analysis/data/platereader/motif_context_dependence/pTSA1-mCh-tTSA1/20201104_pTSA1_tTSA1_n2/fluorescence_per_od_exp_rep_2_fixed_old_platereader.csv")) %>%
       filter(strain != "null") %>%
       separate(strain,into = c("strain","biorep"),sep = " clone ") %>%
       mutate(exp = "2"))
 
-RPS3_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pRPS3_tRPS3_n1_n2_norm_mean.csv")) %>%
+RPS3_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv")) %>%
+  filter(promoter == "pRPS3") %>%
   group_by(construct, bio_rep) %>%
-  summarise(delta_cq = median(delta_cq), .groups = "drop") %>%
+  summarise(delta_cq = median(deltacq), .groups = "drop") %>%
   mutate(mod0_delta_cq = filter(., construct == "mod0") %>% pull(delta_cq) %>% mean()) %>%
   group_by(construct) %>%
   mutate( delta_delta_cq = delta_cq - mod0_delta_cq) %>%
   ungroup()
 
-TSA1_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pTSA1_tTSA1_n1_n2_norm_mean.csv")) %>%
+TSA1_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pTSA1_pPGK1_pSRO9_tTSA1_deltacq_platesnorm_summarise.csv")) %>%
+  filter(promoter == "pTSA1") %>%
   group_by(construct, bio_rep) %>%
-  summarise(delta_cq = median(delta_cq, na.rm = TRUE), .groups = "drop") %>%
+  summarise(delta_cq = median(deltacq, na.rm = TRUE), .groups = "drop") %>%
   mutate(mod0_delta_cq = filter(., construct == "mod0") %>% pull(delta_cq) %>% mean()) %>%
   group_by(construct) %>%
   mutate( delta_delta_cq = delta_cq - mod0_delta_cq) %>%

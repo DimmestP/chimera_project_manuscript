@@ -13,13 +13,13 @@ library(latex2exp)
 
 construct_to_motif_dictionary <- tibble (construct = rep(c("WT", "mod0", "modA", "modB", "modC", "modD", "modE"), times = 4), motif = rep(c("ATATTC", "GTATACCTA","TGTACAATA","TTTCATTTC"), each = 7), count = c(0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,0,1,0,0,0,1,0,0,0,0,0,2,2))
 
-pRPS3_pPGK1_pSRO9_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv")) %>%
+pRPS3_pPGK1_pSRO9_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv")) %>%
   inner_join(construct_to_motif_dictionary) %>%
   filter( target_id == "mCh-7") %>%
   spread(key= motif, value = count) %>%
   mutate(native = (construct == "WT"), delta_cq = deltacq)
 
-pTSA1_pPGK1_pSRO9_tTSA1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/pTSA1_pPGK1_pSRO9_tTSA1_deltacq_platesnorm_summarise.csv")) %>%
+pTSA1_pPGK1_pSRO9_tTSA1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pTSA1_pPGK1_pSRO9_tTSA1_deltacq_platesnorm_summarise.csv")) %>%
   inner_join(construct_to_motif_dictionary) %>%
   filter(target_id == "mCh-7") %>%
   spread(key= motif, value = count) %>%
