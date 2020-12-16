@@ -27,16 +27,14 @@ As the ASH1 transcript localises to the bud tip, PUF6 proteins are phosphorylate
 Without PUF6 the SHE2 binding motif is no longer associated with translation inhibition and ASH1 proteins are formed.
 Alternatively, TRE availability can be temporally regulated as transcript and TRE need to be expressed simultaneously in order to function.
 
-
-
-
-Detecting motifs using functional genomics data sets requires that effector proteins are able to a) bind to target transcripts and b) function effectively once bound. 
-The behavior of both protein and target mRNA, such as localisation to specific cellular compartments, regulation by cell cycle or reaction to stress, may effect protein function and protein binding concurrently. 
-Outside of global behavior, motifs will also be dependent on the secondary structure and presence (or absence) of other regulatory elements within the host transcript. 
-Secondary structures can be integral to a motifs function, such as the She2p binding motif spread across stem loops within Ash1 transcripts or the Smg recognition elements found in transcript targets of Vts1p (Olivier et al., 2005; Aviv et al., 2006), or they can have an overall inhibitory effect on binding, with stable stem loop within the 3’UTR having a stabilising effect due to a reduction in binding of known destabilising RBPs (Giesberg et al. 2014).
-Transcripts often contain multiple motifs for efficient binding as some effector proteins bind indirectly through multiple recruiter proteins, for example Ski2 or Mtr4 recruitment of the exosome for 5'-3' mRNA decay in the cytoplasm or nucleus respectively (Thom et al., 2015; Weick and Lima, 2021), or bind directly with multi-partite motifs separated by unconserved gaps of varying length, such as SSD1's general binding motif CNYUCNYU and upstream CCAACU supplementary motif (Bayne et al., 2020) or PUF3's two bipartite motifs (Jackson et al., 2004). 
-The presence of multiple motifs can also have a negative effect on binding affinity by introducing competition between proteins trying to bind to the same transcript, itself a crucial mechanism of regulation (Lapointe et al., 2017).
-
+The internal context of a motif can be critical in enabling regulation.
+Motifs will are dependent on the secondary structure and presence (or absence) of other regulatory elements within the host transcript.
+Secondary structures can be integral to a motifs function, such as the SHE2 binding motif spread across stem loops within ASH1 transcripts or the Smg recognition elements found in transcript targets of Vts1p (Olivier et al., 2005; Aviv et al., 2006). 
+In other cases secondary structures can have an overall inhibitory effect on binding, with the presence of stable stem loops within the 3’UTR reducing the binding of known destabilising RBPs (Giesberg et al. 2014).
+Other motifs can only effectively bind their TREs in the presence of bound cooperative proteins.
+In human cells, microRNAs in association with Argonaute (AGO) proteins have been shown to be bind to target mRNA cooperatively with PUM1.  
+For certain AGO mRNA targets its binding affinity is negligible unless the target's secondary structure is switched by the binding of PUM1 to its own motif. (Sternburg et al, 2018)
+As AGO is involved in RNA silencing and its targets are key for cell cycle control, it has been shown that certain cancer cells remove PUM binding sites through alternative polyadenlytion in order to avoid cell cycle regulation. (Miles et al, 2012)
 
 ## Implications for novel cis-regulatory element searches
 
@@ -48,6 +46,8 @@ However, some motifs may need to be present above a threshold before sufficientl
 In addition, linear models will also struggle with the behavior of some extrinsic effects, such as the availability of a binding protein in a particular organelle or at a cell cycle stage.
 These are either dominant predictors of motif efficacy or entirely irrelevant with such extreme behavior being poorly modeled by linear regression. 
 Combining partitioning algorithms to separate transcripts with dichotomised features followed by training linear regression models on the separate pool could best predict functional data sets, although overfitting will be serious concern. 
+
+Transcripts often contain multiple motifs for efficient binding as some effector proteins bind indirectly through multiple recruiter proteins, for example Ski2 or Mtr4 recruitment of the exosome for 5'-3' mRNA decay in the cytoplasm or nucleus respectively (Thom et al., 2015; Weick and Lima, 2021), or bind directly with multi-partite motifs separated by unconserved gaps of varying length, such as SSD1's general binding motif CNYUCNYU and upstream CCAACU supplementary motif (Bayne et al., 2020) or PUF3's two bipartite motifs (Jackson et al., 2004). 
 
 
 The growing catalogue of RBPs with multiple binding motifs has lead to a demand for methods that discover multi-partite motifs, which may be separated in a transcript's linear sequence but adjacent in the final 3D structure.
