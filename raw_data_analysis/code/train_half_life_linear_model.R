@@ -12,10 +12,10 @@ source(here("raw_data_analysis/code/linear_model_functions.R"))
 
 # import chan et al half-life data
 
-chan_decay_raw <-read_tsv(here("./methods_chapter/data/new_chan_dr_data.txt"))
+chan_decay_raw <-read_tsv(here("./raw_data_analysis/data/half_life_data/chan_decay_data.txt"))
 
 # import sun et al 2013 decay rate data
-sun_decay_raw <- read_tsv(here("./methods_chapter/data/sun_total_dr.txt"), 
+sun_decay_raw <- read_tsv(here("./raw_data_analysis/data/half_life_data/sun_decay_data.txt"), 
                           locale = locale(decimal = ","))
 #change weird name of 3rd column and orf to consistent ones geneName
 colnames(sun_decay_raw)[3] <- "d_rate"
@@ -39,13 +39,13 @@ Scer_ORF_name <- as_tibble(names(Scer_ORF)) %>%
   separate(value,c("transcriptName",NA),extra="drop",sep=" ")
 
 # Gather all yeast 3'UTRs
-yeast_3UTRs <- read_csv(here("./methods_chapter/data/whole_genome_3UTR.csv"))
+yeast_3UTRs <- read_csv(here("./raw_data_analysis/data/half_life_data/whole_genome_3UTR.csv"))
 
 # import list of collated 3'UTR motifs
-motifs_raw <- scan(here("./methods_chapter/data/list_motifs.txt"), character())
+motifs_raw <- scan(here("./raw_data_analysis/data/half_life_data/collated_suspected_decay_motifs.txt"), character())
 
 # import list of codons
-codon <- readRDS(here("./methods_chapter/data/codons.rds"))
+codon <- readRDS(here("./raw_data_analysis/data/half_life_data/codons.rds"))
 
 # remove one codon to remove colinearity issue in linear model
 codon_no_TTT <- codon[-1]
