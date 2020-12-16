@@ -4,29 +4,29 @@ Our understanding of gene expression relies on the abstraction of a gene into di
 At the DNA level, the promoter sequence coordinates the initiation of transcription and the rate at which this occurs.
 Transcription then progresses through the downstream promoter region and coding sequence (CDS), before termination and polyadenylation of the nascent transcript is coordinated by the terminator sequence.
 Building from this model for genetic determinants of protein expression, a number of standardised and modularised parts libraries have been designed to allow combinatorial assembly of parts and subsequent construction of complex pathways (Lee et al. 2015, Garcia-Ruiz et al. 2018, Andreou et al. 2018).
-Subsequent efforts have focussed on the the characterisation of these parts libraries assuming independent contribution to gene expression from promoter (Lee et al. 2015, Guo et al. 2015, Lubliner et al. 2013) and terminator parts (Yamanishi et al. 2013).
+Subsequent efforts have focussed on the the characterisation of these parts libraries assuming independent contribution to gene expression from promoter (Lee et al. 2015, Guo et al. 2015, Lubliner et al. 2013) and terminator parts [@Yamanishi2013].
 In addition, the characterised libraries have also facilitated the discovery of novel sequence determinants of gene expression by comparing the sequences of parts with similar characteristics.
 In both the discovery and manipulation of genetic determinants of protein expression, the pragmatic assumption that each part functions independently has aided research by reducing the experimental degrees of freedom.
 However, the validity of this assumption and the consequences when parts do interact remains understudied. 
 
-Previous papers characterising the effect of different native yeast terminators on protein production have shown provisional evidence that the promoter selection changes the relative contribution observed based on terminator selection (Curran et al. 2013, Wei et al. 2017).
-When coupled with different promoters, the relative difference in protein output between terminators vary, with a maximum difference of 11-fold when coupled with a low expression promoter (Curran et al. 2013).
+Previous papers characterising the effect of different native yeast terminators on protein production have shown provisional evidence that the promoter selection changes the relative contribution observed based on terminator selection [@Curran2013] (Wei et al. 2017).
+When coupled with different promoters, the relative difference in protein output between terminators vary, with a maximum difference of 11-fold when coupled with a low expression promoter [@Curran2013].
 Interestingly, it has also been possible to associate expression changes directly to sequence elements within a terminator by identifying a 2.5-fold improved protein production mediated by the recruitment of two RBPs (Nab6 and Pap1) to the 3’UTR (Ito et al. 2016).
 The evidence for interactions between parts is incomplete but the possible implications for the discovery of novel regulatory sequences elements within these parts remains of interest.
 
 Experimental and computational methods to identify sequence elements within genes that control gene expression, or cis-regulatory elements, have been well established, but almost always under the assumption of independence.
-Lists of suspected cis-regulatory elements have been collated by searching for common motifs in genes grouped by similar characteristics, such as half lives, (Shalgi et al., 2005, Cheng et al., 2017) or grouped by binding to an immobilised protein (Kretz et al. 2013, Siprashvili et al. 2016).
-Alternatively, direct evidence for transcript binding sites can be obtain by in vitro cross-linking assays (Zhao et al., 2010, Granneman et al, 2009).
+Lists of suspected cis-regulatory elements have been collated by searching for common motifs in genes grouped by similar characteristics, such as half lives, [@Shalgi2005] [@Cheng2017] or grouped by binding to an immobilised protein (Kretz et al. 2013, Siprashvili et al. 2016).
+Alternatively, direct evidence for transcript binding sites can be obtain by in vitro cross-linking assays (Zhao et al., 2010) [@Granneman2009].
 Even with specific binding site assays, the task of determining consensus sequence motifs is non-trivial as they can be of variable length and consist of highly redundant nucleotides separating conserved regions.
-Packages like the MEME-suite (Bailey et al., 2015), excel at determining short consensus sequences containing highly redundant nucleotides but cannot support interacting effects between motifs or regions.
+Packages like the MEME-suite [@Bailey2015], excel at determining short consensus sequences containing highly redundant nucleotides but cannot support interacting effects between motifs or regions.
 Alternatively, whole regions of grouped genes can be broken into shorter sequences called k-mers, typically less then 10 nucleotides in length.
 The presence of each k-mer can then be tested for predicting a particular characteristic, such as high abundance. 
-k-mer searches allow for the detection of large numbers of exact motifs with model selection algorthims, such as penalised linear regression methods like GLMNET (Friedmann et al., 2010), by filtering out insignificant terms. 
-Nonetheless, previous usages of k-mer searches continue to consider the effect of motifs in isolation of  overall context (Vijayabaskar et al., 2019). 
+k-mer searches allow for the detection of large numbers of exact motifs with model selection algorthims, such as penalised linear regression methods like GLMNET [@Friedman2010], by filtering out insignificant terms. 
+Nonetheless, previous usages of k-mer searches continue to consider the effect of motifs in isolation of  overall context [@Vijayabaskar2019]. 
 
 Here, we utilise modular cloning to construct reporters, consisting of different combinations of promoter-5'UTR and 3'UTR-terminator swaps to better understand the contribution of 3’UTRs on gene expression.
 We adapt a method used by Cheng et al. to computationally predict mRNA half-life in yeast, with linear combinations of sequence features.
-This was achieved by modelling the log2 half-life as a linear combination of codon usage and motif counts (Cheng et al. 2017).
+This was achieved by modelling the log2 half-life as a linear combination of codon usage and motif counts [@Cheng2017].
 Using our model, we identify several putative stabilisation and decay motifs and subsequently probe their role on mRNA fate when inserted into different 3’UTRs or removed from 3’UTRs containing these motifs.
 We further explore the dependence of promoter selection on the relationship between these motifs and mRNA abundance.
 Our results demonstrate that, consistent with our model, the incorporation of candidate decay motifs result in a decrease in RNA abundance, however the contribution of motifs on RNA abundance is dependent on promoter choice.
