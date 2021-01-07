@@ -2,11 +2,12 @@
 
 ```{r}
 library(here)
+knitr::opts_chunk$set(fig.pos = "p")
 ```
 
 ## Terminator effects on RNA abundance and protein production are context dependent
 
-```{r pro-ter-platereader, fig.cap="Analysis of protein production in promoter terminator swaps.", out.width='90%', fig.align='center'}
+```{r pro-ter-platereader, fig.cap="\\textbf{Terminator contributions to gene expresion are promoter dependent.} (\\textbf{A}) mCherry fluorescence measured at the time of each sample's maximum growth rate for 10 termintators paired with three highly expressing promoters. (\\textbf{B}) Same as (\\textbf{A}) but with two lowly expressing promoters.", out.width='90%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/pro_ter_platereader.png"))
 ```
 
@@ -17,7 +18,7 @@ Terminator choice on protein output was evaluated by measuring the fluorescence 
 
 ## Short vs long terminator experiment
 
-```{r RPS3-SRO9-short-vs-long, fig.cap="Comparison of short verses long terminators for RPS3 and SRO9.", out.width='60%', fig.align='center'}
+```{r RPS3-SRO9-short-vs-long, fig.cap="\\textbf{Extending terminator sequence beyond transcript 3'UTR length enhances gene expression}. (\\textbf{A}) Fold changes in mRNA abundance for two RPS3 terminator sequences equaling reported 3'UTR isoform lengths, 59bp and 86bp, and one terminator sequence extended beyond the maximum reported 3'UTR length, 200bp. (\\textbf{B}) Same as (\\textbf{A}) but for one SRO9 termintor sequence shorter than reported 3'UTR isoform lengths, 200bp, and one beyond, 500bp.", out.width='60%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/RPS3_SRO9_short_vs_long.png"))
 ```
 
@@ -45,7 +46,7 @@ Interestingly, the TGTAAATA motif was predicted to be stabilising in the [@Sun20
 The puf3 protein associated with motif is known to change function in carbon deficient condition which were likely present due to the bespoke CSM-lowURA media the cultures were grown in overnight, [@Sun2013] used standard YPD media. 
 
 
-```{r hlife-decay-model, fig.cap="a) performance of codon and motif linear model predicting the transcript half lives as reported in the Chan et al (2017) and Sun et al (2013), b) comparison of Sun et al (2013) and Chan et al (2017) genome wide transcipt half lives, c) predicted coefficients of chosen motifs and motifs with significant regulatory effects in both Sun et al (2013) and Chan et al (2017) datasets.", out.width='100%', fig.align='center'}
+```{r hlife-decay-model, fig.cap="\\textbf{A linear model predicting transcript half life verifies candidate RBP motifs regulate gene expression.} (\\textbf{A}) Predicted vs actual log2 transcript half lives calculated by a linear model of codon and motif usage trained on the Chan et al (2017) and Sun et al (2013) data sets. (\\textbf{B}) Correlation between the two log2 transcript half lives reported in the Sun et al (2013) and Chan et al (2017) data sets. (\\textbf{C}) Predicted contributons to log2 half life for choosen motifs in the Sun et al (2013) and Chan et al (2017) datasets. Motifs not detected to be significant in the Sun et al (2013) data set are plotted with an x-axis value of 0.", out.width='100%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/hlife_model_multi_fig.png"))
 ```
 
@@ -86,7 +87,7 @@ However, when paired with the pPGK1 and pSRO9 promoters, only a 2 fold decrease 
 Similarly, introduction of both candidate decay motifs - TGTACAATA and TTTCATTTC in tRPS3 3'UTR resulted in a ~4 fold decrease in RNA abundance when coupled with the pRPS3 promoter however, only a 2 fold decrease in RNA abundance was observed when coupled with the pPGK1 and pSRO9 promoters.
 No significant effect on RNA abundance was observed with the incorporation of a single copy of TGTACAATA in tRPS3 modA.
 
-```{r tRPS3-design-and-qpcr, fig.cap="Design of modified tRPS3 3'UTRs and RT-qPCR measurement of RNA abundance in each reporter construct.", out.width='85%', fig.align='center'}
+```{r tRPS3-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs inserted into RPS3 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Design of motif insertion sites into the native RPS3 terminator with a diagram of the final constructs. (\\textbf{B}) Fold changes in transcript abundance for tRPS3 constructs paired with three promoters; pRPS3, pPGK1 and pSRO9. Fold changes are relative to the abundance of the mod0 construct", out.width='85%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/tRPS3_design_and_qpcr.png"))
 ```
 
@@ -98,11 +99,11 @@ The tTSA1 mod0 construct contained scrambled/random bases iin the M1, M2 and M3 
 Similar to the modified tRPS3 3'UTR-terminator designs, individual motifs of interest previously described were introduced into the insertion sites (Figure \@ref(fig:tTSA1-design-and-qpcr)), whereby modC was designed to characterise a candidate stability motif, whilst modA, modB, modD and modE were designed to characterise candidate decay motifs.
 These 3'UTR/terminators were assembled with either pTSA1, pPGK1 or pSRO9 promoters driving the expression of an mCherry reporter gene in a plasmid and expressed in yeast.
 
-```{r tTSA1-design-and-qpcr, fig.cap="Design of modified tTSA1 3'UTRs and RT-qPCR measurement of RNA abundance in each reporter construct.", out.width='85%', fig.align='center'}
+```{r tTSA1-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs inserted into TSA1 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Design of motif insertion sites into the native TSA1 terminator with a diagram of the final constructs. (\\textbf{B}) Fold changes in transcript abundance for tTSA1 constructs paired with three promoters; pTSA1, pPGK1 and pSRO9. Fold changes are relative to the abundance of the mod0 construct", out.width='85%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/tTSA1_design_and_qpcr.png"))
 ```
 
-```{r tPIR1-design-and-qpcr, fig.cap="Design of modified tPIR1 3'UTRs and RT-qPCR measurement of RNA abundance in each reporter construct.", out.width='85%', fig.align='center'}
+```{r tPIR1-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs removed from PIR1 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Diagram of the final PIR1 constructs with permutations of removed motifs. (\\textbf{B}) Fold changes in transcript abundance for tPIR1 constructs paired with three promoters; pPIR1, pPGK1 and pSRO9. Fold changes are relative to the abundance of the mod0 construct", out.width='85%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/tPIR1_design_and_qpcr.png"))
 ```
 
@@ -125,7 +126,7 @@ In addition, the implications of inserting two different motifs into the termina
 For the PGK1 promoter, the combination of TGTACAATA and TTTCATTTC together either has no added effect, or in fact a reduce efficiency, when compare to the addition of the reductions in abundance when each motif is present separately.
 However with native or SRO9 promoter pairing the combined effect is actually greater than the sum of their individual effects.
 
-```{r hlife-predict-vs-abundance-and-motif-context-dependence, fig.cap="a) Experimental transcript abundance vs predicted abundance for all constructs according to predicted changes in decay rate due to the presence of 3'UTR motifs, b) motif contributions to fold changes in RNA abundance for different promoter and terminator contexts, with each promoter-terminators pairing's mod0 construct as base value. Confidence intervals are within a standard error.", out.width='80%', fig.align='center'}
+```{r hlife-predict-vs-abundance-and-motif-context-dependence, fig.cap="\\textbf{Promoter and terminator context alter the regulatory behaviour of shortlisted motifs} (\\textbf{A}) Predicted transcript abundance inferred from motif contributions to half life vs RT-qPCR measured transcript abundance. (\\textbf{B}) Motif contributions to fold changes in RNA abundance for different promoter and terminator contexts. Each constructs fold change is relative to its promoter-terminator pairing's mod0 construct. Confidence intervals are within a standard error.", out.width='80%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"))
 ```
 
@@ -135,7 +136,7 @@ The effects of motif presence on protein expression was investigate with a plate
 The right column in Figure \@ref(fig:protein-verse-RNA-plot) confirms that motif effects can be detected in protein expression expression alone.
 Comparing the corresponding RNA abundance levels, left column of Figure \@ref(fig:protein-verse-RNA-plot), the same effects of the motifs on transcript abundance are seen in protein expression, together with the same context dependence. 
 
-```{r protein-verse-RNA-plot, fig.cap="Motif contributions to fold changes in RNA abundance and protein fluorescence for RPS3 and TSA1 native paring constructs.", out.width='80%', fig.align='center'}
+```{r protein-verse-RNA-plot, fig.cap="\\textbf{Motif contributions to protein abundance correlate with RNA abundance}. (\\textbf{Left}) Fold changes in mRNA abundance for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings. (\\textbf{Right}) mCherry fluorescence at the maximum growth rate for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings.", out.width='80%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/combined_TSA1_RPSA_protein_RNA_plot.png"))
 ```
 
@@ -152,7 +153,7 @@ Poly(A) sites located 44 nt and 56 nt from STOP codon are more abundant in tRPS3
 Poly(A) site at 67 nt is pronounced only in tRPS3-mod0 and at 74 nt is especially visible in tRPS3-modA and at 80 nt in tRPS3-modB.
 The differences could be caused either by new polyadenylation signals introduced into the 3’ UTR or by increased stability of these isoforms conferred by addition of new motifs.  
 
-```{r alt-polyA-5PSeq, fig.cap="Relative polyadenylation site usage of transcripts signaled for decay for pRPS3-tRPS3 constructs, acquired using using 5PSeq.", out.width='80%', fig.align='center'}
+```{r alt-polyA-5PSeq, fig.cap="\\textbf{Inserting motifs into native RPS3 termintors may cause alternative polyadenylation.} Relative polyadenylation site usage of transcripts signaled for decay for pRPS3-tRPS3 constructs, acquired using using 5PSeq.", out.width='80%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/alternative_polyadenylation_RPS3_5PSeq.png"))
 ```
 
