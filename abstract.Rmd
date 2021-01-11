@@ -17,5 +17,12 @@ link-citations: true
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 \begin{abstract}
-Hopefully this will help format the entire paper according the arxiv latex template. I imagine there will be plenty of kinks in the road yet! 
+The task of discovering determinates of gene expression has led to the abstraction of a gene into discrete modules, such as promoter, ORF and terminator.
+The characterisation of a module often assumes that it contributes to gene expression independently of any other modules present the host gene.
+Our study first highlights the limitations of the assumption of independence by swapping promoter-terminator pairs in S.cerevisiae and confirming non-linear effects on overall gene expression.
+Next, we explore whether this context dependence behavior is replicated by individual cis-regulatory elements within terminator regions.
+Focusing on suspected protein binding motifs in mRNA transcript 3'UTRs, we insert/remove  CREs into/from different promoter-terminator pairings.
+Our results show that individual cis-regulatory elements are highly dependent on both the host terminator and the paired promoter.
+The possibility that the same CRE can regulate gene expression differently in different host genes suggest complex regulatory patterns are more ubiquitous than currently assumed.
+Meanwhile, the consequences for novel CREs searches emphasise the need for improved search algorithms that include local and global context effects.
 \end{abstract}
