@@ -92,22 +92,22 @@ construct_dictionary_TSA1_RPS3 <- tibble( pro = c("pPGK1", "Native", "pSRO9", "p
 
 construct_dictionary_PIR1 <- tibble( pro = c("pPGK1", "Native", "pSRO9"), promoter = c("pPGK1", "pPIR1", "pSRO9"))
 
-r_squared_data_TSA1_RPS3 <- combined_pred_vs_actual_abund_TSA1_RPS3 %>% 
+r_cor_data_TSA1_RPS3 <- combined_pred_vs_actual_abund_TSA1_RPS3 %>% 
   group_by(construct, terminator, promoter) %>% 
   summarise(delta_delta_cq = mean(delta_delta_cq), .groups = "drop") %>%
   inner_join(hlife_coefficients_TSA1_RPS3) %>% 
   group_by(terminator, promoter) %>% 
-  summarise(r_squared = cor(delta_delta_cq, predict_motif_effect)^2, .groups = "drop") %>%
-  mutate(r_squared_label = paste(TeX(paste0("R^2 = ", signif(r_squared,digits = 3))))) %>% 
+  summarise(r_cor = cor(-delta_delta_cq, predict_motif_effect), .groups = "drop") %>%
+  mutate(r_cor_label = paste(TeX(paste0("R = ", signif(r_cor,digits = 3))))) %>% 
   inner_join(construct_dictionary_TSA1_RPS3)
 
-r_squared_data_PIR1 <- pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>% 
+r_cor_data_PIR1 <- pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>% 
   group_by(construct, terminator, promoter) %>% 
   summarise(delta_delta_cq = mean(delta_delta_cq), .groups = "drop") %>%
   inner_join(hlife_coefficients_PIR1) %>% 
   group_by(terminator, promoter) %>% 
-  summarise(r_squared = cor(delta_delta_cq, predict_motif_effect)^2, .groups = "drop") %>%
-  mutate(r_squared_label = paste(TeX(paste0("R^2 = ", signif(r_squared,digits = 3))))) %>% 
+  summarise(r_cor = cor(-delta_delta_cq, predict_motif_effect), .groups = "drop") %>%
+  mutate(r_cor_label = paste(TeX(paste0("R = ", signif(r_cor,digits = 3))))) %>% 
   inner_join(construct_dictionary_PIR1)
 
 
@@ -132,7 +132,7 @@ pred_vs_abundance_TSA1_RPS3 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS
   coord_fixed(ratio = 1 , xlim = c(-2.5, 1.5) ,ylim = c(-2.5, 1.5)) +
   geom_abline(slope = 1, intercept = 0, colour = "grey")  +
   labs(x="", y=TeX("Experimental log_2 Fold Change"), colour = "Construct") +
-  geom_text(aes(label = r_squared_label), data = r_squared_data_TSA1_RPS3, x = -1.2, y= 1, parse = TRUE, size = 4) +
+  geom_text(aes(label = r_cor_label), data = r_cor_data_TSA1_RPS3, x = -1.2, y= 1, parse = TRUE, size = 4) +
   theme(panel.grid.minor = element_blank(), legend.position = "right") +
   scale_color_brewer(palette = "Paired")
 
@@ -144,8 +144,8 @@ pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) +
   facet_grid(terminator~pro) +
   coord_fixed(ratio = 1 , xlim = c(-1, 1.2) ,ylim = c(-1, 1.2)) +
   geom_abline(slope = 1, intercept = 0, colour = "grey")  +
-  labs(x=TeX("Predicted log_2 Fold Change"), y=TeX("Experimental log_2 Fold Change"), colour = "Construct") +
-  geom_text(aes(label = r_squared_label), data = r_squared_data_PIR1, y = -0.7, x= 0, parse = TRUE, size = 4) +
+  labs(x=TeX("Predicted log_2 Fold Change"), y=TeX(""), colour = "Construct") +
+  geom_text(aes(label = r_cor_label), data = r_cor_data_PIR1, y = -0.7, x= 0, parse = TRUE, size = 4) +
   theme(panel.grid.minor = element_blank(), legend.position = "right") +
   scale_color_brewer(palette = "Paired")
 
@@ -165,11 +165,12 @@ pred_vs_abundance_combined <- plot_grid(pred_vs_abundance_TSA1_RPS3,
 load(here("raw_data_analysis/data/motif_multi_context_coefficient.Rdata"))
 
 ggsave(plot_grid(pred_vs_abundance_combined, 
-                 individual_linear_model_coefficients_points, 
+                 individual_linear_model_coefficients_points +
+                   theme(plot.margin = unit(c(0.1,0.1,0.1,0.6),"cm")), 
                  ncol = 1, 
                  labels = c("A", "B"),
                  label_size = 20,
-                 align = "hv",
+                 align = "vh",
                  axis = "t",
                  rel_heights = c(1.5,1)), 
        file = here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"), 

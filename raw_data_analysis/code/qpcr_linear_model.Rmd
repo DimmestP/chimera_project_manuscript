@@ -13,7 +13,7 @@ library(latex2exp)
 
 construct_to_motif_dictionary_PIR1 <- tibble(construct = 
                                                     rep(c("WT", "modA", "modB", "modC", "modD", "modE", "modF", "modG"), each = 3), 
-                                                  motif = rep(c("ATATTC","TGTACAATA","TTTCATTTC"), times = 8), 
+                                                  motif = rep(c("ATATTC","UGUAHMNUA","HWNCAUUWY"), times = 8), 
                                                    count = c(1,1,3,
                                                              1,0,3,
                                                              0,1,3,
@@ -26,7 +26,7 @@ construct_to_motif_dictionary_PIR1 <- tibble(construct =
 construct_to_motif_dictionary_TSA1_RPS3 <- tibble (construct = 
                                                 rep(c("WT", "mod0", "modA", "modB", "modC", "modD", "modE"), times = 4), 
                                               motif = 
-                                                rep(c("ATATTC", "GTATACCTA","TGTACAATA","TTTCATTTC"), each = 7), 
+                                                rep(c("ATATTC", "GTATACCTA","UGUAHMNUA","HWNCAUUWY"), each = 7), 
                                               count = c(0,0,0,2,0,0,0,
                                                         0,0,0,0,2,0,0,
                                                         0,0,1,0,0,0,1,
@@ -58,33 +58,33 @@ collated_norm_mean_data <- pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>%
 
 ```{r run_linear_models, echo=FALSE, include=FALSE}
 
-pTSA1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pTSA1"))
+pTSA1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pTSA1"))
 
-pPGK1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pPGK1"))
+pPGK1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pPGK1"))
 
-pSRO9_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pSRO9"))
+pSRO9_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pSRO9"))
 
-pRPS3_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pRPS3"))
+pRPS3_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pRPS3"))
 
-pPGK1_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pPGK1"))
+pPGK1_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pPGK1"))
 
-pSRO9_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pSRO9"))
+pSRO9_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pSRO9"))
 
-pPIR1_tPIR1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>% filter(promoter == "pPIR1"))
+pPIR1_tPIR1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>% filter(promoter == "pPIR1"))
 
-pPGK1_tPIR1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>% filter(promoter == "pPGK1"))
+pPGK1_tPIR1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>% filter(promoter == "pPGK1"))
 
-pSRO9_tPIR1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>% filter(promoter == "pSRO9"))
+pSRO9_tPIR1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>% filter(promoter == "pSRO9"))
 
-collated_norm_mean_lm_comparison <- step(lm(delta_cq ~ exp_rep + exp_rep:promoter + exp_rep:terminator + native + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TGTACAATA:TTTCATTTC + terminator + promoter, collated_norm_mean_data), delta_cq ~ exp_rep + exp_rep:promoter + exp_rep:terminator + native + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + terminator + promoter + terminator:ATATTC + promoter:ATATTC + terminator:GTATACCTA + promoter:GTATACCTA + terminator:TGTACAATA + promoter:TGTACAATA + terminator:TTTCATTTC + promoter:TTTCATTTC + TTTCATTTC:TGTACAATA:terminator + TTTCATTTC:TGTACAATA:promoter + native:terminator + native:promoter)
+collated_norm_mean_lm_comparison <- step(lm(delta_cq ~ exp_rep + exp_rep:promoter + exp_rep:terminator + native + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + UGUAHMNUA:HWNCAUUWY + terminator + promoter, collated_norm_mean_data), delta_cq ~ exp_rep + exp_rep:promoter + exp_rep:terminator + native + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + terminator + promoter + terminator:ATATTC + promoter:ATATTC + terminator:GTATACCTA + promoter:GTATACCTA + terminator:UGUAHMNUA + promoter:UGUAHMNUA + terminator:HWNCAUUWY + promoter:HWNCAUUWY + HWNCAUUWY:UGUAHMNUA:terminator + HWNCAUUWY:UGUAHMNUA:promoter + native:terminator + native:promoter)
 
-collated_norm_mean_lm <- lm(delta_cq ~ exp_rep + native + ATATTC + TGTACAATA + TTTCATTTC + GTATACCTA + terminator + promoter + exp_rep:promoter + exp_rep:terminator + TGTACAATA:TTTCATTTC + ATATTC:terminator + TGTACAATA:promoter + ATATTC:promoter + native:promoter + TGTACAATA:terminator + TTTCATTTC:terminator + TTTCATTTC:promoter + TGTACAATA:TTTCATTTC:terminator + TGTACAATA:TTTCATTTC:promoter, collated_norm_mean_data)
+collated_norm_mean_lm <- lm(delta_cq ~ exp_rep + native + ATATTC + UGUAHMNUA + HWNCAUUWY + GTATACCTA + terminator + promoter + exp_rep:promoter + exp_rep:terminator + UGUAHMNUA:HWNCAUUWY + ATATTC:terminator + UGUAHMNUA:promoter + ATATTC:promoter + native:promoter + UGUAHMNUA:terminator + HWNCAUUWY:terminator + HWNCAUUWY:promoter + UGUAHMNUA:HWNCAUUWY:terminator + UGUAHMNUA:HWNCAUUWY:promoter, collated_norm_mean_data)
 ```
 
 ## Combined linear model results
 A greedy algorithm for maximising AIC was used to select for the best combination of terms. First the basic model predicting delta_cq using motif presence, terminator, promoter and exp_rep (with interactive term for exp_rep according to promoter/terminator pairing) was ran giving an adjusted R-squared of 0.7816. Then interactive terms for motif contributions in differing contexts and the linear combination of motifs was added increasing the AIC from  AIC=-197.29 to a maximum of -332.62. The final model after selection is summarised below with an adjusted R-squared of 0.90976.
 
-ATATTC has a strong destabilising effect in RPS3 terminators but not TSA1 terminators, irrespective of promoter but even greater with pRPS3 than pPGK1. TGTACAATA only has a significant effect on its own in TSA terminators. GTATACCTA does not have a significant effect in any context. TTTCATTTC has an significant effect in all context on its own. TTTCATTTC and TGTACAATA have an effect when they appear together in the TSA1 terminators only.
+ATATTC has a strong destabilising effect in RPS3 terminators but not TSA1 terminators, irrespective of promoter but even greater with pRPS3 than pPGK1. UGUAHMNUA only has a significant effect on its own in TSA terminators. GTATACCTA does not have a significant effect in any context. HWNCAUUWY has an significant effect in all context on its own. HWNCAUUWY and UGUAHMNUA have an effect when they appear together in the TSA1 terminators only.
 ```{r combined_linear_model}
 summary(collated_norm_mean_lm)
 ```
@@ -132,7 +132,7 @@ ggplot(model_coefficients) +
 
 motif_term_dictionary <- model_coefficients %>% 
   distinct(term) %>%
-  mutate(new_term = c("Construct", "exp_repExpRep2", "ATATTC", "GTATACCTA", "TGTACAATA", "TTTCATTTC", "Wildtype\n vs Mod0", "TGTACAATA\n+\nTTTCATTTC"))
+  mutate(new_term = c("Construct", "exp_repExpRep2", "ATATTC", "GTATACCTA", "UGUAHMNUA", "HWNCAUUWY", "Wildtype\n vs Mod0", "UGUAHMNUA\n+\nHWNCAUUWY"))
 
 construct_dictionary <- model_coefficients %>% 
   distinct(ter_pro) %>%
@@ -151,7 +151,7 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
   ) +
   geom_errorbar(aes(ymax = -estimate + std.error, ymin = -estimate - std.error),
                 size =1) +
-  labs(y = TeX("Log_2 Fold Change in RNA Abundance"), 
+  labs(y = TeX("Log_2 Fold Change in\n RNA Abundance"), 
        colour = "Terminator") + 
   theme_bw(base_size = 16) +
   theme(strip.placement = "outside", 
@@ -163,13 +163,13 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
         panel.grid.major.x = element_blank(),
         axis.line.x = element_blank()) +
   scale_colour_manual(breaks = c("tTSA1", "tRPS3", "tPIR1"), values = c("#56B4E9", "#D55E00", "#000001")) +
-  facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "TGTACAATA", "TTTCATTTC", "TGTACAATA\n+\nTTTCATTTC")), 
+  facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "UGUAHMNUA", "HWNCAUUWY", "UGUAHMNUA\n+\nHWNCAUUWY")), 
              scales = "free_x", 
              space = "free_x", 
              switch = "x") +
   geom_hline(yintercept = 0)
 
-ggsave(here("results_chapter/figures/motif_multi_context_coefficient.png"), individual_linear_model_coefficients_points, width = 12, height = 9)
+ggsave(here("raw_data_analysis/figures/motif_multi_context_coefficient.png"), individual_linear_model_coefficients_points, width = 12, height = 9)
 
 save(individual_linear_model_coefficients_points, file = here("raw_data_analysis/data/motif_multi_context_coefficient.Rdata"))
 
