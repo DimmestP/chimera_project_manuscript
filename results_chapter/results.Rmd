@@ -22,25 +22,26 @@ Terminator choice on protein output was evaluated by measuring the fluorescence 
 knitr::include_graphics(here("results_chapter/figures/RPS3_SRO9_short_vs_long.png"))
 ```
 
-## Selecting cis-regulatory elements by their contributions to linear models of transcript half life
+## Candidate cis-regulatory elements contribute to transcript decay rates
 
-Potential cis-regulatory elements to test for context dependence were initially identified through a literature search.
-We focused on cis-regulatory elements associated with post-transcriptional regulation only.
-This was in order to A) enable confirmation of each element's regulatory role by predicting their contributions to transcript degradation and B) minimise the possibility of selecting motifs with confounding transcriptional, post-transcriptional and translational roles.
-69 suspected post-transcriptional, cis-regulatory elements were collated from three separate studies; @Hogan2008, @Shalgi2005 and @Cheng2017.
-All collated cis-regulatory elements were sequence motifs found in transcript 3' untranslated regions (3'UTR) as confirmed either in vivo, with RNA-protein binding assays [@Hogan2008], or in silico, by comparing the sequences of transcripts with similar half lives [@Shalgi2005] [@Cheng2017].
+
+We wanted to confirm that the context dependent regulation of gene expression observed in terminator regions is replicated by the individual cis-regulatory elements (CREs) contained with these regions.
+A literature search revealed a list of 69 suitable CREs that were suspected sequence motifs for RNA binding proteins (Sup Table 1) several of which appeared regularly in the 3' untranslated regions (3'UTR) of our library of terminators (Sup Table 2) [@Hogan2008] [@Shalgi2005] [@Cheng2017].
+Across the yeast genome 31 of the 69 motifs occurred 5 or fewer times in the median length 3'UTRs reported by @Pelechano2013.
+They were therefore removed.
+A subset of the remaining 38 3'UTR motifs had been verified as binding motifs for proteins associated with various mRNA degradation pathways (Sup Table 1).
+
+Active regulatory roles of candidate CREs were validated using a linear model predicting half life.
+As some motifs had previously been shown to be involved with transcript degradation, we constructed a linear model to predict a transcript's half life using the counts of motifs in its median length 3'UTR.
+The linear model also included terms for the relative codon usage in each transcript's ORF as this has previously been shown to be the most significant determinate of decay rate [@Cheng2017] [@Presnyak2015], see Material and Methods. 
+The linear model was trained separately on two independent, non-invasive pulse labeling assays measuring yeast mRNA decay rates, [@Sun2013] and [@Chan2018].
+With the two data sets loosely correlated, R = 0.63 Figure \@ref(fig:hlife-decay-model)B, the model performed similarly on both by explaining 44% and 41% of the variability in half lives for the @Chan2018 and @Sun2013 data sets respectively, \@ref(fig:hlife-decay-model)A.
+CREs that did not significantly contribute to the model were automatically filter out using a greedy algorithm maximising the Akaike information criterion (AIC) during both training stages.
 
 We shortlisted the collated 3'UTR motifs by determining their contributions to a linear model predicting native transcript half lives.
 The linear model used the counts of the motifs in the median length 3'UTR of a gene's transcript as a predicate.
-A transcript's median length 3'UTR was determined either as reported by @Pelechano2013 or, for genes missing in the TIF-seq dataset, inferred by taking the first 200 nucleotides downstream of the gene's stop codon.
-31 of the original 69 motifs occurred 5 or fewer times in the 3'UTRs as defined above and were subsequently removed.
-The linear model also included terms for the relative codon usage in each transcript's ORF as this has previously been shown to be the most significant determinate of decay rate [@Cheng2017] [@Presnyak2015], see Material and Methods. 
 
-The linear model was trained separately on two independent, genome-wide studies of yeast mRNA decay rates, [@Sun2013] and [@Chan2018].
-The two data sets are loosely correlated, R = 0.63 Figure \@ref(fig:hlife-decay-model)B, with both using non-invasive pulse labeling assays to measure decay rates.
 However, only [@Chan2018] used multiple time points to determine transcript half lives.
-The motifs were then selected for their contribution to half life by using a greedy algorithm to determine the combination of motifs that maximised the Akaike information criterion (AIC) of the model.
-The predictive power of the models with the maximum AIC can be seen in Figure \@ref(fig:hlife-decay-model)A; ??% and 51% of the variability in half lives was explained for the [@Sun2013] and [@Chan2018] data sets respectively.
 Motifs predicted to be significant in both decay data sets are plotted in Figure \@ref(fig:hlife-decay-model)C with their magnitudes calculated according to the data sets plotted against each other.
 Interestingly, the TGTAAATA motif was predicted to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
 The puf3 protein associated with motif is known to change function in carbon deficient condition which were likely present due to the bespoke CSM-lowURA media the cultures were grown in overnight, [@Sun2013] used standard YPD media. 
@@ -116,6 +117,11 @@ Constructs with TSA1 terminators have highing $R^2$ values than those in RPS3 te
 It is also interesting that the SRO9 promoter pairing has the greatest correlation to the decay model suggesting that the less expressing promoter is more influenced by decay pathways. 
 
 ## Motif effects on gene expression are dependant on termintor context and promoter pairing
+
+Promoter choice influences the magnitude of a motifs contribution to gene expression.
+For the ATATTC, TGTACAATA and TTTCATTTC motifs the greatest reduction in RNA abundance occurred when native promoter-terminator pairings are measured.
+This is true for all three motifs across all three host terminators, except for TTTCATTTC in pRPS3-tRPS3 constructs.
+In addition, native promoter-terminator paired constructs exhibit greater than expected contributions to gene expression when compared to predicted effects inferred from motif contributions to half-life. 
 
 A linear model to predict the $\Delta Cq$ values from the qPCR using only motif presence was trained on each promoter-terminator construct library separately.
 The inferred coefficients for each of the motifs, together with an additional interactive term for the linear combination of TTTCATTTC and TGTACAATA, in all of the promoter-terminator pairs are shown in Figure  \@ref(fig:hlife-predict-vs-abundance-and-motif-context-dependence)B.
