@@ -15,18 +15,7 @@ library(tidyqpcr)
 library(dplyr) 
 
 
- # set default theme for graphics
-theme_set(theme_cowplot(font_size=11) %+replace% 
-              theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
-                    panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
-                    panel.grid.major = element_line(size = 0.15, linetype = 'solid',colour = "grey"),
-                    plot.title = element_text(family="Tahoma",size=11,vjust=3.3),
-                    strip.background = element_blank(),
-                    strip.text.x=element_text(family="Tahoma",size=11),
-                    axis.text=element_text(family="Tahoma", size=10),
-                    axis.title=element_text(family="Tahoma", size=10),
-                    legend.text=element_text(family="Tahoma", size=8),
-                    legend.title=element_text(family="Tahoma", size=9)))
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 ```
 
 
@@ -343,6 +332,23 @@ plot_norm_se_2 <- ggplot(data=norm_pro_mTurq_ter_se, aes(x=Terminator,y=strain_m
   geom_errorbar(aes(ymax = strain_mean+se, ymin = strain_mean-se, color=Terminator,  width=0.4))+
   geom_hline(yintercept=1, linetype="dotted", color = "grey50")
 plot_norm_se_2
+```
+```{r plot_norm_all_points, fig.height=3, fig.width=6}
+
+mTurq_platereader_figure <- ggplot(data=norm_pro_mTurq_ter_all %>% mutate(Terminator = str_remove(Terminator, "_long")), aes(x=Terminator,y=norm_mTurq_per_OD_at_max_gr, colour = Terminator)) +
+  geom_point() +
+  labs(y="Relative mTurq fluorescence per OD \n relative to tPGK1",x="Terminator") +
+  facet_wrap(~Promoter, nrow=2)+
+  scale_colour_hue(h = c(0, 360)+20,l=60,c=60)+
+  theme(axis.text.x=element_text(angle=90,vjust=0.5),
+          axis.title.x=element_text(vjust=-2),
+          axis.title.y=element_text(vjust=3))+
+  geom_hline(yintercept=1, linetype="dotted", color = "grey50") + stat_summary(aes(Terminator,norm_mTurq_per_OD_at_max_gr),
+    fun="mean",colour="black",
+    geom="crossbar",size=0.2, width=0.5) +
+    theme(legend.position = "none")
+
+ggsave(here("./results_chapter/figures/pro_ter_platereader_mTurq.png"),mTurq_platereader_figure,width = 12, height = 9)
 ```
 
 ```{r radarGraphDraft}

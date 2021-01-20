@@ -10,6 +10,8 @@ library(here)
 library(cowplot)
 library(ggpattern)
 library(latex2exp)
+ # set default theme for graphics
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 
 construct_to_motif_dictionary_PIR1 <- tibble(construct = 
                                                     rep(c("WT", "modA", "modB", "modC", "modD", "modE", "modF", "modG"), each = 3), 
@@ -124,7 +126,7 @@ model_coefficients <- tidy(pPGK1_tRPS3_norm_mean_lm) %>%
   
 
 ggplot(model_coefficients) +
-  geom_point(aes(x=term, y=estimate, shape = factor(ter_pro, levels =c("pRPS3_tRPS3", "pTSA1_tTSA1", "pPGK1_tRPS3", "pPGK1_tTSA1")), colour = (p.value < 0.05)), size = 3, position = position_jitter(width = 0.1)) +
+  geom_point(aes(x=term, y=estimate, shape = factor(ter_pro, levels =c("pRPS3_tRPS3", "pTSA1_tTSA1", "pPGK1_tRPS3", "pPGK1_tTSA1")), colour = (p.value < 0.05)), position = position_jitter(width = 0.1)) +
   theme_cowplot() +
   theme(axis.text.x = element_text(angle = 90), panel.grid.major.y = element_line(size = 0.1)) +
   labs(x = "", y = "Coefficient", shape = "Promoter/Terminator", colour = "Significant")
@@ -146,14 +148,10 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
          arrange(term,promoter),
        aes(x=factor(promoter_type, levels = c("Native","PGK1","SRO9")), y=-estimate, colour = terminator),
     position = position_dodge2()) +
-  geom_point(
-    size = 5
-  ) +
-  geom_errorbar(aes(ymax = -estimate + std.error, ymin = -estimate - std.error),
-                size =1) +
+  geom_point() +
+  geom_errorbar(aes(ymax = -estimate + std.error, ymin = -estimate - std.error)) +
   labs(y = TeX("Log_2 Fold Change in\n RNA Abundance"), 
-       colour = "Terminator") + 
-  theme_bw(base_size = 16) +
+       colour = "Terminator") +
   theme(strip.placement = "outside", 
         strip.background = element_rect(fill = "white", colour = "white"), 
         axis.title.x = element_blank(),

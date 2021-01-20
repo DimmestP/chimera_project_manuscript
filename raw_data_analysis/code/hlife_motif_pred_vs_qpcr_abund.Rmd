@@ -9,6 +9,9 @@ library(tidyverse)
 library(latex2exp)
 library(RColorBrewer)
 
+ # set default theme for graphics
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
+
 construct_to_motif_dictionary_PIR1 <- tibble(construct = 
                                                     rep(c("WT", "modA", "modB", "modC", "modD", "modE", "modF", "modG"), each = 3), 
                                                   Motif = rep(c("ATATTC","TGTAHMNTA","HWNCATTWY"), times = 8), 
@@ -124,10 +127,9 @@ pred_vs_actual_plot_data_PIR1 <- pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>%
   inner_join(hlife_coefficients_PIR1)
 
 pred_vs_abundance_TSA1_RPS3 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS3) + 
-  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = construct), show.legend = FALSE, size = 3) +
-  geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = construct), size = 1) +
-  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = construct), size = 1) +
-  theme_bw(base_size = 16) +
+  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = construct), show.legend = FALSE) +
+  geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = construct)) +
+  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = construct)) +
   facet_grid(terminator~pro) +
   coord_fixed(ratio = 1 , xlim = c(-2.5, 1.5) ,ylim = c(-2.5, 1.5)) +
   geom_abline(slope = 1, intercept = 0, colour = "grey")  +
@@ -137,10 +139,9 @@ pred_vs_abundance_TSA1_RPS3 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS
   scale_color_brewer(palette = "Paired")
 
 pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) + 
-  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = construct), show.legend = FALSE, size = 3) +
-  geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = construct), size = 1) +
-  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = construct), size = 1) +
-  theme_bw(base_size = 16) +
+  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = construct), show.legend = FALSE) +
+  geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = construct)) +
+  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = construct)) +
   facet_grid(terminator~pro) +
   coord_fixed(ratio = 1 , xlim = c(-1, 1.2) ,ylim = c(-1, 1.2)) +
   geom_abline(slope = 1, intercept = 0, colour = "grey")  +

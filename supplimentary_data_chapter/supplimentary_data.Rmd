@@ -2,8 +2,8 @@
 
 ## Short vs long terminator experiment
 
-```{r RPS3-SRO9-short-vs-long, fig.cap="\\textbf{Extending terminator sequence beyond transcript 3'UTR length enhances gene expression}. (\\textbf{A}) Fold changes in mRNA abundance for two RPS3 terminator sequences equaling reported 3'UTR isoform lengths, 59bp and 86bp, and one terminator sequence extended beyond the maximum reported 3'UTR length, 200bp. (\\textbf{B}) Same as (\\textbf{A}) but for one SRO9 termintor sequence shorter than reported 3'UTR isoform lengths, 200bp, and one beyond, 500bp.", out.width='60%', fig.align='center'}
-knitr::include_graphics(here("results_chapter/figures/RPS3_SRO9_short_vs_long.png"))
+```{r RPS3-SRO9-short-vs-long, fig.cap="\\textbf{Extending terminator sequence beyond transcript 3'UTR length enhances gene expression}. (\\textbf{A}) Fold changes in mRNA abundance for two RPS3 terminator sequences equaling reported 3'UTR isoform lengths, 59bp and 86bp, and one terminator sequence extended beyond the maximum reported 3'UTR length, 200bp. (\\textbf{B}) Same as (\\textbf{A}) but for one SRO9 terminator sequence shorter than reported 3'UTR isoform lengths, 200bp, and one beyond, 500bp.", out.width='80%', fig.align='center'}
+knitr::include_graphics(here("supplimentary_data_chapter/figures/RPS3_SRO9_short_vs_long.png"))
 ```
 
 ## Motif effects on transcript expression is repeated in protein expression data
