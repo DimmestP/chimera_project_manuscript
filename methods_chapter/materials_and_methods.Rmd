@@ -37,6 +37,18 @@ Plasmids were confrmed by PCR and Sanger sequencing (MRC PPU DNA Sequencing and 
 These plasmids were transformed into BY4741 and selecting in Sc-URA plates for isolating yeast containing the reporter plasmids.
 DNA sequences used in this study are summarised in Supplementary table. 
 
+The tRPS3 3'UTR-terminator was modified to incorporate three 9 nt insertion sites for motifs (M1, M2 and M3).
+The M1 was inserted 24 nt downstream of the stop codon, M2 was inserted 15 nt downstream of M1 and the final insert M3 was inserted 4 nt downstream of M2 (Figure \@ref(fig:tRPS3-design-and-qpcr)).
+These positions were selected based out key design criteria (SUP FIGURE/NOTE X).
+A control tRPS3 3'UTR mod0 was designed to incorporate scrambled/random bases in each insertion site (Figure 1A).
+Further modified 3’UTR-terminator designs were designed to incorporate individual motifs of interest previously identified, within the insertion sites described (Figure \@ref(fig:tRPS3-design-and-qpcr)).
+
+Similar to the modified RPS3 3'UTR-terminator designs, three 9 nt insertion sites (M1, M2 and M3).
+The M1 was designed 21 nt downstream of the stop codon, M2 was designed 20 nt downstream of M1, and M3 was designed 24 bp downstream of M2. 
+The tTSA1 mod0 construct contained scrambled/random bases iin the M1, M2 and M3 sites (Figure \@ref(fig:tTSA1-design-and-qpcr)).
+Similar to the modified tRPS3 3'UTR-terminator designs, individual motifs of interest previously described were introduced into the insertion sites (Figure \@ref(fig:tTSA1-design-and-qpcr)), whereby modC was designed to characterise a candidate stability motif, whilst modA, modB, modD and modE were designed to characterise candidate decay motifs.
+These 3'UTR/terminators were assembled with either pTSA1, pPGK1 or pSRO9 promoters driving the expression of an mCherry reporter gene in a plasmid and expressed in yeast.
+
 ## Strain growth, RNA extraction and reverse transcription
 BY4741 yeast strains containing the chimeric reporter plasmid were pre-cultured in a 12 column deep well plate containing 7 ml of SC -URA medium containing 2% glucose and grown for ~20 hours at 30&deg;C in a shaking incbator.
 Following the overnight growth, the OD~600~ was measured using a spectrophotometer and diluted in a 12 column deep well plate to a starting OD~600~ of 0.2.
