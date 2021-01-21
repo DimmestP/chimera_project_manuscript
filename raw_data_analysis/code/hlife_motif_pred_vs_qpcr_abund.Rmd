@@ -9,24 +9,54 @@ library(tidyverse)
 library(latex2exp)
 library(RColorBrewer)
 
-construct_to_motif_dictionary <- tibble (construct = rep(c("WT", "mod0", "modA", "modB", "modC", "modD", "modE"), times = 4), Motif = rep(c("ATATTC", "GTATACCTA","TGTAHMNTA","HWNCATTWY"), each = 7), count = c(0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,0,1,0,0,0,1,0,0,0,0,0,2,2))
+ # set default theme for graphics
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
+
+construct_to_motif_dictionary_PIR1 <- tibble(construct = 
+                                                    rep(c("WT", "modA", "modB", "modC", "modD", "modE", "modF", "modG"), each = 3), 
+                                                  Motif = rep(c("ATATTC","TGTAHMNTA","HWNCATTWY"), times = 8), 
+                                                   count = c(1,1,3,
+                                                             1,0,3,
+                                                             0,1,3,
+                                                             1,1,2,
+                                                             1,1,2,
+                                                             1,1,0,
+                                                             1,0,0,
+                                                             0,1,0))
+
+construct_to_motif_dictionary_TSA1_RPS3 <- tibble (construct = 
+                                                rep(c("WT", "mod0", "modA", "modB", "modC", "modD", "modE"), times = 4), 
+                                              Motif = 
+                                                rep(c("ATATTC", "GTATACCTA","TGTAHMNTA","HWNCATTWY"), each = 7), 
+                                              count = c(0,0,0,2,0,0,0,
+                                                        0,0,0,0,2,0,0,
+                                                        0,0,1,0,0,0,1,
+                                                        0,0,0,0,0,2,2))
  
-hlife_coefficients <- read_csv(here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv")) %>% 
-  inner_join(construct_to_motif_dictionary) %>%
+hlife_coefficients_TSA1_RPS3 <- read_csv(here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv")) %>% 
+  inner_join(construct_to_motif_dictionary_TSA1_RPS3) %>%
   group_by(construct) %>%
   mutate(predict_motif_error = sum(count * std.error)) %>%
   group_by(construct, predict_motif_error) %>%
   summarise(predict_motif_effect = sum(count * Coefficient), .groups = "drop")
 
-# function to calculate mean mod0
-mean_mod0 <- function(cq_value, construct){
-  cq_value[construct == "mod0"] %>% mean()
+hlife_coefficients_PIR1 <- read_csv(here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv")) %>% 
+  inner_join(construct_to_motif_dictionary_PIR1) %>%
+  group_by(construct) %>%
+  mutate(predict_motif_error = sum(count * std.error)) %>%
+  group_by(construct, predict_motif_error) %>%
+  summarise(predict_motif_effect = sum(count * Coefficient), .groups = "drop") %>%
+  mutate(predict_motif_effect = predict_motif_effect - predict_motif_effect[construct == "WT"])
+
+# function to calculate mean cq value for control construct 
+mean_control <- function(cq_value, construct, control = "mod0"){
+  cq_value[construct == {{control}}] %>% mean()
 }
 
 pRPS3_pPGK1_pSRO9_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv")) %>%
   filter( target_id == "mCh-7") %>%
   group_by(promoter) %>%
-  mutate(mod0_delta_cq = mean_mod0(deltacq, construct)) %>%
+  mutate(mod0_delta_cq = mean_control(deltacq, construct)) %>%
   group_by(construct, promoter) %>%
   mutate( delta_delta_cq = deltacq - mod0_delta_cq) %>%
   ungroup() 
@@ -34,18 +64,26 @@ pRPS3_pPGK1_pSRO9_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/nor
 pTSA1_pPGK1_pSRO9_tTSA1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pTSA1_pPGK1_pSRO9_tTSA1_deltacq_platesnorm_summarise.csv")) %>%
   filter( target_id == "mCh-7") %>%
   group_by(promoter) %>%
-  mutate(mod0_delta_cq = mean_mod0(deltacq, construct)) %>%
+  mutate(mod0_delta_cq = mean_control(deltacq, construct)) %>%
   group_by(construct, promoter) %>%
   mutate( delta_delta_cq = deltacq - mod0_delta_cq) %>%
   ungroup() 
 
-combined_pred_vs_actual_abund <- pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>%
+pPIR1_pPGK1_pSRO9_tPIR1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pPIR1_pPGK1_pSRO9_tPIR1_deltacq_platesnorm_summarise.csv")) %>%
+  filter( target_id == "mCh-7") %>%
+  group_by(promoter) %>%
+  mutate(mod0_delta_cq = mean_control(deltacq, construct, "WT")) %>%
+  group_by(construct, promoter) %>%
+  mutate( delta_delta_cq = deltacq - mod0_delta_cq) %>%
+  ungroup() 
+
+combined_pred_vs_actual_abund_TSA1_RPS3 <- pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>%
   bind_rows(pTSA1_pPGK1_pSRO9_tTSA1_norm_mean)
 
-combined_pred_vs_actual_abund %>%
+combined_pred_vs_actual_abund_TSA1_RPS3 %>%
   group_by(promoter,terminator, construct) %>%
   summarise(delta_delta_cq = median(delta_delta_cq)) %>%
-  inner_join(hlife_coefficients) %>%
+  inner_join(hlife_coefficients_TSA1_RPS3) %>%
   group_by(promoter, terminator) %>%
   mutate(r_squared = cor(predict_motif_effect, delta_delta_cq)^2) %>%
   ungroup()
@@ -53,38 +91,71 @@ combined_pred_vs_actual_abund %>%
 ```
 
 ```{r plot_pred_vs_actual}
-construct_dictionary <- tibble( pro = c("pPGK1", "Native", "pSRO9", "pPGK1", "Native", "pSRO9"), promoter = c("pPGK1", "pTSA1", "pSRO9", "pPGK1", "pRPS3", "pSRO9"))
+construct_dictionary_TSA1_RPS3 <- tibble( pro = c("pPGK1", "Native", "pSRO9", "pPGK1", "Native", "pSRO9"), promoter = c("pPGK1", "pTSA1", "pSRO9", "pPGK1", "pRPS3", "pSRO9"))
 
-r_squared_data <- combined_pred_vs_actual_abund %>% 
+construct_dictionary_PIR1 <- tibble( pro = c("pPGK1", "Native", "pSRO9"), promoter = c("pPGK1", "pPIR1", "pSRO9"))
+
+r_cor_data_TSA1_RPS3 <- combined_pred_vs_actual_abund_TSA1_RPS3 %>% 
   group_by(construct, terminator, promoter) %>% 
   summarise(delta_delta_cq = mean(delta_delta_cq), .groups = "drop") %>%
-  inner_join(hlife_coefficients) %>% 
+  inner_join(hlife_coefficients_TSA1_RPS3) %>% 
   group_by(terminator, promoter) %>% 
-  summarise(r_squared = cor(delta_delta_cq, predict_motif_effect)^2, .groups = "drop") %>%
-  mutate(r_squared_label = paste(TeX(paste0("R^2 = ", signif(r_squared,digits = 3))))) %>% 
-  inner_join(construct_dictionary)
+  summarise(r_cor = cor(-delta_delta_cq, predict_motif_effect), .groups = "drop") %>%
+  mutate(r_cor_label = paste(TeX(paste0("R = ", signif(r_cor,digits = 3))))) %>% 
+  inner_join(construct_dictionary_TSA1_RPS3)
 
-
-combined_pred_vs_actual_plot_data <- combined_pred_vs_actual_abund %>%
-  inner_join(construct_dictionary) %>% 
+r_cor_data_PIR1 <- pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>% 
   group_by(construct, terminator, promoter) %>% 
-  mutate(mean_delta_delta_cq = mean(delta_delta_cq)) %>% 
-  group_by(construct, mean_delta_delta_cq, terminator, promoter) %>% 
-  summarise(sd_ddcq = sd(delta_delta_cq), .groups = "drop") %>%
-  inner_join(hlife_coefficients)
+  summarise(delta_delta_cq = mean(delta_delta_cq), .groups = "drop") %>%
+  inner_join(hlife_coefficients_PIR1) %>% 
+  group_by(terminator, promoter) %>% 
+  summarise(r_cor = cor(-delta_delta_cq, predict_motif_effect), .groups = "drop") %>%
+  mutate(r_cor_label = paste(TeX(paste0("R = ", signif(r_cor,digits = 3))))) %>% 
+  inner_join(construct_dictionary_PIR1)
 
-pred_vs_abundance <- ggplot(combined_pred_vs_actual_plot_data) + 
-  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = construct), show.legend = FALSE, size = 3) +
-  geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = construct), size = 1) +
-  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = construct), size = 1) +
-  theme_bw(base_size = 16) +
+
+combined_pred_vs_actual_plot_data_TSA1_RPS3 <- combined_pred_vs_actual_abund_TSA1_RPS3 %>%
+  inner_join(construct_dictionary_TSA1_RPS3) %>% 
+  group_by(construct, terminator, pro) %>%
+  summarise(mean_delta_delta_cq = mean(delta_delta_cq), sd_ddcq = sd(delta_delta_cq), .groups = "drop") %>%
+  inner_join(hlife_coefficients_TSA1_RPS3)
+
+pred_vs_actual_plot_data_PIR1 <- pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>%
+  inner_join(construct_dictionary_PIR1) %>% 
+  group_by(construct, terminator, pro) %>%
+  summarise(mean_delta_delta_cq = mean(delta_delta_cq), sd_ddcq = sd(delta_delta_cq), .groups = "drop") %>%
+  inner_join(hlife_coefficients_PIR1)
+
+pred_vs_abundance_TSA1_RPS3 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS3) + 
+  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = construct), show.legend = FALSE) +
+  geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = construct)) +
+  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = construct)) +
   facet_grid(terminator~pro) +
   coord_fixed(ratio = 1 , xlim = c(-2.5, 1.5) ,ylim = c(-2.5, 1.5)) +
   geom_abline(slope = 1, intercept = 0, colour = "grey")  +
-  labs(x=TeX("Predicted log_2 Fold Change"), y=TeX("Experimental log_2 Fold Change"), colour = "Construct") +
-  geom_text(aes(label = r_squared_label), data = r_squared_data, x = -1.3, y= 0.7, parse = TRUE, size = 5) +
+  labs(x="", y=TeX("Experimental log_2 Fold Change"), colour = "Construct") +
+  geom_text(aes(label = r_cor_label), data = r_cor_data_TSA1_RPS3, x = -1.2, y= 1, parse = TRUE, size = 4) +
   theme(panel.grid.minor = element_blank(), legend.position = "right") +
   scale_color_brewer(palette = "Paired")
+
+pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) + 
+  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = construct), show.legend = FALSE) +
+  geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = construct)) +
+  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = construct)) +
+  facet_grid(terminator~pro) +
+  coord_fixed(ratio = 1 , xlim = c(-1, 1.2) ,ylim = c(-1, 1.2)) +
+  geom_abline(slope = 1, intercept = 0, colour = "grey")  +
+  labs(x=TeX("Predicted log_2 Fold Change"), y=TeX(""), colour = "Construct") +
+  geom_text(aes(label = r_cor_label), data = r_cor_data_PIR1, y = -0.7, x= 0, parse = TRUE, size = 4) +
+  theme(panel.grid.minor = element_blank(), legend.position = "right") +
+  scale_color_brewer(palette = "Paired")
+
+pred_vs_abundance_combined <- plot_grid(pred_vs_abundance_TSA1_RPS3,
+                                        pred_vs_abundance_PIR1,
+                                        rel_heights = c(1.6,1),
+                                        ncol = 1,
+                                        axis = "b",
+                                        align = "hv")
 
 #ggsave(here("./results_chapter/figures/pred_vs_actual_abundance.png"), cowplot::plot_grid(pPGK1_tRPS3_pred_vs_actual, pPGK1_tTSA1_pred_vs_actual, pTSA1_tTSA1_pred_vs_actual, pRPS3_tRPS3_pred_vs_actual, pSRO9_tRPS3_pred_vs_actual, ncol = 1, labels = c("pPGK1- \n tRPS3", "pPGK1- \n tTSA1", "pTSA1- \n tTSA1", "pRPS3- \n tRPS3", "pSRO9- \n tRPS3"), label_x = -0.035), width = 7, height = 12)
 
@@ -94,13 +165,15 @@ pred_vs_abundance <- ggplot(combined_pred_vs_actual_plot_data) +
    
 load(here("raw_data_analysis/data/motif_multi_context_coefficient.Rdata"))
 
-ggsave(plot_grid(pred_vs_abundance, 
-                 individual_linear_model_coefficients_points, 
+ggsave(plot_grid(pred_vs_abundance_combined, 
+                 individual_linear_model_coefficients_points +
+                   theme(plot.margin = unit(c(0.1,0.1,0.1,0.6),"cm")), 
                  ncol = 1, 
                  labels = c("A", "B"),
                  label_size = 20,
-                 align = "hv",
-                 axis = "t"), 
+                 align = "vh",
+                 axis = "t",
+                 rel_heights = c(1.5,1)), 
        file = here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"), 
        width = 9, 
        height = 12)

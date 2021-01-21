@@ -9,6 +9,7 @@ library(cowplot)
 library(patchwork)
 
 source(here("raw_data_analysis/code/linear_model_functions.R"))
+source(here("raw_data_analysis-code/shared_figure_formatting.R"))
 
 # import chan et al half-life data
 
@@ -162,7 +163,6 @@ sun_step_model_r_squared <- summary(single_motif_chan_decay_step_model_sun)$r.sq
 chan_pred_vs_obvs_plot <- ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Chan")) +
   geom_bin2d(aes(x=Predicted_Half_Life,y=Measured_Half_Life), bins = 70) +
   labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obs}$"),title = TeX("Chan")) +
-  theme_bw(base_size = 20) +
   scale_y_log10(limits = c(0.9,200)) +
   scale_x_log10(breaks=c(1,10),minor_breaks = c(3,30),limits = c(1,60)) +
   theme(legend.position = "none",panel.grid.minor.y = element_blank(),plot.title = element_text(hjust=0.5), plot.margin = margin(5,0,5,20)) +
@@ -171,7 +171,6 @@ chan_pred_vs_obvs_plot <- ggplot(two_data_sets_predictive_power_tibble %>% filte
 sun_pred_vs_obvs_plot <- ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Sun")) +
   geom_bin2d(aes(x=Predicted_Half_Life,y=Measured_Half_Life), bins = 70) +
   labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obvs}$"),title = TeX("Sun")) +
-  theme_bw(base_size = 20) +
   scale_y_log10(limits = c(0.9,200)) +
   scale_x_log10(breaks=c(1,10),minor_breaks = c(3,30),limits = c(1,60)) +
   theme(legend.position = "none",panel.grid.minor.y = element_blank(),plot.title = element_text(hjust=0.5),axis.title.y=element_blank(), axis.text.y = element_blank(),axis.ticks.y = element_blank(), plot.margin = margin(5,20,5,0)) +
@@ -189,7 +188,6 @@ decay_data_set_cor <- cor(combined_hlife_data_sets$hlife_S, combined_hlife_data_
 #ggsave2(here("./results_chapter/figures/chan_vs_sun_plot.png"), 
       dataset_comparison <-  ggplot(combined_hlife_data_sets, aes(x=hlife_C, y=hlife_S)) +
            geom_bin2d( bins=70) + 
-           theme_bw(base_size = 20) + 
            theme(panel.grid.minor = element_blank(), legend.position = "none") +
            labs(y = TeX("$\\lambda^^{1/2}_{Sun}$"), 
                 x = TeX("$\\lambda^{1/2}_{Chan}$")) +
@@ -212,8 +210,8 @@ decay_data_set_cor <- cor(combined_hlife_data_sets$hlife_S, combined_hlife_data_
      geom_hline(yintercept = 0,size = 0.2) +
         geom_errorbar() +
         geom_errorbarh() +
-        theme_bw(base_size = 15) +
-        theme(axis.text.x=element_text(angle=90,vjust = 0.5),panel.grid.minor=element_blank(), legend.position = "bottom" ) + # , plot.margin = margin(5,40,5,80)) +
+        theme(axis.text.x=element_text(angle=90,vjust = 0.5),
+              panel.grid.minor=element_blank()) + # , plot.margin = margin(5,40,5,80)) +
         labs(x=TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Sun}$"),y=TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Chan}$"), colour = "Motif") +
         scale_shape_manual(values=1:7) 
       #)
@@ -222,20 +220,20 @@ decay_data_set_cor <- cor(combined_hlife_data_sets$hlife_S, combined_hlife_data_
        (dataset_comparison | model_coefficients) ) | 
      gridExtra::tableGrob(chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), rows = NULL)
    
-  # ggsave2("results_chapter/figures/hlife_model_multi_fig.png", plot_grid(chan_pred_vs_obvs_plot,
-  #           sun_pred_vs_obvs_plot,dataset_comparison,
-  #          model_coefficients, 
-  #           labels = c("A", "", "B", "C"),
-  #           label_size = 20,
-  #           align = "hv",
-  #           axis = "t",
-  #           scale = c(0.9,0.9,1,0.9)), width = 12, height = 9)
+   ggsave2("results_chapter/figures/hlife_model_multi_fig.png", plot_grid(chan_pred_vs_obvs_plot,
+             sun_pred_vs_obvs_plot,dataset_comparison,
+            model_coefficients, 
+             labels = c("A", "", "B", "C"),
+             label_size = 20,
+             align = "hv",
+             axis = "t",
+             scale = c(0.9,0.9,1,0.9)), width = 12, height = 9)
    
 # output list of chan motif coefficients 
 # write_csv( chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./results_chapter/data/chan_motif_coefficients.csv"))
 
 # output list of chan motif coefficients with error
-write_csv( chan_motif_coefficients %>% select(term, estimate, std.error) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv"))
+#write_csv( chan_motif_coefficients %>% select(term, estimate, std.error) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv"))
    
    
 # check for co-occurrences of motifs in native 3'UTR

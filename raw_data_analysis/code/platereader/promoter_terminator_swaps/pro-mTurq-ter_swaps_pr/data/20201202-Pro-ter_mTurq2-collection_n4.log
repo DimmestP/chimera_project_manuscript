@@ -1,0 +1,13 @@
+om.platereader version 0.19
+2021-Jan-13 03:03:09
+
+p= platereader(dnames= False, anames= False, wdir= 'data/', platereadertype= 'Tecan', dsheetnumbers= False, asheetnumbers= False, ODfname= 'ODcorrection_Glucose_Haploid.txt', info= True, ls= True)
+
+p.correctOD(figs= True, correctmedia= True, commonmedia= False, mediafigs= False, experiments= 'all', experimentincludes= False, experimentexcludes= False, correctmediamean= False, correctmediaiskip= False)
+
+p.getstats(dtype= 'OD', bd= False, cvfn= 'matern', esterrs= False, noruns= 10, exitearly= True, noinits= 100, nosamples= 100, iskip= False, stats= True, plotodgr= False, figs= True, experiments= 'all', experimentincludes= False, experimentexcludes= False, conditions= 'all', conditionincludes= False, conditionexcludes= False, strains= 'all', strainincludes= False, strainexcludes= False)
+
+p.correctauto(f= ['mTurq-60'], refstrain= 'POT1-ccdB', figs= True, noruns= 2, bd= False, no1samples= 100, results= False, minqrerr= 1e-06, experiments= 'all', experimentincludes= False, experimentexcludes= False, conditions= 'all', conditionincludes= False, conditionexcludes= False, strains= 'all', strainincludes= False, strainexcludes= False)
+
+p.exportdf(commonname= False, type= 'json')
+

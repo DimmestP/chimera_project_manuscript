@@ -1,1 +1,47 @@
 # Supplimentary Data
+
+## Short vs long terminator experiment
+
+```{r RPS3-SRO9-short-vs-long, fig.cap="\\textbf{Extending terminator sequence beyond transcript 3'UTR length enhances gene expression}. (\\textbf{A}) Fold changes in mRNA abundance for two RPS3 terminator sequences equaling reported 3'UTR isoform lengths, 59bp and 86bp, and one terminator sequence extended beyond the maximum reported 3'UTR length, 200bp. (\\textbf{B}) Same as (\\textbf{A}) but for one SRO9 terminator sequence shorter than reported 3'UTR isoform lengths, 200bp, and one beyond, 500bp.", out.width='80%', fig.align='center'}
+knitr::include_graphics(here("supplimentary_data_chapter/figures/RPS3_SRO9_short_vs_long.png"))
+```
+
+## Motif effects on transcript expression is repeated in protein expression data
+
+The effects of motif presence on protein expression was investigate with a platereader assay detecting the fluorescence of the mCherry reporter gene on the pRPS3-tRPS3 and pTSA1-tTSA1 constructs.
+The right column in Figure \@ref(fig:protein-verse-RNA-plot) confirms that motif effects can be detected in protein expression expression alone.
+Comparing the corresponding RNA abundance levels, left column of Figure \@ref(fig:protein-verse-RNA-plot), the same effects of the motifs on transcript abundance are seen in protein expression, together with the same context dependence. 
+
+```{r protein-verse-RNA-plot, fig.cap="\\textbf{Motif contributions to protein abundance correlate with RNA abundance}. (\\textbf{Left}) Fold changes in mRNA abundance for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings. (\\textbf{Right}) mCherry fluorescence at the maximum growth rate for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings.", out.width='80%', fig.align='center'}
+knitr::include_graphics(here("results_chapter/figures/combined_TSA1_RPSA_protein_RNA_plot.png"))
+```
+
+## Investigating the effects of cis-regulatory motifs in the 3'UTR using 5PSeq
+We used high-throughput 5PSeq (HT-5Pseq) technique to investigate whether modifications of 3’ UTRs influence the process of 5’-3’ co-translational degradation of mRNA, which can also serve as a proxy of translation process (Zhang & Pelechano 2020), and modify ribosome stalling in the 3’-end region of coding sequence.
+The 5PSeq method allows to investigate the process of  5’-3’ degradation of mRNA by capturing only de-capped 5’ ends of mRNA molecules, and at the same time – the polyadenylated 3’ ends.
+We generated sequencing reads with insert sizes up to 600 bp, which included entire 3’UTRs and up to 400 bp of coding sequence.  
+
+The distributions of 5’ ends did not differ significantly between the samples.
+There were major differences between distributions of 3’ ends between different constructs corresponding to different polyadenylation sites (figure \@ref(fig:alt-polyA-5PSeq)).
+In all modified 3’ UTRs we observed additional poly(A) sites at 44 nt and 56 nt from STOP codon, which corresponds to 35 nt and 47 nt in WT 3’ UTR.
+Secondly, we observed differences in the distribution of poly(A) sites between modified 3’UTRs with different motifs inserted.
+Poly(A) sites located 44 nt and 56 nt from STOP codon are more abundant in tRPS3-mod0 compared to tRPS3-modA, with tRPS3-modB between them.
+Poly(A) site at 67 nt is pronounced only in tRPS3-mod0 and at 74 nt is especially visible in tRPS3-modA and at 80 nt in tRPS3-modB.
+The differences could be caused either by new polyadenylation signals introduced into the 3’ UTR or by increased stability of these isoforms conferred by addition of new motifs.  
+
+```{r alt-polyA-5PSeq, fig.cap="\\textbf{Inserting motifs into native RPS3 termintors may cause alternative polyadenylation.} Relative polyadenylation site usage of transcripts signaled for decay for pRPS3-tRPS3 constructs, acquired using using 5PSeq.", out.width='80%', fig.align='center'}
+knitr::include_graphics(here("supplimentary_data_chapter/figures/alternative_polyadenylation_RPS3_5PSeq.png"))
+```
+
+# Selecting PIR1 and TSA1
+Terminators suitable for insertion were required to have less than two of the motifs detected to be significant according to the [@Chan2018] trained linear model.
+Meanwhile, terminators suitable for deletion had to have all of the motifs present except the stability motif GTATACCTA as this only occurs in limited number of native terminators.
+In addition, all terminators were chosen to contain relatively short, <300nt median 3'UTRs according to [@Pelechano2013], to minimise confounding effects from the formation of complex secondary structures.
+Terminators were also selected to be within the top 5% most abundant genes according to the [@Nadal2019] scRNA-seq dataset.
+The terminators selected for insertion had an addition constraint of a minimum median 3'UTR length of 50nt to enable some flexibly in the positions of insertion to reduce the likelihood of affecting other cis-regulatory elements known to contribute significantly to transcription rates, such as efficiency elements and polyadenylation sites. 
+The shortlisted terminators for insertion were RPS3, a ribosomal protein, and TSA1, a redox homeostasis protein, and the terminator for deletion was PIR1, a cell wall protein.
+The selection process is summarised in supplementary figure 1 with supplementary table 1 containing the shortlist of genes.
+
+
+## Comparison of whole-genome ATATTC motif effect vs. reporter-gene ATATTC motif effect
+- Comparison of our qPCR data of modB with that of Cheng et al. (2017)
