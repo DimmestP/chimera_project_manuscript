@@ -15,18 +15,7 @@ library(tidyqpcr)
 library(dplyr) 
 
 
- # set default theme for graphics
-theme_set(theme_cowplot(font_size=11) %+replace% 
-              theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
-                    panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
-                    panel.grid.major = element_line(size = 0.15, linetype = 'solid',colour = "grey"),
-                    plot.title = element_text(family="Tahoma",size=11,vjust=3.3),
-                    strip.background = element_blank(),
-                    strip.text.x=element_text(family="Tahoma",size=11),
-                    axis.text=element_text(family="Tahoma", size=10),
-                    axis.title=element_text(family="Tahoma", size=10),
-                    legend.text=element_text(family="Tahoma", size=8),
-                    legend.title=element_text(family="Tahoma", size=9)))
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 ```
 
 
@@ -261,42 +250,46 @@ norm_pro_mTurq_ter_all <- bind_rows(norm_pro_mTurq_ter_pPGK1, norm_pro_mTurq_ter
 
 
 ```{r tPGK1norm_combined_highexpression, fig.width=8, fig.height=2.5}
-norm_allplot_high <- ggplot(data=norm_pro_mTurq_ter_all %>% filter(!Promoter %in% c('pCLN2', 'pSRO9')), aes(x=Terminator,y=norm_mTurq_per_OD_at_max_gr)) +
+norm_allplot_high <- ggplot(data=norm_pro_mTurq_ter_all %>% filter(!Promoter %in% c('pHSP26', 'pCLN2', 'pSRO9')) %>% mutate(Terminator = str_remove(Terminator, "_long")), aes(x=Terminator,y=norm_mTurq_per_OD_at_max_gr)) +
   geom_point(aes(color=Terminator),
                position=position_dodge(width = 0.5),size=2.3, alpha=0.8) +
   scale_shape_manual(values=c(16,17, 15, 13)) +
   scale_colour_hue(h = c(0, 360)+20,l=60,c=60)+
  # scale_y_continuous(breaks=seq(-4000,4000,1000), limits=c(-4000, 4000))+
-  labs(y="mTurq fluorescence at maximum growth rate \n (relative to tPGK1)",x="Terminator") +
+  labs(y="mTurq fluorescence at maximum growth rate \n (relative to tPGK1)",x="") +
   facet_grid(~Promoter)+
-  theme(axis.text.x=element_text(angle=90,vjust=0.5),
+  theme(axis.text.x=element_blank(),
           axis.title.x=element_text(vjust=-2),
-          axis.title.y=element_text(vjust=3))
+          axis.title.y=element_text(vjust=3),
+        legend.position = "bottom")
 
-norm_allplot_high + stat_summary(aes(Terminator,norm_mTurq_per_OD_at_max_gr),
+norm_allplot_high_with_mean <- norm_allplot_high + stat_summary(aes(Terminator,norm_mTurq_per_OD_at_max_gr),
     fun="mean",colour="black",
-    geom="crossbar",size=0.2, width=0.5) 
+    geom="crossbar",size=0.2, width=0.5) +
+    theme(legend.position = "none")
 ```
 
 
 ```{r tPGK1norm_combined_lowexpression, fig.width=4, fig.height=2.5}
-norm_allplot_low <- ggplot(data=norm_pro_mTurq_ter_all %>% filter(!Promoter %in% c('pHSP26', 'pPGK1', 'pRPS3', 'pRPS13')), aes(x=Terminator,y=norm_mTurq_per_OD_at_max_gr)) +
+norm_allplot_low <- ggplot(data=norm_pro_mTurq_ter_all %>% filter(!Promoter %in% c( 'pPGK1', 'pRPS3', 'pRPS13'))%>% mutate(Terminator = str_remove(Terminator, "_long")), aes(x=Terminator,y=norm_mTurq_per_OD_at_max_gr)) +
   geom_point(aes(color=Terminator),
                position=position_dodge(width = 0.5),size=2.3, alpha=0.8) +
  # labs(title="Controls for pSRO9 strains - \n Comparing between experimental replicates",y="Quantification cycle (Cq)",x="Primers") +
   scale_shape_manual(values=c(16,17, 15, 13)) +
   scale_colour_hue(h = c(0, 360)+20,l=60,c=60)+
   #scale_y_continuous(breaks=seq(-100,100,20), limits=c(-100, 100))+
-  labs(y="mTurq fluorescence at maximum growth rate \n (relative to tPGK1)",x="Terminator") +
+  labs(y="",x="Terminator") +
   facet_grid(~Promoter)+
   theme(axis.text.x=element_text(angle=90,vjust=0.5),
-          axis.title.x=element_text(vjust=-2),
-          axis.title.y=element_text(vjust=3))
+          axis.title.x=element_text(vjust=-3),
+          axis.title.y=element_text(vjust=3),
+        legend.position = "bottom")
 
-norm_allplot_low + stat_summary(aes(Terminator,norm_mTurq_per_OD_at_max_gr),
+norm_allplot_low_with_mean <- norm_allplot_low + stat_summary(aes(Terminator,norm_mTurq_per_OD_at_max_gr),
     fun="mean",colour="black",
-    geom="crossbar",size=0.2, width=0.5) +
-    theme(legend.position = "none")
+    geom="crossbar",size=0.2, width=0.5)
+
+plot_grid(norm_allplot_high_with_mean,norm_allplot_low_with_mean,ncol = 1)
 ```
 
 
@@ -339,4 +332,42 @@ plot_norm_se_2 <- ggplot(data=norm_pro_mTurq_ter_se, aes(x=Terminator,y=strain_m
   geom_errorbar(aes(ymax = strain_mean+se, ymin = strain_mean-se, color=Terminator,  width=0.4))+
   geom_hline(yintercept=1, linetype="dotted", color = "grey50")
 plot_norm_se_2
+```
+```{r plot_norm_all_points, fig.height=3, fig.width=6}
+
+mTurq_platereader_figure <- ggplot(data=norm_pro_mTurq_ter_all %>% mutate(Terminator = str_remove(Terminator, "_long")), aes(x=Terminator,y=norm_mTurq_per_OD_at_max_gr, colour = Terminator)) +
+  geom_point() +
+  labs(y="Relative mTurq fluorescence per OD \n relative to tPGK1",x="Terminator") +
+  facet_wrap(~Promoter, nrow=2)+
+  scale_colour_hue(h = c(0, 360)+20,l=60,c=60)+
+  theme(axis.text.x=element_text(angle=90,vjust=0.5),
+          axis.title.x=element_text(vjust=-2),
+          axis.title.y=element_text(vjust=3))+
+  geom_hline(yintercept=1, linetype="dotted", color = "grey50") + stat_summary(aes(Terminator,norm_mTurq_per_OD_at_max_gr),
+    fun="mean",colour="black",
+    geom="crossbar",size=0.2, width=0.5) +
+    theme(legend.position = "none")
+
+ggsave(here("./results_chapter/figures/pro_ter_platereader_mTurq.png"),mTurq_platereader_figure,width = 12, height = 9)
+```
+
+```{r radarGraphDraft}
+norm_pro_mTurq_ter_se %>%
+  mutate(Terminator = str_remove(Terminator, "_long")) %>%
+  select(Promoter,Terminator, strain_mean) %>%
+  filter(Terminator %in% c("tPGK1", "tSUN4", "tTOS6", "tSRO9", "tPMA1")) %>%
+  transmute(group=factor(Terminator, levels = c("tSUN4", "tTOS6", "tSRO9", "tPMA1", "tPGK1")), Promoter, strain_mean) %>%
+  rename() %>%
+  pivot_wider(names_from = Promoter, values_from = strain_mean) %>%
+  ggradar::ggradar(grid.max = 1, grid.min = 0.1, grid.mid = 0.5, values.radar = c("0.1", "0.5", "1"), group.point.size = 4, group.line.width = 1)
+
+
+norm_pro_mTurq_ter_se %>%
+  mutate(Terminator = str_remove(Terminator, "_long")) %>%
+  select(Promoter,Terminator, strain_mean) %>%
+  filter(Terminator %in% c("tPGK1", "tRPS3", "tPAB1", "tHSP26", "tRPS13", "tCLN2")) %>%
+  transmute(group=factor(Terminator, levels = c("tPAB1", "tPGK1", "tCLN2", "tRPS13", "tRPS3", "tHSP26")), Promoter, strain_mean) %>%
+  rename() %>%
+  pivot_wider(names_from = Promoter, values_from = strain_mean) %>%
+  ggradar::ggradar(grid.max = 1.6, grid.min = 0.1, grid.mid = 1, values.radar = c("0.1", "1", "1.6"), group.point.size = 4, group.line.width = 1)
 ```

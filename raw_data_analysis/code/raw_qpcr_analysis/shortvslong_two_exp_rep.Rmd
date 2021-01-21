@@ -21,17 +21,7 @@ library(tidyqpcr)
 library(here)
 
  # set default theme for graphics
-theme_set(theme_cowplot(font_size=11) %+replace% 
-              theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
-                    panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
-                    panel.grid.major = element_line(size = 0.25, linetype = 'solid',colour = "grey"),
-                    plot.title = element_text(family="Tahoma",size=11,vjust=3.3),
-                    strip.background = element_blank(),
-                    strip.text.x=element_text(family="Tahoma",size=9),
-                    axis.text=element_text(family="Tahoma", size=10),
-                    axis.title=element_text(family="Tahoma", size=10),
-                    legend.text=element_text(family="Tahoma", size=8),
-                    legend.title=element_text(family="Tahoma", size=9)))
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 ```
 
 ```{r label_plates,dependson="plate_functions", echo=FALSE}
@@ -502,7 +492,7 @@ platesnorm_all_median <- bind_rows(platesnorm_S500bp_pSRO9_median,platesnorm_R20
 normalised_plot_SRO9 <- ggplot(data = platesnorm_S500bp_pSRO9_median)+
     geom_point(aes(Ter_length,rel_abund_delta_deltacq,colour=Ter_length, shape=BioRep)) +
     scale_y_log2nice(name="Fold change in RNA abundance relative to \n pSRO9-mCh-tSRO9_500bp (log2 scale)",scilabels=FALSE) +
-      labs(x="") +
+      labs(x="", title = "SRO9") +
     scale_shape_manual(values=c(19, 17, 15, 10, 7, 14)) +
     scale_colour_manual(values=c("#CC6666", "black")) +
     guides(colour=FALSE) +
@@ -521,10 +511,10 @@ combined_SRO9_graph <- normalised_plot_SRO9 + stat_summary(aes(Ter_length,rel_ab
 normalised_plot_RPS3 <- ggplot(data = platesnorm_R200bp_pRPS3_median)+
     geom_point(aes(Ter_length,rel_abund_delta_deltacq, colour=Ter_length, shape=BioRep)) +
     scale_y_log2nice(name="Fold change in RNA abundance relative to \n pRPS3-mCh-tRPS3_200bp (log2 scale)",scilabels=FALSE) +
-      labs(x="") +
+      labs(x="", title = "RPS3") +
     scale_shape_manual(values=c(19, 17, 15, 10, 7, 14)) +
     scale_colour_manual(values=c("#288a2e","#a84a9a","#6f3ba1")) +
-    guides(colour=FALSE) +
+    guides(colour=FALSE, shape=FALSE) +
     theme(axis.text.x=element_text(angle=0,vjust=0.5,colour=c("#288a2e","#a84a9a", "#6f3ba1")),
           axis.title.x=element_text(vjust=-2),
           legend.position="right")
@@ -533,5 +523,5 @@ combined_RPS3_graph <- normalised_plot_RPS3 + stat_summary(aes(Ter_length, rel_a
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 
-ggsave( here("./results_chapter/figures/RPS3_SRO9_short_vs_long.png"),plot_grid(combined_RPS3_graph, combined_SRO9_graph, ncol=1), height = 10, width = 7)
+ggsave( here("./supplimentary_data_chapter/figures/RPS3_SRO9_short_vs_long.png"),plot_grid(combined_RPS3_graph, combined_SRO9_graph, ncol=2), height = 6, width = 12)
 ```

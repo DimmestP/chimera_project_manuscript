@@ -10,49 +10,83 @@ library(here)
 library(cowplot)
 library(ggpattern)
 library(latex2exp)
+ # set default theme for graphics
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 
-construct_to_motif_dictionary <- tibble (construct = rep(c("WT", "mod0", "modA", "modB", "modC", "modD", "modE"), times = 4), motif = rep(c("ATATTC", "GTATACCTA","TGTACAATA","TTTCATTTC"), each = 7), count = c(0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,0,1,0,0,0,1,0,0,0,0,0,2,2))
+construct_to_motif_dictionary_PIR1 <- tibble(construct = 
+                                                    rep(c("WT", "modA", "modB", "modC", "modD", "modE", "modF", "modG"), each = 3), 
+                                                  motif = rep(c("ATATTC","UGUAHMNUA","HWNCAUUWY"), times = 8), 
+                                                   count = c(1,1,3,
+                                                             1,0,3,
+                                                             0,1,3,
+                                                             1,1,2,
+                                                             1,1,2,
+                                                             1,1,0,
+                                                             1,0,0,
+                                                             0,1,0))
+
+construct_to_motif_dictionary_TSA1_RPS3 <- tibble (construct = 
+                                                rep(c("WT", "mod0", "modA", "modB", "modC", "modD", "modE"), times = 4), 
+                                              motif = 
+                                                rep(c("ATATTC", "GTATACCTA","UGUAHMNUA","HWNCAUUWY"), each = 7), 
+                                              count = c(0,0,0,2,0,0,0,
+                                                        0,0,0,0,2,0,0,
+                                                        0,0,1,0,0,0,1,
+                                                        0,0,0,0,0,2,2))
 
 pRPS3_pPGK1_pSRO9_tRPS3_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv")) %>%
-  inner_join(construct_to_motif_dictionary) %>%
+  inner_join(construct_to_motif_dictionary_TSA1_RPS3) %>%
   filter( target_id == "mCh-7") %>%
   spread(key= motif, value = count) %>%
   mutate(native = (construct == "WT"), delta_cq = deltacq)
 
 pTSA1_pPGK1_pSRO9_tTSA1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pTSA1_pPGK1_pSRO9_tTSA1_deltacq_platesnorm_summarise.csv")) %>%
-  inner_join(construct_to_motif_dictionary) %>%
+  inner_join(construct_to_motif_dictionary_TSA1_RPS3) %>%
+  filter(target_id == "mCh-7") %>%
+  spread(key= motif, value = count) %>%
+  mutate(native = (construct == "WT"), delta_cq = deltacq)
+
+pPIR1_pPGK1_pSRO9_tPIR1_norm_mean <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pPIR1_pPGK1_pSRO9_tPIR1_deltacq_platesnorm_summarise.csv")) %>%
+  inner_join(construct_to_motif_dictionary_PIR1) %>%
   filter(target_id == "mCh-7") %>%
   spread(key= motif, value = count) %>%
   mutate(native = (construct == "WT"), delta_cq = deltacq)
 
 collated_norm_mean_data <- pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>%
-  bind_rows(pTSA1_pPGK1_pSRO9_tTSA1_norm_mean)
+  bind_rows(pTSA1_pPGK1_pSRO9_tTSA1_norm_mean) %>%
+  bind_rows(pPIR1_pPGK1_pSRO9_tPIR1_norm_mean)
 
 ```
 
 ```{r run_linear_models, echo=FALSE, include=FALSE}
 
-pTSA1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pTSA1"))
+pTSA1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pTSA1"))
 
-pPGK1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pPGK1"))
+pPGK1_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pPGK1"))
 
-pSRO9_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pSRO9"))
+pSRO9_tTSA1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pTSA1_pPGK1_pSRO9_tTSA1_norm_mean %>% filter(promoter == "pSRO9"))
 
-pRPS3_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pRPS3"))
+pRPS3_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pRPS3"))
 
-pPGK1_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pPGK1"))
+pPGK1_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pPGK1"))
 
-pSRO9_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pSRO9"))
+pSRO9_tRPS3_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>% filter(promoter == "pSRO9"))
 
-collated_norm_mean_lm_comparison <- step(lm(delta_cq ~ exp_rep + exp_rep:promoter + exp_rep:terminator + native + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TGTACAATA:TTTCATTTC + terminator + promoter, collated_norm_mean_data), delta_cq ~ exp_rep + exp_rep:promoter + exp_rep:terminator + native + ATATTC + GTATACCTA + TGTACAATA + TTTCATTTC + TTTCATTTC:TGTACAATA + terminator + promoter + terminator:ATATTC + promoter:ATATTC + terminator:GTATACCTA + promoter:GTATACCTA + terminator:TGTACAATA + promoter:TGTACAATA + terminator:TTTCATTTC + promoter:TTTCATTTC + TTTCATTTC:TGTACAATA:terminator + TTTCATTTC:TGTACAATA:promoter + native:terminator + native:promoter)
+pPIR1_tPIR1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>% filter(promoter == "pPIR1"))
 
-collated_norm_mean_lm <- lm(delta_cq ~ exp_rep + native + ATATTC + TGTACAATA + TTTCATTTC + GTATACCTA + terminator + promoter + exp_rep:promoter + exp_rep:terminator + TGTACAATA:TTTCATTTC + ATATTC:terminator + TGTACAATA:promoter + ATATTC:promoter + native:promoter + TGTACAATA:terminator + TTTCATTTC:terminator + TTTCATTTC:promoter + TGTACAATA:TTTCATTTC:terminator + TGTACAATA:TTTCATTTC:promoter, collated_norm_mean_data)
+pPGK1_tPIR1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>% filter(promoter == "pPGK1"))
+
+pSRO9_tPIR1_norm_mean_lm <- lm(delta_cq ~ exp_rep + ATATTC + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + native, pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>% filter(promoter == "pSRO9"))
+
+collated_norm_mean_lm_comparison <- step(lm(delta_cq ~ exp_rep + exp_rep:promoter + exp_rep:terminator + native + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + UGUAHMNUA:HWNCAUUWY + terminator + promoter, collated_norm_mean_data), delta_cq ~ exp_rep + exp_rep:promoter + exp_rep:terminator + native + ATATTC + GTATACCTA + UGUAHMNUA + HWNCAUUWY + HWNCAUUWY:UGUAHMNUA + terminator + promoter + terminator:ATATTC + promoter:ATATTC + terminator:GTATACCTA + promoter:GTATACCTA + terminator:UGUAHMNUA + promoter:UGUAHMNUA + terminator:HWNCAUUWY + promoter:HWNCAUUWY + HWNCAUUWY:UGUAHMNUA:terminator + HWNCAUUWY:UGUAHMNUA:promoter + native:terminator + native:promoter)
+
+collated_norm_mean_lm <- lm(delta_cq ~ exp_rep + native + ATATTC + UGUAHMNUA + HWNCAUUWY + GTATACCTA + terminator + promoter + exp_rep:promoter + exp_rep:terminator + UGUAHMNUA:HWNCAUUWY + ATATTC:terminator + UGUAHMNUA:promoter + ATATTC:promoter + native:promoter + UGUAHMNUA:terminator + HWNCAUUWY:terminator + HWNCAUUWY:promoter + UGUAHMNUA:HWNCAUUWY:terminator + UGUAHMNUA:HWNCAUUWY:promoter, collated_norm_mean_data)
 ```
 
 ## Combined linear model results
 A greedy algorithm for maximising AIC was used to select for the best combination of terms. First the basic model predicting delta_cq using motif presence, terminator, promoter and exp_rep (with interactive term for exp_rep according to promoter/terminator pairing) was ran giving an adjusted R-squared of 0.7816. Then interactive terms for motif contributions in differing contexts and the linear combination of motifs was added increasing the AIC from  AIC=-197.29 to a maximum of -332.62. The final model after selection is summarised below with an adjusted R-squared of 0.90976.
 
-ATATTC has a strong destabilising effect in RPS3 terminators but not TSA1 terminators, irrespective of promoter but even greater with pRPS3 than pPGK1. TGTACAATA only has a significant effect on its own in TSA terminators. GTATACCTA does not have a significant effect in any context. TTTCATTTC has an significant effect in all context on its own. TTTCATTTC and TGTACAATA have an effect when they appear together in the TSA1 terminators only.
+ATATTC has a strong destabilising effect in RPS3 terminators but not TSA1 terminators, irrespective of promoter but even greater with pRPS3 than pPGK1. UGUAHMNUA only has a significant effect on its own in TSA terminators. GTATACCTA does not have a significant effect in any context. HWNCAUUWY has an significant effect in all context on its own. HWNCAUUWY and UGUAHMNUA have an effect when they appear together in the TSA1 terminators only.
 ```{r combined_linear_model}
 summary(collated_norm_mean_lm)
 ```
@@ -60,13 +94,16 @@ summary(collated_norm_mean_lm)
 ```{r}
 
 model_r_squares <- tibble(
-  ter_pro = c("pTSA1_tTSA1", "pPGK1_tTSA1", "pSRO9_tTSA1", "pRPS3_tRPS3", "pPGK1_tRPS3", "pSRO9_tRPS3"),
+  ter_pro = c("pTSA1_tTSA1", "pPGK1_tTSA1", "pSRO9_tTSA1", "pRPS3_tRPS3", "pPGK1_tRPS3", "pSRO9_tRPS3", "pPIR1_tPIR1", "pPGK1_tPIR1", "pSRO9_tPIR1"),
   R_squared = c(summary(pTSA1_tTSA1_norm_mean_lm)$r.squared,
                 summary(pPGK1_tTSA1_norm_mean_lm)$r.squared,
                 summary(pSRO9_tTSA1_norm_mean_lm)$r.squared,
                 summary(pRPS3_tRPS3_norm_mean_lm)$r.squared,
                 summary(pPGK1_tRPS3_norm_mean_lm)$r.squared,
-                summary(pSRO9_tRPS3_norm_mean_lm)$r.squared))
+                summary(pSRO9_tRPS3_norm_mean_lm)$r.squared,
+                summary(pPIR1_tPIR1_norm_mean_lm)$r.squared,
+                summary(pPGK1_tPIR1_norm_mean_lm)$r.squared,
+                summary(pSRO9_tPIR1_norm_mean_lm)$r.squared))
 
 model_coefficients <- tidy(pPGK1_tRPS3_norm_mean_lm) %>%
   mutate(ter_pro = "pPGK1_tRPS3", norm_by = "mean") %>%
@@ -79,11 +116,17 @@ model_coefficients <- tidy(pPGK1_tRPS3_norm_mean_lm) %>%
   bind_rows(tidy(pSRO9_tRPS3_norm_mean_lm) %>%
   mutate(ter_pro = "pSRO9_tRPS3", norm_by = "mean")) %>%
   bind_rows(tidy(pSRO9_tTSA1_norm_mean_lm) %>%
-  mutate(ter_pro = "pSRO9_tTSA1", norm_by = "mean"))
+  mutate(ter_pro = "pSRO9_tTSA1", norm_by = "mean"))%>%
+  bind_rows(tidy(pSRO9_tPIR1_norm_mean_lm) %>%
+  mutate(ter_pro = "pSRO9_tPIR1", norm_by = "mean")) %>%
+  bind_rows(tidy(pPIR1_tPIR1_norm_mean_lm) %>%
+  mutate(ter_pro = "pPIR1_tPIR1", norm_by = "mean")) %>%
+  bind_rows(tidy(pPGK1_tPIR1_norm_mean_lm) %>%
+  mutate(ter_pro = "pPGK1_tPIR1", norm_by = "mean"))
   
 
 ggplot(model_coefficients) +
-  geom_point(aes(x=term, y=estimate, shape = factor(ter_pro, levels =c("pRPS3_tRPS3", "pTSA1_tTSA1", "pPGK1_tRPS3", "pPGK1_tTSA1")), colour = (p.value < 0.05)), size = 3, position = position_jitter(width = 0.1)) +
+  geom_point(aes(x=term, y=estimate, shape = factor(ter_pro, levels =c("pRPS3_tRPS3", "pTSA1_tTSA1", "pPGK1_tRPS3", "pPGK1_tTSA1")), colour = (p.value < 0.05)), position = position_jitter(width = 0.1)) +
   theme_cowplot() +
   theme(axis.text.x = element_text(angle = 90), panel.grid.major.y = element_line(size = 0.1)) +
   labs(x = "", y = "Coefficient", shape = "Promoter/Terminator", colour = "Significant")
@@ -91,11 +134,11 @@ ggplot(model_coefficients) +
 
 motif_term_dictionary <- model_coefficients %>% 
   distinct(term) %>%
-  mutate(new_term = c("Construct", "exp_repExpRep2", "ATATTC", "GTATACCTA", "TGTACAATA", "TTTCATTTC", "Wildtype\n vs Mod0", "TGTACAATA\n+\nTTTCATTTC"))
+  mutate(new_term = c("Construct", "exp_repExpRep2", "ATATTC", "GTATACCTA", "UGUAHMNUA", "HWNCAUUWY", "Wildtype\n vs Mod0", "UGUAHMNUA\n+\nHWNCAUUWY"))
 
 construct_dictionary <- model_coefficients %>% 
   distinct(ter_pro) %>%
-  mutate(promoter_type = c("PGK1", "Native", "PGK1", "Native", "SRO9", "SRO9"))
+  mutate(promoter_type = c("PGK1", "Native", "PGK1", "Native", "SRO9", "SRO9", "SRO9", "Native", "PGK1"))
 
 individual_linear_model_coefficients_points <- ggplot(model_coefficients %>% 
          inner_join(motif_term_dictionary) %>%
@@ -105,14 +148,10 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
          arrange(term,promoter),
        aes(x=factor(promoter_type, levels = c("Native","PGK1","SRO9")), y=-estimate, colour = terminator),
     position = position_dodge2()) +
-  geom_point(
-    size = 5
-  ) +
-  geom_errorbar(aes(ymax = -estimate + std.error, ymin = -estimate - std.error),
-                size =1) +
-  labs(y = TeX("Log_2 Fold Change in RNA Abundance"), 
-       colour = "Terminator") + 
-  theme_bw(base_size = 16) +
+  geom_point() +
+  geom_errorbar(aes(ymax = -estimate + std.error, ymin = -estimate - std.error)) +
+  labs(y = TeX("Log_2 Fold Change in\n RNA Abundance"), 
+       colour = "Terminator") +
   theme(strip.placement = "outside", 
         strip.background = element_rect(fill = "white", colour = "white"), 
         axis.title.x = element_blank(),
@@ -121,14 +160,14 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
         panel.spacing = unit(0, units = "cm"),
         panel.grid.major.x = element_blank(),
         axis.line.x = element_blank()) +
-  scale_colour_manual(breaks = c("tTSA1", "tRPS3"), labels = c("TSA1", "RPS3"), values = c("#56B4E9", "#D55E00")) +
-  facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "TGTACAATA", "TTTCATTTC", "TGTACAATA\n+\nTTTCATTTC")), 
+  scale_colour_manual(breaks = c("tTSA1", "tRPS3", "tPIR1"), values = c("#56B4E9", "#D55E00", "#000001")) +
+  facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "UGUAHMNUA", "HWNCAUUWY", "UGUAHMNUA\n+\nHWNCAUUWY")), 
              scales = "free_x", 
              space = "free_x", 
              switch = "x") +
   geom_hline(yintercept = 0)
 
-ggsave(here("results_chapter/figures/motif_multi_context_coefficient.png"), individual_linear_model_coefficients_points, width = 12, height = 9)
+ggsave(here("raw_data_analysis/figures/motif_multi_context_coefficient.png"), individual_linear_model_coefficients_points, width = 12, height = 9)
 
 save(individual_linear_model_coefficients_points, file = here("raw_data_analysis/data/motif_multi_context_coefficient.Rdata"))
 
