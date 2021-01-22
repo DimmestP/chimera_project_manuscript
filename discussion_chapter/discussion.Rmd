@@ -1,11 +1,67 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Discussion
 
-Saccharomyces cerevisiae is a well-established host platform for industrial production due to its traits as a robust organism under fermentation conditions, the wealth of molecular biology tools developed for its genetic manipulation and its status as a generally regarded as safe (GRAS) organism. Over the past two decades, it has been optimised for the production of antibiotics, painkillers, antioxidants and anti-cancer drugs (Siewers et al 2009, Gidijala et al. 2009, Yan et al. 2005, Koopman et al. 2012, Rodriguez et al. 2017). This process for pathway engineering is reliant on precise capabilities in modulating native and heterologous enzyme expression. Over the past few years, the development of an increasing number of modular toolkits containing standardised genetic parts for the rapid and combinatorial assembly of genes have expedited our capability to undergo multiple iterations of the design-build-test-learn cycle for pathway optimisatiion (Lee et al. 2015, Garcia-Ruiz et al. 2018, Andreou et al. 2018). 
+\@ref(fig:hlife-decay-model)C with their magnitudes calculated according to the data sets plotted against each other.
+Interestingly, the TGTAAATA motif was predicted to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
+The puf3 protein associated with motif is known to change function in carbon deficient condition which were likely present due to the bespoke CSM-lowURA media the cultures were grown in overnight, [@Sun2013] used standard YPD media. 
 
-These toolkits often utilise native yeast promoter/5'UTR and 3'UTR/terminator regions to provide parts to enable modular assembly of genes for pathway expression. Non-coding regulatory elements, comprising of promoters, untranslated regions (5’UTR and 3’UTR) and terminators, possess a large amount of information for the regulation of mRNA and protein abundance. Perhaps the best studied is the role of the promoter, which plays a central role in coordinating the rate of new transcript production (Ottoz et al. 2018). Transcription factor (TF) binding sites upstream of the core promoter region modulate promoter activity through the recruitment of single TFs or synergistic combinations to facilitate recruitment of transcriptional machinery. Coupled with chromatin context and other bound TFs, these ultimately control transcription rates (Levo 2017, Blazeck et al. 2012). The importance of terminator choice in gene expression has not been as extensively studied, with only a handful of common terminators (tADH1, tCYC1, tPGK1) often used for heterologous expression or pathway asssemblies.
+We have confirmed that promoter-terminator pairings change the effectiveness of each region's contribution to gene expression.
+This supports previous work by @Curran2013 and  Wei et al. 2017 showing that promoter and terminator regions are not entirely modular when regulating gene expression.
+We explored whether the changes in regulatory behavior according to overall context is explained by changes in the regulatory effects of individual cis-regulatory elements within these regions.
+We have gone on to show that 3'UTR sequence motifs, confirmed to to have a statistically significant contributions to transcript decay rates, have effects on gene expression that are dependent on overall terminator context and promoter pairing. 
 
-Several groups have sought to elucidate the effect of different native yeast terminators with a goal of maximal protein expression. Yamanishi et al. identified a terminator (tTPS1) which increased fluorescent protein production by 50% compared to the tCYC1 terminator (Yamanishi et al. 2011). Ito et al. identified tDIT1 was associated with a 2.5-fold improved protein production mediated by the recruitment of two RBPs (Nab6 and Pap1) to the 3’UTR (Ito et al. 2016). The same group further identified that the effect of a library of 5302 terminators spanned an 81-fold range difference in fluorescence production, with several resulting in a doubling of protein production relative to tPGK1 (Yamanishi et al. 2013). When coupled with different promoters, the relative difference in protein output between terminators vary, with a maximum difference of 11-fold when coupled with a low expression promoter (Curran et al. 2013, Wei et al. 2017).
+## Mechanisms for motif terminator context dependence
 
-The identification of the functional elements within the terminator region which control gene expression are confounded by its combined involvement in transcriptional, post-transcriptional and translational regulation. The functional elements contained in the terminator are known to recoordinate transcriptional termination and polyadenylation (Guo et al. 1996) but after transcription a sub-sequence of variable length remains to form the 3'UTR of the mRNA transcript. The 3'UTR itself has been shown to play important roles in coordinating mRNA stability, translation and localisation. It contributes through the formation of secondary or tertiary structures and by containing binding motifs for RNA binding proteins (RBPs), both leading to dynamic RNA-protein interactions that are responsive to metabolic or environmental stimuli. Meanwhile, inferring a cis-regulatory motifs role from its paired RBPs is itself difficult because they bind many mRNA targets but binding specificity can be modulated through their association with protein interaction partners. For example She2p and She3p RBPs show enhanced blinding to ASH1 mRNA compared to their individual interactions, leading to localisation of ASH1 mRNA to the budding daughter cell (Shen et al.  2009, Niedner et al. 2014). As such changes to the mRNA fate is determined by the available binding sites on the UTR for RBPs at a given moment. 
+The regulatory behavior of a motif can be explained by its internal and external context. 
+A motif's external context refers to characteristics outside of the host transcript.
+It includes transcriptional control, such a differential expression or alternative polyadenylation, and the presence of trans-regulatory elements (TRE), such as RBPs.
+A motif's internal context refers to the characteristics of the host transcript.
+It includes the secondary structure of the host transcript and the presence of other motifs concurrently.
 
-To control the numerous effects confounding the search for 3'UTR cis-regulatory motifs, experimental methods for the identification and dissection of RNA-protein interactions networks have predominately been in vitro. These techniques centre around the immobilisation of either mRNA (Hartmuth et al. 2004) or proteins (Kretz et al. 2013, Siprashvili et al. 2016) before exposing them to cell extract. Whilst these approaches maximise control, they remove much of the cellular context, with synthesised mRNA being devoid of post transcriptional chemical modifications. In contrast, in vivo strategies centre around cross-linking RNA and RBPs in living cells using UV or formaldehyde to form covalent bonds between RNA and proteins that are in direct contact with each other. Formaldehyde based cross-linking has the advantage of much higher efficiency of cross-linking between RNA and RNA binding proteins, however a key caveat is that protein-protein cross-linking also occurs, meaning that it can be more challenging to discern between RBPs and proteins that interact with RBPs. In contrast UV cross-linking approaches are much more specific, however not only is cross-linking less efficient, but further biases have been observed for cross-linking with uridines (Sugimoto et al. 2012) and varying efficiencies of cross-linking are seen across different amino acids (Meisenheimer et al. 1997).
+The external context of a motif can be controlled by spatiotemporal regulation.
+Motifs that act as binding sites, as focused on in our study, are dependent on the presence of TREs in their external context.
+The availability of a required TRE can be spatially regulated through the localisation of a host transcript or a TRE to a specific organelle.
+ASH1 is a DNA-binding protein localised to the bud tip that facilitates mate-type switching between mother and daughter cells in S.cer. 
+A SHE2 binding motif inside the ASH1 mRNA transcript's 3'UTR inhibits translation in the cytoplasm as SHE2 recruits available PUF6 proteins. 
+As the ASH1 transcript localises to the bud tip, PUF6 proteins are phosphorylated which interferes with SHE2 binding.
+Without PUF6 the SHE2 binding motif is no longer associated with translation inhibition and ASH1 proteins are formed.
+Alternatively, TRE availability can be temporally regulated as transcript and TRE need to be expressed simultaneously in order to function.
+
+The internal context of a motif can be critical in enabling regulation.
+Motifs will are dependent on the secondary structure and presence (or absence) of other regulatory elements within the host transcript.
+Secondary structures can be integral to a motifs function, such as the SHE2 binding motif spread across stem loops within ASH1 transcripts or the Smg recognition elements found in transcript targets of Vts1p (Olivier et al., 2005; Aviv et al., 2006). 
+In other cases secondary structures can have an overall inhibitory effect on binding, with the presence of stable stem loops within the 3’UTR reducing the binding of known destabilising RBPs (Giesberg et al. 2014).
+Other motifs can only effectively bind their TREs in the presence of bound cooperative proteins.
+In human cells, microRNAs in association with Argonaute (AGO) proteins have been shown to be bind to target mRNA cooperatively with PUM1.  
+For certain AGO mRNA targets its binding affinity is negligible unless the target's secondary structure is switched by the binding of PUM1 to its own motif. (Sternburg et al, 2018)
+As AGO is involved in RNA silencing and its targets are key for cell cycle control, it has been shown that certain cancer cells remove PUM binding sites through alternative polyadenlytion in order to avoid cell cycle regulation. (Miles et al, 2012)
+
+## Implications for novel cis-regulatory element searches
+
+Future motif detecting algorithms need to incorporate transcript context: secondary structure, localisation and cell cycle expression, for more accurate and comprehensive search results.
+Secondary structure features can be included in motif searches a priori by setting nucleotides within single stranded regions to be more likely to be part of motifs, by incorporating predicted binding energy.
+Non-linear relationships between intrinsic and extrinsic transcript characteristics can be modeled by partition regression techniques, such as random forests.
+Linear regression algorithms assume increased motif occurrence must increase protein binding, which causes a subsequent increase in the protein's functional effect.
+However, some motifs may need to be present above a threshold before sufficiently affecting binding or can behave differently in the presence of other co-regulatory motifs.
+In addition, linear models will also struggle with the behavior of some extrinsic effects, such as the availability of a binding protein in a particular organelle or at a cell cycle stage.
+These are either dominant predictors of motif efficacy or entirely irrelevant with such extreme behavior being poorly modeled by linear regression. 
+Combining partitioning algorithms to separate transcripts with dichotomised features followed by training linear regression models on the separate pool could best predict functional data sets, although overfitting will be serious concern. 
+
+Transcripts often contain multiple motifs for efficient binding as some effector proteins bind indirectly through multiple recruiter proteins, for example Ski2 or Mtr4 recruitment of the exosome for 5'-3' mRNA decay in the cytoplasm or nucleus respectively (Thom et al., 2015; Weick and Lima, 2021), or bind directly with multi-partite motifs separated by unconserved gaps of varying length, such as SSD1's general binding motif CNYUCNYU and upstream CCAACU supplementary motif (Bayne et al., 2020) or PUF3's two bipartite motifs (Jackson et al., 2004). 
+
+
+The growing catalogue of RBPs with multiple binding motifs has lead to a demand for methods that discover multi-partite motifs, which may be separated in a transcript's linear sequence but adjacent in the final 3D structure.
+Algorithms that determine position weight matrices for a linear segment of fixed length are unreliable when searching for motifs of variable widths and struggle with multi-partate motifs unless parts are directly adjacent in the linear sequence.
+k-mer based searches ignore motif position, enabling for the detection of separated, multi-partate motifs, but can only detect exact matches, therefore motifs with highly redundant nucleotides are missed.
+Deep learning algorithms can accurately model complex motif interactions, but interpreting the model features into biologically relevant motifs remains a serious constraint.
+
+## Implications for experimental biology
+
+Our results show that sequence motifs within the 3'UTR have a significant effect on gene expression.
+However it is important to note that there is evidence of dependence between the motifs and the sequence context suggesting that post-transcriptional cross-talk between RNA binding proteins can result in the fine-tuning of mRNA stability and translation. 
+
+Further, these different UTR compositions can enable more rapid, dynamic post-transcriptional modulations of expression to be achieved with improved understanding of how different combinations of motifs and secondary structures lead to modulations in expression under different cell conditions, facilitating the generation of more complex phenotypes and enabling more predictable control of flux through metabolic pathway circuits.

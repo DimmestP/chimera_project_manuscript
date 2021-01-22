@@ -1,2 +1,2 @@
-rmd_files: ["abstract.Rmd", "intro_chapter/intro.Rmd", "results_chapter/results.Rmd", "methods_chapter/materials_and_methods.Rmd", "discussion_chapter/discussion.Rmd"]
-book_filename: "manuscript"
+rmd_files: ["abstract.Rmd", "intro_chapter/intro.Rmd", "results_chapter/results.Rmd", "methods_chapter/materials_and_methods.Rmd", "discussion_chapter/discussion.Rmd", "supplimentary_data_chapter/supplimentary_data.Rmd"]
+book_filename: "chimeria_project_manuscript"
