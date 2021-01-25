@@ -1,0 +1,15 @@
+# R and Rstudio session mess
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Mac directory listing files
+.DS_Store
+**/.DS_Store
+**/**/.DS_Store
+
+
+# LaTeX intermediate files
+*.log
+*.tex
