@@ -8,7 +8,7 @@ knitr::opts_chunk$set(fig.pos = "p")
 ## Terminator effects on gene expression are context dependent
 
 ```{r pro-ter-platereader-mCherry, fig.cap="\\textbf{Terminator contributions to gene expresion are promoter dependent.} (\\textbf{A}) mCherry fluorescence measured at the time of each sample's maximum growth rate for 10 termintators paired with three highly expressing promoters. (\\textbf{B}) Same as (\\textbf{A}) but with two lowly expressing promoters.", out.width='90%', fig.align='center'}
-knitr::include_graphics(here("results_chapter/figures/pro_ter_platereader_mCherry.png"))
+knitr::include_graphics(here("results_chapter/figures/pro_ter_platereader_mCh.png"))
 ```
 
 ```{r pro-ter-platereader-mTurq, fig.cap="\\textbf{Terminator contributions to gene expresion are promoter dependent.}  mTurq fluorescence measured at the time of each sample's maximum growth rate for 10 termintators paired with six promoters.", out.width='90%', fig.align='center'}
