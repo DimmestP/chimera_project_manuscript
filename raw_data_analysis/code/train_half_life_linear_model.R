@@ -190,14 +190,18 @@ chan_pred_vs_obvs_plot <-
          aes(x=Predicted_Half_Life,y=Measured_Half_Life)) +
   options_half_life_plots +
   labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obs}$"),title = TeX("Chan")) +
-  annotate("text",label = TeX(paste0("$R^2=$",signif(chan_step_model_r_squared,2))),size=7,x=3,y=130)
+  annotate("text",
+           label = TeX(paste0("$R^2=$",signif(chan_step_model_r_squared,2))),
+           size=6, x=3, y=130)
 
 sun_pred_vs_obvs_plot <- 
   ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Sun"),
          aes(x=Predicted_Half_Life,y=Measured_Half_Life)) +
   options_half_life_plots +
   labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obs}$"),title = TeX("Sun")) +
-  annotate("text",label = TeX(paste0("$R^2=$",signif(sun_step_model_r_squared,2))),size=7,x=3,y=130)
+  annotate("text",
+           label = TeX(paste0("$R^2=$",signif(sun_step_model_r_squared,2))),
+           size=6, x=3, y=130)
 
 # output chan vs sun comparison graph
 combined_hlife_data_sets <- inner_join(sun_decay_hlife, 
@@ -214,7 +218,9 @@ dataset_comparison <-
   options_half_life_plots +
   labs(y = TeX("$\\lambda^^{1/2}_{Sun}$"), 
        x = TeX("$\\lambda^{1/2}_{Chan}$")) +
-  annotate("text",label = paste0("R = ",signif(decay_data_set_cor,2)),size=6,x=40,y=2)
+  annotate("text",
+           label = paste0("R = ",signif(decay_data_set_cor,2)),
+           size = 6, x = 40, y = 2)
 
 
 # output model predictive power graph
@@ -248,7 +254,7 @@ ggsave2("results_chapter/figures/hlife_model_multi_fig.png",
                   label_size = 20,
                   align = "hv",
                   axis = "t",
-                  scale = c(1,1,1,0.9)), width = 8, height = 7)
+                  scale = c(1,0.9,1,1)), width = 8, height = 7)
 
 # output list of chan motif coefficients 
 # write_csv( chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./results_chapter/data/chan_motif_coefficients.csv"))
