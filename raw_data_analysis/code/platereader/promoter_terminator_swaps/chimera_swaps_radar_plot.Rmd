@@ -1,0 +1,286 @@
+---
+title: "chimera_swaps_radar_plot"
+author: "Sam Haynes"
+date: "25/01/2021"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(tidyverse)
+library(cowplot)
+library(tidyqpcr)
+library(dplyr) 
+
+
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
+```
+
+```{r readin-mcherry}
+pro_mCh_ter_n1 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_n=1.csv")) 
+names(pro_mCh_ter_n1)[2] <- "sample_id"
+names(pro_mCh_ter_n1)[3] <- "mCh_per_OD_at_max_gr"
+
+pro_mCh_ter_n2 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_n=2.csv"))
+names(pro_mCh_ter_n2)[2] <- "sample_id"
+names(pro_mCh_ter_n2)[3] <- "mCh_per_OD_at_max_gr"
+
+pro_mCh_ter_n3 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_n=3.csv")) 
+names(pro_mCh_ter_n3)[2] <- "sample_id"
+names(pro_mCh_ter_n3)[3] <- "mCh_per_OD_at_max_gr"
+
+pro_mCh_ter_n4 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_n=4.csv")) 
+names(pro_mCh_ter_n4)[2] <- "sample_id"
+names(pro_mCh_ter_n4)[3] <- "mCh_per_OD_at_max_gr"
+
+pro_mCh_ter_n5 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_n=5.csv"))
+names(pro_mCh_ter_n5)[2] <- "sample_id"
+names(pro_mCh_ter_n5)[3] <- "mCh_per_OD_at_max_gr"
+
+pro_mCh_ter_n6 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_n=6.csv")) 
+names(pro_mCh_ter_n6)[2] <- "sample_id"
+names(pro_mCh_ter_n6)[3] <- "mCh_per_OD_at_max_gr"
+
+
+pro_mCh_ter <-  bind_rows(pro_mCh_ter_n1, pro_mCh_ter_n2, pro_mCh_ter_n3, pro_mCh_ter_n4, pro_mCh_ter_n5, pro_mCh_ter_n6) %>%
+        separate(sample_id, remove = FALSE,sep="_",into=c("Strain","BioRep")) %>%
+        filter(!Strain %in% c('Null', 'POT1-ccdB')) %>%
+        separate(Strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator"))
+```
+
+```{r readin-mturq}
+pro_mTurq_ter_n1 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=1.csv")) 
+names(pro_mTurq_ter_n1)[2] <- "Strain"
+names(pro_mTurq_ter_n1)[3] <- "mTurq_per_OD_at_max_gr"
+
+pro_mTurq_ter_n2 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=2.csv")) 
+names(pro_mTurq_ter_n2)[2] <- "Strain"
+names(pro_mTurq_ter_n2)[3] <- "mTurq_per_OD_at_max_gr"
+
+pro_mTurq_ter_n3 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=3.csv")) 
+names(pro_mTurq_ter_n3)[2] <- "Strain"
+names(pro_mTurq_ter_n3)[3] <- "mTurq_per_OD_at_max_gr"
+
+pro_mTurq_ter_n4 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=4.csv")) 
+names(pro_mTurq_ter_n4)[2] <- "Strain"
+names(pro_mTurq_ter_n4)[3] <- "mTurq_per_OD_at_max_gr"
+
+pro_mTurq_ter_n5 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=5.csv"))
+names(pro_mTurq_ter_n5)[2] <- "Strain"
+names(pro_mTurq_ter_n5)[3] <- "mTurq_per_OD_at_max_gr"
+
+pro_mTurq_ter_n6 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=6.csv"))
+names(pro_mTurq_ter_n6)[2] <- "Strain"
+names(pro_mTurq_ter_n6)[3] <- "mTurq_per_OD_at_max_gr"
+
+pro_mTurq_ter <-  bind_rows(pro_mTurq_ter_n1, pro_mTurq_ter_n2, pro_mTurq_ter_n3, pro_mTurq_ter_n4, pro_mTurq_ter_n5, pro_mTurq_ter_n6) %>%
+        filter(!Strain %in% c('Null', 'POT1-ccdB')) %>%
+        separate(Strain, remove = FALSE,sep="-",into=c("Promoter","mTurq","Terminator"))
+```
+
+```{r normalisation-mcherry}
+pro_mCh_ter_pPGK1 <- pro_mCh_ter %>%
+                  filter(Promoter %in% c('pPGK1'))
+
+pro_mCh_ter_pPGK1_tPGK1 <- pro_mCh_ter_pPGK1 %>%
+    filter(Terminator %in% c('tPGK1'))%>%
+    summarize(mean_pPGK1_tPGK1 = mean(mCh_per_OD_at_max_gr))
+
+norm_pro_mCh_ter_pPGK1 <- pro_mCh_ter_pPGK1 %>%
+      mutate(norm_mCh_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pPGK1_tPGK1$mean_pPGK1_tPGK1, remove=FALSE)
+
+pro_mCh_ter_pRPS3 <- pro_mCh_ter %>%
+                  filter(Promoter %in% c('pRPS3'))
+
+pro_mCh_ter_pRPS3_tPGK1 <- pro_mCh_ter_pRPS3 %>%
+    filter(Terminator %in% c('tPGK1'))%>%
+    summarize(mean_pRPS3_tPGK1 = mean(mCh_per_OD_at_max_gr))
+
+norm_pro_mCh_ter_pRPS3 <- pro_mCh_ter_pRPS3 %>%
+      mutate(norm_mCh_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pRPS3_tPGK1$mean_pRPS3_tPGK1, remove=FALSE)
+
+pro_mCh_ter_pRPS13 <- pro_mCh_ter %>%
+                  filter(Promoter %in% c('pRPS13'))
+
+pro_mCh_ter_pRPS13_tPGK1 <- pro_mCh_ter_pRPS13 %>%
+    filter(Terminator %in% c('tPGK1'))%>%
+    summarize(mean_pRPS13_tPGK1 = mean(mCh_per_OD_at_max_gr))
+
+norm_pro_mCh_ter_pRPS13 <- pro_mCh_ter_pRPS13 %>%
+      mutate(norm_mCh_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pRPS13_tPGK1$mean_pRPS13_tPGK1, remove=FALSE)
+
+pro_mCh_ter_pHSP26 <- pro_mCh_ter %>%
+                  filter(Promoter %in% c('pHSP26'))
+
+pro_mCh_ter_pHSP26_tPGK1 <- pro_mCh_ter_pHSP26 %>%
+    filter(Terminator %in% c('tPGK1'))%>%
+    summarize(mean_pHSP26_tPGK1 = mean(mCh_per_OD_at_max_gr))
+
+norm_pro_mCh_ter_pHSP26 <- pro_mCh_ter_pHSP26 %>%
+      mutate(norm_mCh_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pHSP26_tPGK1$mean_pHSP26_tPGK1, remove=FALSE)
+
+pro_mCh_ter_pCLN2 <- pro_mCh_ter %>%
+                  filter(Promoter %in% c('pCLN2'))
+
+pro_mCh_ter_pCLN2_tPGK1 <- pro_mCh_ter_pCLN2 %>%
+    filter(Terminator %in% c('tPGK1'))%>%
+    summarize(mean_pCLN2_tPGK1 = mean(mCh_per_OD_at_max_gr))
+
+norm_pro_mCh_ter_pCLN2 <- pro_mCh_ter_pCLN2 %>%
+      mutate(norm_mCh_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pCLN2_tPGK1$mean_pCLN2_tPGK1, remove=FALSE)
+
+pro_mCh_ter_pSRO9 <- pro_mCh_ter %>%
+                  filter(Promoter %in% c('pSRO9'))
+
+pro_mCh_ter_pSRO9_tPGK1 <- pro_mCh_ter_pSRO9 %>%
+    filter(Terminator %in% c('tPGK1'))%>%
+    summarize(mean_pSRO9_tPGK1 = mean(mCh_per_OD_at_max_gr))
+
+norm_pro_mCh_ter_pSRO9 <- pro_mCh_ter_pSRO9 %>%
+      mutate(norm_mCh_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pSRO9_tPGK1$mean_pSRO9_tPGK1, remove=FALSE)
+
+norm_pro_mCh_ter_all <- bind_rows(norm_pro_mCh_ter_pPGK1, norm_pro_mCh_ter_pRPS3, norm_pro_mCh_ter_pRPS13,norm_pro_mCh_ter_pHSP26, norm_pro_mCh_ter_pCLN2, norm_pro_mCh_ter_pSRO9)
+```
+
+```{r normalisation-mturq}
+pro_mTurq_ter_pPGK1 <- pro_mTurq_ter %>%
+                  filter(Promoter %in% c('pPGK1'))
+
+pro_mTurq_ter_pPGK1_tPGK1 <- pro_mTurq_ter_pPGK1 %>%
+    filter(Terminator %in% c('tPGK1'))%>%
+    summarize(mean_pPGK1_tPGK1 = mean(mTurq_per_OD_at_max_gr))
+
+norm_pro_mTurq_ter_pPGK1 <- pro_mTurq_ter_pPGK1 %>%
+      mutate(norm_mTurq_per_OD_at_max_gr = mTurq_per_OD_at_max_gr / pro_mTurq_ter_pPGK1_tPGK1$mean_pPGK1_tPGK1, remove=FALSE)
+
+pro_mTurq_ter_pRPS3 <- pro_mTurq_ter %>%
+                  filter(Promoter %in% c('pRPS3'))
+
+pro_mTurq_ter_pRPS3_tPGK1 <- pro_mTurq_ter_pRPS3 %>%
+    filter(Terminator %in% c('tPGK1'))%>%
+    summarize(mean_pRPS3_tPGK1 = mean(mTurq_per_OD_at_max_gr))
+
+norm_pro_mTurq_ter_pRPS3 <- pro_mTurq_ter_pRPS3 %>%
+      mutate(norm_mTurq_per_OD_at_max_gr = mTurq_per_OD_at_max_gr / pro_mTurq_ter_pRPS3_tPGK1$mean_pRPS3_tPGK1, remove=FALSE)
+
+pro_mTurq_ter_pRPS13 <- pro_mTurq_ter %>%
+                  filter(Promoter %in% c('pRPS13'))
+
+pro_mTurq_ter_pRPS13_tPGK1 <- pro_mTurq_ter_pRPS13 %>%
+    filter(Terminator %in% c('tPGK1'))%>%
+    summarize(mean_pRPS13_tPGK1 = mean(mTurq_per_OD_at_max_gr))
+
+norm_pro_mTurq_ter_pRPS13 <- pro_mTurq_ter_pRPS13 %>%
+      mutate(norm_mTurq_per_OD_at_max_gr = mTurq_per_OD_at_max_gr / pro_mTurq_ter_pRPS13_tPGK1$mean_pRPS13_tPGK1, remove=FALSE)
+
+pro_mTurq_ter_pHSP26 <- pro_mTurq_ter %>%
+                  filter(Promoter %in% c('pHSP26'))
+
+pro_mTurq_ter_pHSP26_tPGK1 <- pro_mTurq_ter_pHSP26 %>%
+    filter(Terminator %in% c('tPGK1'))%>%
+    summarize(mean_pHSP26_tPGK1 = mean(mTurq_per_OD_at_max_gr))
+
+norm_pro_mTurq_ter_pHSP26 <- pro_mTurq_ter_pHSP26 %>%
+      mutate(norm_mTurq_per_OD_at_max_gr = mTurq_per_OD_at_max_gr / pro_mTurq_ter_pHSP26_tPGK1$mean_pHSP26_tPGK1, remove=FALSE)
+
+pro_mTurq_ter_pCLN2 <- pro_mTurq_ter %>%
+                  filter(Promoter %in% c('pCLN2'))
+
+pro_mTurq_ter_pCLN2_tPGK1 <- pro_mTurq_ter_pCLN2 %>%
+    filter(Terminator %in% c('tPGK1'))%>%
+    summarize(mean_pCLN2_tPGK1 = mean(mTurq_per_OD_at_max_gr))
+
+norm_pro_mTurq_ter_pCLN2 <- pro_mTurq_ter_pCLN2 %>%
+      mutate(norm_mTurq_per_OD_at_max_gr = mTurq_per_OD_at_max_gr / pro_mTurq_ter_pCLN2_tPGK1$mean_pCLN2_tPGK1, remove=FALSE)
+
+pro_mTurq_ter_pSRO9 <- pro_mTurq_ter %>%
+                  filter(Promoter %in% c('pSRO9'))
+
+pro_mTurq_ter_pSRO9_tPGK1 <- pro_mTurq_ter_pSRO9 %>%
+    filter(Terminator %in% c('tPGK1'))%>%
+    summarize(mean_pSRO9_tPGK1 = mean(mTurq_per_OD_at_max_gr))
+
+norm_pro_mTurq_ter_pSRO9 <- pro_mTurq_ter_pSRO9 %>%
+      mutate(norm_mTurq_per_OD_at_max_gr = mTurq_per_OD_at_max_gr / pro_mTurq_ter_pSRO9_tPGK1$mean_pSRO9_tPGK1, remove=FALSE)
+
+norm_pro_mTurq_ter_all <- bind_rows(norm_pro_mTurq_ter_pPGK1, norm_pro_mTurq_ter_pRPS3, norm_pro_mTurq_ter_pRPS13,norm_pro_mTurq_ter_pHSP26, norm_pro_mTurq_ter_pCLN2, norm_pro_mTurq_ter_pSRO9)
+```
+
+```{r plot_norm_se-mcherry, fig.height=3, fig.width=6}
+norm_pro_mCh_ter_se <- norm_pro_mCh_ter_all %>% 
+  group_by(Strain) %>%
+  summarize(strain_mean=mean(norm_mCh_per_OD_at_max_gr), 
+            strain_sd=sd(norm_mCh_per_OD_at_max_gr), 
+            strain_n=n(),
+            se=strain_sd/sqrt(strain_n),
+            upper_limit=strain_mean+se,
+            lower_limit=strain_mean-se)  %>% 
+  ungroup()%>%
+  separate(Strain, remove = FALSE,sep="-",into=c("Promoter","mCh","Terminator")) %>%
+  mutate(Terminator=factor(Terminator, levels=c("tPGK1", "tCLN2", "tHSP26", "tPAB1", "tPMA1", "tRPS3", "tRPS13", "tSRO9", "tSUN4", "tTOS6")))
+norm_pro_mCh_ter_se
+```
+
+```{r plot_norm_se-mturq, fig.height=3, fig.width=6}
+norm_pro_mTurq_ter_se <- norm_pro_mTurq_ter_all %>% 
+  group_by(Strain) %>%
+  summarize(strain_mean=mean(norm_mTurq_per_OD_at_max_gr), 
+            strain_sd=sd(norm_mTurq_per_OD_at_max_gr), 
+            strain_n=n(),
+            se=strain_sd/sqrt(strain_n),
+            upper_limit=strain_mean+se,
+            lower_limit=strain_mean-se)  %>% 
+  ungroup()%>%
+  separate(Strain, remove = FALSE,sep="-",into=c("Promoter","mTurq","Terminator")) %>%
+  mutate(Terminator=factor(Terminator, levels=c("tPGK1", "tCLN2", "tHSP26", "tPAB1", "tPMA1_long", "tRPS3", "tRPS13", "tSRO9_long", "tSUN4", "tTOS6")))
+```
+
+```{r radarGraphDraft-mchr}
+low_mCh_radar <- norm_pro_mCh_ter_se %>%
+  mutate(Terminator = str_remove(Terminator, "_long")) %>%
+  select(Promoter,Terminator, strain_mean) %>%
+  filter(Terminator %in% c("tPGK1", "tSUN4", "tTOS6", "tSRO9", "tPMA1"), Promoter != "pSRO9") %>%
+  transmute(group=factor(Terminator, levels = c("tSUN4", "tTOS6", "tSRO9", "tPMA1", "tPGK1")), Promoter, strain_mean) %>%
+  rename() %>%
+  pivot_wider(names_from = Promoter, values_from = strain_mean) %>%
+  ggradar::ggradar(grid.max = 1, grid.min = 0.1, grid.mid = 0.5, values.radar = c("0.1", "0.5", "1"), group.point.size = 4, group.line.width = 1)
+
+
+high_mCh_radar <- norm_pro_mCh_ter_se %>%
+  mutate(Terminator = str_remove(Terminator, "_long")) %>%
+  select(Promoter,Terminator, strain_mean) %>%
+  filter(Terminator %in% c("tPGK1", "tRPS3", "tPAB1", "tHSP26", "tRPS13", "tCLN2"), Promoter != "pSRO9") %>%
+  transmute(group=factor(Terminator, levels = c("tPAB1", "tPGK1", "tCLN2", "tRPS13", "tRPS3", "tHSP26")), Promoter, strain_mean) %>%
+  rename() %>%
+  pivot_wider(names_from = Promoter, values_from = strain_mean) %>%
+  ggradar::ggradar(grid.max = 2, grid.min = 0.1, grid.mid = 1, values.radar = c("0.1", "1", "2"), group.point.size = 4, group.line.width = 1)
+
+ggsave(here("raw_data_analysis/figures/low_expression_mCh_radar_no_pSRO9_plot.png"), low_mCh_radar)
+ggsave(here("raw_data_analysis/figures/high_expression_mCh_radar_no_pSRO9_plot.png"), high_mCh_radar)
+
+```
+
+```{r radarGraphDraft-mturq}
+low_mTurq_radar <- norm_pro_mTurq_ter_se %>%
+  mutate(Terminator = str_remove(Terminator, "_long")) %>%
+  select(Promoter,Terminator, strain_mean) %>%
+  filter(Terminator %in% c("tPGK1", "tSUN4", "tTOS6", "tSRO9", "tPMA1")) %>%
+  transmute(group=factor(Terminator, levels = c("tSUN4", "tTOS6", "tSRO9", "tPMA1", "tPGK1")), Promoter, strain_mean) %>%
+  rename() %>%
+  pivot_wider(names_from = Promoter, values_from = strain_mean) %>%
+  ggradar::ggradar(grid.max = 1, grid.min = 0.1, grid.mid = 0.5, values.radar = c("0.1", "0.5", "4"), group.point.size = 4, group.line.width = 1)
+
+
+high_mTurq_radar <- norm_pro_mTurq_ter_se %>%
+  mutate(Terminator = str_remove(Terminator, "_long")) %>%
+  select(Promoter,Terminator, strain_mean) %>%
+  filter(Terminator %in% c("tPGK1", "tRPS3", "tPAB1", "tHSP26", "tRPS13", "tCLN2")) %>%
+  transmute(group=factor(Terminator, levels = c("tPAB1", "tPGK1", "tCLN2", "tRPS13", "tRPS3", "tHSP26")), Promoter, strain_mean) %>%
+  rename() %>%
+  pivot_wider(names_from = Promoter, values_from = strain_mean) %>%
+  ggradar::ggradar(grid.max = 1.6, grid.min = 0.1, grid.mid = 1, values.radar = c("0.1", "1", "1.6"), group.point.size = 4, group.line.width = 1)
+
+ggsave(here("raw_data_analysis/figures/low_expression_mTurq_radar_plot.png"), low_mTurq_radar)
+ggsave(here("raw_data_analysis/figures/high_expression_mTurq_radar_plot.png"), high_mTurq_radar)
+```

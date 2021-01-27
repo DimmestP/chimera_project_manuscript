@@ -12,6 +12,7 @@ library(ggplot2)
 library(tidyverse)
 library(cowplot)
 library(tidyqpcr)
+library(here)
 library(dplyr) 
 
 
@@ -21,27 +22,27 @@ source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 
 
 ```{r}
-pro_mCh_ter_n1 <- read.csv("pro-mCherry-ter_swaps_pr/pro-mCherry-ter_swaps_n=1.csv") 
+pro_mCh_ter_n1 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_n=1.csv")) 
 names(pro_mCh_ter_n1)[2] <- "sample_id"
 names(pro_mCh_ter_n1)[3] <- "mCh_per_OD_at_max_gr"
 
-pro_mCh_ter_n2 <- read.csv("pro-mCherry-ter_swaps_pr/pro-mCherry-ter_swaps_n=2.csv") 
+pro_mCh_ter_n2 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_n=2.csv"))
 names(pro_mCh_ter_n2)[2] <- "sample_id"
 names(pro_mCh_ter_n2)[3] <- "mCh_per_OD_at_max_gr"
 
-pro_mCh_ter_n3 <- read.csv("pro-mCherry-ter_swaps_pr/pro-mCherry-ter_swaps_n=3.csv") 
+pro_mCh_ter_n3 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_n=3.csv")) 
 names(pro_mCh_ter_n3)[2] <- "sample_id"
 names(pro_mCh_ter_n3)[3] <- "mCh_per_OD_at_max_gr"
 
-pro_mCh_ter_n4 <- read.csv("pro-mCherry-ter_swaps_pr/pro-mCherry-ter_swaps_n=4.csv") 
+pro_mCh_ter_n4 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_n=4.csv")) 
 names(pro_mCh_ter_n4)[2] <- "sample_id"
 names(pro_mCh_ter_n4)[3] <- "mCh_per_OD_at_max_gr"
 
-pro_mCh_ter_n5 <- read.csv("pro-mCherry-ter_swaps_pr/pro-mCherry-ter_swaps_n=5.csv") 
+pro_mCh_ter_n5 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_n=5.csv"))
 names(pro_mCh_ter_n5)[2] <- "sample_id"
 names(pro_mCh_ter_n5)[3] <- "mCh_per_OD_at_max_gr"
 
-pro_mCh_ter_n6 <- read.csv("pro-mCherry-ter_swaps_pr/pro-mCherry-ter_swaps_n=6.csv") 
+pro_mCh_ter_n6 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_n=6.csv")) 
 names(pro_mCh_ter_n6)[2] <- "sample_id"
 names(pro_mCh_ter_n6)[3] <- "mCh_per_OD_at_max_gr"
 
@@ -351,25 +352,4 @@ mCh_platereader_figure <- ggplot(data=norm_pro_mCh_ter_all %>% mutate(Terminator
     theme(legend.position = "none")
 
 ggsave(here("./results_chapter/figures/pro_ter_platereader_mCh.png"),mCh_platereader_figure,width = 12, height = 9)
-```
-
-```{r radarGraphDraft}
-norm_pro_mCh_ter_se %>%
-  mutate(Terminator = str_remove(Terminator, "_long")) %>%
-  select(Promoter,Terminator, strain_mean) %>%
-  filter(Terminator %in% c("tPGK1", "tSUN4", "tTOS6", "tSRO9", "tPMA1")) %>%
-  transmute(group=factor(Terminator, levels = c("tSUN4", "tTOS6", "tSRO9", "tPMA1", "tPGK1")), Promoter, strain_mean) %>%
-  rename() %>%
-  pivot_wider(names_from = Promoter, values_from = strain_mean) %>%
-  ggradar::ggradar(grid.max = 1, grid.min = 0.1, grid.mid = 0.5, values.radar = c("0.1", "0.5", "1"), group.point.size = 4, group.line.width = 1)
-
-
-norm_pro_mCh_ter_se %>%
-  mutate(Terminator = str_remove(Terminator, "_long")) %>%
-  select(Promoter,Terminator, strain_mean) %>%
-  filter(Terminator %in% c("tPGK1", "tRPS3", "tPAB1", "tHSP26", "tRPS13", "tCLN2")) %>%
-  transmute(group=factor(Terminator, levels = c("tPAB1", "tPGK1", "tCLN2", "tRPS13", "tRPS3", "tHSP26")), Promoter, strain_mean) %>%
-  rename() %>%
-  pivot_wider(names_from = Promoter, values_from = strain_mean) %>%
-  ggradar::ggradar(grid.max = 1.6, grid.min = 0.1, grid.mid = 1, values.radar = c("0.1", "1", "1.6"), group.point.size = 4, group.line.width = 1)
 ```
