@@ -15,18 +15,8 @@ library(tidyqpcr)
 library(dplyr) 
 
 
- # set default theme for graphics
-theme_set(theme_cowplot(font_size=11) %+replace% 
-              theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
-                    panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
-                    panel.grid.major = element_line(size = 0.15, linetype = 'solid',colour = "grey"),
-                    plot.title = element_text(family="Tahoma",size=11,vjust=3.3),
-                    strip.background = element_blank(),
-                    strip.text.x=element_text(family="Tahoma",size=11),
-                    axis.text=element_text(family="Tahoma", size=10),
-                    axis.title=element_text(family="Tahoma", size=10),
-                    legend.text=element_text(family="Tahoma", size=8),
-                    legend.title=element_text(family="Tahoma", size=9)))
+
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 ```
 
 
@@ -181,6 +171,7 @@ normRPS13plot + stat_summary(aes(Terminator,norm_mCh_per_OD_at_max_gr),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
+
 ```{r pHSP26_tPGK1_norm, fig.width=3, fig.height=2}
 pro_mCh_ter_pHSP26 <- pro_mCh_ter %>%
                   filter(Promoter %in% c('pHSP26'))
