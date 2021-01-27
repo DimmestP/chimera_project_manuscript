@@ -9,7 +9,7 @@ library(cowplot)
 library(patchwork)
 
 source(here("raw_data_analysis/code/linear_model_functions.R"))
-source(here("raw_data_analysis-code/shared_figure_formatting.R"))
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 
 # import chan et al half-life data
 
@@ -104,6 +104,7 @@ single_count_median_3UTR_motifs_freq <-  yeast_3UTRs %>%
 unique_IUPAC <- deduplicated_motifs %>% distinct(newMotifsRegex,.keep_all = TRUE) %>% pull(newMotifIUPAC)
 
 #Search and add frequency of each c(motif) as a column in ref dataset
+print("Counting occurences of each motif in each 3'UTR")
 for (i in 1:length(unique_IUPAC)){
   motif_count <- str_count(single_count_median_3UTR_motifs_freq$threePrimeUTR, str_c(deduplicated_motifs %>% filter(newMotifIUPAC == unique_IUPAC[i]) %>% pull(motifsStrings),collapse = "|"))
   if(sum(motif_count) > 5)  single_count_median_3UTR_motifs_freq <- mutate(single_count_median_3UTR_motifs_freq %>% ungroup(), !!unique_IUPAC[i] := motif_count)
@@ -122,10 +123,13 @@ single_count_decay_prediction_dataset_sun <- single_count_median_3UTR_motifs_fre
   mutate(UTR3_length = str_length(threePrimeUTR))
 
 # Find motifs associated with decay for all isoforms without duplicated motif counts for chan et al
+print("greedy linear motif selection for Chan et al. This step takes a few minutes to run.")
 single_motif_chan_decay_step_model_chan <- greedy_linear_motif_selection(single_count_decay_prediction_dataset_chan,"hlife")
 
+print("greedy linear motif selection for Sun et al. This step takes a few minutes to run.")
 single_motif_chan_decay_step_model_sun <- greedy_linear_motif_selection(single_count_decay_prediction_dataset_sun,"hlife")
 
+print("Finished motif selection")
 
 # find motifs that contribute the most the predicting half life in each data set
 sun_motif_coefficients <- broom::tidy(single_motif_chan_decay_step_model_sun) %>% 
@@ -165,8 +169,9 @@ halflife_breaks <- c(1,10,100)
 halflife_minor_breaks <- c(2,3,4,5,20,30,40,50)
 halflife_limits <- c(0.9,200)
 
-options_pred_vs_obvs_plot <-
+options_half_life_plots <-
   list(
+    geom_bin2d(bins = 70),
     scale_y_log10(breaks = halflife_breaks,
                   minor_breaks = halflife_minor_breaks,
                   limits = halflife_limits),
@@ -180,17 +185,19 @@ options_pred_vs_obvs_plot <-
           plot.margin = margin(5,0,5,20))
   )
 
-chan_pred_vs_obvs_plot <- ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Chan")) +
-  geom_bin2d(aes(x=Predicted_Half_Life,y=Measured_Half_Life), bins = 70) +
+chan_pred_vs_obvs_plot <- 
+  ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Chan"),
+         aes(x=Predicted_Half_Life,y=Measured_Half_Life)) +
+  options_half_life_plots +
   labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obs}$"),title = TeX("Chan")) +
-  annotate("text",label = TeX(paste0("$R^2=$",signif(chan_step_model_r_squared,2))),size=7,x=3,y=130) +
-  options_pred_vs_obvs_plot
+  annotate("text",label = TeX(paste0("$R^2=$",signif(chan_step_model_r_squared,2))),size=7,x=3,y=130)
 
-sun_pred_vs_obvs_plot <- ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Sun")) +
-  geom_bin2d(aes(x=Predicted_Half_Life,y=Measured_Half_Life), bins = 70) +
-  labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obvs}$"),title = TeX("Sun")) +
-  annotate("text",label = TeX(paste0("$R^2=$",signif(sun_step_model_r_squared,2))),size=7,x=3,y=130)  +
-  options_pred_vs_obvs_plot
+sun_pred_vs_obvs_plot <- 
+  ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Sun"),
+         aes(x=Predicted_Half_Life,y=Measured_Half_Life)) +
+  options_half_life_plots +
+  labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obs}$"),title = TeX("Sun")) +
+  annotate("text",label = TeX(paste0("$R^2=$",signif(sun_step_model_r_squared,2))),size=7,x=3,y=130)
 
 # output chan vs sun comparison graph
 combined_hlife_data_sets <- inner_join(sun_decay_hlife, 
@@ -202,12 +209,12 @@ combined_hlife_data_sets <- inner_join(sun_decay_hlife,
 decay_data_set_cor <- cor(combined_hlife_data_sets$hlife_S, combined_hlife_data_sets$hlife_C)
 
 
-dataset_comparison <-  ggplot(combined_hlife_data_sets, aes(x=hlife_C, y=hlife_S)) +
-  geom_bin2d( bins=70) + 
+dataset_comparison <-  
+  ggplot(combined_hlife_data_sets, aes(x=hlife_C, y=hlife_S)) +
+  options_half_life_plots +
   labs(y = TeX("$\\lambda^^{1/2}_{Sun}$"), 
        x = TeX("$\\lambda^{1/2}_{Chan}$")) +
-  annotate("text",label = paste0("R = ",signif(decay_data_set_cor,2)),size=6,x=40,y=2) +
-  options_pred_vs_obvs_plot
+  annotate("text",label = paste0("R = ",signif(decay_data_set_cor,2)),size=6,x=40,y=2)
 
 
 # output model predictive power graph
@@ -233,14 +240,15 @@ model_coefficients <-   ggplot(combined_motif_coefficients, aes(y = estimate_C, 
   gridExtra::tableGrob(chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), rows = NULL)
 
 ggsave2("results_chapter/figures/hlife_model_multi_fig.png", 
-        plot_grid(chan_pred_vs_obvs_plot,
-                  sun_pred_vs_obvs_plot,dataset_comparison,
+        plot_grid(dataset_comparison,
                   model_coefficients, 
-                  labels = c("A", "", "B", "C"),
+                  chan_pred_vs_obvs_plot,
+                  sun_pred_vs_obvs_plot,
+                  labels = c("A", "B", "C", ""),
                   label_size = 20,
                   align = "hv",
                   axis = "t",
-                  scale = c(0.9,0.9,1,0.9)), width = 12, height = 9)
+                  scale = c(1,1,1,0.9)), width = 8, height = 7)
 
 # output list of chan motif coefficients 
 # write_csv( chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./results_chapter/data/chan_motif_coefficients.csv"))
