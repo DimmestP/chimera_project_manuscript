@@ -61,7 +61,7 @@ bio_rep_levels_3 <- c("bio_rep3")
 bio_rep_values_R3_P1_1 <- c(rep(bio_rep_levels_1,times=21))
 bio_rep_values_R3_P1_2 <- c(rep(bio_rep_levels_2,times=21))
 bio_rep_values_R3_P1_3 <- c(rep(bio_rep_levels_3,times=21))
-bio_rep_values_S9_1_2 <- factor(rep(bio_rep_levels_1_2,times=10))
+bio_rep_values_S9_1_2 <- factor(rep(bio_rep_levels_1_2,each=10))
 bio_rep_values_S9_3 <- c(rep(bio_rep_levels_3,times=10))
 
 # Attribute labels to each row and column for each plate (pRPS3 and pPGK1 plates)
@@ -110,19 +110,19 @@ plateplan_SRO9_3 <-
 ```{r load_plates,dependson="label_plates",results="show"}
 # read my plates
 
-plates_RPS3_PGK1_1 <- read_lightcycler_1colour_cq("data/JA_2020-12-12-pro-ter_pRPS3-pPGK1-n1-ct.txt")  %>%
+plates_RPS3_PGK1_1 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-12-pro-ter_pRPS3-pPGK1-n1-ct.txt"))  %>%
     left_join(plateplan_RPS3_PGK1_1)
 
-plates_RPS3_PGK1_2 <- read_lightcycler_1colour_cq("data/JA_2020-12-13-pro-ter_pRPS3-pPGK1-n2-ct.txt")  %>%
+plates_RPS3_PGK1_2 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-13-pro-ter_pRPS3-pPGK1-n2-ct.txt"))  %>%
     left_join(plateplan_RPS3_PGK1_2)
 
-plates_RPS3_PGK1_3 <- read_lightcycler_1colour_cq("data/JA_2020-12-14-pro-ter_pRPS3-pPGK1-n3-ct.txt")  %>%
+plates_RPS3_PGK1_3 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-14-pro-ter_pRPS3-pPGK1-n3-ct.txt"))  %>%
     left_join(plateplan_RPS3_PGK1_3)
 
-plates_SRO9_1_2 <- read_lightcycler_1colour_cq("data/JA_2020-12-13-pro-ter_pSRO9-n1-n2-ct.txt")  %>%
+plates_SRO9_1_2 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-13-pro-ter_pSRO9-n1-n2-ct.txt"))  %>%
     left_join(plateplan_SRO9_1_2)
 
-plates_SRO9_3 <- read_lightcycler_1colour_cq("data/JA_2020-12-14-pro-ter_pSRO9-n3-ct.txt")  %>%
+plates_SRO9_3 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-14-pro-ter_pSRO9-n3-ct.txt"))  %>%
     left_join(plateplan_SRO9_3)
 
 plates <- bind_rows(plates_RPS3_PGK1_1, plates_RPS3_PGK1_2, plates_RPS3_PGK1_3, plates_SRO9_1_2, plates_SRO9_3) 
@@ -197,184 +197,6 @@ ggplot(data=plates %>% filter(strain %in% c('POT1-ccdB')), aes(x=target_id,y=cq)
           axis.title.x=element_text(vjust=-2),
           axis.title.y=element_text(vjust=3))
 ```
-
-
-## Loading amplification and melt curve pRPS3 data
-
-```{r load_amp-melt_R3,dependson="label_plates", results="show"}
-
-platecurve_RPS3_1 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/motif_context_dependence/pRPS3-tRPS3/JA_20200121-pRPS3-tRPS3mod-n1.txt"),skip=2,
-                      col_names=c("well","SID","program_no","segment","cycle","time","temperature","fluor_raw")) %>%
-    debaseline() %>%left_join(plateplan_RPS3_1)%>%
-    mutate(exp_rep = 1,exp_rep=factor(exp_rep))
-
-platecurve_RPS3_2 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/motif_context_dependence/pRPS3-tRPS3/JA_20200204-pRPS3-tRPS3mod-n2.txt"),skip=2,
-                           col_names=c("well","SID","program_no","segment","cycle","time","temperature","fluor_raw")) %>%
-    debaseline() %>%left_join(plateplan_RPS3_2)%>%
-    mutate(exp_rep = 2,exp_rep=factor(exp_rep))
-
-platecurve_RPS3 <- bind_rows(platecurve_RPS3_1, platecurve_RPS3_2)
-
-platesamp_RPS3  <- platecurve_RPS3 %>% filter(program_no == 2)
-platesmelt_RPS3 <- platecurve_RPS3 %>% filter(program_no != 2) %>% getdRdTall() %>% filter(temperature >= 61)  
-```
-
-### Amplification Curves of POT1-ccdB strains (all bioreps) against all 4 target_ids (mCh-7, PGK1-ORF, RPS3-ORF, URA3-ORF) (pRPS3)
-Here I am comparing the amplification curves of POT1-ccdB strains in pRPS3 experiments between experimental replicates (exp_rep1 in red, exp_rep2 in blue). Looking only at the mCh-7 amplification curves for each bio_rep, it seems that bio_rep1, 2 and 3 have an early cq value (reaches exponential phase at an earlier cycle) than bio_rep4, 5 and 6. However, across all amplification curves against the mCherry target, the -RT either does not have a fluorecence signal (flat dotted line) or a late cq value (fluorescence signal at a late cycle). So there doesn't seem to be a problem with samples based on the amplification curves.  
-
-NOTE - shallow curves seems to be related to including a high cDNA volume
-
-```{r plotamp_Rep_R3,fig.width=8,fig.height=6, echo=FALSE}
-ggplot(data=platesamp_RPS3 %>% filter(strain==c("POT1-ccdB")),
-       aes(x=cycle,y=fluor_signal,linetype=prep_type,group=well, color=exp_rep)) + 
-    facet_grid(bio_rep~target_id) + 
-    geom_line() +
-    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
-    expand_limits(y=0) + 
-    labs(title="Amplification curves of POT1-ccdB strains (bio_rep 1-6) in pRPS3 experiments") + panel_border()
-
-ggplot(data=platesamp_RPS3 %>% filter(strain==c("pRPS3-mCherry-tRPS3_WT")),
-       aes(x=cycle,y=fluor_signal,linetype=prep_type,group=well, color=exp_rep)) + 
-    facet_grid(bio_rep~target_id) + 
-    geom_line() +
-    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
-    expand_limits(y=0) + 
-    labs(title="Amplification curves of pRPS3-mCherry-tRPS3_WT strains (bio_rep 1-6) in pRPS3 experiments") + panel_border()
-```
-
-
-
-### Melt Curves of POT1-ccdB and pRPS3-mCherry-tRPS3_WT strains (all bioreps) against all 4 target_ids (mCh-7, PGK1-ORF, RPS3-ORF, URA3-ORF) (pRPS3)
-Here I am comparing the melt curves of POT1-ccdB and pRPS3-mCherry-tRPS3_WT strains in pRPS3 experiments between experimental replicates (exp_rep1 in red, exp_rep2 in blue).The melt curves with PGK1-ORF, RPS3-ORF and URA3-ORF probes look fine (with only 1 peak). The melt curves of the pRPS3-mCherry-tRPS3_WT show a peak at ~85C however a peak shows up at ~75C in POT1-ccdB strains which was not in the pRPS3-mCherry-tRPS3_WT strains. Apart from this, everything looks normal.  
-
-```{r plotmelt_Rep_R3,dependson="load_amp",fig.width=8,fig.height=6, echo=FALSE}
-ggplot(data=platesmelt_RPS3 %>% filter(strain==c("POT1-ccdB")),
-       aes(x=temperature,y=dRdT,group=well)) + 
-    facet_grid(bio_rep~target_id) + 
-    geom_line(aes(color=exp_rep, linetype=prep_type)) +
-    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
-    scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 
-    labs(title="Melt curves of POT1-ccdB strains (bio_rep 1-6) in pRPS3 experiments") + panel_border()
-
-ggplot(data=platesmelt_RPS3 %>% filter(strain==c("pRPS3-mCherry-tRPS3_WT")),
-       aes(x=temperature,y=dRdT,group=well)) + 
-    facet_grid(bio_rep~target_id) + 
-    geom_line(aes(color=exp_rep, linetype=prep_type)) +
-    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
-    scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 
-    labs(title="Melt curves of pRPS3-mCherry-tRPS3_WT strains (bio_rep 1-6) in pRPS3 experiments") + panel_border()
-```
-
-
-### Loading amplification and melt curve pPGK1 data
-
-```{r load_amp-melt_P1,dependson="label_plates"}
-
-platecurve_PGK1_1 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/motif_context_dependence/pPGK1-tRPS3/JA_20200221_pPGK1-tRPS3mod-n1.txt"),skip=2,
-                           col_names=c("well","SID","program_no","segment","cycle","time","temperature","fluor_raw")) %>%
-    debaseline() %>%left_join(plateplan_PGK1_1)%>%
-    mutate(exp_rep = 1,exp_rep=factor(exp_rep))
-
-platecurve_PGK1_2 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/motif_context_dependence/pPGK1-tRPS3/JA_20200311-pPGK1-tRPS3mod-n2.txt"),skip=2,
-                           col_names=c("well","SID","program_no","segment","cycle","time","temperature","fluor_raw")) %>%
-    debaseline() %>%left_join(plateplan_PGK1_2)%>%
-    mutate(exp_rep = 2,exp_rep=factor(exp_rep))
-
-platecurve_PGK1 <- bind_rows(platecurve_PGK1_1, platecurve_PGK1_2)
-
-platesamp_PGK1  <- platecurve_PGK1 %>% filter(program_no == 2)
-platesmelt_PGK1 <- platecurve_PGK1 %>% filter(program_no != 2) %>% getdRdTall() %>% filter(temperature >= 61)  
-```
-
-### Amplification Curves of POT1-ccdB strains (all bioreps) against all 4 target_ids (mCh-7, PGK1-ORF, RPS3-ORF, URA3-ORF) (pPGK1)
-Here I am comparing the amplification curves of POT1-ccdB strains in pRPS3 experiments between experimental replicates (exp_rep1 in red, exp_rep2 in blue). Looking only at the mCh-7 amplification curves for each bio_rep, it seems that bio_rep1, 2 and 3 have an early cq value (reaches exponential phase at an earlier cycle) than bio_rep4, 5 and 6. However, across all amplification curves against the mCherry target, the -RT either does not have a fluorecence signal (flat dotted line) or a late cq value (fluorescence signal at a late cycle). So there doesn't seem to be a problem with samples based on the amplification curves.  
-
-NOTE - shallow curves seems to be related to including a high cDNA volume (seemed to clear up when I added more RNA to cDNA reaction then used less of the reaction for qPCR)
-
-```{r plotamp_Rep_PGK1,dependson="load_amp",fig.width=8,fig.height=6, echo=FALSE}
-ggplot(data=platesamp_PGK1 %>% filter(strain==c("POT1-ccdB")),
-       aes(x=cycle,y=fluor_signal,linetype=prep_type,group=well, color=exp_rep)) + 
-    facet_grid(bio_rep~target_id) + 
-    geom_line() +
-    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
-    expand_limits(y=0) + 
-    labs(title="Amplification curves of POT1-ccdB strains (bio_rep 1-6) in pPGK1 experiments") + panel_border()
-```
-
-### Melt Curves of POT1-ccdB and pPGK1-mCherry-tRPS3_WT strains (all bioreps) against all 4 target_ids (mCh-7, PGK1-ORF, RPS3-ORF, URA3-ORF) (pPGK1)
-Here I am comparing the melt curves of POT1-ccdB and pRPS3-mCherry-tRPS3_WT strains in pRPS3 experiments between experimental replicates (exp_rep1 in red, exp_rep2 in blue).The melt curves with PGK1-ORF, RPS3-ORF and URA3-ORF probes look fine (with only 1 peak). The melt curves of the pRPS3-mCherry-tRPS3_WT show a peak at ~85C however a peak shows up at ~75C in POT1-ccdB strains which was not in the pRPS3-mCherry-tRPS3_WT strains. Apart from this, everything looks normal.  
-
-```{r plotmelt_Rep_PGK1,fig.width=8,fig.height=6, echo=FALSE}
-ggplot(data=platesmelt_PGK1 %>% filter(strain==c("POT1-ccdB")),
-       aes(x=temperature,y=dRdT,group=well)) + 
-    facet_grid(bio_rep~target_id) + 
-    geom_line(aes(color=exp_rep, linetype=prep_type)) +
-    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
-    scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 
-    labs(title="Melt curves of POT1-ccdB strains (bio_rep 1-6) in pPGK1 experiments") + panel_border()
-
-ggplot(data=platesmelt_PGK1 %>% filter(strain==c("pPGK1-mCherry-tRPS3_WT")),
-       aes(x=temperature,y=dRdT,group=well)) + 
-    facet_grid(bio_rep~target_id) + 
-    geom_line(aes(color=exp_rep, linetype=prep_type)) +
-    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
-    scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 
-    labs(title="Melt curves of pPGK1-mCherry-tRPS3_WT strains (bio_rep 1-6) in pPGK1 experiments") + panel_border()
-```
-
-### Loading amplification and melt curve pSRO9 data
-
-```{r load_amp-melt_SRO9,dependson="label_plates"}
-
-platecurve_SRO9_1 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/motif_context_dependence/pSRO9-tRPS3/JA_20200814-pSRO9-tRPS3mod-n1.txt"),skip=2,
-                           col_names=c("well","SID","program_no","segment","cycle","time","temperature","fluor_raw")) %>%
-    debaseline() %>%left_join(plateplan_SRO9_1)%>%
-    mutate(exp_rep = 1,exp_rep=factor(exp_rep))
-
-platecurve_SRO9_2 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/motif_context_dependence/pSRO9-tRPS3/JA_20200924-pSRO9-tRPS3mod_n2.txt"),skip=2,
-                           col_names=c("well","SID","program_no","segment","cycle","time","temperature","fluor_raw")) %>%
-    debaseline() %>%left_join(plateplan_SRO9_2)%>%
-    mutate(exp_rep = 2,exp_rep=factor(exp_rep))
-
-platecurve_SRO9 <- bind_rows(platecurve_SRO9_1, platecurve_SRO9_2)
-
-platesamp_SRO9  <- platecurve_SRO9 %>% filter(program_no == 2)
-platesmelt_SRO9 <- platecurve_SRO9 %>% filter(program_no != 2) %>% getdRdTall() %>% filter(temperature >= 61)  
-```
-
-### Amplification Curves of POT1-ccdB strains (all bioreps) against all 4 target_ids (mCh-7, PGK1-ORF, RPS3-ORF, URA3-ORF) (pSRO9)
-
-
-```{r plotamp_Rep_SRO9,dependson="load_amp",fig.width=8,fig.height=6, echo=FALSE}
-ggplot(data=platesamp_SRO9 %>% filter(strain==c("POT1-ccdB")),
-       aes(x=cycle,y=fluor_signal,linetype=prep_type,group=well, color=exp_rep)) + 
-    facet_grid(bio_rep~target_id) + 
-    geom_line() +
-    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
-    expand_limits(y=0) + 
-    labs(title="Amplification curves of POT1-ccdB strains (bio_rep 1-6) in pSRO9 experiments") + panel_border()
-```
-
-### Melt Curves of POT1-ccdB and pPGK1-mCherry-tRPS3_WT strains (all bioreps) against all 4 target_ids (mCh-7, PGK1-ORF, RPS3-ORF, URA3-ORF) (SRO9)
-
-```{r plotmelt_Rep_SRO9,fig.width=8,fig.height=6, echo=FALSE}
-ggplot(data=platesmelt_SRO9 %>% filter(strain==c("POT1-ccdB")),
-       aes(x=temperature,y=dRdT,group=well)) + 
-    facet_grid(bio_rep~target_id) + 
-    geom_line(aes(color=exp_rep, linetype=prep_type)) +
-    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
-    scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 
-    labs(title="Melt curves of POT1-ccdB strains (bio_rep 1-6) in pSRO9 experiments") + panel_border()
-
-ggplot(data=platesmelt_SRO9 %>% filter(strain==c("pSRO9-mCherry-tRPS3_WT")),
-       aes(x=temperature,y=dRdT,group=well)) + 
-    facet_grid(bio_rep~target_id) + 
-    geom_line(aes(color=exp_rep, linetype=prep_type)) +
-    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
-    scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 
-    labs(title="Melt curves of pSRO9-mCherry-tRPS3_WT strains (bio_rep 1-6) in pSRO9 experiments") + panel_border()
-```
-
 
 ## 1) Delta cq calculation
 norm_function changed to **mean**
