@@ -251,135 +251,132 @@ ggplot(platesnorm %>% filter(target_id %in% 'mCh-7'), aes(terminator,delta_cq))+
 # Extracts the pRPS3 strains
 platesnorm_pRPS3_bio_rep <- platesnorm %>% filter(promoter %in% "pRPS3", target_id %in% "mCh-7")
   
-# Calculates the mean cq value of pRPS3-mCherry-tPGK1 Samples
-mean_platesnorm_pRPS3_P1_bio_rep1 <- platesnorm_pRPS3_bio_rep  %>% filter(bio_rep %in% c('bio_rep1'))%>%
+# Calculates the mean cq value of pRPS3-mCherry-tPGK1 samples from biorep 1
+mean_cq_pRPS3_tPGK1_bio_rep1 <- platesnorm_pRPS3_bio_rep  %>% filter(bio_rep %in% c('bio_rep1'))%>%
     select(c("strain","delta_cq", "bio_rep", "tech_rep")) %>% 
     filter(strain %in% c("pRPS3-mCherry-tPGK1")) %>%
     group_by(strain, bio_rep)%>%
-    summarize(median_bio_rep_P1 = median(delta_cq)) %>%
+    summarize(median_tech_rep = median(delta_cq)) %>%
     ungroup()%>%
     group_by(strain)%>%
-    summarize(mean_P1 = mean(median_bio_rep_P1))
+    summarize(mean_cq = mean(median_tech_rep))
 
-# Calculates the mean cq value of pRPS3-mCherry-tPGK1 Samples
-mean_platesnorm_pRPS3_P1_bio_rep2 <- platesnorm_pRPS3_bio_rep  %>% filter(bio_rep %in% c('bio_rep2'))%>%
+# Calculates the mean cq value of pRPS3-mCherry-tPGK1 Samples from biorep 2
+mean_cq_pRPS3_tPGK1_bio_rep2 <- platesnorm_pRPS3_bio_rep  %>% filter(bio_rep %in% c('bio_rep2'))%>%
     select(c("strain","delta_cq", "bio_rep", "tech_rep")) %>% 
     filter(strain %in% c("pRPS3-mCherry-tPGK1")) %>%
     group_by(strain, bio_rep)%>%
-    summarize(median_bio_rep_P1 = median(delta_cq)) %>%
+    summarize(median_tech_rep = median(delta_cq)) %>%
     ungroup()%>%
     group_by(strain)%>%
-    summarize(mean_P1 = mean(median_bio_rep_P1))
+    summarize(mean_cq = mean(median_tech_rep))
 
-# Calculates the mean cq value of pRPS3-mCherry-tPGK1 Samples
-mean_platesnorm_pRPS3_P1_bio_rep3 <- platesnorm_pRPS3_bio_rep  %>% filter(bio_rep %in% c('bio_rep3'))%>%
+# Calculates the mean cq value of pRPS3-mCherry-tPGK1 Samples from biorep 3
+mean_cq_pRPS3_tPGK1_bio_rep3 <- platesnorm_pRPS3_bio_rep  %>% filter(bio_rep %in% c('bio_rep3'))%>%
     select(c("strain","delta_cq", "bio_rep", "tech_rep")) %>% 
     filter(strain %in% c("pRPS3-mCherry-tPGK1")) %>%
     group_by(strain, bio_rep)%>%
-    summarize(median_bio_rep_P1 = median(delta_cq)) %>%
+    summarize(median_tech_rep = median(delta_cq)) %>%
     ungroup()%>%
     group_by(strain)%>%
-    summarize(mean_P1 = mean(median_bio_rep_P1))
+    summarize(mean_cq = mean(median_tech_rep))
 
 # Calculates the delta delta cq (subtracts mean(pRPS3_P1$delta_cq) from every delta_cq))
-platesnorm_P1_pRPS3_bio_rep1 <- platesnorm_pRPS3_bio_rep %>% filter(bio_rep %in% c('bio_rep1'))%>%
-    mutate(delta_cq.P1 = delta_cq - mean_platesnorm_pRPS3_P1_bio_rep1$mean_P1, remove=FALSE)
-platesnorm_P1_pRPS3_bio_rep2 <- platesnorm_pRPS3_bio_rep %>% filter(bio_rep %in% c('bio_rep2'))%>%
-    mutate(delta_cq.P1 = delta_cq - mean_platesnorm_pRPS3_P1_bio_rep2$mean_P1, remove=FALSE)
-platesnorm_P1_pRPS3_bio_rep3 <- platesnorm_pRPS3_bio_rep %>% filter(bio_rep %in% c('bio_rep3'))%>%
-    mutate(delta_cq.P1 = delta_cq - mean_platesnorm_pRPS3_P1_bio_rep2$mean_P1, remove=FALSE)
+platesnorm_pRPS3_bio_rep1 <- platesnorm_pRPS3_bio_rep %>% filter(bio_rep %in% c('bio_rep1'))%>%
+    mutate(delta_cq.P1 = delta_cq - mean_cq_pRPS3_tPGK1_bio_rep1$mean_cq, remove=FALSE)
+platesnorm_pRPS3_bio_rep2 <- platesnorm_pRPS3_bio_rep %>% filter(bio_rep %in% c('bio_rep2'))%>%
+    mutate(delta_cq.P1 = delta_cq - mean_cq_pRPS3_tPGK1_bio_rep2$mean_cq, remove=FALSE)
+platesnorm_pRPS3_bio_rep3 <- platesnorm_pRPS3_bio_rep %>% filter(bio_rep %in% c('bio_rep3'))%>%
+    mutate(delta_cq.P1 = delta_cq - mean_cq_pRPS3_tPGK1_bio_rep3$mean_cq, remove=FALSE)
 ```
 
 
 ```{r delta-deltacq_norm_PGK1_exp_rep, echo=TRUE}
+
 # Extracts the pPGK1 strains
 platesnorm_pPGK1_bio_rep <- platesnorm %>% filter(promoter %in% "pPGK1", target_id %in% "mCh-7")
   
-# Calculates the mean cq value of pPGK1-mCherry-tPGK1 Samples
-mean_platesnorm_pPGK1_P1_bio_rep1 <- platesnorm_pPGK1_bio_rep  %>% filter(bio_rep %in% c('bio_rep1'))%>%
+# Calculates the mean cq value of pPGK1-mCherry-tPGK1 samples from biorep 1
+mean_cq_pPGK1_tPGK1_bio_rep1 <- platesnorm_pPGK1_bio_rep  %>% filter(bio_rep %in% c('bio_rep1'))%>%
     select(c("strain","delta_cq", "bio_rep", "tech_rep")) %>% 
     filter(strain %in% c("pPGK1-mCherry-tPGK1")) %>%
     group_by(strain, bio_rep)%>%
-    summarize(median_bio_rep_P1 = median(delta_cq)) %>%
+    summarize(median_tech_rep = median(delta_cq)) %>%
     ungroup()%>%
     group_by(strain)%>%
-    summarize(mean_P1 = mean(median_bio_rep_P1))
+    summarize(mean_cq = mean(median_tech_rep))
 
-# Calculates the mean cq value of pPGK1-mCherry-tPGK1 Samples
-mean_platesnorm_pPGK1_P1_bio_rep2 <- platesnorm_pPGK1_bio_rep  %>% filter(bio_rep %in% c('bio_rep2'))%>%
+# Calculates the mean cq value of pPGK1-mCherry-tPGK1 Samples from biorep 2
+mean_cq_pPGK1_tPGK1_bio_rep2 <- platesnorm_pPGK1_bio_rep  %>% filter(bio_rep %in% c('bio_rep2'))%>%
     select(c("strain","delta_cq", "bio_rep", "tech_rep")) %>% 
     filter(strain %in% c("pPGK1-mCherry-tPGK1")) %>%
     group_by(strain, bio_rep)%>%
-    summarize(median_bio_rep_P1 = median(delta_cq)) %>%
+    summarize(median_tech_rep = median(delta_cq)) %>%
     ungroup()%>%
     group_by(strain)%>%
-    summarize(mean_P1 = mean(median_bio_rep_P1))
+    summarize(mean_cq = mean(median_tech_rep))
 
-# Calculates the mean cq value of pPGK1-mCherry-tPGK1 Samples
-mean_platesnorm_pPGK1_P1_bio_rep3 <- platesnorm_pPGK1_bio_rep  %>% filter(bio_rep %in% c('bio_rep3'))%>%
+# Calculates the mean cq value of pPGK1-mCherry-tPGK1 Samples from biorep 3
+mean_cq_pPGK1_tPGK1_bio_rep3 <- platesnorm_pPGK1_bio_rep  %>% filter(bio_rep %in% c('bio_rep3'))%>%
     select(c("strain","delta_cq", "bio_rep", "tech_rep")) %>% 
     filter(strain %in% c("pPGK1-mCherry-tPGK1")) %>%
     group_by(strain, bio_rep)%>%
-    summarize(median_bio_rep_P1 = median(delta_cq)) %>%
+    summarize(median_tech_rep = median(delta_cq)) %>%
     ungroup()%>%
     group_by(strain)%>%
-    summarize(mean_P1 = mean(median_bio_rep_P1))
+    summarize(mean_cq = mean(median_tech_rep))
 
 # Calculates the delta delta cq (subtracts mean(pPGK1_P1$delta_cq) from every delta_cq))
-platesnorm_P1_pPGK1_bio_rep1 <- platesnorm_pPGK1_bio_rep %>% filter(bio_rep %in% c('bio_rep1'))%>%
-    mutate(delta_cq.P1 = delta_cq - mean_platesnorm_pPGK1_P1_bio_rep1$mean_P1, remove=FALSE)
-platesnorm_P1_pPGK1_bio_rep2 <- platesnorm_pPGK1_bio_rep %>% filter(bio_rep %in% c('bio_rep2'))%>%
-    mutate(delta_cq.P1 = delta_cq - mean_platesnorm_pPGK1_P1_bio_rep2$mean_P1, remove=FALSE)
-platesnorm_P1_pPGK1_bio_rep3 <- platesnorm_pPGK1_bio_rep %>% filter(bio_rep %in% c('bio_rep3'))%>%
-    mutate(delta_cq.P1 = delta_cq - mean_platesnorm_pPGK1_P1_bio_rep2$mean_P1, remove=FALSE)
+platesnorm_pPGK1_bio_rep1 <- platesnorm_pPGK1_bio_rep %>% filter(bio_rep %in% c('bio_rep1'))%>%
+    mutate(delta_cq.P1 = delta_cq - mean_cq_pPGK1_tPGK1_bio_rep1$mean_cq, remove=FALSE)
+platesnorm_pPGK1_bio_rep2 <- platesnorm_pPGK1_bio_rep %>% filter(bio_rep %in% c('bio_rep2'))%>%
+    mutate(delta_cq.P1 = delta_cq - mean_cq_pPGK1_tPGK1_bio_rep2$mean_cq, remove=FALSE)
+platesnorm_pPGK1_bio_rep3 <- platesnorm_pPGK1_bio_rep %>% filter(bio_rep %in% c('bio_rep3'))%>%
+    mutate(delta_cq.P1 = delta_cq - mean_cq_pPGK1_tPGK1_bio_rep3$mean_cq, remove=FALSE)
 ```
 
 ```{r delta-deltacq_norm_SRO9_exp_rep, echo=TRUE}
+
 # Extracts the pSRO9 strains
 platesnorm_pSRO9_bio_rep <- platesnorm %>% filter(promoter %in% "pSRO9", target_id %in% "mCh-7")
   
-# Calculates the mean cq value of pSRO9-mCherry-tPGK1 Samples
-mean_platesnorm_pSRO9_P1_bio_rep1 <- platesnorm_pSRO9_bio_rep %>% filter(sample_id %in% c("pSRO9-mCherry-tPGK1_bio_rep1"))
-  
-  platesnorm_pSRO9_bio_rep  %>% filter(bio_rep %in% c('bio_rep1'), strain %in% c("pSRO9-mCherry-tPGK1"))%>%
+# Calculates the mean cq value of pSRO9-mCherry-tPGK1 samples from biorep 1
+mean_cq_pSRO9_tPGK1_bio_rep1 <- platesnorm_pSRO9_bio_rep  %>% filter(bio_rep %in% c('bio_rep1'))%>%
     select(c("strain","delta_cq", "bio_rep", "tech_rep")) %>% 
     filter(strain %in% c("pSRO9-mCherry-tPGK1")) %>%
     group_by(strain, bio_rep)%>%
-    summarize(median_bio_rep_P1 = median(delta_cq)) %>%
+    summarize(median_tech_rep = median(delta_cq)) %>%
     ungroup()%>%
     group_by(strain)%>%
-    summarize(mean_P1 = mean(median_bio_rep_P1))
+    summarize(mean_cq = mean(median_tech_rep))
 
-
-
-
-# Calculates the mean cq value of pSRO9-mCherry-tPGK1 Samples
-mean_platesnorm_pSRO9_P1_bio_rep2 <- platesnorm_pSRO9_bio_rep  %>% filter(bio_rep %in% c('bio_rep2'))%>%
+# Calculates the mean cq value of pSRO9-mCherry-tPGK1 Samples from biorep 2
+mean_cq_pSRO9_tPGK1_bio_rep2 <- platesnorm_pSRO9_bio_rep  %>% filter(bio_rep %in% c('bio_rep2'))%>%
     select(c("strain","delta_cq", "bio_rep", "tech_rep")) %>% 
     filter(strain %in% c("pSRO9-mCherry-tPGK1")) %>%
     group_by(strain, bio_rep)%>%
-    summarize(median_bio_rep_P1 = median(delta_cq)) %>%
+    summarize(median_tech_rep = median(delta_cq)) %>%
     ungroup()%>%
     group_by(strain)%>%
-    summarize(mean_P1 = mean(median_bio_rep_P1))
+    summarize(mean_cq = mean(median_tech_rep))
 
-# Calculates the mean cq value of pSRO9-mCherry-tPGK1 Samples
-mean_platesnorm_pSRO9_P1_bio_rep3 <- platesnorm_pSRO9_bio_rep  %>% filter(bio_rep %in% c('bio_rep3'))%>%
+# Calculates the mean cq value of pSRO9-mCherry-tPGK1 Samples from biorep 3
+mean_cq_pSRO9_tPGK1_bio_rep3 <- platesnorm_pSRO9_bio_rep  %>% filter(bio_rep %in% c('bio_rep3'))%>%
     select(c("strain","delta_cq", "bio_rep", "tech_rep")) %>% 
     filter(strain %in% c("pSRO9-mCherry-tPGK1")) %>%
     group_by(strain, bio_rep)%>%
-    summarize(median_bio_rep_P1 = median(delta_cq)) %>%
+    summarize(median_tech_rep = median(delta_cq)) %>%
     ungroup()%>%
     group_by(strain)%>%
-    summarize(mean_P1 = mean(median_bio_rep_P1))
+    summarize(mean_cq = mean(median_tech_rep))
 
 # Calculates the delta delta cq (subtracts mean(pSRO9_P1$delta_cq) from every delta_cq))
-platesnorm_P1_pSRO9_bio_rep1 <- platesnorm_pSRO9_bio_rep %>% filter(bio_rep %in% c('bio_rep1'))%>%
-    mutate(delta_cq.P1 = delta_cq - mean_platesnorm_pSRO9_P1_bio_rep1$mean_P1, remove=FALSE)
-platesnorm_P1_pSRO9_bio_rep2 <- platesnorm_pSRO9_bio_rep %>% filter(bio_rep %in% c('bio_rep2'))%>%
-    mutate(delta_cq.P1 = delta_cq - mean_platesnorm_pSRO9_P1_bio_rep2$mean_P1, remove=FALSE)
-platesnorm_P1_pSRO9_bio_rep3 <- platesnorm_pSRO9_bio_rep %>% filter(bio_rep %in% c('bio_rep3'))%>%
-    mutate(delta_cq.P1 = delta_cq - mean_platesnorm_pSRO9_P1_bio_rep2$mean_P1, remove=FALSE)
+platesnorm_pSRO9_bio_rep1 <- platesnorm_pSRO9_bio_rep %>% filter(bio_rep %in% c('bio_rep1'))%>%
+    mutate(delta_cq.P1 = delta_cq - mean_cq_pSRO9_tPGK1_bio_rep1$mean_cq, remove=FALSE)
+platesnorm_pSRO9_bio_rep2 <- platesnorm_pSRO9_bio_rep %>% filter(bio_rep %in% c('bio_rep2'))%>%
+    mutate(delta_cq.P1 = delta_cq - mean_cq_pSRO9_tPGK1_bio_rep2$mean_cq, remove=FALSE)
+platesnorm_pSRO9_bio_rep3 <- platesnorm_pSRO9_bio_rep %>% filter(bio_rep %in% c('bio_rep3'))%>%
+    mutate(delta_cq.P1 = delta_cq - mean_cq_pSRO9_tPGK1_bio_rep3$mean_cq, remove=FALSE)
 ```
 
 ## 2) Mean delta delta cq and RNA abundance calculation
@@ -388,8 +385,11 @@ In the previous 2 chunks, we have calculated the delta-delta cq value for each t
 ```{r mean_rna_abund_exp_rep, echo=TRUE}
 
 # Combining the calculated delta-delta cq from the two dataframes then calculating the Median delta-delta cq. RNA abundance is calculated by the following formula 2^(- Median_cq). 
-platesnorm_P1_median_bio_rep <- bind_rows(platesnorm_P1_pRPS3_bio_rep1, platesnorm_P1_pRPS3_bio_rep2, platesnorm_P1_pRPS3_bio_rep3,
-                                            platesnorm_P1_pPGK1_bio_rep1, platesnorm_P1_pPGK1_bio_rep2, platesnorm_P1_pPGK1_bio_rep3)%>%
+platesnorm_median_ddct <- bind_rows(platesnorm_pRPS3_bio_rep1, platesnorm_pRPS3_bio_rep2,
+                                    platesnorm_pRPS3_bio_rep3,platesnorm_pPGK1_bio_rep1,
+                                    platesnorm_pPGK1_bio_rep2, platesnorm_pPGK1_bio_rep3,
+                                    platesnorm_pSRO9_bio_rep1, platesnorm_pSRO9_bio_rep2,
+                                    platesnorm_pSRO9_bio_rep3)%>%
                     group_by(strain, target_id, bio_rep)%>%
                     summarize(delta_deltacq = median(delta_cq.P1, na.rm=TRUE),
                               rel_abund_delta_deltacq = (2^-delta_deltacq), na.rm=FALSE)%>%
@@ -400,7 +400,7 @@ platesnorm_P1_median_bio_rep <- bind_rows(platesnorm_P1_pRPS3_bio_rep1, platesno
 
 ```{r plot_delta_deltacq_exp_rep_1,fig.height=2,fig.width=5, echo=FALSE}
 
-normalised_plot_bio_rep_R3 <- ggplot(data = platesnorm_P1_median_bio_rep %>% filter(promoter %in% c('pRPS3')))+
+normalised_plot_bio_rep_R3 <- ggplot(data = platesnorm_median_ddct %>% filter(promoter %in% c('pRPS3')))+
     geom_point(aes(terminator,rel_abund_delta_deltacq, colour=terminator, shape=bio_rep)) +
     #scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 (log2 scale)",omag = seq(-5,5),scilabels=TRUE) +
     scale_y_log2nice(name="Fold change in RNA abundance of pRPS3 relative to \n pRPS3-mCherry-tPGK1 (log2 scale)",omag = seq(-5,5),scilabels=FALSE) +
@@ -419,7 +419,7 @@ normalised_plot_bio_rep_R3 + stat_summary(aes(terminator, rel_abund_delta_deltac
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 
-normalised_plot_bio_rep_P1 <- ggplot(data = platesnorm_P1_median_bio_rep %>% filter(promoter %in% c('pPGK1')))+
+normalised_plot_bio_rep_P1 <- ggplot(data = platesnorm_median_ddct %>% filter(promoter %in% c('pPGK1')))+
     geom_point(aes(terminator,rel_abund_delta_deltacq, colour=terminator, shape=bio_rep)) +
     #scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 (log2 scale)",omag = seq(-5,5),scilabels=TRUE) +
     scale_y_log2nice(name="Fold change in RNA abundance of pPGK1 relative to \n pPGK1-mCherry-tPGK1 (log2 scale)",omag = seq(-5,5),scilabels=FALSE) +
@@ -441,7 +441,7 @@ normalised_plot_bio_rep_P1 + stat_summary(aes(terminator, rel_abund_delta_deltac
 
 ```{r plot_delta_deltacq_exp_rep_2,fig.height=9,fig.width=5, echo=FALSE}
 
-normalised_plot1_exp_rep <- ggplot(data = platesnorm_P1_median_bio_rep)+
+normalised_plot1_exp_rep <- ggplot(data = platesnorm_median_ddct)+
     geom_point(aes(rel_abund_delta_deltacq,terminator,colour=terminator, shape=bio_rep)) +
     scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 \n (log2 scale)",omag = seq(-5,5),scilabels=FALSE) +
     labs(y="") +
