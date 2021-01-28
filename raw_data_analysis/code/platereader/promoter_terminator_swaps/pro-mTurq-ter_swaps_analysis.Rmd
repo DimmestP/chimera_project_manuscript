@@ -124,7 +124,9 @@ plot_se <- ggplot(data=pro_mTurq_ter_se,
 plot_se
 ```
 
+## Normalize relative to tPGK1
 
+These next code chunks, until `tPGK1norm_combined`, can be combined into one using `group_by` - perhaps using `tidyqpcr::calculate_normvalue` on the way.
 
 ```{r pPGK1_tPGK1_norm, fig.width=3, fig.height=2}
 pro_mTurq_ter_pPGK1 <- pro_mTurq_ter %>%
@@ -201,6 +203,7 @@ normRPS13plot + stat_summary(aes(Terminator,norm_mTurq_per_OD_at_max_gr),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
+
 ```{r pHSP26_tPGK1_norm, fig.width=3, fig.height=2}
 pro_mTurq_ter_pHSP26 <- pro_mTurq_ter %>%
                   filter(Promoter %in% c('pHSP26'))
@@ -363,6 +366,22 @@ plot_norm_se_2 <- ggplot(data=norm_pro_mTurq_ter_se, aes(x=Terminator,y=strain_m
   geom_hline(yintercept=1, linetype="dotted", color = "grey50")
 plot_norm_se_2
 ```
+
+```{r plot_norm_se_pro4, fig.height=3, fig.width=7}
+plot_norm_se_pro4 <- ggplot(data=filter(norm_pro_mTurq_ter_se, Promoter %in% pro4),
+                            aes(x=Terminator,y=strain_mean)) +
+  geom_point(aes(color=Terminator), size=2) +
+  labs(y="mTu fluorescence/OD \n relative to tPGK1",x="Terminator") +
+  facet_wrap(~Promoter, nrow=1)+
+  scale_colour_hue(h = c(0, 360)+20,l=60,c=60)+
+  theme(axis.text.x=element_text(angle=90,vjust=0.5),
+          axis.title.x=element_text(vjust=-2),
+          axis.title.y=element_text(vjust=3))+
+  geom_errorbar(aes(ymax = strain_mean+se, ymin = strain_mean-se, color=Terminator,  width=0.4))+
+  geom_hline(yintercept=1, linetype="dotted", color = "grey50")
+plot_norm_se_pro4
+```
+
 ```{r plot_norm_all_points, fig.height=3, fig.width=6}
 
 mTurq_platereader_figure <- 

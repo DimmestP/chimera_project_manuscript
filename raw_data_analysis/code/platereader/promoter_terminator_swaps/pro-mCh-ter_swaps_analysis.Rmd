@@ -68,7 +68,7 @@ pro_mCh_ter <-  bind_rows(pro_mCh_ter_n1, pro_mCh_ter_n2, pro_mCh_ter_n3, pro_mC
 plot_norm <- ggplot(data=pro_mCh_ter, aes(x=Terminator,y=mCh_per_OD_at_max_gr)) +
   geom_point(aes(color=Terminator),
                position=position_dodge(width = 0.5),size=1.8, alpha=1) +
-  labs(y="mCh fluorescence at maximum growth rate \n (normalised to OD)",x="Terminator") +
+  labs(y="mCh fluorescence/OD (AU)",x="Terminator") +
   facet_grid(~Promoter)+
   theme(axis.text.x=element_text(angle=90,vjust=0.5),
           axis.title.x=element_text(vjust=-2),
@@ -105,7 +105,9 @@ plot_se <- ggplot(data=pro_mCh_ter_se,
 plot_se
 ```
 
+## Normalize relative to tPGK1
 
+These next code chunks, until `tPGK1norm_combined`, can be combined into one using `group_by` - perhaps using `tidyqpcr::calculate_normvalue` on the way.
 
 ```{r pPGK1_tPGK1_norm, fig.width=3, fig.height=2}
 pro_mCh_ter_pPGK1 <- pro_mCh_ter %>%
@@ -320,7 +322,7 @@ norm_pro_mCh_ter_se
 plot_norm_se <- ggplot(data=norm_pro_mCh_ter_se, aes(x=Promoter,y=strain_mean)) +
   geom_point(aes(color=Promoter), size=2) +
   scale_colour_hue(h = c(0, 360)+20,l=60,c=60)+
-  labs(y="Relative mCh fluorescence per OD \n relative to tPGK1",x="Promoter") +
+  labs(y="mCh fluorescence/OD \n relative to tPGK1",x="Promoter") +
   facet_wrap(~Terminator, nrow=2)+
   theme(axis.text.x=element_text(angle=90,vjust=0.5),
           axis.title.x=element_text(vjust=-2),
@@ -333,7 +335,7 @@ plot_norm_se
 ```{r plot_norm_se_2, fig.height=3, fig.width=6}
 plot_norm_se_2 <- ggplot(data=norm_pro_mCh_ter_se, aes(x=Terminator,y=strain_mean)) +
   geom_point(aes(color=Terminator), size=2) +
-  labs(y="Relative mCh fluorescence per OD \n relative to tPGK1",x="Terminator") +
+  labs(y="mCh fluorescence/OD \n relative to tPGK1",x="Terminator") +
   facet_wrap(~Promoter, nrow=2)+
   scale_colour_hue(h = c(0, 360)+20,l=60,c=60)+
   theme(axis.text.x=element_text(angle=90,vjust=0.5),
@@ -342,6 +344,21 @@ plot_norm_se_2 <- ggplot(data=norm_pro_mCh_ter_se, aes(x=Terminator,y=strain_mea
   geom_errorbar(aes(ymax = strain_mean+se, ymin = strain_mean-se, color=Terminator,  width=0.4))+
   geom_hline(yintercept=1, linetype="dotted", color = "grey50")
 plot_norm_se_2
+```
+
+```{r plot_norm_se_pro4, fig.height=3, fig.width=7}
+plot_norm_se_pro4 <- ggplot(data=filter(norm_pro_mCh_ter_se, Promoter %in% pro4),
+                            aes(x=Terminator,y=strain_mean)) +
+  geom_point(aes(color=Terminator), size=2) +
+  labs(y="mCh fluorescence/OD \n relative to tPGK1",x="Terminator") +
+  facet_wrap(~Promoter, nrow=1)+
+  scale_colour_hue(h = c(0, 360)+20,l=60,c=60)+
+  theme(axis.text.x=element_text(angle=90,vjust=0.5),
+          axis.title.x=element_text(vjust=-2),
+          axis.title.y=element_text(vjust=3))+
+  geom_errorbar(aes(ymax = strain_mean+se, ymin = strain_mean-se, color=Terminator,  width=0.4))+
+  geom_hline(yintercept=1, linetype="dotted", color = "grey50")
+plot_norm_se_pro4
 ```
 
 ```{r plot_norm_all_points, fig.height=3, fig.width=6}
