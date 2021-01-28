@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.path = "figure/pro-mCh-ter-swaps-")
 
 library(ggplot2)
 library(tidyverse)
@@ -18,6 +18,15 @@ library(dplyr)
 
 
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
+```
+
+```{r labels_pro_ter}
+# define promoter and terminator levels in desired order
+pro6  <- c("pPGK1", "pHSP26", "pRPS3", "pRPS13", "pSRO9", "pCLN2")
+pro4  <- c("pPGK1", "pHSP26", "pRPS3", "pRPS13")
+ter10 <- c("tPGK1", "tHSP26", "tRPS3", "tRPS13",
+           "tSRO9", "tCLN2", "tPAB1", 
+           "tSUN4", "tTOS6", "tPMA1")
 ```
 
 
@@ -49,13 +58,15 @@ names(pro_mCh_ter_n6)[3] <- "mCh_per_OD_at_max_gr"
 
 pro_mCh_ter <-  bind_rows(pro_mCh_ter_n1, pro_mCh_ter_n2, pro_mCh_ter_n3, pro_mCh_ter_n4, pro_mCh_ter_n5, pro_mCh_ter_n6) %>%
         separate(sample_id, remove = FALSE,sep="_",into=c("Strain","BioRep")) %>%
-        filter(!Strain %in% c('Null', 'POT1-ccdB')) %>%
-        separate(Strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator"))
+  filter(!Strain %in% c('null', 'Null', 'POT1-ccdB')) %>%
+  separate(Strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator")) %>%
+  mutate(Promoter = factor(Promoter, levels = pro6),
+         Terminator = factor(Terminator, levels = ter10))
 ```
 
-```{r plot_norm, fig.width=8, fig.height=2}
+```{r plot_norm, fig.width=9, fig.height=5}
 plot_norm <- ggplot(data=pro_mCh_ter, aes(x=Terminator,y=mCh_per_OD_at_max_gr)) +
-  geom_point(aes(color=Terminator, shape=BioRep),
+  geom_point(aes(color=Terminator),
                position=position_dodge(width = 0.5),size=1.8, alpha=1) +
   labs(y="mCh fluorescence at maximum growth rate \n (normalised to OD)",x="Terminator") +
   facet_grid(~Promoter)+
@@ -71,15 +82,14 @@ plot_norm + stat_summary(aes(Terminator,mCh_per_OD_at_max_gr),
 
 ```{r plot_se, fig.width=8, fig.height=2}
 pro_mCh_ter_se <- pro_mCh_ter %>% 
-  group_by(Strain) %>% 
+  group_by(Strain,Promoter,Terminator) %>% 
   summarize(strain_mean = mean(mCh_per_OD_at_max_gr), # mean mCh fluorescence per strain
             strain_sd = sd(mCh_per_OD_at_max_gr), # mCh fluorescence sd per strain
             strain_n = n(),
             se = strain_sd/sqrt(strain_n), # mCh fluorescence se
             upper_limit = strain_mean+se, # Upper limit
             lower_limit = strain_mean-se # Lower limit
-            ) %>%
-        separate(Strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator"))
+            )
 pro_mCh_ter_se
 
 
@@ -297,16 +307,14 @@ norm_allplot_low_with_mean <- norm_allplot_low + stat_summary(aes(Terminator,nor
 
 ```{r plot_norm_se_1, fig.height=3, fig.width=6}
 norm_pro_mCh_ter_se <- norm_pro_mCh_ter_all %>% 
-  group_by(Strain) %>%
+  group_by(Strain,Promoter,Terminator) %>%
   summarize(strain_mean=mean(norm_mCh_per_OD_at_max_gr), 
             strain_sd=sd(norm_mCh_per_OD_at_max_gr), 
             strain_n=n(),
             se=strain_sd/sqrt(strain_n),
             upper_limit=strain_mean+se,
             lower_limit=strain_mean-se)  %>% 
-  ungroup()%>%
-  separate(Strain, remove = FALSE,sep="-",into=c("Promoter","mCh","Terminator")) %>%
-  mutate(Terminator=factor(Terminator, levels=c("tPGK1", "tCLN2", "tHSP26", "tPAB1", "tPMA1", "tRPS3", "tRPS13", "tSRO9", "tSUN4", "tTOS6")))
+  ungroup()
 norm_pro_mCh_ter_se
 
 plot_norm_se <- ggplot(data=norm_pro_mCh_ter_se, aes(x=Promoter,y=strain_mean)) +
