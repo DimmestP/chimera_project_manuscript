@@ -110,19 +110,19 @@ plateplan_SRO9_3 <-
 ```{r load_plates,dependson="label_plates",results="show"}
 # read my plates
 
-plates_RPS3_PGK1_1 <- read_lightcycler_1colour_cq("data/JA_2020-12-12-pro-ter_pRPS3-pPGK1-n1-ct.txt")  %>%
+plates_RPS3_PGK1_1 <- read_lightcycler_1colour_cq(here("./raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-12-pro-ter_pRPS3-pPGK1-n1-ct.txt"))  %>%
     left_join(plateplan_RPS3_PGK1_1)
 
-plates_RPS3_PGK1_2 <- read_lightcycler_1colour_cq("data/JA_2020-12-13-pro-ter_pRPS3-pPGK1-n2-ct.txt")  %>%
+plates_RPS3_PGK1_2 <- read_lightcycler_1colour_cq(here("./raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-13-pro-ter_pRPS3-pPGK1-n2-ct.txt"))  %>%
     left_join(plateplan_RPS3_PGK1_2)
 
-plates_RPS3_PGK1_3 <- read_lightcycler_1colour_cq("data/JA_2020-12-14-pro-ter_pRPS3-pPGK1-n3-ct.txt")  %>%
+plates_RPS3_PGK1_3 <- read_lightcycler_1colour_cq(here("./raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-14-pro-ter_pRPS3-pPGK1-n3-ct.txt"))  %>%
     left_join(plateplan_RPS3_PGK1_3)
 
-plates_SRO9_1_2 <- read_lightcycler_1colour_cq("data/JA_2020-12-13-pro-ter_pSRO9-n1-n2-ct.txt")  %>%
+plates_SRO9_1_2 <- read_lightcycler_1colour_cq(here("./raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-13-pro-ter_pSRO9-n1-n2-ct.txt"))  %>%
     left_join(plateplan_SRO9_1_2)
 
-plates_SRO9_3 <- read_lightcycler_1colour_cq("data/JA_2020-12-14-pro-ter_pSRO9-n3-ct.txt")  %>%
+plates_SRO9_3 <- read_lightcycler_1colour_cq(here("./raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-14-pro-ter_pSRO9-n3-ct.txt"))  %>%
     left_join(plateplan_SRO9_3)
 
 plates <- bind_rows(plates_RPS3_PGK1_1, plates_RPS3_PGK1_2, plates_RPS3_PGK1_3, plates_SRO9_1_2, plates_SRO9_3) 
@@ -202,21 +202,20 @@ ggplot(data=plates %>% filter(strain %in% c('POT1-ccdB')), aes(x=target_id,y=cq)
 ## Loading amplification and melt curve pRPS3 data
 
 ```{r load_amp-melt_R3,dependson="label_plates", results="show"}
-
-platecurve_RPS3_1 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/motif_context_dependence/pRPS3-tRPS3/JA_20200121-pRPS3-tRPS3mod-n1.txt"),skip=2,
+platecurve_RPS3_PGK1_1 <- read_tsv(here("./raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-12-pro-ter_pRPS3-pPGK1-n1.txt"),skip=2,
                       col_names=c("well","SID","program_no","segment","cycle","time","temperature","fluor_raw")) %>%
-    debaseline() %>%left_join(plateplan_RPS3_1)%>%
+    debaseline() %>%left_join(plateplan_RPS3_PGK1_1)%>%
     mutate(exp_rep = 1,exp_rep=factor(exp_rep))
 
-platecurve_RPS3_2 <- read_tsv(here("raw_data_analysis/data/raw_qpcr/motif_context_dependence/pRPS3-tRPS3/JA_20200204-pRPS3-tRPS3mod-n2.txt"),skip=2,
+platecurve_RPS3_PGK1_2 <- read_tsv(here("./raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-13-pro-ter_pRPS3-pPGK1-n2.txt"),skip=2,
                            col_names=c("well","SID","program_no","segment","cycle","time","temperature","fluor_raw")) %>%
-    debaseline() %>%left_join(plateplan_RPS3_2)%>%
+    debaseline() %>%left_join(plateplan_RPS3_PGK1_2)%>%
     mutate(exp_rep = 2,exp_rep=factor(exp_rep))
 
-platecurve_RPS3 <- bind_rows(platecurve_RPS3_1, platecurve_RPS3_2)
+platecurve_RPS3_PGK1_ <- bind_rows(platecurve_RPS3_PGK1_1, platecurve_RPS3_PGK1_2)
 
-platesamp_RPS3  <- platecurve_RPS3 %>% filter(program_no == 2)
-platesmelt_RPS3 <- platecurve_RPS3 %>% filter(program_no != 2) %>% getdRdTall() %>% filter(temperature >= 61)  
+platesamp_RPS3_PGK1_  <- platecurve_RPS3_PGK1_ %>% filter(program_no == 2)
+platesmelt_RPS3_PGK1_ <- platecurve_RPS3_PGK1_ %>% filter(program_no != 2) %>% getdRdTall() %>% filter(temperature >= 61)  
 ```
 
 ### Amplification Curves of POT1-ccdB strains (all bioreps) against all 4 target_ids (mCh-7, PGK1-ORF, RPS3-ORF, URA3-ORF) (pRPS3)
