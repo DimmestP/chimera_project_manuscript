@@ -459,3 +459,106 @@ normalised_plot1_exp_rep + stat_summary(aes(rel_abund_delta_deltacq,terminator),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
+
+## Loading amplification and melt curve data
+
+```{r load_amp-melt,dependson="label_plates", results="show"}
+
+platescurve_RPS3_PGK1_1 <- read_lightcycler_1colour_raw(here("raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-12-pro-ter_pRPS3-pPGK1-n1.txt"))  %>%
+        debaseline() %>%
+        left_join(plateplan_RPS3_PGK1_1)
+
+platescurve_RPS3_PGK1_2  <- read_lightcycler_1colour_raw(here("raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-13-pro-ter_pRPS3-pPGK1-n2.txt"))  %>%
+        debaseline() %>%
+        left_join(plateplan_RPS3_PGK1_2)
+
+platescurve_RPS3_PGK1_3 <- read_lightcycler_1colour_raw(here("raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-14-pro-ter_pRPS3-pPGK1-n3.txt"))  %>%
+        debaseline() %>%
+        left_join(plateplan_RPS3_PGK1_3)
+
+platescurve_SRO9_1_2 <- read_lightcycler_1colour_raw(here("raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-13-pro-ter_pSRO9-n1-n2.txt"))  %>%
+        debaseline() %>%
+        left_join(plateplan_SRO9_1_2)
+
+platescurve_SRO9_3 <- read_lightcycler_1colour_raw(here("raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-14-pro-ter_pSRO9-n3.txt"))  %>%
+        debaseline() %>%
+        left_join(plateplan_SRO9_3)
+
+platescurve <- bind_rows(platescurve_RPS3_PGK1_1, platescurve_RPS3_PGK1_2, platescurve_RPS3_PGK1_3, platescurve_SRO9_1_2, platescurve_SRO9_3)
+
+platesamp  <- platescurve %>% filter(program_no == 2)
+platesmelt <- platescurve %>% filter(program_no != 2) %>% getdRdTall() %>% filter(temperature >= 61)  
+```
+
+### Amplification Curves against all 4 target_ids (mCh-7, PGK1-ORF, RPS3-ORF, URA3-ORF)
+
+```{r plotamp,fig.width=4,fig.height=8, echo=FALSE}
+ggplot(data=platesamp %>% filter(strain==c("POT1-ccdB")),
+       aes(x=cycle,y=fluor_signal,linetype=prep_type,group=well)) + 
+    facet_grid(bio_rep~target_id) + 
+    geom_line() +
+    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
+    expand_limits(y=0) + 
+    labs(title="Amplification curves of POT1-ccdB strains") + panel_border()
+
+ggplot(data=platesamp %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_rep1"), promoter %in% c("pRPS3")),
+       aes(x=cycle,y=fluor_signal,linetype=prep_type,group=well)) + 
+    facet_grid(terminator~target_id) + 
+    geom_line() +
+    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
+    expand_limits(y=0) + 
+    labs(title="Amplification curves of pRPS3 collection") + panel_border()
+
+ggplot(data=platesamp %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_rep1"), promoter %in% c("pPGK1")),
+       aes(x=cycle,y=fluor_signal,linetype=prep_type,group=well)) + 
+    facet_grid(terminator~target_id) + 
+    geom_line() +
+    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
+    expand_limits(y=0) + 
+    labs(title="Amplification curves of pPGK1 collection") + panel_border()
+
+ggplot(data=platesamp %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_rep1"), promoter %in% c("pSRO9")),
+       aes(x=cycle,y=fluor_signal,linetype=prep_type,group=well)) + 
+    facet_grid(terminator~target_id) + 
+    geom_line() +
+    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
+    expand_limits(y=0) + 
+    labs(title="Amplification curves of pSRO9 collection") + panel_border()
+```
+
+### Melt Curves against all 4 target_ids (mCh-7, PGK1-ORF, RPS3-ORF, URA3-ORF)
+
+```{r plotmelt,,fig.width=4,fig.height=8, echo=FALSE}
+ggplot(data=platesmelt %>% filter(strain==c("POT1-ccdB")),
+       aes(x=temperature,y=dRdT,group=well)) + 
+    facet_grid(bio_rep~target_id) + 
+    geom_line(aes(linetype=prep_type)) +
+    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
+    scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 
+    labs(title="Melt curves of POT1-ccdB strains") + panel_border()
+
+ggplot(data=platesmelt %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_rep1"), promoter %in% c("pRPS3")),
+       aes(x=temperature,y=dRdT,group=well)) + 
+    facet_grid(terminator~target_id) + 
+    geom_line(aes(linetype=prep_type)) +
+    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
+    scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 
+    labs(title="Melt curves of pRPS3 collection") + panel_border()
+
+ggplot(data=platesmelt %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_rep1"), promoter %in% c("pPGK1")),
+       aes(x=temperature,y=dRdT,group=well)) + 
+    facet_grid(terminator~target_id) + 
+    geom_line(aes(linetype=prep_type)) +
+    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
+    scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 
+    labs(title="Melt curves of pPGK1 collection") + panel_border()
+
+ggplot(data=platesmelt %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_rep1"), promoter %in% c("pSRO9")),
+       aes(x=temperature,y=dRdT,group=well)) + 
+    facet_grid(terminator~target_id) + 
+    geom_line(aes(linetype=prep_type)) +
+    scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
+    scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 
+    labs(title="Melt curves of pSRO9 collection") + panel_border()
+```
+
