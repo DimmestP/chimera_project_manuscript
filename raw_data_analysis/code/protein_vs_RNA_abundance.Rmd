@@ -7,6 +7,7 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(here)
+library(extrafont)
 
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 
