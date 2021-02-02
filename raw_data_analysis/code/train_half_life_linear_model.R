@@ -142,12 +142,6 @@ chan_motif_coefficients <- broom::tidy(single_motif_chan_decay_step_model_chan) 
   filter(p.value < 0.05) %>% 
   arrange(desc(abs(estimate)))
 
-combined_motif_coefficients <- chan_motif_coefficients %>%
-  inner_join(sun_motif_coefficients, by = "term", suffix = c("_S", "_C")) %>%
-  bind_rows(chan_motif_coefficients %>%
-              left_join(sun_motif_coefficients, by = "term", suffix = c("_C", "_S")) %>%
-              filter(is.na(estimate_S), term %in% c("HWNCATTWY", "ATATTC", "TGTAHMNTA", "GTATACCTA")) %>%
-              mutate(estimate_S = 0, std.error_S = 0))
 
 # Compare model performanace on both decay datasets
 two_data_sets_predictive_power_tibble <- single_count_decay_prediction_dataset_chan %>%
@@ -192,7 +186,7 @@ chan_pred_vs_obvs_plot <-
   labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obs}$"),title = TeX("Chan")) +
   annotate("text",
            label = TeX(paste0("$R^2=$",signif(chan_step_model_r_squared,2))),
-           size=6, x=3, y=130)
+           size=6, x=4, y=130)
 
 sun_pred_vs_obvs_plot <- 
   ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Sun"),
@@ -201,7 +195,7 @@ sun_pred_vs_obvs_plot <-
   labs(x=TeX("$\\lambda^{1/2}_{pred}$"),y=TeX("$\\lambda^{1/2}_{obs}$"),title = TeX("Sun")) +
   annotate("text",
            label = TeX(paste0("$R^2=$",signif(sun_step_model_r_squared,2))),
-           size=6, x=3, y=130)
+           size=6, x=4, y=130)
 
 # output chan vs sun comparison graph
 combined_hlife_data_sets <- inner_join(sun_decay_hlife, 
@@ -223,46 +217,10 @@ dataset_comparison <-
            size = 6, x = 40, y = 2)
 
 
-# output model predictive power graph
+# output model predictive power and dataset comparison figures
 
-model_performance_comparison <- cowplot::plot_grid(chan_pred_vs_obvs_plot,sun_pred_vs_obvs_plot, rel_widths = c(0.58,0.42))
-      
-#ggsave2(here("./results_chapter/figures/model_predictive_power.png"), cowplot::plot_grid(chan_pred_vs_obvs_plot,sun_pred_vs_obvs_plot, rel_widths = c(0.58,0.42)), height = 5, width = 7)
+save(chan_pred_vs_obvs_plot, sun_pred_vs_obvs_plot, codon_no_TTT, dataset_comparison, chan_motif_coefficients, single_count_decay_prediction_dataset_chan, single_count_decay_prediction_dataset_sun, file = here("raw_data_analysis/data/hlife_model_summary"))
 
-
-# output motif coefficients graph
-model_coefficients <-   ggplot(combined_motif_coefficients, aes(y = estimate_C, x = estimate_S, ymin=estimate_C - std.error_C ,ymax=estimate_C + std.error_C, xmin=estimate_S - std.error_S, xmax=estimate_S + std.error_S, colour=term)) +
-  geom_hline(yintercept = 0,size = 0.2) +
-  geom_errorbar() +
-  geom_errorbarh() +
-  theme(axis.text.x=element_text(angle=90,vjust = 0.5),
-        panel.grid.minor=element_blank()) + # , plot.margin = margin(5,40,5,80)) +
-  labs(x=TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Sun}$"),y=TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Chan}$"), colour = "Motif") +
-  scale_shape_manual(values=1:7) 
-
-### WHAT DOES THIS DO?
-((chan_pred_vs_obvs_plot | sun_pred_vs_obvs_plot) / 
-    (dataset_comparison | model_coefficients) ) | 
-  gridExtra::tableGrob(chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), rows = NULL)
-
-ggsave2("results_chapter/figures/hlife_model_multi_fig.png", 
-        plot_grid(dataset_comparison,
-                  model_coefficients, 
-                  chan_pred_vs_obvs_plot,
-                  sun_pred_vs_obvs_plot,
-                  labels = c("A", "B", "C", ""),
-                  label_size = 20,
-                  align = "hv",
-                  axis = "t",
-                  scale = c(1,0.9,1,1)), width = 8, height = 7)
-
-# output list of chan motif coefficients 
-# write_csv( chan_motif_coefficients %>% select(term, estimate) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./results_chapter/data/chan_motif_coefficients.csv"))
-
-# output list of chan motif coefficients with error
-#write_csv( chan_motif_coefficients %>% select(term, estimate, std.error) %>% rename("term" = "Motif", "estimate" = "Coefficient"), here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv"))
-   
-   
 # check for co-occurrences of motifs in native 3'UTR
 TGTAHMNTA_co_occurrences <- single_count_median_3UTR_motifs_freq %>% 
   filter(TGTAHMNTA > 0) %>% 
