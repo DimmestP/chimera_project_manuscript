@@ -1,9 +1,9 @@
-# Supplimentary Data
+# Supplementary Data
 
 ## Short vs long terminator experiment
 
 ```{r RPS3-SRO9-short-vs-long, fig.cap="\\textbf{Extending terminator sequence beyond transcript 3'UTR length enhances gene expression}. (\\textbf{A}) Fold changes in mRNA abundance for two RPS3 terminator sequences equaling reported 3'UTR isoform lengths, 59bp and 86bp, and one terminator sequence extended beyond the maximum reported 3'UTR length, 200bp. (\\textbf{B}) Same as (\\textbf{A}) but for one SRO9 terminator sequence shorter than reported 3'UTR isoform lengths, 200bp, and one beyond, 500bp.", out.width='80%', fig.align='center'}
-knitr::include_graphics(here("supplimentary_data_chapter/figures/RPS3_SRO9_short_vs_long.png"))
+knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_SRO9_short_vs_long.png"))
 ```
 
 ## Motif effects on transcript expression is repeated in protein expression data
@@ -13,7 +13,7 @@ The right column in Figure \@ref(fig:protein-verse-RNA-plot) confirms that motif
 Comparing the corresponding RNA abundance levels, left column of Figure \@ref(fig:protein-verse-RNA-plot), the same effects of the motifs on transcript abundance are seen in protein expression, together with the same context dependence. 
 
 ```{r protein-verse-RNA-plot, fig.cap="\\textbf{Motif contributions to protein abundance correlate with RNA abundance}. (\\textbf{Left}) Fold changes in mRNA abundance for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings. (\\textbf{Right}) mCherry fluorescence at the maximum growth rate for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings.", out.width='80%', fig.align='center'}
-knitr::include_graphics(here("results_chapter/figures/combined_TSA1_RPSA_protein_RNA_plot.png"))
+knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"))
 ```
 
 ## Investigating the effects of cis-regulatory motifs in the 3'UTR using 5PSeq
@@ -30,7 +30,7 @@ Poly(A) site at 67 nt is pronounced only in tRPS3-mod0 and at 74 nt is especiall
 The differences could be caused either by new polyadenylation signals introduced into the 3’ UTR or by increased stability of these isoforms conferred by addition of new motifs.  
 
 ```{r alt-polyA-5PSeq, fig.cap="\\textbf{Inserting motifs into native RPS3 termintors may cause alternative polyadenylation.} Relative polyadenylation site usage of transcripts signaled for decay for pRPS3-tRPS3 constructs, acquired using using 5PSeq.", out.width='80%', fig.align='center'}
-knitr::include_graphics(here("supplimentary_data_chapter/figures/alternative_polyadenylation_RPS3_5PSeq.png"))
+knitr::include_graphics(here("supplementary_data_chapter/figures/alternative_polyadenylation_RPS3_5PSeq.png"))
 ```
 
 # Selecting PIR1 and TSA1

@@ -13,3 +13,6 @@
 # LaTeX intermediate files
 *.log
 *.tex
+
+# Bookdown files
+_book

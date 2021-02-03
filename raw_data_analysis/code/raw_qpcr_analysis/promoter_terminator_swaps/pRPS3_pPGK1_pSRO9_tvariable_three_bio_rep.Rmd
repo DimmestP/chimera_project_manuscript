@@ -109,7 +109,6 @@ plateplan_SRO9_3 <-
 ## Load data and attribute sample information
 ```{r load_plates,dependson="label_plates",results="show"}
 # read my plates
-
 plates_RPS3_PGK1_1 <- read_lightcycler_1colour_cq(here("raw_data_analysis/data/raw_qpcr/promoter_terminator_swaps/JA_2020-12-12-pro-ter_pRPS3-pPGK1-n1-ct.txt"))  %>%
     left_join(plateplan_RPS3_PGK1_1)
 
@@ -197,7 +196,6 @@ ggplot(data=plates %>% filter(strain %in% c('POT1-ccdB')), aes(x=target_id,y=cq)
           axis.title.x=element_text(vjust=-2),
           axis.title.y=element_text(vjust=3))
 ```
-
 ## 1) Delta cq calculation
 norm_function changed to **mean**
 
