@@ -1,6 +1,7 @@
 library(ggplot2)
 library(cowplot)
 library(extrafont)
+library(scales)
 
 theme_set(theme_cowplot(font_size=11) %+replace% 
             theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
@@ -29,9 +30,20 @@ RNA_relative_abundance_figure_options <- list(
           axis.title.x=element_text(vjust=-2),
           legend.position="bottom",
           legend.box.margin=margin(20,10,10,180)),
-  stat_summary(aes(rel_abund_delta_deltacq,UTR3),
+  stat_summary(aes(x=rel_abund_delta_deltacq,y=UTR3),
                fun="mean",colour="black",
                geom="crossbar"))
+
+protein_relative_abundance_figure_options <- list(
+  geom_point(aes(y=Terminator,x=norm_fluo_per_OD_at_max_gr, colour = Terminator)),
+  scale_colour_hue(h = c(0, 360)+20,l=60,c=60),
+  geom_vline(xintercept=1, linetype="dotted", color = "grey50"),
+  stat_summary(aes(y=Terminator,x=norm_fluo_per_OD_at_max_gr),
+               fun="mean",colour="black",
+               geom="crossbar",size=0.2, width=0.5),
+  theme(legend.position = "none"),
+  scale_x_continuous(oob=oob_squish, limits = c(0,NA))
+)
 
 update_geom_defaults("point", list(size = 3))
 update_geom_defaults("errorbar", list(size = 1))
