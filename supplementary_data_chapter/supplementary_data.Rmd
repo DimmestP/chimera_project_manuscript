@@ -12,7 +12,7 @@ The effects of motif presence on protein expression was investigate with a plate
 The right column in Figure \@ref(fig:protein-verse-RNA-plot) confirms that motif effects can be detected in protein expression expression alone.
 Comparing the corresponding RNA abundance levels, left column of Figure \@ref(fig:protein-verse-RNA-plot), the same effects of the motifs on transcript abundance are seen in protein expression, together with the same context dependence. 
 
-```{r protein-verse-RNA-plot, fig.cap="\\textbf{Motif contributions to protein abundance correlate with RNA abundance}. (\\textbf{Left}) Fold changes in mRNA abundance for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings. (\\textbf{Right}) mCherry fluorescence at the maximum growth rate for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings.", out.width='80%', fig.align='center'}
+```{r protein-verse-RNA-plot, fig.cap="\\textbf{Motif contributions to protein abundance correlate with RNA abundance}. (\\textbf{Left}) Fold changes in mRNA abundance for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings. (\\textbf{Right}) mCherry fluorescence at the maximum growth rate for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings.", out.width='60%', fig.align='center'}
 knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"))
 ```
 
