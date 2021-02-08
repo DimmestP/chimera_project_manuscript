@@ -118,7 +118,7 @@ RPS3_TSA1_PIR1_protein_and_RNA_plot<- ggplot(RPS3_TSA1_PIR1_protein_and_RNA_data
   geom_point(aes(y = construct, x = relative_abundance, colour = construct), show.legend = FALSE, alpha = 0.5) + 
   stat_summary(aes(relative_abundance,construct),
     fun="mean",colour="black",
-    geom="crossbar",size=0.5, width=1) +
+    geom="crossbar") +
   facet_grid(promoter~data, scales = "free") + 
   labs(y=NULL, x = "Relative Abundance")
 
