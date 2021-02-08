@@ -5,12 +5,12 @@ output:
 ---
 # Discussion
 
-Our quantitative measurements of promoter-terminator swaps and cis-regulatory element combinations show that the modularity practically implemented across biology does not correlate with the function modulatity of regulatory parts.
+Our quantitative measurements of promoter-terminator swaps and cis-regulatory element combinations show that the practical abstraction of genes into modular parts which is implemented across biology does not correlate with the functional modularity of regulatory parts.
 Building upon previous work by @Curran2013, we have presented quantitative differences in relative RNA and protein levels for terminators paired with different promoters and ORFs.
 Furthermore, we have extended the exploration of the context dependence of gene expression regulation by determining changes in contributions of individual cis-regulatory elements.
-Our chosen cis-regulatory elements, shortlisted by predicting half life, displayed contirbutions to overal gene expression when inserted/deleted from three host terminators.
+Our chosen cis-regulatory elements, shortlisted by predicting half life, displayed contributions to overall gene expression when inserted/deleted from three host terminators.
 However, contributions to gene expression depends highly on its host terminator and its paired promoter; TGTAHMNTA has no measurable effect when inserted into tRPS3, ATATTC has little to no effect in tTSA1, meanwhile HWNCATTWY can have decreased or increased RNA levels when removed from tPIR1 depending on promoter.
-The disparity between practical modularity and functional modularity raises issues with current methods for discovering novel cis-regulatory elements and understanding and manipulatiing regulatory process across biology.
+The disparity between practical modularity and functional modularity raises issues with current methods for discovering novel cis-regulatory elements and understanding and manipulating regulatory process across biology.
 
 \@ref(fig:hlife-decay-model)C with their magnitudes calculated according to the data sets plotted against each other.
 Interestingly, the TGTAAATA motif was predicted to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
