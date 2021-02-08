@@ -5,14 +5,17 @@ output:
 ---
 # Discussion
 
+Our quantitative measurements of promoter-terminator swaps and cis-regulatory element combinations show that the modularity practically implemented across biology does not correlate with the function modulatity of regulatory parts.
+Building upon previous work by @Curran2013, we have presented quantitative differences in relative RNA and protein levels for terminators paired with different promoters and ORFs.
+Furthermore, we have extended the exploration of the context dependence of gene expression regulation by determining changes in contributions of individual cis-regulatory elements.
+Our chosen cis-regulatory elements, shortlisted by predicting half life, displayed contirbutions to overal gene expression when inserted/deleted from three host terminators.
+However, contributions to gene expression depends highly on its host terminator and its paired promoter; TGTAHMNTA has no measurable effect when inserted into tRPS3, ATATTC has little to no effect in tTSA1, meanwhile HWNCATTWY can have decreased or increased RNA levels when removed from tPIR1 depending on promoter.
+The disparity between practical modularity and functional modularity raises issues with current methods for discovering novel cis-regulatory elements and understanding and manipulatiing regulatory process across biology.
+
 \@ref(fig:hlife-decay-model)C with their magnitudes calculated according to the data sets plotted against each other.
 Interestingly, the TGTAAATA motif was predicted to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
 The puf3 protein associated with motif is known to change function in carbon deficient condition which were likely present due to the bespoke CSM-lowURA media the cultures were grown in overnight, [@Sun2013] used standard YPD media. 
 
-We have confirmed that promoter-terminator pairings change the effectiveness of each region's contribution to gene expression.
-This supports previous work by @Curran2013 and  Wei et al. 2017 showing that promoter and terminator regions are not entirely modular when regulating gene expression.
-We explored whether the changes in regulatory behavior according to overall context is explained by changes in the regulatory effects of individual cis-regulatory elements within these regions.
-We have gone on to show that 3'UTR sequence motifs, confirmed to to have a statistically significant contributions to transcript decay rates, have effects on gene expression that are dependent on overall terminator context and promoter pairing. 
 
 ## Mechanisms for motif terminator context dependence
 
