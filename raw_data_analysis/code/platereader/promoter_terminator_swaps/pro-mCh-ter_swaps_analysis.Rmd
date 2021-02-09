@@ -118,9 +118,9 @@ pro_mCh_ter_pPGK1_tPGK1 <- pro_mCh_ter_pPGK1 %>%
     summarize(mean_pPGK1_tPGK1 = mean(mCh_per_OD_at_max_gr))
 
 norm_pro_mCh_ter_pPGK1 <- pro_mCh_ter_pPGK1 %>%
-      mutate(norm_mCh_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pPGK1_tPGK1$mean_pPGK1_tPGK1, remove=FALSE)
+      mutate(norm_fluo_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pPGK1_tPGK1$mean_pPGK1_tPGK1, remove=FALSE)
 
-normPGK1plot <- ggplot(data=norm_pro_mCh_ter_pPGK1, aes(x=Terminator,y=norm_mCh_per_OD_at_max_gr)) +
+normPGK1plot <- ggplot(data=norm_pro_mCh_ter_pPGK1, aes(x=Terminator,y=norm_fluo_per_OD_at_max_gr)) +
   geom_point(aes(color=Terminator),
                position=position_dodge(width = 0.5),size=1.8, alpha=1) +
   labs(y="mCh fluorescence at maximum growth rate \n (normalised to OD relative to tPGK1)",x="Terminator") +
@@ -129,7 +129,7 @@ normPGK1plot <- ggplot(data=norm_pro_mCh_ter_pPGK1, aes(x=Terminator,y=norm_mCh_
           axis.title.x=element_text(vjust=-2),
           axis.title.y=element_text(vjust=3))
 
-normPGK1plot + stat_summary(aes(Terminator,norm_mCh_per_OD_at_max_gr),
+normPGK1plot + stat_summary(aes(Terminator,norm_fluo_per_OD_at_max_gr),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
@@ -144,9 +144,9 @@ pro_mCh_ter_pRPS3_tPGK1 <- pro_mCh_ter_pRPS3 %>%
     summarize(mean_pRPS3_tPGK1 = mean(mCh_per_OD_at_max_gr))
 
 norm_pro_mCh_ter_pRPS3 <- pro_mCh_ter_pRPS3 %>%
-      mutate(norm_mCh_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pRPS3_tPGK1$mean_pRPS3_tPGK1, remove=FALSE)
+      mutate(norm_fluo_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pRPS3_tPGK1$mean_pRPS3_tPGK1, remove=FALSE)
 
-normRPS3plot <- ggplot(data=norm_pro_mCh_ter_pRPS3, aes(x=Terminator,y=norm_mCh_per_OD_at_max_gr)) +
+normRPS3plot <- ggplot(data=norm_pro_mCh_ter_pRPS3, aes(x=Terminator,y=norm_fluo_per_OD_at_max_gr)) +
   geom_point(aes(color=Terminator),
                position=position_dodge(width = 0.5),size=1.8, alpha=1) +
   labs(y="mCh fluorescence at maximum growth rate \n (normalised to OD relative to tPGK1)",x="Terminator") +
@@ -155,7 +155,7 @@ normRPS3plot <- ggplot(data=norm_pro_mCh_ter_pRPS3, aes(x=Terminator,y=norm_mCh_
           axis.title.x=element_text(vjust=-2),
           axis.title.y=element_text(vjust=3))
 
-normRPS3plot + stat_summary(aes(Terminator,norm_mCh_per_OD_at_max_gr),
+normRPS3plot + stat_summary(aes(Terminator,norm_fluo_per_OD_at_max_gr),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
@@ -169,9 +169,9 @@ pro_mCh_ter_pRPS13_tPGK1 <- pro_mCh_ter_pRPS13 %>%
     summarize(mean_pRPS13_tPGK1 = mean(mCh_per_OD_at_max_gr))
 
 norm_pro_mCh_ter_pRPS13 <- pro_mCh_ter_pRPS13 %>%
-      mutate(norm_mCh_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pRPS13_tPGK1$mean_pRPS13_tPGK1, remove=FALSE)
+      mutate(norm_fluo_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pRPS13_tPGK1$mean_pRPS13_tPGK1, remove=FALSE)
 
-normRPS13plot <- ggplot(data=norm_pro_mCh_ter_pRPS13, aes(x=Terminator,y=norm_mCh_per_OD_at_max_gr)) +
+normRPS13plot <- ggplot(data=norm_pro_mCh_ter_pRPS13, aes(x=Terminator,y=norm_fluo_per_OD_at_max_gr)) +
   geom_point(aes(color=Terminator),
                position=position_dodge(width = 0.5),size=1.8, alpha=1) +
   labs(y="mCh fluorescence at maximum growth rate \n (normalised to OD relative to tPGK1)",x="Terminator") +
@@ -180,7 +180,7 @@ normRPS13plot <- ggplot(data=norm_pro_mCh_ter_pRPS13, aes(x=Terminator,y=norm_mC
           axis.title.x=element_text(vjust=-2),
           axis.title.y=element_text(vjust=3))
 
-normRPS13plot + stat_summary(aes(Terminator,norm_mCh_per_OD_at_max_gr),
+normRPS13plot + stat_summary(aes(Terminator,norm_fluo_per_OD_at_max_gr),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
@@ -194,9 +194,9 @@ pro_mCh_ter_pHSP26_tPGK1 <- pro_mCh_ter_pHSP26 %>%
     summarize(mean_pHSP26_tPGK1 = mean(mCh_per_OD_at_max_gr))
 
 norm_pro_mCh_ter_pHSP26 <- pro_mCh_ter_pHSP26 %>%
-      mutate(norm_mCh_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pHSP26_tPGK1$mean_pHSP26_tPGK1, remove=FALSE)
+      mutate(norm_fluo_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pHSP26_tPGK1$mean_pHSP26_tPGK1, remove=FALSE)
 
-normHSP26plot <- ggplot(data=norm_pro_mCh_ter_pHSP26, aes(x=Terminator,y=norm_mCh_per_OD_at_max_gr)) +
+normHSP26plot <- ggplot(data=norm_pro_mCh_ter_pHSP26, aes(x=Terminator,y=norm_fluo_per_OD_at_max_gr)) +
   geom_point(aes(color=Terminator),
                position=position_dodge(width = 0.5),size=1.8, alpha=1) +
   labs(y="mCh fluorescence at maximum growth rate \n (normalised to OD relative to tPGK1)",x="Terminator") +
@@ -205,7 +205,7 @@ normHSP26plot <- ggplot(data=norm_pro_mCh_ter_pHSP26, aes(x=Terminator,y=norm_mC
           axis.title.x=element_text(vjust=-2),
           axis.title.y=element_text(vjust=3))
 
-normHSP26plot + stat_summary(aes(Terminator,norm_mCh_per_OD_at_max_gr),
+normHSP26plot + stat_summary(aes(Terminator,norm_fluo_per_OD_at_max_gr),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
@@ -219,9 +219,9 @@ pro_mCh_ter_pCLN2_tPGK1 <- pro_mCh_ter_pCLN2 %>%
     summarize(mean_pCLN2_tPGK1 = mean(mCh_per_OD_at_max_gr))
 
 norm_pro_mCh_ter_pCLN2 <- pro_mCh_ter_pCLN2 %>%
-      mutate(norm_mCh_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pCLN2_tPGK1$mean_pCLN2_tPGK1, remove=FALSE)
+      mutate(norm_fluo_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pCLN2_tPGK1$mean_pCLN2_tPGK1, remove=FALSE)
 
-normCLN2plot <- ggplot(data=norm_pro_mCh_ter_pCLN2, aes(x=Terminator,y=norm_mCh_per_OD_at_max_gr)) +
+normCLN2plot <- ggplot(data=norm_pro_mCh_ter_pCLN2, aes(x=Terminator,y=norm_fluo_per_OD_at_max_gr)) +
   geom_point(aes(color=Terminator),
                position=position_dodge(width = 0.5),size=1.8, alpha=1) +
   labs(y="mCh fluorescence at maximum growth rate \n (normalised to OD relative to tPGK1)",x="Terminator") +
@@ -230,7 +230,7 @@ normCLN2plot <- ggplot(data=norm_pro_mCh_ter_pCLN2, aes(x=Terminator,y=norm_mCh_
           axis.title.x=element_text(vjust=-2),
           axis.title.y=element_text(vjust=3))
 
-normCLN2plot + stat_summary(aes(Terminator,norm_mCh_per_OD_at_max_gr),
+normCLN2plot + stat_summary(aes(Terminator,norm_fluo_per_OD_at_max_gr),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
@@ -244,9 +244,9 @@ pro_mCh_ter_pSRO9_tPGK1 <- pro_mCh_ter_pSRO9 %>%
     summarize(mean_pSRO9_tPGK1 = mean(mCh_per_OD_at_max_gr))
 
 norm_pro_mCh_ter_pSRO9 <- pro_mCh_ter_pSRO9 %>%
-      mutate(norm_mCh_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pSRO9_tPGK1$mean_pSRO9_tPGK1, remove=FALSE)
+      mutate(norm_fluo_per_OD_at_max_gr = mCh_per_OD_at_max_gr / pro_mCh_ter_pSRO9_tPGK1$mean_pSRO9_tPGK1, remove=FALSE)
 
-normSRO9plot <- ggplot(data=norm_pro_mCh_ter_pSRO9, aes(x=Terminator,y=norm_mCh_per_OD_at_max_gr)) +
+normSRO9plot <- ggplot(data=norm_pro_mCh_ter_pSRO9, aes(x=Terminator,y=norm_fluo_per_OD_at_max_gr)) +
   geom_point(aes(color=Terminator),
                position=position_dodge(width = 0.5),size=1.8, alpha=1) +
   labs(y="mCh fluorescence at maximum growth rate \n (normalised to OD relative to tPGK1)",x="Terminator") +
@@ -255,7 +255,7 @@ normSRO9plot <- ggplot(data=norm_pro_mCh_ter_pSRO9, aes(x=Terminator,y=norm_mCh_
           axis.title.x=element_text(vjust=-2),
           axis.title.y=element_text(vjust=3))
 
-normSRO9plot + stat_summary(aes(Terminator,norm_mCh_per_OD_at_max_gr),
+normSRO9plot + stat_summary(aes(Terminator,norm_fluo_per_OD_at_max_gr),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
@@ -267,7 +267,7 @@ norm_pro_mCh_ter_all <- bind_rows(norm_pro_mCh_ter_pPGK1, norm_pro_mCh_ter_pRPS3
 
 ```{r tPGK1norm_combined_highexpression, fig.width=8, fig.height=2.5}
 norm_allplot_high <- ggplot(data=norm_pro_mCh_ter_all %>% filter(!Promoter %in% c('pCLN2', 'pSRO9')),
-                            aes(x=Terminator,y=norm_mCh_per_OD_at_max_gr)) +
+                            aes(x=Terminator,y=norm_fluo_per_OD_at_max_gr)) +
   geom_point(aes(color=Terminator),
                position=position_dodge(width = 0.5),size=2.3, alpha=0.8) +
   scale_shape_manual(values=c(16,17, 15, 13)) +
@@ -279,7 +279,7 @@ norm_allplot_high <- ggplot(data=norm_pro_mCh_ter_all %>% filter(!Promoter %in% 
           axis.title.y=element_text(vjust=3),
         legend.position = "bottom")
 
-norm_allplot_high_with_mean <- norm_allplot_high + stat_summary(aes(Terminator,norm_mCh_per_OD_at_max_gr),
+norm_allplot_high_with_mean <- norm_allplot_high + stat_summary(aes(Terminator,norm_fluo_per_OD_at_max_gr),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) +
     theme(legend.position = "none")
@@ -288,7 +288,7 @@ norm_allplot_high_with_mean <- norm_allplot_high + stat_summary(aes(Terminator,n
 
 ```{r tPGK1norm_combined_lowexpression, fig.width=8, fig.height=2.5}
 norm_allplot_low <- ggplot(data=norm_pro_mCh_ter_all %>% filter(!Promoter %in% c('pHSP26', 'pPGK1', 'pRPS3', 'pRPS13')),
-                            aes(x=Terminator,y=norm_mCh_per_OD_at_max_gr)) +
+                            aes(x=Terminator,y=norm_fluo_per_OD_at_max_gr)) +
   geom_point(aes(color=Terminator),
                position=position_dodge(width = 0.5),size=2.3, alpha=0.8) +
     facet_grid(~Promoter)+
@@ -300,7 +300,7 @@ norm_allplot_low <- ggplot(data=norm_pro_mCh_ter_all %>% filter(!Promoter %in% c
           axis.title.y=element_text(vjust=3),
         legend.position = "bottom")
 
-norm_allplot_low_with_mean <- norm_allplot_low + stat_summary(aes(Terminator,norm_mCh_per_OD_at_max_gr),
+norm_allplot_low_with_mean <- norm_allplot_low + stat_summary(aes(Terminator,norm_fluo_per_OD_at_max_gr),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5)
 
@@ -310,8 +310,8 @@ norm_allplot_low_with_mean <- norm_allplot_low + stat_summary(aes(Terminator,nor
 ```{r plot_norm_se_1, fig.height=3, fig.width=6}
 norm_pro_mCh_ter_se <- norm_pro_mCh_ter_all %>% 
   group_by(Strain,Promoter,Terminator) %>%
-  summarize(strain_mean=mean(norm_mCh_per_OD_at_max_gr), 
-            strain_sd=sd(norm_mCh_per_OD_at_max_gr), 
+  summarize(strain_mean=mean(norm_fluo_per_OD_at_max_gr), 
+            strain_sd=sd(norm_fluo_per_OD_at_max_gr), 
             strain_n=n(),
             se=strain_sd/sqrt(strain_n),
             upper_limit=strain_mean+se,
@@ -363,18 +363,10 @@ plot_norm_se_pro4
 
 ```{r plot_norm_all_points, fig.height=3, fig.width=6}
 
-mCh_platereader_figure <- ggplot(data=norm_pro_mCh_ter_all %>% mutate(Terminator = str_remove(Terminator, "_long")), aes(x=Terminator,y=norm_mCh_per_OD_at_max_gr, colour = Terminator)) +
-  geom_point() +
-  labs(y="Relative mCh fluorescence per OD \n relative to tPGK1",x="Terminator") +
-  facet_wrap(~Promoter, nrow=2)+
-  scale_colour_hue(h = c(0, 360)+20,l=60,c=60)+
-  theme(axis.text.x=element_text(angle=90,vjust=0.5),
-          axis.title.x=element_text(vjust=-2),
-          axis.title.y=element_text(vjust=3))+
-  geom_hline(yintercept=1, linetype="dotted", color = "grey50") + stat_summary(aes(Terminator,norm_mCh_per_OD_at_max_gr),
-    fun="mean",colour="black",
-    geom="crossbar",size=0.2, width=0.5) +
-    theme(legend.position = "none")
+mCh_platereader_figure <- ggplot(data=norm_pro_mCh_ter_all %>% mutate(Terminator = str_remove(Terminator, "_long"))) +
+  labs(x="Relative mCh fluorescence per OD relative to tPGK1", y="Terminator") +
+  facet_wrap(~Promoter, nrow=2) +
+  protein_relative_abundance_figure_options
 
-ggsave(here("./results_chapter/figures/pro_ter_platereader_mCh.png"),mCh_platereader_figure,width = 12, height = 9)
+ggsave(here("./results_chapter/figures/pro_ter_platereader_mCh.png"),mCh_platereader_figure,width = 7, height = 5)
 ```
