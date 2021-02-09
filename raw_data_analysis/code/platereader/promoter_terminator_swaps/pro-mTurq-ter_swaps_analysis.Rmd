@@ -24,9 +24,10 @@ source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 # define promoter and terminator levels in desired order
 pro6  <- c("pPGK1", "pHSP26", "pRPS3", "pRPS13", "pSRO9", "pCLN2")
 pro4  <- c("pPGK1", "pHSP26", "pRPS3", "pRPS13")
-ter10 <- c("tPGK1", "tHSP26", "tRPS3", "tRPS13",
-           "tSRO9", "tCLN2", "tPAB1", 
-           "tSUN4", "tTOS6", "tPMA1")
+ter10 <- c("tPGK1", "tRPS3", "tRPS13",
+           "tPAB1", "tHSP26", 
+           "tCLN2", "tSRO9", 
+           "tTOS6", "tSUN4", "tPMA1")
 ```
 
 
