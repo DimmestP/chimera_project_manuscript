@@ -1,19 +1,19 @@
 library(ggplot2)
 library(cowplot)
-library(extrafont)
 library(scales)
 
-theme_set(theme_cowplot(font_size=11) %+replace% 
-            theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
-                  panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
-                  panel.grid.major = element_line(size = 0.15, linetype = 'solid',colour = "grey"),
-                  plot.title = element_text(family="FreeSans",size=18),
-                  strip.background = element_blank(),
-                  strip.text.x=element_text(family="FreeSans",size=11),
-                  axis.text=element_text(family="FreeSans", size=10),
-                  axis.title=element_text(family="FreeSans", size=15),
-                  legend.text=element_text(family="FreeSans", size=10),
-                  legend.title=element_text(family="FreeSans", size=12)))
+theme_set(
+  theme_cowplot(font_size = 12, 
+                font_family = "sans",
+                rel_small = 11/12,
+                rel_tiny = 10/12,
+                rel_large = 14/12) %+replace% 
+    theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+          panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
+          panel.grid.major = element_line(size = 0.15, linetype = 'solid',colour = "grey"),
+          strip.background = element_blank()
+    )
+)
 
 RPS3_TSA1_colour_scheme <- c( "grey50", "#288a2e","#a84a9a", 
                               "#6f3ba1","#416db0","#CC6666","black")
