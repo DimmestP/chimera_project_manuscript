@@ -67,9 +67,9 @@ plateplan3 <-label_plate_rowcol(create_blank_plate(well_row = LETTERS[11:15],wel
 plateplan_A <- bind_rows(plateplan1, plateplan2, plateplan3)%>% 
     unite(sample_id,strain,BioRep,remove=FALSE)%>%
     separate(strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator","Length"))%>%
-      mutate(Ter_length = factor(Length,levels = c("500bp","200bp","86bp","59bp")),remove = FALSE)%>%
+      mutate(UTR3 = factor(Length,levels = c("500bp","200bp","86bp","59bp")),remove = FALSE)%>%
     unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
-      unite(Ter_length, Terminator, Length, sep="-", remove=FALSE)
+      unite(UTR3, Terminator, Length, sep="-", remove=FALSE)
 
 # Plate plans for plate B (BioRep 4, 5 and 6)
 plateplan4 <-label_plate_rowcol(create_blank_plate(well_row = LETTERS[1:5],well_col=1:24),rowkey1,colkey4)
@@ -79,9 +79,9 @@ plateplan6 <-label_plate_rowcol(create_blank_plate(well_row = LETTERS[11:15],wel
 plateplan_B <- bind_rows(plateplan4, plateplan5, plateplan6)%>% 
     unite(sample_id,strain,BioRep,remove=FALSE)%>%
     separate(strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator","Length"))%>%
-      mutate(Ter_length = factor(Length,levels = c("500bp","200bp","86bp","59bp")),remove = FALSE)%>%
+      mutate(UTR3 = factor(Length,levels = c("500bp","200bp","86bp","59bp")),remove = FALSE)%>%
     unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
-      unite(Ter_length, Terminator, Length, sep="-", remove=FALSE)
+      unite(UTR3, Terminator, Length, sep="-", remove=FALSE)
 ```
 
 ```{r plate_plan, fig.height=15,fig.width=25}
@@ -267,9 +267,9 @@ platesnorm_summarise <- platesnorm%>%
            target_id = factor (target_id, levels = c("PGK1-ORF", "SRO9-ORF", "RPS3-ORF",
                                                    "URA3-ORF", "mCh-7")))%>%
     separate(strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator","Length"))%>%
-    mutate(Ter_length = factor(Length,levels = c("500bp","200bp","86bp","59bp")),remove = FALSE)%>%
+    mutate(UTR3 = factor(Length,levels = c("500bp","200bp","86bp","59bp")),remove = FALSE)%>%
     unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
-    unite(Ter_length, Terminator, Length, sep="-", remove=FALSE)
+    unite(UTR3, Terminator, Length, sep="-", remove=FALSE)
 ```
 
 ### 1) Exporting analysed data
@@ -280,7 +280,7 @@ write.csv(platesnorm_summarise,here("raw_data_analysis/data/norm_qpcr/shortvslon
 
 ```{r deltacq_plot-all, fig.height=6, fig.width=9}
 
-ggplot(platesnorm, aes(Ter_length,delta_cq))+
+ggplot(platesnorm, aes(UTR3,delta_cq))+
   geom_point(aes(color=BioRep),position=position_dodge(width = 0.85),size=1.2, alpha=0.7)+
   scale_colour_hue(h = c(90, 360)+20,l=60,c=60)+
   labs(y="delta cq", x="3'UTR-terminators")+
@@ -291,7 +291,7 @@ ggplot(platesnorm, aes(Ter_length,delta_cq))+
 
 ```{r deltacq_plot-pRPS3, fig.height=6, fig.width=8}
 
-ggplot(platesnorm %>% filter(Promoter %in% c("pRPS3")), aes(Ter_length,delta_cq))+
+ggplot(platesnorm %>% filter(Promoter %in% c("pRPS3")), aes(UTR3,delta_cq))+
   geom_point(aes(color=BioRep),position=position_dodge(width = 0.8),size=1.5, alpha=0.7)+
   scale_colour_hue(h = c(90, 360)+20,l=60,c=60)+
   ylim(-6,6)+
@@ -304,7 +304,7 @@ ggplot(platesnorm %>% filter(Promoter %in% c("pRPS3")), aes(Ter_length,delta_cq)
 
 ```{r deltacq_plot-pSRO9, fig.height=6, fig.width=7}
 
-ggplot(platesnorm %>% filter(Promoter %in% c("pSRO9")), aes(Ter_length,delta_cq))+
+ggplot(platesnorm %>% filter(Promoter %in% c("pSRO9")), aes(UTR3,delta_cq))+
   geom_point(aes(color=BioRep),position=position_dodge(width = 0.8),size=1.5, alpha=0.7)+
   scale_colour_hue(h = c(90, 360)+20,l=60,c=60)+
   ylim(-6,6)+
@@ -318,7 +318,7 @@ ggplot(platesnorm %>% filter(Promoter %in% c("pSRO9")), aes(Ter_length,delta_cq)
 - There doesn't seem to be much of a difference between ExpRep distributions (no batch-to-batch variances)
 ```{r deltacq_comparison, echo=TRUE, fig.height=4, fig.width=5}
 
-ggplot(platesnorm %>% filter(target_id %in% 'mCh-7'), aes(Ter_length,delta_cq))+
+ggplot(platesnorm %>% filter(target_id %in% 'mCh-7'), aes(UTR3,delta_cq))+
   geom_point(aes(color=tech_rep),position=position_dodge(width = 0.85),size=1.2, alpha=1)+
   scale_colour_hue(h = c(90, 360)+20,l=60,c=60)+
   labs(y="delta cq", x="3'UTR-terminators")+
@@ -373,7 +373,7 @@ normalised_Exp_pRPS3 + stat_summary(aes(rel_abund_deltacq,target_id),
 ```{r deltacq_all, fig.width=6, fig.height=3}
 
 normalised_all <- ggplot(data = platesnorm_summarise %>% filter(target_id %in% 'mCh-7'))+
-    geom_point(aes(Ter_length,rel_abund_deltacq,colour=strain, shape=BioRep)) +
+    geom_point(aes(UTR3,rel_abund_deltacq,colour=strain, shape=BioRep)) +
     scale_y_log2nice(name="2^deltacq (log2 scale)",omag = seq(-5,5),scilabels=FALSE) +
     labs(y="") +
     scale_shape_manual(values=c(19, 17, 15, 10, 7, 14)) +
@@ -383,7 +383,7 @@ normalised_all <- ggplot(data = platesnorm_summarise %>% filter(target_id %in% '
           axis.title.x=element_text(size=10,vjust=-2),
           legend.position="right")
 
-normalised_all + stat_summary(aes(Ter_length,rel_abund_deltacq),
+normalised_all + stat_summary(aes(UTR3,rel_abund_deltacq),
     fun="mean",colour="black",
     geom="crossbar",size=0.2, width=0.5) 
 ```
@@ -467,7 +467,7 @@ platesnorm_S500bp_pSRO9_median <- bind_rows(platesnorm_by_S500bp_pSRO9_ExpRep1,p
                               rel_abund_delta_deltacq = (2^-median_delta_deltacq), na.rm=FALSE)%>%
                     separate(strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator", "Length")) %>%
                     unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
-                    unite(Ter_length,Terminator,Length,sep="_", remove=FALSE)
+                    unite(UTR3,Terminator,Length,sep="_", remove=FALSE)
 
 
 platesnorm_R200bp_pRPS3_median <- bind_rows(platesnorm_by_R200bp_pRPS3_ExpRep1,platesnorm_by_R200bp_pRPS3_ExpRep2)%>%
@@ -479,7 +479,7 @@ platesnorm_R200bp_pRPS3_median <- bind_rows(platesnorm_by_R200bp_pRPS3_ExpRep1,p
                                              "pRPS3-mCherry-tRPS3_WT-200bp")))%>%
                     separate(strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator", "Length")) %>%
                     unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
-                    unite(Ter_length,Terminator,Length,sep="_", remove=FALSE)
+                    unite(UTR3,Terminator,Length,sep="_", remove=FALSE)
 
 
 platesnorm_all_median <- bind_rows(platesnorm_S500bp_pSRO9_median,platesnorm_R200bp_pRPS3_median)
@@ -489,39 +489,21 @@ platesnorm_all_median <- bind_rows(platesnorm_S500bp_pSRO9_median,platesnorm_R20
 
 ```{r plot_delta_deltacq_SRO9,fig.height=3.5,fig.width=5, echo=FALSE}
 
-normalised_plot_SRO9 <- ggplot(data = platesnorm_S500bp_pSRO9_median)+
-    geom_point(aes(Ter_length,rel_abund_delta_deltacq,colour=Ter_length, shape=BioRep)) +
-    scale_y_log2nice(name="Fold change in RNA abundance relative to \n pSRO9-mCh-tSRO9_500bp (log2 scale)",scilabels=FALSE) +
-      labs(x="", title = "SRO9") +
-    scale_shape_manual(values=c(19, 17, 15, 10, 7, 14)) +
+normalised_plot_SRO9 <- ggplot(data = platesnorm_S500bp_pSRO9_median) +
+  RNA_relative_abundance_figure_options +
+      labs(x="Fold change in RNA abundance relative to \n pSRO9-mCh-tSRO9_500bp (log2 scale)", title = "SRO9", y = NULL) +
     scale_colour_manual(values=c("#CC6666", "black")) +
-    guides(colour=FALSE) +
-    theme(axis.text.x=element_text(angle=0,vjust=0.5, colour=c("#CC6666", "black")),
-          axis.title.x=element_text(vjust=-2),
-          legend.position="right")
-  #facet_wrap(~Pro_mCh,ncol = 2)
-
-combined_SRO9_graph <- normalised_plot_SRO9 + stat_summary(aes(Ter_length,rel_abund_delta_deltacq),
-    fun="mean",colour="black",
-    geom="crossbar",size=0.2, width=0.5) 
+    theme(axis.text.y=element_text(colour=c("#CC6666", "black")))
+normalised_plot_SRO9
 ```
 
 ```{r plot_delta_deltacq_RPS3,fig.height=3.5,fig.width=6.5, echo=FALSE}
 
-normalised_plot_RPS3 <- ggplot(data = platesnorm_R200bp_pRPS3_median)+
-    geom_point(aes(Ter_length,rel_abund_delta_deltacq, colour=Ter_length, shape=BioRep)) +
-    scale_y_log2nice(name="Fold change in RNA abundance relative to \n pRPS3-mCh-tRPS3_200bp (log2 scale)",scilabels=FALSE) +
-      labs(x="", title = "RPS3") +
-    scale_shape_manual(values=c(19, 17, 15, 10, 7, 14)) +
+normalised_plot_RPS3 <- ggplot(data = platesnorm_R200bp_pRPS3_median) +
+  RNA_relative_abundance_figure_options + 
+      labs(x="Fold change in RNA abundance relative to \n pRPS3-mCh-tRPS3_200bp (log2 scale)", title = "RPS3", y="3\'UTR Length") +
     scale_colour_manual(values=c("#288a2e","#a84a9a","#6f3ba1")) +
-    guides(colour=FALSE, shape=FALSE) +
-    theme(axis.text.x=element_text(angle=0,vjust=0.5,colour=c("#288a2e","#a84a9a", "#6f3ba1")),
-          axis.title.x=element_text(vjust=-2),
-          legend.position="right")
+    theme(axis.text.y=element_text(colour=c("#288a2e","#a84a9a", "#6f3ba1")))
 
-combined_RPS3_graph <- normalised_plot_RPS3 + stat_summary(aes(Ter_length, rel_abund_delta_deltacq),
-    fun="mean",colour="black",
-    geom="crossbar",size=0.2, width=0.5) 
-
-ggsave( here("./supplimentary_data_chapter/figures/RPS3_SRO9_short_vs_long.png"),plot_grid(combined_RPS3_graph, combined_SRO9_graph, ncol=2), height = 6, width = 12)
+ggsave( here("./supplementary_data_chapter/figures/RPS3_SRO9_short_vs_long.png"),plot_grid(normalised_plot_RPS3, normalised_plot_SRO9, ncol=2), height = 4, width = 10.5)
 ```
