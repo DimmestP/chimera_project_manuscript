@@ -7,6 +7,7 @@ library(latex2exp)
 library(here)
 library(cowplot)
 library(patchwork)
+library(tidyqpcr)
 
 source(here("raw_data_analysis/code/linear_model_functions.R"))
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
@@ -219,7 +220,7 @@ dataset_comparison <-
 
 # output model predictive power and dataset comparison figures
 
-save(chan_pred_vs_obvs_plot, sun_pred_vs_obvs_plot, codon_no_TTT, dataset_comparison, chan_motif_coefficients, single_count_decay_prediction_dataset_chan, single_count_decay_prediction_dataset_sun, file = here("raw_data_analysis/data/hlife_model_summary"))
+save(chan_pred_vs_obvs_plot, sun_pred_vs_obvs_plot, codon_no_TTT, dataset_comparison, sun_motif_coefficients, chan_motif_coefficients, single_count_decay_prediction_dataset_chan, single_count_decay_prediction_dataset_sun, file = here("raw_data_analysis/data/hlife_model_summary"))
 
 # check for co-occurrences of motifs in native 3'UTR
 TGTAHMNTA_co_occurrences <- single_count_median_3UTR_motifs_freq %>% 

@@ -157,9 +157,6 @@ pred_vs_abundance_combined <- plot_grid(pred_vs_abundance_TSA1_RPS3,
                                         axis = "b",
                                         align = "hv")
 
-#ggsave(here("./results_chapter/figures/pred_vs_actual_abundance.png"), cowplot::plot_grid(pPGK1_tRPS3_pred_vs_actual, pPGK1_tTSA1_pred_vs_actual, pTSA1_tTSA1_pred_vs_actual, pRPS3_tRPS3_pred_vs_actual, pSRO9_tRPS3_pred_vs_actual, ncol = 1, labels = c("pPGK1- \n tRPS3", "pPGK1- \n tTSA1", "pTSA1- \n tTSA1", "pRPS3- \n tRPS3", "pSRO9- \n tRPS3"), label_x = -0.035), width = 7, height = 12)
-
-#ggsave(here("./results_chapter/figures/pred_vs_actual_abundance.png"), pred_vs_abundance, width = 12, height = 9)
 
 # combine with motif_multi_context_coefficient figure to make two panel image
    
