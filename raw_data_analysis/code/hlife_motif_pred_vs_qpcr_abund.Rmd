@@ -5,7 +5,10 @@ output: html_document
 # Requires train_half_life_model.R to be ran first
 ```{r load_data}
 library(here)
-library(tidyverse)
+library(dplyr)
+library(tibble)
+library(stringr)
+library(readr)
 library(latex2exp)
 library(RColorBrewer)
 

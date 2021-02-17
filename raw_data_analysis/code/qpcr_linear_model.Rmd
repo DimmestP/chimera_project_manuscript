@@ -5,10 +5,12 @@ output: html_notebook
 
 ```{r}
 library(broom)
-library(tidyverse)
+library(dplyr)
+library(tibble)
+library(stringr)
+library(readr)
 library(here)
 library(cowplot)
-library(ggpattern)
 library(latex2exp)
  # set default theme for graphics
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))

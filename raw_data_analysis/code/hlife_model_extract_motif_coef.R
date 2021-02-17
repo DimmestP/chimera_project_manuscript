@@ -1,7 +1,10 @@
 library(here)
 library(tidyqpcr)
 library(latex2exp)
-library(tidyverse)
+library(dplyr)
+library(tibble)
+library(stringr)
+library(readr)
 # requires train_hlife_life_linear_model.R to be ran first
 #
 #

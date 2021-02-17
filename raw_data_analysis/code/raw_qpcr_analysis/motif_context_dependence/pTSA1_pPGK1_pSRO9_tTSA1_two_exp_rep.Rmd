@@ -13,7 +13,11 @@ output:
 ## knitr options for report generation
 knitr::opts_chunk$set(warning=FALSE,message=FALSE,echo=TRUE,cache=FALSE)
 
-library(tidyverse)
+
+library(dplyr)
+library(tibble)
+library(stringr)
+library(readr)
 library(cowplot)
 library(tidyqpcr)
 library(here)
