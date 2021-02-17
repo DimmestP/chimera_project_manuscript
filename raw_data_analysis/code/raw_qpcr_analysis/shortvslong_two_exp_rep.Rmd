@@ -456,6 +456,13 @@ platesnorm_by_R200bp_pRPS3_ExpRep2 <- platesnorm_pRPS3_ExpRep %>% filter(ExpRep=
     mutate(delta_deltacq = delta_cq - mean_platesnorm_R200bp_ExpRep2$mean_R200bp, remove=FALSE)
 ```
 
+### 1) Exporting analysed delta cq values data
+```{r deltacq_normdata, echo=TRUE}
+#exporting platesnorm dataframe
+write.csv(platesnorm_summarise,here("raw_data_analysis/data/norm_qpcr/shortvslong_two_exp_rep_deltacq_platesnorm_summarise.csv"), row.names = FALSE)
+
+```
+
 ## 2) Summarise delta delta cq (Mean delta delta cq) and RNA abundance calculation
 In the previous 2 chunks, we have calculated the delta-delta cq value for each techrep. Here, we are summarising that information by calculating the median cq for each biorep and calculating the RNA abundance (2^-Median_cq).  
 

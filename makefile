@@ -12,7 +12,7 @@ ANALYSIS_FOLDER = raw_data_analysis/code
 MOTIF_QPCR_ANALYSIS_FILES_RMD := $(wildcard $(ANALYSIS_FOLDER)/raw_qpcr_analysis/motif_context_dependence/*.Rmd)
 MOTIF_QPCR_ANALYSIS_FILES_MD := $(MOTIF_QPCR_ANALYSIS_FILES_RMD:.Rmd=.md)
 
-CHIMERA_PLATEREADER_ANALYSIS_FILES_RMD := $(wildcard $(ANALYSIS_FOLDER)/platereader/promoter_terminator_swaps/*.Rmd)
+CHIMERA_PLATEREADER_ANALYSIS_FILES_RMD := $(wildcard $(ANALYSIS_FOLDER)/raw_platereader_analysis/promoter_terminator_swaps/*.Rmd)
 CHIMERA_PLATEREADER_ANALYSIS_FILES_MD := $(CHIMERA_PLATEREADER_ANALYSIS_FILES_RMD:.Rmd=.md)
 
 LINEAR_MODELLING_RMD_FILES := $(wildcard $(ANALYSIS_FOLDER)/*.Rmd)
@@ -37,14 +37,14 @@ $(ANALYSIS_FOLDER)/qpcr_linear_model.md results_chapter/results.Rmd
 	$(KNIT_RMD)
 	
 # Check if supplementary data chapter is older than relevent analysis files, if so remake
-supplementary_data_chapter/supplementary_data.md : supplementary_data_chapter/supplementary_data.Rmd $(ANALYSIS_FOLDER)/platereader/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.md $(ANALYSIS_FOLDER)/raw_qpcr_analysis/promoter_terminator_swaps/pRPS3_pPGK1_pSRO9_tvariable_three_bio_rep.md
+supplementary_data_chapter/supplementary_data.md : supplementary_data_chapter/supplementary_data.Rmd $(ANALYSIS_FOLDER)/raw_platereader_analysis/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.md $(ANALYSIS_FOLDER)/raw_qpcr_analysis/promoter_terminator_swaps/pRPS3_pPGK1_pSRO9_tvariable_three_bio_rep.md
 	$(KNIT_RMD)
 
 # Check if analysis files need to be updated
 $(ANALYSIS_FOLDER)/raw_qpcr_analysis/promoter_terminator_swaps/pRPS3_pPGK1_pSRO9_tvariable_three_bio_rep.md\
 $(ANALYSIS_FOLDER)/raw_qpcr_analysis/shortvslong_two_exp_rep.md\
 $(CHIMERA_PLATEREADER_ANALYSIS_FILES_MD)\
-$(ANALYSIS_FOLDER)/platereader/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.md\
+$(ANALYSIS_FOLDER)/raw_platereader_analysis/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.md\
 $(MOTIF_QPCR_ANALYSIS_FILES_MD)\
 $(ANALYSIS_FOLDER)/qpcr_linear_model.md : %.md : %.Rmd
 	$(KNIT_RMD)
@@ -71,7 +71,7 @@ $(CHAPTERS_RMD) :
 
 $(ANALYSIS_FOLDER)/raw_qpcr_analysis/shortvslong_two_exp_rep.Rmd :
 
-$(ANALYSIS_FOLDER)/platereader/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.Rmd :
+$(ANALYSIS_FOLDER)/raw_platereader_analysis/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.Rmd :
 
 $(CHAPTERS_RMD) :
 
@@ -83,7 +83,7 @@ clean:
 	rm -fv $(MOTIF_QPCR_ANALYSIS_FILES_MD)
 	rm -fv $(CHAPTERS_MD)
 	rm -fv $(CHIMERA_PLATEREADER_ANALYSIS_FILES_MD)
-	rm -fv $(ANALYSIS_FOLDER)/platereader/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.md
+	rm -fv $(ANALYSIS_FOLDER)/raw_platereader_analysis/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.md
 	rm -fv $(ANALYSIS_FOLDER)/raw_qpcr_analysis/promoter_terminator_swaps/pRPS3_pPGK1_pSRO9_tvariable_three_bio_rep.md
 	rm -fv $(ANALYSIS_FOLDER)/raw_qpcr_analysis/shortvslong_two_exp_rep.md
 	

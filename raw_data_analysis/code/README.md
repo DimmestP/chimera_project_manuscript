@@ -1,11 +1,22 @@
-raw_qpcr_analysis folder contains the tidyqpcr analysis files for all of the qpcr data presented here. Code for producing Figures 4-6 (The motif qPCR results for the three chosen terminators), and Figure ? (Pro-Term swap qpcr results) can be found here.
+## Folder Contents
 
-train_half_life_linear_model.R predicts the half lives of all transcripts in the yeast genome using codon usage and motif presence. It requires the use of functions contained in linear_model_functions.R. Code making Figure 3 (Results from training the linear model of half life) can be found here.
+### raw_qpcr_analysis
+Contains the tidyqpcr analysis files for all of the qpcr data presented in raw_data_analysis/data/norm_qpcr.
 
-protein_vs_RNA_abundance.Rmd produces the manuscript supplimentary figure 2 comparing protein fluorescence and mRNA abundance for the motif context constructs.
+### raw_platereader_analysis
+Contains the omniplate analysis files for all of the platereader data presented in raw_data_analysis/data/platereader_qpcr.
 
-qpcr_linear_model.R predicts the contributions of motifs to the abundance of contructs.
+### train_half_life_linear_model.R
+Predicts the half lives of all transcripts in the yeast genome using codon usage and motif presence. It requires the use of functions contained in linear_model_functions.R. 
 
-hlife_motif_pred_vs_qpcr_abund.Rmd produce Figure 7 in the manuscript comparing motif contributions to half life and to mRNA abundence. Requires the files outputted by qpcr_linear_model.R to run.
+### qpcr_linear_model.R
+Predicts the contributions of motifs to the abundance of contructs. Creates the figure in  results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.
 
-shared_figure_formatting.R contains several default settings to ensure all figures have similar sizes/fonts/orientations.
+### shared_figure_formatting.R
+Contains several default settings to ensure all figures have similar sizes/fonts/orientations.
+
+### linear_model_functions.R
+Collection of linear model fitting functions used in train_half_life_linear_model.R
+
+### hlife_model_extract_motif_coef.R
+Uses the output of train_half_life_linear_model.R to create the coefficient table in results_chapter/data/chan_motif_coefficients.csv and the summary figure in results_chapter/figures/hlife_model_multi_fig.png

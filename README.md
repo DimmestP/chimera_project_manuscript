@@ -19,12 +19,30 @@ There are three main stages to the analysis code presented in this repo, there a
 
 All of the text, formatting code, processed data and figures relating to the manuscript are presented in the home folder of the repository.
 It is entirely self-contained from the analysis files producing the processed data/figures which are found in the raw_data_analysis folder (explored below).
-The main text of the manuscript is held in five folders, denoted by chapter title; intro_chapter, results_chapter, methods_chapter, discussion_chapter and supplimentary_data_chapter.
-Each of these folders is again self-contained; i.e. each chapter can be rendered separately and does not call on any file outside that folder. 
+The main text of the manuscript is held in five folders, denoted by chapter title; 
+
+- intro_chapter
+
+- results_chapter
+
+- methods_chapter
+
+- discussion_chapter 
+
+- supplimentary_data_chapter
+
+Each of these folders is self-contained; each chapter can be rendered separately and does not call on any file outside that folder. 
 They hold an .Rmd file containing the text of that chapter and folders of all of the figures/data presented in that chapter.
 Each data/figure folder also contains a README file that explains which analysis file in the raw_data_analysis folder recreates that figure/data.
-Other than the text held in the chapter folders, the final sections of the manuscript are; the  abstract in its own .Rmd file in the main repository, the author names and affiliations held in the author.tex file and all the references used in the paper held in the reference folder.
-For rendering the entire manuscript the _bookdown.yaml file tells the bookdown::render_book function where each chapter file is and the formatting folder holds the latex files hold the code to render the manuscript in the biorxiv format.
+Other than the text held in the chapter folders, the final sections of the manuscript found in the home repository are; 
+
+- abstract.Rmd
+
+- author.tex 
+
+- references/chimeraProject.bib
+
+Finally, For rendering the entire manuscript the _bookdown.yaml file tells the bookdown::render_book function where each chapter file is and the formatting folder holds the latex files hold the code to render the manuscript in the biorxiv format.
 
 ### Raw data analysis and normalisation
 The raw_data_analysis folder contains all the raw data, analysis code and figure making code used in the manuscript.
@@ -92,7 +110,7 @@ Folders containing the text and data/figures required to create that chapter. Pl
 ### formatting
 Folder containing the TeX files required for LaTeX to render an article using the biorxiv template.
 
-### feferences
+### references
 Folder containing a bib file that holds the citing information for all articles reference in the manuscript.
 
 ### raw_data_analysis
