@@ -5,10 +5,12 @@ output: html_notebook
 
 ```{r}
 library(broom)
-library(tidyverse)
+library(dplyr)
+library(tibble)
+library(stringr)
+library(readr)
 library(here)
 library(cowplot)
-library(ggpattern)
 library(latex2exp)
  # set default theme for graphics
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
@@ -166,8 +168,6 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
              space = "free_x", 
              switch = "x") +
   geom_hline(yintercept = 0)
-
-ggsave(here("raw_data_analysis/figures/motif_multi_context_coefficient.png"), individual_linear_model_coefficients_points, width = 12, height = 9)
 
 save(individual_linear_model_coefficients_points, file = here("raw_data_analysis/data/motif_multi_context_coefficient.Rdata"))
 

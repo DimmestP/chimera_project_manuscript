@@ -1,4 +1,4 @@
-"strain","pro_mCh","promoter","mCherry","target_id","UTR3","terminator","construct","bio_rep","exp_rep","deltacq","rel_abund_deltacq","na.rm","remove"
+"strain","pro_mCh","promoter","mCherry","target_id","ter_mod","terminator","construct","bio_rep","exp_rep","deltacq","rel_abund_deltacq","na.rm","remove"
 "pRPS3-mCherry-tRPS3_WT","pRPS3-mCherry","pRPS3","mCherry","mCh-7","tRPS3_WT","tRPS3","WT","bio_rep1","1",-1.17111111111111,2.25185059491646,FALSE,FALSE
 "pRPS3-mCherry-tRPS3_WT","pRPS3-mCherry","pRPS3","mCherry","mCh-7","tRPS3_WT","tRPS3","WT","bio_rep2","1",-1.00555555555555,2.00771648318895,FALSE,FALSE
 "pRPS3-mCherry-tRPS3_WT","pRPS3-mCherry","pRPS3","mCherry","mCh-7","tRPS3_WT","tRPS3","WT","bio_rep3","1",-1.20888888888889,2.31159537560743,FALSE,FALSE

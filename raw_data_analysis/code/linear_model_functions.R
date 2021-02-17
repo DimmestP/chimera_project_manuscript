@@ -1,4 +1,8 @@
-library(tidyverse)
+
+library(dplyr)
+library(tibble)
+library(stringr)
+library(readr)
 library(testthat)
 # Function to count the number of each codon in an ORF
 # ORF_name is a string containing the name of the ORFE
