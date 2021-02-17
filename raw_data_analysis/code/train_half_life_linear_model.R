@@ -1,6 +1,11 @@
 # Takes several minutes to run
 
-library(tidyverse)
+
+library(dplyr)
+library(tibble)
+library(stringr)
+library(readr)
+library(BiocManager)
 library(Biostrings)
 library(DECIPHER)
 library(latex2exp)
