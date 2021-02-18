@@ -21,3 +21,7 @@ Normalised protein fluorescence data for the promoter-terminator swaps conducted
 
 ### hlife_model_multi_fig.png
 Summary results of the half life prediction linear model as trained on the Sun et al 2013 and Chan et al 2018 decay datasets. Created by raw_data_analysis/code/hlife_model_extract_motif_coef.R
+
+### pro_ter_qpcr_mCh.fig
+Normalised RT-qPCR date for the promoter terminator swaps using mCherry fluorescent proteins. Created by
+- raw_data_analysis/code/raw_qpcr_analysis/promoter_terminator_swaps/pRPS3_pPGK1_pSRO9_tvariable_three_bio_rep.Rmd

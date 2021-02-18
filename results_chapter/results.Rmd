@@ -7,12 +7,16 @@ knitr::opts_chunk$set(fig.pos = "p")
 
 ## Terminator effects on gene expression are context dependent
 
-```{r pro-ter-platereader-mCherry, fig.cap="\\textbf{Terminator contributions to gene expresion are promoter dependent.}  mCherry fluorescence measured at the time of each sample's maximum growth rate for 10 termintators paired with three highly expressing promoters. Negative values arising from instrument noise dominating measurements of constructs with neglegible fluorescence are automatically set to 0.", out.width='90%', fig.align='center'}
+```{r pro-ter-platereader-mCherry, fig.cap="\\textbf{Terminator contributions to gene expresion are promoter dependent.}  mCherry fluorescence measured at the time of each sample's maximum growth rate for 10 termintators paired with three highly expressing promoters. Negative values arising from instrument noise dominating measurements of constructs with neglegible fluorescence are automatically set to 0.", out.width='100%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/pro_ter_platereader_mCh.png"))
 ```
 
-```{r pro-ter-platereader-mTurq, fig.cap="\\textbf{Terminator contributions to gene expresion are promoter dependent.}  mTurq fluorescence measured at the time of each sample's maximum growth rate for 10 termintators paired with six promoters. Negative values arising from instrument noise dominating measurements of constructs with neglegible fluorescence are automatically set to 0.", out.width='90%', fig.align='center'}
+```{r pro-ter-platereader-mTurq, fig.cap="\\textbf{Terminator contributions to gene expresion are promoter dependent.}  mTurq fluorescence measured at the time of each sample's maximum growth rate for 10 termintators paired with six promoters. Negative values arising from instrument noise dominating measurements of constructs with neglegible fluorescence are automatically set to 0.", out.width='100%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/pro_ter_platereader_mTurq.png"))
+```
+
+```{r pro-ter-qpcr-mCh, fig.cap="\\textbf{Terminator contributions to gene expresion are promoter dependent.}  mRNA abundance measured of the 10 termintators paired with mCherry terminator and three promoters.", out.width='100%', fig.align='center'}
+knitr::include_graphics(here("results_chapter/figures/pro_ter_qpcr_mCh.png"))
 ```
 
 
@@ -89,15 +93,15 @@ However, when paired with the pPGK1 and pSRO9 promoters, only a 2 fold decrease 
 Similarly, introduction of both candidate decay motifs - TGTACAATA and TTTCATTTC in tRPS3 3'UTR resulted in a ~4 fold decrease in RNA abundance when coupled with the pRPS3 promoter however, only a 2 fold decrease in RNA abundance was observed when coupled with the pPGK1 and pSRO9 promoters.
 No significant effect on RNA abundance was observed with the incorporation of a single copy of TGTACAATA in tRPS3 modA.
 
-```{r tRPS3-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs inserted into RPS3 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Design of motif insertion sites into the native RPS3 terminator with a diagram of the final constructs. (\\textbf{B}) Fold changes in transcript abundance for tRPS3 constructs paired with three promoters; pRPS3, pPGK1 and pSRO9. Fold changes are relative to the abundance of the mod0 construct", out.width='85%', fig.align='center'}
+```{r tRPS3-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs inserted into RPS3 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Design of motif insertion sites into the native RPS3 terminator with a diagram of the final constructs. (\\textbf{B}) Fold changes in transcript abundance for tRPS3 constructs paired with three promoters; pRPS3, pPGK1 and pSRO9. Fold changes are relative to the abundance of the mod0 construct", out.width='100%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/tRPS3_design_and_qpcr.png"))
 ```
 
-```{r tTSA1-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs inserted into TSA1 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Design of motif insertion sites into the native TSA1 terminator with a diagram of the final constructs. (\\textbf{B}) Fold changes in transcript abundance for tTSA1 constructs paired with three promoters; pTSA1, pPGK1 and pSRO9. Fold changes are relative to the abundance of the mod0 construct", out.width='85%', fig.align='center'}
+```{r tTSA1-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs inserted into TSA1 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Design of motif insertion sites into the native TSA1 terminator with a diagram of the final constructs. (\\textbf{B}) Fold changes in transcript abundance for tTSA1 constructs paired with three promoters; pTSA1, pPGK1 and pSRO9. Fold changes are relative to the abundance of the mod0 construct", out.width='100%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/tTSA1_design_and_qpcr.png"))
 ```
 
-```{r tPIR1-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs removed from PIR1 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Diagram of the final PIR1 constructs with permutations of removed motifs. (\\textbf{B}) Fold changes in transcript abundance for tPIR1 constructs paired with three promoters; pPIR1, pPGK1 and pSRO9. Fold changes are relative to the abundance of the WT construct", out.width='85%', fig.align='center'}
+```{r tPIR1-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs removed from PIR1 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Diagram of the final PIR1 constructs with permutations of removed motifs. (\\textbf{B}) Fold changes in transcript abundance for tPIR1 constructs paired with three promoters; pPIR1, pPGK1 and pSRO9. Fold changes are relative to the abundance of the WT construct", out.width='100%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/tPIR1_design_and_qpcr.png"))
 ```
 
@@ -135,7 +139,7 @@ In addition, the implications of inserting two different motifs into the termina
 For the PGK1 promoter, the combination of TGTACAATA and TTTCATTTC together either has no added effect, or in fact a reduce efficiency, when compare to the addition of the reductions in abundance when each motif is present separately.
 However with native or SRO9 promoter pairing the combined effect is actually greater than the sum of their individual effects.
 
-```{r hlife-predict-vs-abundance-and-motif-context-dependence, fig.cap="\\textbf{Promoter and terminator context alter the regulatory behaviour of shortlisted motifs} (\\textbf{A}) Predicted transcript abundance inferred from motif contributions to half life vs RT-qPCR measured transcript abundance. (\\textbf{B}) Motif contributions to fold changes in RNA abundance for different promoter and terminator contexts. The fold change is relative to the mod0 construct in each promoter-terminator pairing for the tRPS3 and tTSA1 sets. For the tPIR1 sets the fold change is relative to the WT constructs. Confidence intervals are within a standard error.", out.width='80%', fig.align='center'}
+```{r hlife-predict-vs-abundance-and-motif-context-dependence, fig.cap="\\textbf{Promoter and terminator context alter the regulatory behaviour of shortlisted motifs} (\\textbf{A}) Predicted transcript abundance inferred from motif contributions to half life vs RT-qPCR measured transcript abundance. (\\textbf{B}) Motif contributions to fold changes in RNA abundance for different promoter and terminator contexts. The fold change is relative to the mod0 construct in each promoter-terminator pairing for the tRPS3 and tTSA1 sets. For the tPIR1 sets the fold change is relative to the WT constructs. Confidence intervals are within a standard error.", out.width='100%', fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"))
 ```
 

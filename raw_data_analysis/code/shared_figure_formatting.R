@@ -1,6 +1,7 @@
 library(ggplot2)
 library(cowplot)
 library(scales)
+library(tidyqpcr)
 
 theme_set(
   theme_cowplot(font_size = 12, 
