@@ -1,0 +1,130 @@
+---
+title: "Comparison of protein vs mRNA levels of motifs inserted in RPS3, TSA1 and PIR1 motifs"
+output: html_notebook
+---
+
+
+```{r setup}
+library(here)
+library(dplyr)
+library(tibble)
+library(stringr)
+library(readr)
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
+```
+
+```{r import_data}
+# Function to extract WT constructs or to find which construct the strain is
+construct_extraction <- function(strain_name){
+  construct_name <- str_extract(strain_name,"mod[A-Z0]")
+  construct_name[is.na(construct_name)] <- str_extract(strain_name[is.na(construct_name)],"WT")
+  construct_name
+}
+
+RPS3_protein <- read.csv(here("raw_data_analysis/data/norm_platereader/motif_context_dependence/pRPS3-mCh-tRPS3/pRPS3-mCh-tRPS3_both_reps.csv")) %>%
+  filter(strain != c("null")) %>%
+  separate(strain,into = c("strain","bio_rep"),sep = "_clone_") %>%
+  filter(strain != "POT1-ccdB") %>%
+  mutate(construct = factor(construct_extraction(strain), 
+                            c("modC", "modE", "modD", "modA", "modB", "mod0", "WT")),
+         promoter = "pRPS3",
+         data = "Protein") %>% 
+  mutate(mod0_fluor = filter(., construct == "mod0") %>%
+           pull(c_mCherry_100_per_OD_at_max_local_gr) %>%
+           mean()) %>%
+  group_by(construct) %>%
+  mutate( relative_abundance = c_mCherry_100_per_OD_at_max_local_gr / mod0_fluor) %>%
+  select(-experiment, -X, -strain, - c_mCherry_100_per_OD_at_max_local_gr, - mod0_fluor)
+
+TSA1_protein <- read.csv(here("raw_data_analysis/data/norm_platereader/motif_context_dependence/pTSA1-mCh-tTSA1/pTSA1-mCh-tTSA1_both_reps.csv")) %>%
+  filter(strain != "null") %>%
+  separate(strain,into = c("strain","bio_rep"),sep = " clone ") %>%
+  filter(strain != "POT1-ccdB") %>%
+  mutate(construct = factor(construct_extraction(strain), 
+                            c("modC", "modE", "modD", "modA", "modB", "mod0", "WT")),
+         promoter = "pTSA1",
+         data = "Protein") %>% 
+  mutate(mod0_fluor = filter(., construct == "mod0") %>%
+           pull(c_mCherry_100_per_OD_at_max_local_gr) %>%
+           mean()) %>%
+  group_by(construct) %>%
+  mutate( relative_abundance = c_mCherry_100_per_OD_at_max_local_gr / mod0_fluor) %>%
+  select(-experiment, -X, -strain, - c_mCherry_100_per_OD_at_max_local_gr, - mod0_fluor)
+
+PIR1_protein <- read.csv(here("raw_data_analysis/data/norm_platereader/motif_context_dependence/pPIR1-mCh-tPIR1/pPIR1-mCh-tPIR1_both_reps.csv")) %>%
+  filter(strain != "null") %>%
+  separate(strain,into = c("strain","bio_rep"),sep = " clone ") %>%
+  filter(strain != "POT1-ccdB") %>%
+  mutate(construct = factor(construct_extraction(strain), 
+                            c("modG", "modF", "modE", "modD", "modC", "modB", "modA", "WT")),
+         promoter = "pPIR1",
+         data = "Protein") %>% 
+  mutate(WT_fluor = filter(., construct == "WT") %>%
+           pull(c_mCherry_100_per_OD_at_max_local_gr) %>%
+           mean()) %>%
+  group_by(construct) %>%
+  mutate( relative_abundance = c_mCherry_100_per_OD_at_max_local_gr / WT_fluor) %>%
+  select(-experiment, -X, -strain, - c_mCherry_100_per_OD_at_max_local_gr, - WT_fluor)
+
+RPS3_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv")) %>%
+  filter(promoter == "pRPS3") %>%
+  group_by(construct, bio_rep, promoter) %>%
+  summarise(delta_cq = median(deltacq), .groups = "drop") %>%
+  mutate(mod0_delta_cq = filter(., construct == "mod0") %>% pull(delta_cq) %>% mean()) %>%
+  group_by(construct) %>%
+  mutate( "relative_abundance" = 2^(-delta_cq + mod0_delta_cq)) %>%
+  ungroup() %>%
+  mutate(construct = factor(construct, 
+                            c("modC", "modE", "modD", "modA", "modB", "mod0", "WT")),
+         data = "RNA") %>%
+  select(- mod0_delta_cq, - delta_cq)
+
+TSA1_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pTSA1_pPGK1_pSRO9_tTSA1_deltacq_platesnorm_summarise.csv")) %>%
+  filter(promoter == "pTSA1") %>%
+  group_by(construct, bio_rep, promoter) %>%
+  summarise(delta_cq = median(deltacq, na.rm = TRUE), .groups = "drop") %>%
+  mutate(mod0_delta_cq = filter(., construct == "mod0") %>% pull(delta_cq) %>% mean()) %>%
+  group_by(construct) %>%
+  mutate( relative_abundance = 2^(-delta_cq + mod0_delta_cq)) %>%
+  ungroup() %>%
+  mutate(construct = factor(construct, 
+                            c("modC", "modE", "modD", "modA", "modB", "mod0", "WT")),
+         data = "RNA") %>%
+  select(- mod0_delta_cq, - delta_cq)
+
+PIR1_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pPIR1_pPGK1_pSRO9_tPIR1_deltacq_platesnorm_summarise.csv")) %>%
+  filter(promoter == "pPIR1") %>%
+  group_by(construct, bio_rep, promoter) %>%
+  summarise(delta_cq = median(deltacq, na.rm = TRUE), .groups = "drop") %>%
+  mutate(WT_delta_cq = filter(., construct == "WT") %>% pull(delta_cq) %>% mean()) %>%
+  group_by(construct) %>%
+  mutate( relative_abundance = 2^(-delta_cq + WT_delta_cq)) %>%
+  ungroup() %>%
+  mutate(construct = factor(construct, 
+                            c("modG", "modF", "modE", "modD", "modC", "modB", "modA", "WT")),
+         data = "RNA") %>%
+  select(- WT_delta_cq, - delta_cq)
+
+RPS3_TSA1_PIR1_protein_and_RNA_data <- RPS3_protein %>%
+  bind_rows(RPS3_RNA)  %>%
+  bind_rows(TSA1_protein)  %>%
+  bind_rows(TSA1_RNA)  %>%
+  bind_rows(PIR1_protein)  %>%
+  bind_rows(PIR1_RNA) %>%
+  mutate(promoter = factor(str_remove(promoter, "p"), levels = c("RPS3", "TSA1", "PIR1")),
+         data = factor(data, levels = c("RNA", "Protein")),
+         construct = factor(construct, levels = c("modG", "modF", "modE", "modD", "modC", "modB", "modA", "mod0", "WT")))
+```
+
+```{r plot_protein_vs_rna}
+RPS3_TSA1_PIR1_protein_and_RNA_plot<- ggplot(RPS3_TSA1_PIR1_protein_and_RNA_data) + 
+  geom_point(aes(y = construct, x = relative_abundance, colour = construct), show.legend = FALSE, alpha = 0.5) + 
+  stat_summary(aes(relative_abundance,construct),
+    fun="mean",colour="black",
+    geom="crossbar") +
+  facet_grid(promoter~data, scales = "free") + 
+  labs(y=NULL, x = "Relative Abundance")
+
+ggsave(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"),RPS3_TSA1_PIR1_protein_and_RNA_plot, width=5,height=7)
+
+```
