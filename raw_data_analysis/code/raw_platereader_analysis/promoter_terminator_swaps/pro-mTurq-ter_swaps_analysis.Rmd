@@ -26,35 +26,36 @@ source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 # define promoter and terminator levels in desired order
 pro6  <- c("pPGK1", "pHSP26", "pRPS3", "pRPS13", "pSRO9", "pCLN2")
 pro4  <- c("pPGK1", "pHSP26", "pRPS3", "pRPS13")
-ter10 <- c("tPGK1", "tHSP26", "tRPS3", "tRPS13",
-           "tSRO9", "tCLN2", "tPAB1", 
-           "tSUN4", "tTOS6", "tPMA1")
+ter10 <- c("tPGK1", "tRPS3", "tRPS13",
+           "tPAB1", "tHSP26", 
+           "tCLN2", "tSRO9", 
+           "tTOS6", "tSUN4", "tPMA1")
 ```
 
 
 
 ```{r}
-pro_mTurq_ter_n1 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=1.csv")) 
+pro_mTurq_ter_n1 <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=1.csv")) 
 names(pro_mTurq_ter_n1)[2] <- "Strain"
 names(pro_mTurq_ter_n1)[3] <- "mTurq_per_OD_at_max_gr"
 
-pro_mTurq_ter_n2 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=2.csv")) 
+pro_mTurq_ter_n2 <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=2.csv")) 
 names(pro_mTurq_ter_n2)[2] <- "Strain"
 names(pro_mTurq_ter_n2)[3] <- "mTurq_per_OD_at_max_gr"
 
-pro_mTurq_ter_n3 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=3.csv")) 
+pro_mTurq_ter_n3 <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=3.csv")) 
 names(pro_mTurq_ter_n3)[2] <- "Strain"
 names(pro_mTurq_ter_n3)[3] <- "mTurq_per_OD_at_max_gr"
 
-pro_mTurq_ter_n4 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=4.csv")) 
+pro_mTurq_ter_n4 <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=4.csv")) 
 names(pro_mTurq_ter_n4)[2] <- "Strain"
 names(pro_mTurq_ter_n4)[3] <- "mTurq_per_OD_at_max_gr"
 
-pro_mTurq_ter_n5 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=5.csv"))
+pro_mTurq_ter_n5 <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=5.csv"))
 names(pro_mTurq_ter_n5)[2] <- "Strain"
 names(pro_mTurq_ter_n5)[3] <- "mTurq_per_OD_at_max_gr"
 
-pro_mTurq_ter_n6 <- read.csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=6.csv"))
+pro_mTurq_ter_n6 <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_n=6.csv"))
 names(pro_mTurq_ter_n6)[2] <- "Strain"
 names(pro_mTurq_ter_n6)[3] <- "mTurq_per_OD_at_max_gr"
 
@@ -283,6 +284,8 @@ normSRO9plot + stat_summary(aes(Terminator,norm_fluo_per_OD_at_max_gr),
 
 ```{r tPGK1norm_combined}
 norm_pro_mTurq_ter_all <- bind_rows(norm_pro_mTurq_ter_pPGK1, norm_pro_mTurq_ter_pRPS3, norm_pro_mTurq_ter_pRPS13,norm_pro_mTurq_ter_pHSP26, norm_pro_mTurq_ter_pCLN2, norm_pro_mTurq_ter_pSRO9)
+
+write_csv(norm_pro_mTurq_ter_all, here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_summary_PGK1_norm.csv"))
 ```
 
 
@@ -386,10 +389,31 @@ plot_norm_se_pro4
 ```{r plot_norm_all_points, fig.height=3, fig.width=6}
 
 mTurq_platereader_figure <- 
-  ggplot(data=norm_pro_mTurq_ter_all) +
+  ggplot(data=norm_pro_mTurq_ter_all %>% rename(fluo_per_OD_at_max_gr = "norm_fluo_per_OD_at_max_gr")) +
   labs(x="Relative mTurq fluorescence per OD relative to tPGK1", y="Terminator") +
   facet_wrap(~Promoter, nrow=2) +
-  protein_relative_abundance_figure_options
+  protein_raw_abundance_figure_options
 
 ggsave(here("./results_chapter/figures/pro_ter_platereader_mTurq.png"),mTurq_platereader_figure,width = 7, height = 5)
+```
+
+```{r combine_norm_with_mCh}
+norm_pro_mCh_ter_all <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCh-ter_swaps_summary_PGK1_norm.csv"))
+
+norm_mTurq_and_mCherry <- norm_pro_mTurq_ter_all %>%
+  rename(protein = "mTurq", fluo_per_OD_at_max_gr = "norm_fluo_per_OD_at_max_gr") %>%
+  select(-mTurq_per_OD_at_max_gr, -remove) %>%
+  bind_rows(
+    norm_pro_mCh_ter_all %>%
+  rename(protein = "mCherry", fluo_per_OD_at_max_gr = "norm_fluo_per_OD_at_max_gr") %>%
+    select(-BioRep, -mCh_per_OD_at_max_gr, -sample_id, -remove)
+  ) %>%
+  mutate(Terminator = factor(Terminator, ter10))
+
+norm_mTurq_and_mCherry_figure <- ggplot(data=norm_mTurq_and_mCherry %>% filter(!Promoter %in% c("pSRO9", "pCLN2"))) +
+  labs(x="Relative fluorescence per OD relative to tPGK1", y="Terminator") +
+  facet_grid(protein~Promoter) +
+  protein_relative_abundance_figure_options
+
+ggsave(here("./results_chapter/figures/pro_ter_platereader_mTurq_and_mCh.png"), norm_mTurq_and_mCherry_figure, width = 9, height = 4)
 ```

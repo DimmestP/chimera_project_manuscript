@@ -1,4 +1,4 @@
-"strain","pro_mCh","promoter","mCherry","target_id","ter_mod","terminator","construct","bio_rep","exp_rep","deltacq","rel_abund_deltacq","na.rm","remove"
+"strain","pro_mCh","promoter","mCherry","target_id","UTR3","terminator","construct","bio_rep","exp_rep","deltacq","rel_abund_deltacq","na.rm","remove"
 "pTSA1-mCherry-tTSA1_WT","pTSA1-mCherry","pTSA1","mCherry","mCh-7","tTSA1_WT","tTSA1","WT","bio_rep4","2",0.620000000000001,0.650670927720966,FALSE,FALSE
 "pTSA1-mCherry-tTSA1_WT","pTSA1-mCherry","pTSA1","mCherry","mCh-7","tTSA1_WT","tTSA1","WT","bio_rep5","2",-0.113333333333333,1.0817246660801,FALSE,FALSE
 "pTSA1-mCherry-tTSA1_WT","pTSA1-mCherry","pTSA1","mCherry","mCh-7","tTSA1_WT","tTSA1","WT","bio_rep6","2",-0.341666666666667,1.26721969828706,FALSE,FALSE

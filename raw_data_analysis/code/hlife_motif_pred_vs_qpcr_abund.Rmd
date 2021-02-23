@@ -129,29 +129,45 @@ pred_vs_actual_plot_data_PIR1 <- pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>%
   summarise(mean_delta_delta_cq = mean(delta_delta_cq), sd_ddcq = sd(delta_delta_cq), .groups = "drop") %>%
   inner_join(hlife_coefficients_PIR1)
 
-pred_vs_abundance_TSA1_RPS3 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS3) + 
-  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = construct), show.legend = FALSE) +
-  geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = construct)) +
-  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = construct)) +
-  facet_grid(terminator~pro) +
+pred_vs_abundance_figure_options <- list(
+  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = construct), show.legend = FALSE),
+   geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = construct)),
+ geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = construct)),
+  facet_grid(terminator~pro),
+  scale_color_brewer(palette = "Paired"),
+  geom_abline(slope = 1, intercept = 0, colour = "grey"),
+  labs(x="", y="", colour = "Construct")
+)
+
+
+
+pred_vs_abundance_RPS3 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS3 %>% filter(terminator == "tRPS3")) + 
+  pred_vs_abundance_figure_options +
   coord_fixed(ratio = 1 , xlim = c(-2.5, 1.5) ,ylim = c(-2.5, 1.5)) +
-  geom_abline(slope = 1, intercept = 0, colour = "grey")  +
-  labs(x="", y=TeX("Experimental log_2 Fold Change"), colour = "Construct") +
-  geom_text(aes(label = r_cor_label), data = r_cor_data_TSA1_RPS3, x = -1.2, y= 1, parse = TRUE, size = 4) +
-  theme(panel.grid.minor = element_blank(), legend.position = "right") +
-  scale_color_brewer(palette = "Paired")
+  geom_text(aes(label = r_cor_label), data = r_cor_data_TSA1_RPS3 %>% filter(terminator == "tRPS3"), x = -1.2, y= 1, parse = TRUE, size = 4)
+
+pred_vs_abundance_TSA1 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS3 %>% filter(terminator == "tTSA1")) + 
+  pred_vs_abundance_figure_options +
+  coord_fixed(ratio = 1 , xlim = c(-2.5, 1.5) ,ylim = c(-2.5, 1.5)) +
+  geom_text(aes(label = r_cor_label), data = r_cor_data_TSA1_RPS3 %>% filter(terminator == "tTSA1"), x = -1.2, y= 1, parse = TRUE, size = 4) +
+  theme(strip.text.x = element_blank()) +
+  labs(y = TeX("Experimental log_2 Fold Change"))
 
 pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) + 
-  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = construct), show.legend = FALSE) +
-  geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = construct)) +
-  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = construct)) +
-  facet_grid(terminator~pro) +
+  pred_vs_abundance_figure_options +
   coord_fixed(ratio = 1 , xlim = c(-1, 1.2) ,ylim = c(-1, 1.2)) +
-  geom_abline(slope = 1, intercept = 0, colour = "grey")  +
-  labs(x=TeX("Predicted log_2 Fold Change"), y=TeX(""), colour = "Construct") +
   geom_text(aes(label = r_cor_label), data = r_cor_data_PIR1, y = -0.7, x= 0, parse = TRUE, size = 4) +
-  theme(panel.grid.minor = element_blank(), legend.position = "right") +
-  scale_color_brewer(palette = "Paired")
+  scale_x_continuous(breaks = c(-1,0,1)) +
+  scale_y_continuous(breaks = c(-1,0,1)) +
+  theme(strip.text.x = element_blank()) +
+  labs(x=TeX("Predicted log_2 Fold Change"))
+
+wrap_plots(pred_vs_abundance_RPS3,
+           pred_vs_abundance_TSA1,
+           pred_vs_abundance_PIR1,
+           individual_linear_model_coefficients_points,
+           ncol = 1) + 
+  plot_layout(guides = 'collect')
 
 pred_vs_abundance_combined <- plot_grid(pred_vs_abundance_TSA1_RPS3,
                                         pred_vs_abundance_PIR1,
@@ -162,18 +178,20 @@ pred_vs_abundance_combined <- plot_grid(pred_vs_abundance_TSA1_RPS3,
 
 
 # combine with motif_multi_context_coefficient figure to make two panel image
+
+#  TeX("Predicted log_2 Fold Change")
    
 load(here("raw_data_analysis/data/motif_multi_context_coefficient.Rdata"))
 
 ggsave(plot_grid(pred_vs_abundance_combined, 
                  individual_linear_model_coefficients_points +
-                   theme(plot.margin = unit(c(0.1,0.1,0.1,0.6),"cm")), 
+                   theme(plot.margin = unit(c(0.1,1,0.1,2),"cm")), 
                  ncol = 1, 
                  labels = c("A", "B"),
                  label_size = 20,
                  align = "vh",
                  axis = "t",
-                 rel_heights = c(1.5,1)), 
+                 rel_heights = c(2,1)), 
        file = here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"), 
        width = 9, 
        height = 12)

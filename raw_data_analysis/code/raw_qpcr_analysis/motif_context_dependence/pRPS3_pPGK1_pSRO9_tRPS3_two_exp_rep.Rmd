@@ -671,6 +671,28 @@ ggsave(here("results_chapter/figures/tRPS3_design_and_qpcr.png"),
        height = 7)
 ```
 
+```{r alternative_plot}
+library(magick)
+library(patchwork)
+
+layout <- "AAA
+           BCC"
+
+simplified_plot <- wrap_plots(ggdraw() + 
+    draw_image(magick::image_read_svg(here("raw_data_analysis/figures/terminator_construct_designs/RPS3_motif_mod0_construct_design.svg"))), 
+    gridExtra::tableGrob(tibble("Motif 1" = c("Random", "Random", "Random", 
+                                              "HWNCAUUWY", "HWNCAUUWY", "Random"), 
+                                "Motif 2" = c("Random", "ATATTC", "UGUAHMNU", 
+                                              "Random", "UGUAHMNU", "GTATACCTA"), 
+                                "Motif 3" = c("Random", "ATATTC", "Random", 
+                                              "HWNCAUUWY", "HWNCAUUWY", "GTATACCTA")), 
+                         rows = NULL), 
+    normalised_plot_exp_rep) +
+  plot_layout(design = layout)
+
+ggsave(here("results_chapter/figures/simplified_tRPS3_design_and_qpcr.png"), simplified_plot, width = 12, height = 5)
+```
+
 ```{r plot_delta_deltacq_exp_rep_2,fig.height=9,fig.width=5, echo=FALSE}
 
 normalised_plot1_exp_rep <- ggplot(data = platesnorm_mod0_median_exp_rep %>% 
