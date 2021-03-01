@@ -6,8 +6,8 @@ library(tidyqpcr)
 theme_set(
   theme_cowplot(font_size = 12, 
                 font_family = "sans",
-                rel_small = 11/12,
-                rel_tiny = 10/12,
+                rel_small = 9/12,
+                rel_tiny = 8/12,
                 rel_large = 14/12) %+replace% 
     theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
           panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
@@ -41,7 +41,7 @@ protein_raw_abundance_figure_options <- list(
   geom_vline(xintercept=1, linetype="dotted", color = "grey50"),
   stat_summary(aes(y=Terminator,x=fluo_per_OD_at_max_gr),
                fun="mean",colour="black",
-               geom="crossbar",size=0.2, width=0.5),
+               geom="crossbar"),
   theme(legend.position = "none"),
   scale_x_continuous(oob=oob_squish, limits = c(0,NA))
 )
@@ -61,9 +61,9 @@ protein_relative_abundance_figure_options <- list(
   scale_x_continuous(oob=oob_squish, limits = c(0,1.9))
 )
 
-update_geom_defaults("point", list(size = 3))
+update_geom_defaults("point", list(size = 2))
 update_geom_defaults("errorbar", list(size = 1))
 update_geom_defaults("errorbarh", list(size = 1))
-update_geom_defaults("crossbar", list(size=0.5, width=1))
+update_geom_defaults("crossbar", list(size=0.5, width=2.5))
 
 
