@@ -65,6 +65,8 @@ pro_mCh_ter <-  bind_rows(pro_mCh_ter_n1, pro_mCh_ter_n2, pro_mCh_ter_n3, pro_mC
   separate(Strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator")) %>%
   mutate(Promoter = factor(Promoter, levels = pro6),
          Terminator = factor(Terminator, levels = ter10))
+
+write_csv(pro_mCh_ter, here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCh-ter_swaps_raw.csv"))
 ```
 
 ```{r plot_norm, fig.width=9, fig.height=5}
@@ -374,13 +376,4 @@ mCh_platereader_figure <- ggplot(data=norm_pro_mCh_ter_all %>% mutate(Terminator
   protein_raw_abundance_figure_options
 
 ggsave(here("./results_chapter/figures/pro_ter_platereader_mCh.png"),mCh_platereader_figure,width = 7, height = 5)
-```
-
-```{r plot_raw_all_points}
-mCh_platereader_raw_figure <- ggplot(pro_mCh_ter %>% rename(fluo_per_OD_at_max_gr = "mCh_per_OD_at_max_gr")) +
-  protein_raw_abundance_figure_options +
-  facet_wrap(~Promoter) +
-  labs(x="Fluorescence per OD at max growth rate")
-
-ggsave(here("./results_chapter/figures/pro_ter_platereader_raw_mCh.png"),mCh_platereader_raw_figure,width = 5, height = 4)
 ```
