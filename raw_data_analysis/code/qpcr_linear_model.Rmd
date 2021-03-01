@@ -136,7 +136,7 @@ ggplot(model_coefficients) +
 
 motif_term_dictionary <- model_coefficients %>% 
   distinct(term) %>%
-  mutate(new_term = c("Construct", "exp_repExpRep2", "ATATTC", "GTATACCTA", "UGUAHMNUA", "HWNCAUUWY", "Wildtype\n vs Mod0", "UGUAHMNUA\n+\nHWNCAUUWY"))
+  mutate(new_term = c("Construct", "exp_repExpRep2", "ATATTC", "GTATACCTA", "TGTAHMNTA", "HWNCATTWY", "Wildtype\n vs Mod0", "TGTAHMNTA\n+\nHWNCATTWY"))
 
 construct_dictionary <- model_coefficients %>% 
   distinct(ter_pro) %>%
@@ -163,7 +163,7 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
         panel.grid.major.x = element_blank(),
         axis.line.x = element_blank()) +
   scale_colour_manual(breaks = c("tTSA1", "tRPS3", "tPIR1"), values = c("#56B4E9", "#D55E00", "#000001")) +
-  facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "UGUAHMNUA", "HWNCAUUWY", "UGUAHMNUA\n+\nHWNCAUUWY")), 
+  facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "TGTAHMNTA", "HWNCATTWY", "TGTAHMNTA\n+\nHWNCATTWY")), 
              scales = "free_x", 
              space = "free_x", 
              switch = "x") +
