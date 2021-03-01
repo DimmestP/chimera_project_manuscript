@@ -647,6 +647,8 @@ platesnorm_mod0_median_exp_rep <- bind_rows(platesnorm_mod0_pRPS3_exp_rep1, plat
                     mutate(pro_mCh = factor(pro_mCh,levels = c("pRPS3-mCherry","pPGK1-mCherry", "pSRO9-mCherry"))) %>% 
                     mutate(UTR3 = factor(UTR3,levels=c("tRPS3_WT", "tRPS3_modC","tRPS3_modE","tRPS3_modD","tRPS3_modA",
                                            "tRPS3_modB","tRPS3_mod0")))
+
+write_csv(platesnorm_mod0_median_exp_rep, here("raw_data_analysis/data/norm_qpcr/motif_context_dependence/pRPS3_pPGK1_pSRO9_tRPS3_deltadeltacq_platesnorm_summarise.csv"))
 ```
 
 ### 2) Plotting the results in a scatter plot
@@ -669,28 +671,6 @@ ggsave(here("results_chapter/figures/tRPS3_design_and_qpcr.png"),
                  rel_heights =  c(1,0.7)), 
        width = 7, 
        height = 7)
-```
-
-```{r alternative_plot}
-library(magick)
-library(patchwork)
-
-layout <- "AAA
-           BCC"
-
-simplified_plot <- wrap_plots(ggdraw() + 
-    draw_image(magick::image_read_svg(here("raw_data_analysis/figures/terminator_construct_designs/RPS3_motif_mod0_construct_design.svg"))), 
-    gridExtra::tableGrob(tibble("Motif 1" = c("Random", "Random", "Random", 
-                                              "HWNCAUUWY", "HWNCAUUWY", "Random"), 
-                                "Motif 2" = c("Random", "ATATTC", "UGUAHMNU", 
-                                              "Random", "UGUAHMNU", "GTATACCTA"), 
-                                "Motif 3" = c("Random", "ATATTC", "Random", 
-                                              "HWNCAUUWY", "HWNCAUUWY", "GTATACCTA")), 
-                         rows = NULL), 
-    normalised_plot_exp_rep) +
-  plot_layout(design = layout)
-
-ggsave(here("results_chapter/figures/simplified_tRPS3_design_and_qpcr.png"), simplified_plot, width = 12, height = 5)
 ```
 
 ```{r plot_delta_deltacq_exp_rep_2,fig.height=9,fig.width=5, echo=FALSE}
