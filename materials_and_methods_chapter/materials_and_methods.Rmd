@@ -24,18 +24,6 @@ The mutation of motifs for their removal from the 3'UTR were carried out accordi
 
 The native and modified candidate 3'UTRs were screened for the presesnce of Esp31 and Bsa1 sites within the sequence.
 100 nt downstream of the native 3'UTR was added to the candidate and verified for whether they can be synthesised by IDT using the gBlock entry form (https://eu.idtdna.com/site/order/gblockentry).
-The sequence 'agcgtgCGTCTCgTAGC' was added to the 5'-end of the 3'UTR and the sequence 'CCTCcGAGACGcagcac' was added to the 3'-end of the 3'UTR.
-
-## Strains and media
-The BY4741 (*MATa his3$\Delta1$ leu2$\Delta0$ met15$\Delta0$ ura3$\Delta0$*) wild type strain was used in this study and grown in either synthetic complete medium without uracil (SC -URA medium), containing 0.69% yeast nitrogen base without amino acids and with ammonium sulfate (Formedium, Norfolk, UK), 0.193% amino acid drop-out supplement mixture (Formedium, Norfolk, UK) and 2% glucose, or YPDA medium, containing 2% peptone, 1% yeast extract, 2% glucose and 0.004% adenine. 
-
-## Construction of chimera strains
-All fluorescence reporter plasmids were constructed by Golden Gate assembly as described in Garcia-Ruiz et al. 2018.
-Promoters, ORFs and terminators were either amplified from the yeast genome or synthesised by a commercial vendor (IDT) then cloned into a parts accepting vector (HcKan_P for promoters, HcKan_O for ORFs and HcKan_T for terminators) by Golden Gate assembly using Bsa1-HFv2 (NEB).
-The promoter, ORF and terminators were asssembled together into the transcription unit acceptor vector (POT1-ccdB) by Golden Gate assembly using Esp31 (NEB).
-Plasmids were confrmed by PCR and Sanger sequencing (MRC PPU DNA Sequencing and Services, Dundee).
-These plasmids were transformed into BY4741 and selecting in Sc-URA plates for isolating yeast containing the reporter plasmids.
-DNA sequences used in this study are summarised in Supplementary table. 
 
 The tRPS3 3'UTR-terminator was modified to incorporate three 9 nt insertion sites for motifs (M1, M2 and M3).
 The M1 was inserted 24 nt downstream of the stop codon, M2 was inserted 15 nt downstream of M1 and the final insert M3 was inserted 4 nt downstream of M2 (Figure \@ref(fig:tRPS3-design-and-qpcr)).
@@ -45,38 +33,30 @@ Further modified 3’UTR-terminator designs were designed to incorporate individ
 
 Similar to the modified RPS3 3'UTR-terminator designs, three 9 nt insertion sites (M1, M2 and M3).
 The M1 was designed 21 nt downstream of the stop codon, M2 was designed 20 nt downstream of M1, and M3 was designed 24 bp downstream of M2. 
-The tTSA1 mod0 construct contained scrambled/random bases iin the M1, M2 and M3 sites (Figure \@ref(fig:tTSA1-design-and-qpcr)).
+The tTSA1 mod0 construct contained scrambled/random bases in the M1, M2 and M3 sites (Figure \@ref(fig:tTSA1-design-and-qpcr)).
 Similar to the modified tRPS3 3'UTR-terminator designs, individual motifs of interest previously described were introduced into the insertion sites (Figure \@ref(fig:tTSA1-design-and-qpcr)), whereby modC was designed to characterise a candidate stability motif, whilst modA, modB, modD and modE were designed to characterise candidate decay motifs.
-These 3'UTR/terminators were assembled with either pTSA1, pPGK1 or pSRO9 promoters driving the expression of an mCherry reporter gene in a plasmid and expressed in yeast.
 
-## Strain growth, RNA extraction and reverse transcription
-BY4741 yeast strains containing the chimeric reporter plasmid were pre-cultured in a 12 column deep well plate containing 7 ml of SC -URA medium containing 2% glucose and grown for ~20 hours at 30&deg;C in a shaking incbator.
-Following the overnight growth, the OD~600~ was measured using a spectrophotometer and diluted in a 12 column deep well plate to a starting OD~600~ of 0.2.
-Diluted cultures were grown at 30&deg;C in a shaking incbator to an OD~600~ of 0.5-0.6 then pelleted by centrifugation.
-All remaining media was removed with an aspirator. 
+The sequence 'agcgtgCGTCTCgTAGC' was added to the 5'-end of the 3'UTR and the sequence 'CCTCcGAGACGcagcac' was added to the 3'-end of the 3'UTR.
 
-The pelleted cells were resuspended in 400 $\mu$l RNA binding buffer (Zymo cat #R1013-2) transerred to 2 ml screw cap tubes containing zirconia beads, lysed using the Precellys Evolution homogeniser then pelleted by centrifugation.
-The supernatant was transferred to a Zymo Spin IIICG column (Zymo cat #C1006) then centrifuged.
-The flow through is mixed with 1 volume of ethanol then transferred to a Zymo Spin IIC column (Zymo cat #C1011) and centrifuged.
-The flow through was discarded and 1 volume of DNA/RNA Prep buffer (Zymo cat #D7010-2) was added then centrifuged.
-The column was washed with 700 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo cat #D7010-3) then centrifuged.
-The column was washed a second time, but with 400 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo cat #D7010-3).
-The column was centrifuged once more to remove residual wash buffer in the column. 30 $\mu$l of nuclease free water was added to the column then eluted.
+## Strains and media
+The BY4741 (*MATa his3$\Delta1$ leu2$\Delta0$ met15$\Delta0$ ura3$\Delta0$*) wild type strain was used in this study and grown in either synthetic complete medium without uracil (SC -URA medium), containing 0.69% yeast nitrogen base without amino acids and with ammonium sulfate (Formedium, Norfolk, UK), 0.193% amino acid drop-out supplement mixture (Formedium, Norfolk, UK) and 2% glucose, or YPDA medium, containing 2% peptone, 1% yeast extract, 2% glucose and 0.004% adenine. 
+
+## Construction of chimeric reporter plasmids
+All fluorescence reporter plasmids were constructed by Golden Gate assembly as described in @garcia2018. Promoters, ORFs and terminators were either amplified from the yeast genome or synthesised by a commercial vendor (IDT) then cloned into a parts accepting plasmids (HcKan_P for promoters, HcKan_O for ORFs and HcKan_T for terminators) by Golden Gate assembly using Bsa1-HFv2 (NEB) to create the promoter-HcKan_P, ORF-HcKan_O and terminator-HcKan_T parts libraries. Using these parts libraries, the promoter, ORF and terminators were asssembled together by into the transcription unit acceptor plasmids (POT1-ccdB) by Golden Gate assembly using Esp31 (NEB) to construct chimeric reporter plasmids. Plasmids were confrmed Sanger sequencing (MRC PPU DNA Sequencing and Services, Dundee). DNA sequences used in this study are summarised in **Supplementary table**. These plasmids were transformed into yeast BY4741 and selected in Sc-URA plates for isolating yeast clones containing the chimeric reporter plasmids.
+
+## Strain growth, RNA extraction and RT-qPCR analysis
+BY4741 yeast strains containing the chimeric reporter plasmid were grown in a 24 deepwell plate (4titude) containing 1.5 ml of SC -URA medium with 2% glucose and grown for ~20 hours at 30&deg;C in a shaking incbator set at 250 rpm. Following the overnight growth, the OD~600~ was measured using a spectrophotometer and diluted in a 12 column deep well reservoir plate (4titude) 7 ml of SC -URA medium with 2% glucose to a starting OD~600~ between 0.15-0.2. Diluted cultures were grown at 30&deg;C in a shaking incbator set at 90 rpm to an OD~600~ of 0.5-0.7 then pelleted by centrifugation.  All remaining media was removed with an aspirator. Pelleted cells in the plate were stored in -80&deg;C.
+
+The pelleted cells were thawed and individually resuspended in 400 $\mu$l RNA binding buffer (Zymo cat #R1013-2), then transerred to 2 ml screw cap tubes containing zirconia beads, lysed using the Precellys Evolution homogeniser then pelleted by centrifugation at 12,000g for 1.5 minutes. The supernatant was transferred to a Zymo Spin IIICG column (Zymo cat #C1006) then centrifuged at 12,000g for 1 minute. The flow through is mixed with 1 volume of ethanol then transferred to a Zymo Spin IIC column (Zymo cat #C1011) and centrifuged at 12,000g for 1 minute.The flow through was discarded and 1 volume of DNA/RNA Prep buffer (Zymo cat #D7010-2) was added then centrifuged at 12,000g for 1 minute. The column was washed with 700 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo cat #D7010-3) then centrifuged at 12,000g for 1 minute. The column was washed a second time, but with 400 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo cat #D7010-3) at 12,000g for 1 minute. The column was centrifuged once more to remove residual wash buffer in the column. 30 $\mu$l of nuclease free water was added to the column then eluted at 12,000g for 1 minute.
 
 The quantity and quality of the RNA was measured using both the nanodrop and Fragment Analyser (Agilent).
-4 $\mu$g of RNA is treated with Turbo DNAse (Invitrogen cat #AM2238). 
-2.5 $\mu$l of Random primer mix (NEB cat #S1330S) was added to the mixture then separated into 2 PCR tubes, one for -RT and one for +RT).
-The RNA is denatured at 70&deg;C then cooled on ice.
-Reverse transcription (RT) master mix was prepared, containing 2 $\mu$l of First Strand synthesis buffer, 0.75 $\mu$l of 10mM dNTP mix, 1.5 $\mu$l of nuclease free water, 0.25 $\mu$l of RNase inhibitor and 0.5 $\mu$l of SuperScript IV Reverse Transcriptase (Invitrogen cat #18091050) per reactioon.
-5 $\mu$l of the RT master mix was added to the denatured RNA then incubated at 25&deg;C for 5 minutes then 55&deg;C for 1 hour.
-The cDNA was diluted with 180 $\mu$l of nuclease free water.
+4 $\mu$g of RNA is treated with DNAse1 (Thermo). The DNase1 was inactivated using the RapidOut DNA removal kit (Thermo) according to the manufacturer's protocol. 2.5 $\mu$l of Random primer mix (NEB cat #S1330S) was added to the mixture then separated into 2 PCR tubes, one for -RT and one for +RT). The RNA is denatured at 70&deg;C then cooled on ice.
+Reverse transcription (RT) master mix was prepared, containing 2 $\mu$l of First Strand synthesis buffer, 0.75 $\mu$l of 10mM dNTP mix, 1.5 $\mu$l of nuclease free water, 0.25 $\mu$l of RNase inhibitor and 0.5 $\mu$l of SuperScript IV Reverse Transcriptase (Invitrogen cat #18091050) per reaction. 5 $\mu$l of the RT master mix was added to the denatured RNA then incubated at 25&deg;C for 5 minutes then 55&deg;C for 1 hour. The cDNA was diluted with 200 $\mu$l of nuclease free water.
 
+Quantification of target cDNAs were measured by quantitative PCR with Brilliant II Fast SYBR Green QPCR Master Mix (Agilent) using a Lightcycler 480 qPCR machine (Roche). RPS3, PGK1 and URA3 were used as the internal standard for data normalisation. qPCR data was analysed using the tidyqPCR R package. $\Delta$Cq values calculated by normalising the mCherry Cq values by the median Cq values of the internal standards (RPS3, PGK1 and URA3). For tRPS3mod and tTSA1mod strains, $\Delta\Delta$Cq values were calculated by normalising mCherry $\Delta$Cq the by the control mod0 strain. 
 
-## Quantitative PCR analysis
-Quantification of target cDNAs were measured by quantitative PCR with Brilliant II Fast SYBR Green QPCR Master Mix (Agilent) using a Lightcycler 480 qPCR machine (Roche).
-RPS3, PGK1 and URA3 were used as the internal standard.
-qPCR data was analysed using the tidyqPCR R package. $\Delta$Cq values calculated by normalising the mCherry Cq values by the median Cq values of the internal standards (RPS3, PGK1).
-$\Delta\Delta$Cq values were calculated by normalising mCherry $\Delta$Cq the by the control mod0 strain. 
+## Plate reader analysis of strain growth and fluorescence
+BY4741 yeast strains containing the chimeric reporter plasmid were grown in a 96 deepwell plate (VWR) containing 100$\mu$l  of SC -URA medium with 2% glucose and grown for ~12 hours at 30&deg;C in a shaking incbator set at 250 rpm. Following the overnight growth, 1 ml of SC -URA medium with 2% glucose was added to each culture and the the OD was measured using the Tecan Infinity M200 series plate reader. The OD was normalised to a starting OD of 0.2 for each culture. 200$\mu$l of each culture was transferred to a 96 well black microtiter plate (Corning) and grown according to the protocol described in @lichten2014. The Tecan Infinity M200 series plate reader (Tecan) wass set at the temperature of 29.9 (range of 29.4-30.4&deg;C) with linear shaking (6 mm amplitude at 200-220 rpm). OD measurements were carried out at an absorbance wavelength oof 595 nm with a measurement bandwidth of 9 nm with 15 reads. mCherry fluorescence measurements were carried out with an excitation wavelength at 585 nm and an emission wavelength of 620 nm (excitation bandwidth of 9 nm and emission bandwidth of 20 nm) with the gain set at 100. mTurquoise fluorescence measurements were carried out with an excitation wavelength at 434 nm and an emission wavelength of 474 nm (excitation bandwidth of 9 nm and emission bandwidth of 20 nm) with the gain set at 60.
 
 ## Determining motif effect on abundance
 A linear model predicting construct $\Delta$Cq's using the presence or absence of the four selected motifs was trained on each promoter-terminator pairing separately. The linear model also included a term for batch effects, between the two experimental replicates for each set of constructs, and a term to account for interactions between the UGUAMNUA and HWNCAUUWY motifs.

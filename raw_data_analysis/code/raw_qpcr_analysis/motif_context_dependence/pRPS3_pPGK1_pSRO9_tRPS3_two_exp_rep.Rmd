@@ -647,6 +647,8 @@ platesnorm_mod0_median_exp_rep <- bind_rows(platesnorm_mod0_pRPS3_exp_rep1, plat
                     mutate(pro_mCh = factor(pro_mCh,levels = c("pRPS3-mCherry","pPGK1-mCherry", "pSRO9-mCherry"))) %>% 
                     mutate(UTR3 = factor(UTR3,levels=c("tRPS3_WT", "tRPS3_modC","tRPS3_modE","tRPS3_modD","tRPS3_modA",
                                            "tRPS3_modB","tRPS3_mod0")))
+
+write_csv(platesnorm_mod0_median_exp_rep, here("raw_data_analysis/data/norm_qpcr/motif_context_dependence/pRPS3_pPGK1_pSRO9_tRPS3_deltadeltacq_platesnorm_summarise.csv"))
 ```
 
 ### 2) Plotting the results in a scatter plot
@@ -660,15 +662,7 @@ normalised_plot_exp_rep <- ggplot(data = platesnorm_mod0_median_exp_rep) +
   labs(x ="Fold change in RNA abundance relative to tRPS3-mod0 (log2 scale)", y = "") +
   facet_wrap(~pro_mCh,ncol = 3)
 
-ggsave(here("results_chapter/figures/tRPS3_design_and_qpcr.png"),
-       plot_grid(ggdraw() + 
-                   draw_image(here("raw_data_analysis/figures/terminator_construct_designs/RPS3_motif_insertion_construct_design.svg")),
-                 normalised_plot_exp_rep, 
-                 ncol = 1, 
-                 labels = c("A", "B"), 
-                 rel_heights =  c(1,0.7)), 
-       width = 7, 
-       height = 7)
+normalised_plot_exp_rep
 ```
 
 ```{r plot_delta_deltacq_exp_rep_2,fig.height=9,fig.width=5, echo=FALSE}

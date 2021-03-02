@@ -25,17 +25,7 @@ library(tidyqpcr)
 library(here)
 
  # set default theme for graphics
-theme_set(theme_cowplot(font_size=11) %+replace% 
-              theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
-                    panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
-                    panel.grid.major = element_line(size = 0.25, linetype = 'solid',colour = "grey"),
-                    plot.title = element_text(family="Tahoma",size=11,vjust=3.3),
-                    strip.background = element_blank(),
-                    strip.text.x=element_text(family="Tahoma",size=9),
-                    axis.text=element_text(family="Tahoma", size=10),
-                    axis.title=element_text(family="Tahoma", size=10),
-                    legend.text=element_text(family="Tahoma", size=8),
-                    legend.title=element_text(family="Tahoma", size=9)))
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 ```
 
 # tPMA1 and tSRO9 variants used here are the full 3'UTR versions
@@ -83,31 +73,31 @@ plateplan_RPS3_PGK1_1 <-
     label_plate_rowcol(create_blank_plate(well_row = LETTERS[1:16],well_col=1:21),
                        rowkey,colkey_RPS3_PGK1_1%>% 
     unite(sample_id,strain,bio_rep,remove=FALSE)%>%
-    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","terminator")))
+    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","UTR3")))
 
 plateplan_RPS3_PGK1_2 <-     
     label_plate_rowcol(create_blank_plate(well_row = LETTERS[1:16],well_col=1:21),
                        rowkey,colkey_RPS3_PGK1_2%>% 
     unite(sample_id,strain,bio_rep,remove=FALSE)%>%
-    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","terminator")))
+    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","UTR3")))
 
 plateplan_RPS3_PGK1_3 <-     
     label_plate_rowcol(create_blank_plate(well_row = LETTERS[1:16],well_col=1:21),
                        rowkey,colkey_RPS3_PGK1_3%>% 
     unite(sample_id,strain,bio_rep,remove=FALSE)%>%
-    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","terminator")))
+    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","UTR3")))
 
 plateplan_SRO9_1_2 <-     
     label_plate_rowcol(create_blank_plate(well_row = LETTERS[1:16],well_col=1:20),
                        rowkey,colkey_SRO9_1_2%>% 
     unite(sample_id,strain,bio_rep,remove=FALSE)%>%
-    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","terminator")))
+    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","UTR3")))
 
 plateplan_SRO9_3 <-     
     label_plate_rowcol(create_blank_plate(well_row = LETTERS[1:16],well_col=1:10),
                        rowkey,colkey_SRO9_3%>% 
     unite(sample_id,strain,bio_rep,remove=FALSE)%>%
-    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","terminator")))
+    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","UTR3")))
 ```
 
 ## Load data and attribute sample information
@@ -214,11 +204,11 @@ platesnorm_summarise <- platesnorm%>%
                     group_by(strain, target_id, bio_rep)%>%
                     summarize(deltacq = median(delta_cq, na.rm=TRUE),
                               rel_abund_deltacq = (2^-deltacq), na.rm=FALSE)%>% 
-    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","terminator"))
+    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","UTR3"))
 
 
 
-ggplot(platesnorm, aes(terminator,delta_cq))+
+ggplot(platesnorm, aes(UTR3,delta_cq))+
   geom_point(aes(color=bio_rep, shape=promoter),position=position_dodge(width = 0.85),size=1.2, alpha=0.7)+
   scale_colour_hue(h = c(90, 360)+20,l=60,c=60)+
   labs(y="delta cq", x="3'UTR-terminators")+
@@ -228,16 +218,16 @@ ggplot(platesnorm, aes(terminator,delta_cq))+
 ```
 
 ### 1) Exporting analysed delta cq values data
-#```{r deltacq_normdata, echo=TRUE}
+```{r deltacq_normdata, echo=TRUE}
 #exporting platesnorm dataframe
-#write.csv(platesnorm_summarise,here("raw_data_analysis/data/norm_qpcr/motif_context_dependence/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv"), row.names = FALSE)
+write.csv(platesnorm_summarise,here("raw_data_analysis/data/norm_qpcr/promoter_terminator_swaps/pRPS3_pPGK1_pSRO9_tvariable_deltacq_platesnorm_summarise.csv"), row.names = FALSE)
 
-#```
+```
 
 Plot shows shifted distributions in normalised cq values for pRPS3 samples between experimental replciates. This shift in distributions between experimental replicates is not seen for pPGK1 samples.
 ```{r plot_deltacq, echo=TRUE, fig.height=5, fig.width=9}
 
-ggplot(platesnorm %>% filter(target_id %in% 'mCh-7'), aes(terminator,delta_cq))+
+ggplot(platesnorm %>% filter(target_id %in% 'mCh-7'), aes(UTR3,delta_cq))+
   geom_point(aes(color=bio_rep),position=position_dodge(width = 0.85),size=1.2, alpha=1)+
   scale_colour_hue(h = c(90, 360)+20,l=60,c=60)+
   labs(y="delta cq", x="3'UTR-terminators")+
@@ -291,7 +281,6 @@ platesnorm_pRPS3_bio_rep2 <- platesnorm_pRPS3_bio_rep %>% filter(bio_rep %in% c(
 platesnorm_pRPS3_bio_rep3 <- platesnorm_pRPS3_bio_rep %>% filter(bio_rep %in% c('bio_rep3'))%>%
     mutate(delta_cq.P1 = delta_cq - mean_cq_pRPS3_tPGK1_bio_rep3$mean_cq, remove=FALSE)
 ```
-
 
 ```{r delta-deltacq_norm_PGK1_exp_rep, echo=TRUE}
 
@@ -395,71 +384,30 @@ platesnorm_median_ddct <- bind_rows(platesnorm_pRPS3_bio_rep1, platesnorm_pRPS3_
                     group_by(strain, target_id, bio_rep)%>%
                     summarize(delta_deltacq = median(delta_cq.P1, na.rm=TRUE),
                               rel_abund_delta_deltacq = (2^-delta_deltacq), na.rm=FALSE)%>%
-                    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","terminator"))
+                    separate(strain, remove = FALSE,sep="-",into=c("promoter","mCherry","UTR3"))
 ```
 
 ### 2) Plotting the results in a scatter plot
 
-```{r plot_delta_deltacq_exp_rep_1,fig.height=2,fig.width=5, echo=FALSE}
+```{r plot_delta_deltacq_separate,fig.height=2,fig.width=5, echo=FALSE}
 
-normalised_plot_bio_rep_R3 <- ggplot(data = platesnorm_median_ddct %>% filter(promoter %in% c('pRPS3')))+
-    geom_point(aes(terminator,rel_abund_delta_deltacq, colour=terminator, shape=bio_rep)) +
-    #scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 (log2 scale)",omag = seq(-5,5),scilabels=TRUE) +
-    scale_y_log2nice(name="Fold change in RNA abundance of pRPS3 relative to \n pRPS3-mCherry-tPGK1 (log2 scale)",omag = seq(-5,5),scilabels=FALSE) +
-      labs(y="") +
-    #scale_shape_manual(values=c(19, 17, 15, 10, 7, 14)) +
-    #scale_colour_manual(values=c( "grey50", "#288a2e","#a84a9a","#6f3ba1","#416db0","#CC6666","black")) +
-    guides(colour=FALSE) +
-    theme(axis.text.x=element_text(angle=0,vjust=0.5),
-          axis.title.x=element_text(vjust=-2),
-          legend.position="bottom",
-          legend.box.margin=margin(20,10,10,180))
-#axis.text.y=element_text(colour=c("grey50", "#288a2e","#a84a9a","#6f3ba1","#416db0","#CC6666","black"))
-  #facet_wrap(~promoter))
-
-normalised_plot_bio_rep_R3 + stat_summary(aes(terminator, rel_abund_delta_deltacq),
-    fun="mean",colour="black",
-    geom="crossbar",size=0.2, width=0.5) 
+normalised_plot_bio_rep_R3 <- ggplot(data = platesnorm_median_ddct %>% filter(promoter %in% c('pRPS3'))) +
+  RNA_relative_abundance_figure_options +
+    labs(x="Fold change in RNA abundance of pRPS3 relative to \n pRPS3-mCherry-tPGK1 (log2 scale)",y = "") 
 
 normalised_plot_bio_rep_P1 <- ggplot(data = platesnorm_median_ddct %>% filter(promoter %in% c('pPGK1')))+
-    geom_point(aes(terminator,rel_abund_delta_deltacq, colour=terminator, shape=bio_rep)) +
-    #scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 (log2 scale)",omag = seq(-5,5),scilabels=TRUE) +
-    scale_y_log2nice(name="Fold change in RNA abundance of pPGK1 relative to \n pPGK1-mCherry-tPGK1 (log2 scale)",omag = seq(-5,5),scilabels=FALSE) +
-      labs(y="") +
-    #scale_shape_manual(values=c(19, 17, 15, 10, 7, 14)) +
-    #scale_colour_manual(values=c( "grey50", "#288a2e","#a84a9a","#6f3ba1","#416db0","#CC6666","black")) +
-    guides(colour=FALSE) +
-    theme(axis.text.x=element_text(angle=0,vjust=0.5),
-          axis.title.x=element_text(vjust=-2),
-          legend.position="bottom",
-          legend.box.margin=margin(20,10,10,180))
-#axis.text.y=element_text(colour=c("grey50", "#288a2e","#a84a9a","#6f3ba1","#416db0","#CC6666","black"))
-  #facet_wrap(~promoter))
-
-normalised_plot_bio_rep_P1 + stat_summary(aes(terminator, rel_abund_delta_deltacq),
-    fun="mean",colour="black",
-    geom="crossbar",size=0.2, width=0.5) 
+  RNA_relative_abundance_figure_options +
+      labs(x = "Fold change in RNA abundance of pPGK1 relative to \n pPGK1-mCherry-tPGK1 (log2 scale)", y="")
 ```
 
-```{r plot_delta_deltacq_exp_rep_2,fig.height=9,fig.width=5, echo=FALSE}
+```{r plot_delta_deltacq_together,fig.height=9,fig.width=5, echo=FALSE}
 
 normalised_plot1_exp_rep <- ggplot(data = platesnorm_median_ddct)+
-    geom_point(aes(rel_abund_delta_deltacq,terminator,colour=terminator, shape=bio_rep)) +
-    scale_x_log2nice(name="Fold change in RNA abundance relative to tRPS3-mod0 \n (log2 scale)",omag = seq(-5,5),scilabels=FALSE) +
-    labs(y="") +
-    #scale_shape_manual(values=c(19, 17, 15, 10, 7, 14)) +
-    #scale_colour_manual(values=c("#288a2e","#a84a9a","#6f3ba1","#416db0","#CC6666","black")) +
-    guides(colour=FALSE) +
-    theme(axis.text.y=element_text(colour=c("#288a2e","#a84a9a","#6f3ba1","#416db0","#CC6666","black")),
-          axis.text.x=element_text(angle=0,vjust=0.5),
-          axis.title.x=element_text(size=10,vjust=-2),
-          legend.position="bottom",
-          legend.box.margin=margin(20,0,0,30))+
+  RNA_relative_abundance_figure_options +
+    labs(x="Fold change in RNA abundance relative to \n each promoters tPGK1 construct (log2 scale)",y = "") +
     facet_wrap(~promoter,nrow = 3)
 
-normalised_plot1_exp_rep + stat_summary(aes(rel_abund_delta_deltacq,terminator),
-    fun="mean",colour="black",
-    geom="crossbar",size=0.2, width=0.5) 
+ggsave(here("results_chapter/figures/pro_ter_qpcr_mCh.png"),normalised_plot1_exp_rep, height = 7, width = 5)
 ```
 
 ## Loading amplification and melt curve data
@@ -505,7 +453,7 @@ ggplot(data=platesamp %>% filter(strain==c("POT1-ccdB")),
 
 ggplot(data=platesamp %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_rep1"), promoter %in% c("pRPS3")),
        aes(x=cycle,y=fluor_signal,linetype=prep_type,group=well)) + 
-    facet_grid(terminator~target_id) + 
+    facet_grid(UTR3~target_id) + 
     geom_line() +
     scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
     expand_limits(y=0) + 
@@ -513,7 +461,7 @@ ggplot(data=platesamp %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_re
 
 ggplot(data=platesamp %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_rep1"), promoter %in% c("pPGK1")),
        aes(x=cycle,y=fluor_signal,linetype=prep_type,group=well)) + 
-    facet_grid(terminator~target_id) + 
+    facet_grid(UTR3~target_id) + 
     geom_line() +
     scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
     expand_limits(y=0) + 
@@ -521,7 +469,7 @@ ggplot(data=platesamp %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_re
 
 ggplot(data=platesamp %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_rep1"), promoter %in% c("pSRO9")),
        aes(x=cycle,y=fluor_signal,linetype=prep_type,group=well)) + 
-    facet_grid(terminator~target_id) + 
+    facet_grid(UTR3~target_id) + 
     geom_line() +
     scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
     expand_limits(y=0) + 
@@ -541,7 +489,7 @@ ggplot(data=platesmelt %>% filter(strain==c("POT1-ccdB")),
 
 ggplot(data=platesmelt %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_rep1"), promoter %in% c("pRPS3")),
        aes(x=temperature,y=dRdT,group=well)) + 
-    facet_grid(terminator~target_id) + 
+    facet_grid(UTR3~target_id) + 
     geom_line(aes(linetype=prep_type)) +
     scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
     scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 
@@ -549,7 +497,7 @@ ggplot(data=platesmelt %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_r
 
 ggplot(data=platesmelt %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_rep1"), promoter %in% c("pPGK1")),
        aes(x=temperature,y=dRdT,group=well)) + 
-    facet_grid(terminator~target_id) + 
+    facet_grid(UTR3~target_id) + 
     geom_line(aes(linetype=prep_type)) +
     scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
     scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 
@@ -557,7 +505,7 @@ ggplot(data=platesmelt %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_r
 
 ggplot(data=platesmelt %>% filter(!strain==c("POT1-ccdB"), bio_rep %in% c("bio_rep1"), promoter %in% c("pSRO9")),
        aes(x=temperature,y=dRdT,group=well)) + 
-    facet_grid(terminator~target_id) + 
+    facet_grid(UTR3~target_id) + 
     geom_line(aes(linetype=prep_type)) +
     scale_linetype_manual(values=c("-RT"="dashed","+RT"="solid")) +
     scale_x_continuous(breaks=seq(60,100,10),minor_breaks=seq(60,100,5)) + 

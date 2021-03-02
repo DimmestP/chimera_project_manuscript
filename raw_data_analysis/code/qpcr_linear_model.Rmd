@@ -136,7 +136,7 @@ ggplot(model_coefficients) +
 
 motif_term_dictionary <- model_coefficients %>% 
   distinct(term) %>%
-  mutate(new_term = c("Construct", "exp_repExpRep2", "ATATTC", "GTATACCTA", "UGUAHMNUA", "HWNCAUUWY", "Wildtype\n vs Mod0", "UGUAHMNUA\n+\nHWNCAUUWY"))
+  mutate(new_term = c("Construct", "exp_repExpRep2", "ATATTC", "GTATACCTA", "TGTAHMNTA", "HWNCATTWY", "Wildtype\n vs Mod0", "TGTAHMNTA\n+\nHWNCATTWY"))
 
 construct_dictionary <- model_coefficients %>% 
   distinct(ter_pro) %>%
@@ -153,17 +153,20 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
   geom_point() +
   geom_errorbar(aes(ymax = -estimate + std.error, ymin = -estimate - std.error)) +
   labs(y = TeX("Log_2 Fold Change in\n RNA Abundance"), 
-       colour = "Terminator") +
+       colour = "Terminator",
+       tag = "B") +
   theme(strip.placement = "outside", 
         strip.background = element_rect(fill = "white", colour = "white"), 
+        strip.text = element_text(size = 7, face = "bold"),
         axis.title.x = element_blank(),
         axis.text.x = element_text(angle = 90, hjust = 0, vjust = 0.5),
         axis.ticks.x = element_blank(),
         panel.spacing = unit(0, units = "cm"),
         panel.grid.major.x = element_blank(),
-        axis.line.x = element_blank()) +
+        axis.line.x = element_blank(),
+        plot.tag = element_text( vjust = -2)) +
   scale_colour_manual(breaks = c("tTSA1", "tRPS3", "tPIR1"), values = c("#56B4E9", "#D55E00", "#000001")) +
-  facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "UGUAHMNUA", "HWNCAUUWY", "UGUAHMNUA\n+\nHWNCAUUWY")), 
+  facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "TGTAHMNTA", "HWNCATTWY", "TGTAHMNTA\n+\nHWNCATTWY")), 
              scales = "free_x", 
              space = "free_x", 
              switch = "x") +

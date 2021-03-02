@@ -15,18 +15,10 @@ Contains three .Rmd files, one for each motif host terminator, holding tidyqpcr 
 
 - raw_data_analysis/data/norm_qpcr/motif_context_dependence/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv
 
-The following figures are also made in the corresponding file;
+The following figureis also made in the corresponding file;
 
 - results_chapter/figures/tPIR1_design_and_qpcr.png
 
-- results_chapter/figures/tTSA1_design_and_qpcr.png
-
-- results_chapter/figures/tRPS3_design_and_qpcr.png
-
-Requires the construct design diagrams available in;
+Requires the construct design diagram available in;
 
 - raw_data_analysis/figures/terminator_construct_designs/PIR1_motif_insertion_construct_design.svg
-
-- raw_data_analysis/figures/terminator_construct_designs/TSA1_motif_insertion_construct_design.svg
-
-- raw_data_analysis/figures/terminator_construct_designs/RPS3_motif_insertion_construct_design.svg
