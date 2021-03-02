@@ -88,4 +88,4 @@ insertion_construct_plot <- wrap_elements(full = (wrap_elements(full = (ggdraw()
   plot_annotation(tag_levels = "A") +
   plot_layout(heights = c(4,1,1))
 
-ggsave(filename = here("results_chapter/figures/insertion_constructs_design_and_qpcr.png"), width = 183, height = 200, unit = "mm")
+ggsave(filename = here("results_chapter/figures/insertion_constructs_design_and_qpcr.png"), width = 163, height = 200, unit = "mm")
