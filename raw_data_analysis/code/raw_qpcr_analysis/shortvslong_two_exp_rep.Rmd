@@ -478,7 +478,8 @@ platesnorm_S500bp_pSRO9_median <- bind_rows(platesnorm_by_S500bp_pSRO9_ExpRep1,p
                               rel_abund_delta_deltacq = (2^-median_delta_deltacq), na.rm=FALSE)%>%
                     separate(strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator", "Length")) %>%
                     unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
-                    unite(UTR3,Terminator,Length,sep="_", remove=FALSE)
+                    unite(UTR3,Terminator,Length,sep="_", remove=FALSE) %>%
+  mutate(UTR3 = str_remove(UTR3,"_WT"))
 
 
 platesnorm_R200bp_pRPS3_median <- bind_rows(platesnorm_by_R200bp_pRPS3_ExpRep1,platesnorm_by_R200bp_pRPS3_ExpRep2)%>%
@@ -490,7 +491,8 @@ platesnorm_R200bp_pRPS3_median <- bind_rows(platesnorm_by_R200bp_pRPS3_ExpRep1,p
                                              "pRPS3-mCherry-tRPS3_WT-200bp")))%>%
                     separate(strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator", "Length")) %>%
                     unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
-                    unite(UTR3,Terminator,Length,sep="_", remove=FALSE)
+                    unite(UTR3,Terminator,Length,sep="_", remove=FALSE) %>%
+  mutate(UTR3 = str_remove(UTR3,"_WT"))
 
 
 platesnorm_all_median <- bind_rows(platesnorm_S500bp_pSRO9_median,platesnorm_R200bp_pRPS3_median)
@@ -502,7 +504,7 @@ platesnorm_all_median <- bind_rows(platesnorm_S500bp_pSRO9_median,platesnorm_R20
 
 normalised_plot_SRO9 <- ggplot(data = platesnorm_S500bp_pSRO9_median) +
   RNA_relative_abundance_figure_options +
-      labs(x="Fold change in RNA abundance relative to \n pSRO9-mCh-tSRO9_500bp (log2 scale)", title = "SRO9", y = NULL) +
+      labs(x="Fold change in RNA abundance \n relative to tSRO9_500bp \n (log2 scale)", title = "SRO9", y = NULL) +
     scale_colour_manual(values=c("#CC6666", "black")) +
     theme(axis.text.y=element_text(colour=c("#CC6666", "black")))
 normalised_plot_SRO9
@@ -512,9 +514,9 @@ normalised_plot_SRO9
 
 normalised_plot_RPS3 <- ggplot(data = platesnorm_R200bp_pRPS3_median) +
   RNA_relative_abundance_figure_options + 
-      labs(x="Fold change in RNA abundance relative to \n pRPS3-mCh-tRPS3_200bp (log2 scale)", title = "RPS3", y="3\'UTR Length") +
+      labs(x="Fold change in RNA abundance \n relative to tRPS3_200bp \n (log2 scale)", title = "RPS3", y="3\'UTR Length") +
     scale_colour_manual(values=c("#288a2e","#a84a9a","#6f3ba1")) +
     theme(axis.text.y=element_text(colour=c("#288a2e","#a84a9a", "#6f3ba1")))
 
-ggsave( here("./supplementary_data_chapter/figures/RPS3_SRO9_short_vs_long.png"),plot_grid(normalised_plot_RPS3, normalised_plot_SRO9, ncol=2), height = 4, width = 10.5)
+ggsave( here("./results_chapter/figures/RPS3_SRO9_short_vs_long.png"),plot_grid(normalised_plot_RPS3, normalised_plot_SRO9, ncol=2),  width = 163, height = 80, unit = "mm")
 ```
