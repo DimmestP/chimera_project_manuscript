@@ -66,7 +66,7 @@ mCherry_protein_vs_RNA_figure <- ggplot(mCherry_protein_vs_RNA) +
   scale_y_log2nice(omag = seq(-10, 15)) +
   geom_text(aes(label = mCherry_protein_vs_RNA_cor_text),
             y = 1.4,
-            x= -0.8, parse = TRUE, size = 5) +
+            x= -0.8, parse = TRUE, size = 4) +
   theme(legend.position = "bottom") +
   guides(shape=guide_legend(ncol=1))
 
@@ -87,7 +87,7 @@ ggsave(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png
           (low_exp_mCh_mTurq_platereader_raw_figure + mCherry_protein_vs_RNA_figure + 
              plot_layout(widths = c(1.85,1)))) +
          plot_annotation(tag_levels = "A"),
-       width = 183, height = 220, units = "mm")
+       width = 165, height = 200, units = "mm")
 
 # Create Normalised Platereader plot
 
@@ -97,12 +97,13 @@ norm_pro_mTurq_ter_all <- read_csv(here("raw_data_analysis/data/norm_platereader
 
 norm_mTurq_and_mCherry <- norm_pro_mTurq_ter_all %>%
   rename(protein = "mTurq", fluo_per_OD_at_max_gr = "norm_fluo_per_OD_at_max_gr") %>%
-  select(-mTurq_per_OD_at_max_gr, -remove) %>%
+  select(-mTurq_per_OD_at_max_gr, -remove, -X1) %>%
   bind_rows(
     norm_pro_mCh_ter_all %>%
       rename(protein = "mCherry", fluo_per_OD_at_max_gr = "norm_fluo_per_OD_at_max_gr") %>%
-      select(-BioRep, -mCh_per_OD_at_max_gr, -sample_id, -remove)
+      select(-BioRep, -mCh_per_OD_at_max_gr, -sample_id, -remove, -X)
   ) %>%
+  filter(!Promoter %in% c("pCLN2", "pSRO9")) %>%
   mutate(Terminator = factor(Terminator, ter10), Promoter = factor(Promoter, pro4))
 
 norm_mTurq_and_mCherry_figure <- ggplot(data=norm_mTurq_and_mCherry %>% filter(!Promoter %in% c("pSRO9", "pCLN2"))) +
@@ -110,5 +111,6 @@ norm_mTurq_and_mCherry_figure <- ggplot(data=norm_mTurq_and_mCherry %>% filter(!
   facet_grid(protein~Promoter) +
   protein_relative_abundance_figure_options
 
-ggsave(here("./results_chapter/figures/pro_ter_platereader_mTurq_and_mCh.png"), norm_mTurq_and_mCherry_figure, width = 9, height = 4)
+ggsave(here("./results_chapter/figures/pro_ter_platereader_mTurq_and_mCh.png"), norm_mTurq_and_mCherry_figure,
+       width = 165, height = 100, units = "mm")
 
