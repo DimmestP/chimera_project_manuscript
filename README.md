@@ -76,7 +76,7 @@ If you want to rerun the analysis files yourself they need to be ran in a certai
 - Make manuscript
 ```
     # In console at the bottom of RStudio
-    install.packages("bookdown")
+    install.packages(bookdown)
     
     bookdown::render_book("abstract.Rmd")
 
@@ -86,14 +86,6 @@ All of the figures required to make the manuscript from chapter Rmd file are pro
 However, if you want to rerun the analysis from raw data you can use the makefile to automatically run the analysis in the right order.
 
 - Check you have all the required R libraries listed in the sessionInfo.txt file
-
-```
-	# In console at the bottom of RStudio
-	install.packages("renv")
-	
-	renv::load()
-	renv::restore()
-```
 
 - Use GNU make to run R scripts (GNU make is available by default in Mac/Linux terminals but you'll need to download a GNU terminal for Windows)
 
@@ -141,9 +133,6 @@ Key file used by RStudio to automatically set up the working directory for R con
 
 ### sessionInfo.txt
 Useful R library information to aid with running analysis scripts on other computers. It is a list of all active libraries and their versions used the last time the script ran successfully.
-
-### renv.lock
-JSON conforming file that holds all of the R libraries, their depenencies and versions that were used to last run the scripts correctly.
 
 ## Tips 
 
