@@ -3,8 +3,6 @@
 ### tPIR1_design_and_qpcr.png, insertion_constructs_design_and_qpcr.png
 Construct design and normalised RT-qPCR results for PIR1, TSA1 and RPS3 terminators. Created by
 
--  raw_data_analysis/code/raw_qpcr_analysis/motif_context_dependence/pPIR1_pPGK1_pSRO9_tPIR1_two_exo_rep.Rmd
-
 - raw_data_analysis/code/combine_terminator_construct_qPCR_and_design_figure.R
 
 ### qPCR_model_coef_and_pred_vs_exp_abund.png
