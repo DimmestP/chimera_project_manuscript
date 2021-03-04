@@ -12,13 +12,7 @@ knitr::include_graphics(here("results_chapter/figures/pro_ter_swap_protein_and_r
 ```
 
 ```{r pro-ter-platereader-mCherry-mTurq-norm, fig.cap="\\textbf{Terminator contributions to gene expresion are promoter dependent.}  mTurq and mCherry fluorescence measured at the time of each sample's maximum growth rate for 10 termintators paired with four high expressing promoters. Negative values arising from instrument noise dominating measurements of constructs with neglegible fluorescence are automatically set to 0.", fig.align='center'}
-knitr::include_graphics(here("results_chapter/figures/pro_ter_platereader_mTurq_and_mCh.png"))
-```
-
-## Short vs long terminator experiment
-
-```{r RPS3-SRO9-short-vs-long, fig.cap="\\textbf{Extending terminator sequence beyond transcript 3'UTR length enhances gene expression}. (\\textbf{A}) Fold changes in mRNA abundance for two RPS3 terminator sequences equaling reported 3'UTR isoform lengths, 59bp and 86bp, and one terminator sequence extended beyond the maximum reported 3'UTR length, 200bp. (\\textbf{B}) Same as (\\textbf{A}) but for one SRO9 terminator sequence shorter than reported 3'UTR isoform lengths, 200bp, and one beyond, 500bp.", fig.align='center'}
-knitr::include_graphics(here("results_chapter/figures/RPS3_SRO9_short_vs_long.png"))
+knitr::include_graphics(here("results_chapter/figures/pro_ter_platereader_norm_mTurq_and_mCh.png"))
 ```
 
 

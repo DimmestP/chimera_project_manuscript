@@ -34,6 +34,6 @@ Requires the construct design diagram available in;
 Uses results from train_half_life_linear_model.R and qpcr_linear_model.R to make figure results_chapter/figures/hlife_motif_pred_vs_qpcr_abund.Rmd
 
 ### pro_ter_swaps_platereader_and_qPCR_plot.R
-Uses results from pro-ter swap qPCR and platereader analysis to create results/figures/pro_ter_swaps_platereader_and_qPCR_plot.R 
+Uses results from pro-ter swap qPCR and platereader analysis to create results_chapter/figures/pro_ter_swaps_platereader_and_qPCR_plot.R and results_chapter/figures/pro_ter_platereader_norm_mTurq_and_mCh.png
 
 

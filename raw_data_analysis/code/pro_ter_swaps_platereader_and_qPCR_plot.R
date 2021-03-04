@@ -89,7 +89,23 @@ ggsave(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png
          plot_annotation(tag_levels = "A"),
        width = 165, height = 200, units = "mm")
 
-# Create Normalised Platereader plot
+# Create Normalised Platereader plot and add qPCR of short-vs-long
+
+shortvslong_platesnorm_all_median <- read_csv(here("raw_data_analysis/data/norm_qpcr/short_vs_long/shortvslong_two_exp_rep_deltadeltacq_platesnorm_summarise.csv")) %>%
+  separate(UTR3, into = c(NA, "UTR3"), sep = "_") %>%
+  mutate(UTR3 = factor(UTR3, levels = rev(c("59bp","86bp","200bp","500bp"))))
+
+normalised_plot_SRO9 <- ggplot(data = shortvslong_platesnorm_all_median %>% filter(Promoter == "pSRO9")) +
+  RNA_relative_abundance_figure_options +
+  labs(x="Fold change in RNA abundance \n relative to tSRO9_500bp \n (log2 scale)", title = "SRO9", y = NULL) +
+  scale_colour_manual(values=c("#CC6666", "black")) +
+  theme(axis.text.y=element_text(colour=c("#CC6666", "black")))
+
+normalised_plot_RPS3 <- ggplot(data = shortvslong_platesnorm_all_median %>% filter(Promoter == "pRPS3")) +
+  RNA_relative_abundance_figure_options + 
+  labs(x="Fold change in RNA abundance \n relative to tRPS3_200bp \n (log2 scale)", title = "RPS3", y="Terminator \n Length") +
+  scale_colour_manual(values=c("#288a2e","#a84a9a","#6f3ba1")) +
+  theme(axis.text.y=element_text(colour=c("#288a2e","#a84a9a", "#6f3ba1")))
 
 norm_pro_mCh_ter_all <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCh-ter_swaps_summary_PGK1_norm.csv"))
 
@@ -111,6 +127,12 @@ norm_mTurq_and_mCherry_figure <- ggplot(data=norm_mTurq_and_mCherry %>% filter(!
   facet_grid(protein~Promoter) +
   protein_relative_abundance_figure_options
 
-ggsave(here("./results_chapter/figures/pro_ter_platereader_mTurq_and_mCh.png"), norm_mTurq_and_mCherry_figure,
-       width = 165, height = 100, units = "mm")
+norm_layout <- "A
+                A
+                A
+                B"
+
+ggsave(here("./results_chapter/figures/pro_ter_platereader_norm_mTurq_and_mCh.png"), 
+       norm_mTurq_and_mCherry_figure + (normalised_plot_RPS3 + (normalised_plot_SRO9 + plot_layout(tag_level = "new"))) + plot_layout(design = norm_layout) + plot_annotation(tag_levels = "A"),
+       width = 165, height = 150, units = "mm")
 

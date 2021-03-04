@@ -463,7 +463,7 @@ platesnorm_by_R200bp_pRPS3_ExpRep2 <- platesnorm_pRPS3_ExpRep %>% filter(ExpRep=
 ### 1) Exporting analysed delta cq values data
 ```{r deltacq_normdata, echo=TRUE}
 #exporting platesnorm dataframe
-write.csv(platesnorm_summarise,here("raw_data_analysis/data/norm_qpcr/shortvslong_two_exp_rep_deltacq_platesnorm_summarise.csv"), row.names = FALSE)
+write.csv(platesnorm_summarise,here("raw_data_analysis/data/norm_qpcr/short_vs_long/shortvslong_two_exp_rep_deltacq_platesnorm_summarise.csv"), row.names = FALSE)
 
 ```
 
@@ -496,6 +496,8 @@ platesnorm_R200bp_pRPS3_median <- bind_rows(platesnorm_by_R200bp_pRPS3_ExpRep1,p
 
 
 platesnorm_all_median <- bind_rows(platesnorm_S500bp_pSRO9_median,platesnorm_R200bp_pRPS3_median)
+
+write_csv(platesnorm_all_median, here("raw_data_analysis/data/norm_qpcr/short_vs_long/shortvslong_two_exp_rep_deltadeltacq_platesnorm_summarise.csv"))
 ```
 
 ### 2) Plotting the results in a scatter plot
@@ -518,5 +520,5 @@ normalised_plot_RPS3 <- ggplot(data = platesnorm_R200bp_pRPS3_median) +
     scale_colour_manual(values=c("#288a2e","#a84a9a","#6f3ba1")) +
     theme(axis.text.y=element_text(colour=c("#288a2e","#a84a9a", "#6f3ba1")))
 
-ggsave( here("./results_chapter/figures/RPS3_SRO9_short_vs_long.png"),plot_grid(normalised_plot_RPS3, normalised_plot_SRO9, ncol=2),  width = 163, height = 80, unit = "mm")
+normalised_plot_RPS3
 ```

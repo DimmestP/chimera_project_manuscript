@@ -8,5 +8,8 @@ Contains three csv files, one for each host terminator, of normalised mRNA abund
 
 Contains one csv file of normalised mRNA abundance for all promoter-terminator swap constructs. Created by the associated analysis file in raw_data_analysis/code/raw_qpcr_analysis/promoter_terminator_swaps/pRPS3_pPGK1_pSRO9_tvariable_three_bio_rep.Rmd.
 
-### shortvslong_two_exp_rep_deltacq_platesnorm_summarise.csv
-A csv file of normalised mRNA abundance for the short vs long terminator constructs. Created by the associated analysis file in raw_data_analysis/code/raw_qpcr_analysis/promoter_terminator_swaps/shortvslong_two_exp_rep.Rmd.
+### short_vs_long
+Contains two csv files of normalised mRNA abundance for the short vs long terminator constructs.
+- shortvslong_two_exp_rep_deltacq_platesnorm_summarise.csv
+- shortvslong_two_exp_rep_deltadeltacq_platesnorm_summarise.csv
+ Created by the associated analysis file in raw_data_analysis/code/raw_qpcr_analysis/promoter_terminator_swaps/shortvslong_two_exp_rep.Rmd.
