@@ -7,6 +7,22 @@ knitr::opts_chunk$set(fig.pos = "p")
 
 ## Terminator effects on gene expression are context dependent
 
+To investigate the context dependence of regulatory regions, we created a library of 120 constructs containing all combindations of 10 terminators, 6 promoters and 2 ORFs.
+t and p prefixes are added to native gene names to denote references to terminator/promoter regions.
+The ORF either encoded a mCherry or mTurq fluorescent protein and a platereader assay measured each construct's fluorescence.
+Promoter choice dominated overall gene expression with over 100 fold changes in fluorescence between the four highest expressing promoters, \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)A, and the two lowest expressing promoters, \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)B.
+The effect of terminator choice alone can also be seen as up to 5 fold changes in fluorescence within smae promoter-ORf sets.
+We also measured the mRNA levels of a subset of mCherry constructs and confirmed the effects seen on protein expression correlate with transcript levels, \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)C.
+
+We normalised the fluorescence of each construct to the PGK1 terminator its promoter-ORF set in order to explore the context dependence of each terminator by comparing relative contributions to gene expression, \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)A.
+SRO9 and CLN2 promoter were removed due to the poor signal to noise ratio at low fluorescence levels.
+tPAB1 exhibits promoter dependent regulatory behaviour as it is consistantly the most highly expressed terminator in mTurq constructs but not in mCherry constructs.
+tPGK1 exhibits promoter dependent regulatory behaviour as it changes from being one of the most hirghly expressing terminators when paired with pHSP26 to less than the median value when paired with pRPS13.
+The behaviour of tPGK1 is repeated across both ORFs.
+To further examine terminator contributions to gene expression, we chose two widely used native genes and adjusted the number of nucleotides after the stop codon used to denote the terminator region.
+The lengths used were close to or significantly longer than previously reported 3'UTR lengths for the gene's transcripts.
+For both native genes, selecting a terminator length longer than the suspected 3'UTR enables greater mRNA expression, \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B. 
+
 ```{r pro-ter-platereader-mCherry-mTurq-raw, fig.cap="\\textbf{Both terminator and promoter contribute to mCherry and mTurq gene expresion.}  (\\textbf{A}) mCherry and mTurq fluorescence measured at the time of each sample's maximum growth rate for 10 termintators paired with 4 high expressing promoters. Negative fluorescence values arising from instrument noise dominating measurements of constructs with neglegible fluorescence are automatically set to 0. (\\textbf{B}) Same as above but for 2 low expressing promoters. (\\textbf{C}) mCherry fluorescence vs RT-qPCR mRNA abundance for 3 promoters paired with all 10 terminators.", fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png"))
 ```
@@ -14,15 +30,6 @@ knitr::include_graphics(here("results_chapter/figures/pro_ter_swap_protein_and_r
 ```{r pro-ter-platereader-mCherry-mTurq-norm, fig.cap="\\textbf{Terminator contributions to gene expresion are promoter dependent.}  mTurq and mCherry fluorescence measured at the time of each sample's maximum growth rate for 10 termintators paired with four high expressing promoters. Negative values arising from instrument noise dominating measurements of constructs with neglegible fluorescence are automatically set to 0.", fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/pro_ter_platereader_norm_mTurq_and_mCh.png"))
 ```
-
-
-We verified that a terminator region's contribution to gene expression is dependent both on the ORF and the promoter of the host transcript.
-A library was created of 10 terminators paired with 2 different fluorescent protein ORFs (mCherry and mTurq) and 5 different promoters.
-A protein fluorescence assay measured the expression of every combination relative to the tPGK1 construct of each promoter-ORF set.
-In mTurq, tPAB1 constructs are always the most abundant and tPMA1 constructs are always the least abundant, within promoter sets.
-However, in mCherry tCLN2, tPAB1 and tRPS3; and tPMA1, tSRO9 and tSUN4 compete for the most and least abundant constructs respectively, dependent on promoter.
-The behavior of tHSP26 is especially interesting as it is changes from being one of the most abundant constructs in pCLN2-mTurq to one of the least expressing in pRPS3-mCherry.
-
 
 ## Candidate cis-regulatory elements contribute to transcript decay rates
 
