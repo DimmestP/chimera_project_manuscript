@@ -100,7 +100,7 @@ construct_dictionary_TSA1_RPS3 <- tibble( construct = c("mod0", "modA", "modB", 
 
 promoter_dictionary_PIR1 <- tibble( pro = c("pPGK1", "Native", "pSRO9"), promoter = c("pPGK1", "pPIR1", "pSRO9"))
 
-construct_dictionary_PIR1 <- tibble( construct = c("modA", "modB", "modC", "modD", "modE", "mod_F", "mod_G", "WT"), new_construct = c( "mod_ANHHH", "mod_NTHHH", "mod_ATNHH", "mod_ATHNH", "mod_ATNNN", "mod_ANNNN", "mod_NTNNN", "WT_ATHHH"))
+construct_dictionary_PIR1 <- tibble( construct = c("modA", "modB", "modC", "modD", "modE", "modF", "modG", "WT"), new_construct = c( "mod_ANHHH", "mod_NTHHH", "mod_ATNHH", "mod_ATHNH", "mod_ATNNN", "mod_ANNNN", "mod_NTNNN", "WT_ATHHH"))
 
 r_cor_data_TSA1_RPS3 <- combined_pred_vs_actual_abund_TSA1_RPS3 %>% 
   group_by(construct, terminator, promoter) %>% 

@@ -46,7 +46,7 @@ model_coefficients <-   ggplot(combined_motif_coefficients, aes(y = estimate_C, 
 
 ggsave2(here("results_chapter/figures/hlife_model_multi_fig.png"), 
         (dataset_comparison + model_coefficients) / 
-          (chan_pred_vs_obvs_plot + sun_pred_vs_obvs_plot) + 
+          (chan_pred_vs_obvs_plot + (sun_pred_vs_obvs_plot + plot_layout(tag_level = "new"))) + 
           plot_annotation(tag_levels = "A"), 
         width = 163, 
         height = 180,
