@@ -85,7 +85,18 @@ If you want to rerun the analysis files yourself they need to be ran in a certai
 All of the figures required to make the manuscript from chapter Rmd file are provided in the repo. 
 However, if you want to rerun the analysis from raw data you can use the makefile to automatically run the analysis in the right order.
 
-- Check you have all the required R libraries listed in the sessionInfo.txt file
+- Check you have all the required R libraries using the renv package. 
+
+- First open R project in RStudio File -> Open Project -> chimera_project_manuscript
+
+- Then update packages with;
+```
+# In RStudio Command line
+
+install.packages("renv")
+
+renv::restore()
+```
 
 - Use GNU make to run R scripts (GNU make is available by default in Mac/Linux terminals but you'll need to download a GNU terminal for Windows)
 
