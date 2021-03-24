@@ -18,12 +18,14 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 library(bookdown)
 ```
 \begin{abstract}
-The task of discovering determinates of gene expression has led to the abstraction of a gene into discrete modules, such as promoter, ORF and terminator.
-The characterisation of a module often assumes that it contributes to gene expression independently of any other modules present the host gene.
-Our study first highlights the limitations of the assumption of independence by swapping promoter-terminator pairs in S.cerevisiae and confirming non-linear effects on overall gene expression.
-Next, we explore whether this context dependence behavior is replicated by individual cis-regulatory elements within terminator regions.
-Focusing on suspected protein binding motifs in mRNA transcript 3'UTRs, we insert/remove  CREs into/from different promoter-terminator pairings.
-Our results show that individual cis-regulatory elements are highly dependent on both the host terminator and the paired promoter.
-The possibility that the same CRE can regulate gene expression differently in different host genes suggest complex regulatory patterns are more ubiquitous than currently assumed.
-Meanwhile, the consequences for novel CREs searches emphasise the need for improved search algorithms that include local and global context effects.
+Cis-regulatory elements (CREs) determining gene expression are abstracted into discrete modules, such as promoter, coding sequence, and terminator, and short sequence motifs within those.
+Current cloning techniques mean that CREs are easy to construct and combine, i.e. they are practically modular.
+However, it is unclear how much the effect of CREs on gene expression outcomes depends on other elements present in the same gene: are they functionally modular?
+We probe the limitations of assuming independent effects in budding yeast, by confirming that the quantitative effect of a terminator depends on both promoter and coding sequence.
+Next, we explore whether individual cis-regulatory motifs within terminator regions display similar context dependence.
+We focus on suspected protein binding motifs in mRNA transcript 3'UTRs, inferred from transcriptome-wide datasets of mRNA decay.
+Then we construct reporter genes with different combinations of inserted or removed motifs in 3 different terminator contexts, each expressed from 3 different promoters.
+Our results show that the effects of individual CREs depend both on their host terminator, and also on the paired promoter at the opposite end of the coding sequence.
+Observations that the same CRE can regulate gene expression differently in different host genes suggests that complex regulatory patterns are ubiquitous and need to be accounted for in designing synthetic genes.
+Meanwhile, the consequences for novel CRE searches emphasise the need for improved search algorithms that include local and global context effects.
 \end{abstract}

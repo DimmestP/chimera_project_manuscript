@@ -4,6 +4,7 @@ library(gridExtra)
 library(here)
 library(dplyr)
 library(readr)
+library(stringr)
 
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 
@@ -55,10 +56,13 @@ insertion_construct_plot <- wrap_elements(full = (wrap_elements(full = (ggdraw()
                                  "Motif 3" = c("Random", "ATATTC", "Random", 
                                                "HWNCATTWY", "HWNCATTWY", "GTATACCTA", "NA")),
                           rows = NULL,
-                          theme = ttheme_default(base_size=4,
+                          theme = ttheme_default(base_size=5,
                                                  padding = unit(c(2, 2), "mm"),
                                                  core=list(
-                                                   fg_params=list(col = rev(RPS3_TSA1_colour_scheme)))))) + 
+                                                   fg_params=list(col = c("black", "#CC6666", "#416db0", "#6f3ba1", "#a84a9a", "#288a2e", "grey50",
+                                                                          "black", "black", "black", "#6f3ba1", "#a84a9a", "black", "grey50",
+                                                                          "black", "#CC6666", "#416db0", "black", "#a84a9a", "#288a2e", "grey50",
+                                                                          "black", "#CC6666", "black", "#6f3ba1", "#a84a9a", "#288a2e", "grey50")))))) + 
   wrap_elements(full = (ggdraw() + 
                           draw_image(image_read_svg(here("raw_data_analysis/figures/terminator_construct_designs/tRPS3-tTSA1_design.svg"), width = 520, height = 354))))+
     plot_layout(design = insertion_layout))) /
@@ -93,21 +97,26 @@ deletion_construct_plot <- wrap_elements(full = (wrap_elements(full = (ggdraw() 
                                                                           draw_image(image_read_svg(here("raw_data_analysis/figures/terminator_construct_designs/PIR1_motif_WT_construct_design.svg"))))) +
                                                     wrap_elements(full = tableGrob(tibble("Construct" = rev(c("mod_NTNNN", "mod_ANNNN", "mod_ATNNN", "mod_ATHNH", 
                                                                                                           "mod_ATNHH", "mod_ANHHH", "mod_NTHHH", "WT")), 
-                                                                                          "ATATTC" = c("", "Random", "", 
-                                                                                                        "", "", "", "", "Random"), 
-                                                                                          "TGTAHMNTA" = c("", "", "Random", 
-                                                                                                        "", "", "", "Random", ""), 
-                                                                                          "1st HWNCATTWY" = c("", "", "", 
-                                                                                                          "Random", "", "Random", "Random", "Random"),
-                                                                                          "2nd HWNCATTWY" = c("", "", "", 
-                                                                                                          "", "Random", "Random", "Random", "Random"),
-                                                                                          "3rd HWNCATTWY" = c("", "", "", 
-                                                                                                          "", "", "Random", "Random", "Random")),
+                                                                                          "Motif 1" = c("ATATTC", "Random", "ATATTC", 
+                                                                                                        "ATATTC", "ATATTC", "ATATTC", "ATATTC", "Random"), 
+                                                                                          "Motif 2" = c("TGTAHMNTA", "TGTAHMNTA", "Random", 
+                                                                                                        "TGTAHMNTA", "TGTAHMNTA", "TGTAHMNTA", "Random", "TGTAHMNTA"), 
+                                                                                          "Motif 3" = c("HWNCATTWY", "HWNCATTWY", "HWNCATTWY", 
+                                                                                                          "Random", "HWNCATTWY", "Random", "Random", "Random"),
+                                                                                          "Motif 4" = c("HWNCATTWY", "HWNCATTWY", "HWNCATTWY", 
+                                                                                                          "HWNCATTWY", "Random", "Random", "Random", "Random"),
+                                                                                          "Motif 5" = c("HWNCATTWY", "HWNCATTWY", "HWNCATTWY", 
+                                                                                                          "HWNCATTWY", "HWNCATTWY", "Random", "Random", "Random")),
                                                                                    rows = NULL,
-                                                                                   theme = ttheme_default(base_size=4,
+                                                                                   theme = ttheme_default(base_size=5,
                                                                                                           padding = unit(c(2, 2), "mm"),
                                                                                                           core=list(
-                                                                                                            fg_params=list(col = rev(PIR1_colour_scheme)))))) + 
+                                                                                                            fg_params=list(col = c("black", "#CC6666", "#416db0", "#9884ab", "#a84a9a", "#5d1c9c", "#1e1c9c", "#971c9c",
+                                                                                                                                   "black", "#CC6666", "black", "black", "black", "black", "black", "#971c9c",
+                                                                                                                                   "black", "black", "#416db0", "black", "black", "black", "#1e1c9c", "black",
+                                                                                                                                   "black", "black", "black", "#9884ab", "black", "#5d1c9c", "#1e1c9c", "#971c9c",
+                                                                                                                                   "black", "black", "black", "black", "#a84a9a", "#5d1c9c", "#1e1c9c", "#971c9c",
+                                                                                                                                   "black", "black", "black", "black", "black", "#5d1c9c", "#1e1c9c", "#971c9c")))))) + 
                                                     wrap_elements(full = (ggdraw() + 
                                                                             draw_image(image_read_svg(here("raw_data_analysis/figures/terminator_construct_designs/tPIR1_design.svg"), width = 520, height = 354))))+
                                                     plot_layout(design = deletion_layout))) /
