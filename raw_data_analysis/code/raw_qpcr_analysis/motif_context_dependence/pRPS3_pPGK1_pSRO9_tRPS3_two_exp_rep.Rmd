@@ -11,9 +11,7 @@ output:
 ```{r setup,warning=FALSE,message=FALSE,echo=FALSE}
 
 ## knitr options for report generation
-knitr::opts_chunk$set(warning=FALSE,message=FALSE,echo=TRUE,cache=FALSE,
-                      #results="show",
-                      fig.path="figures_pRPS3_pPGK1_pSRO9_tRPS3mod/")
+knitr::opts_chunk$set(warning=FALSE,message=FALSE,echo=TRUE,cache=FALSE)
 
 
 library(dplyr)

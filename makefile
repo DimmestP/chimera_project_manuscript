@@ -30,14 +30,16 @@ $(MANUSCRIPT).pdf : $(CHAPTERS_MD)
 	Rscript -e "bookdown::render_book(\"abstract.Rmd\")"
 
 # Check if results chapter is older than relevent analysis files, if so remake
-results_chapter/results.md : $(MOTIF_QPCR_ANALYSIS_FILES_MD) $(CHIMERA_PLATEREADER_ANALYSIS_FILES_MD)\
+results_chapter/results.md :  $(ANALYSIS_FOLDER)/pro_ter_swaps_platereader_and_qPCR_plot.Rout\
 $(ANALYSIS_FOLDER)/raw_qpcr_analysis/shortvslong_two_exp_rep.md\
-hlife_model_extract_motif_coef.Rout $(ANALYSIS_FOLDER)/hlife_motif_pred_vs_qpcr_abund.md\
+$(ANALYSIS_FOLDER)/hlife_model_extract_motif_coef.Rout\
+$(ANALYSIS_FOLDER)/combine_terminator_construct_qPCR_and_design_figure.Rout\
+$(ANALYSIS_FOLDER)/hlife_motif_pred_vs_qpcr_abund.md\
 $(ANALYSIS_FOLDER)/qpcr_linear_model.md results_chapter/results.Rmd
 	$(KNIT_RMD)
 	
 # Check if supplementary data chapter is older than relevent analysis files, if so remake
-supplementary_data_chapter/supplementary_data.md : supplementary_data_chapter/supplementary_data.Rmd $(ANALYSIS_FOLDER)/raw_platereader_analysis/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.md $(ANALYSIS_FOLDER)/raw_qpcr_analysis/promoter_terminator_swaps/pRPS3_pPGK1_pSRO9_tvariable_three_bio_rep.md
+supplementary_data_chapter/supplementary_data.md : supplementary_data_chapter/supplementary_data.Rmd $(ANALYSIS_FOLDER)/raw_platereader_analysis/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.md
 	$(KNIT_RMD)
 
 # Check if analysis files need to be updated
@@ -49,11 +51,18 @@ $(MOTIF_QPCR_ANALYSIS_FILES_MD)\
 $(ANALYSIS_FOLDER)/qpcr_linear_model.md : %.md : %.Rmd
 	$(KNIT_RMD)
 
+
+$(ANALYSIS_FOLDER)/pro_ter_swaps_platereader_and_qPCR_plot.Rout : $(CHIMERA_PLATEREADER_ANALYSIS_FILES_MD) $(ANALYSIS_FOLDER)/raw_qpcr_analysis/promoter_terminator_swaps/pRPS3_pPGK1_pSRO9_tvariable_three_bio_rep.md $(ANALYSIS_FOLDER)/pro_ter_swaps_platereader_and_qPCR_plot.R
+	R CMD BATCH $(ANALYSIS_FOLDER)/pro_ter_swaps_platereader_and_qPCR_plot.R $(ANALYSIS_FOLDER)/pro_ter_swaps_platereader_and_qPCR_plot.Rout
+
+$(ANALYSIS_FOLDER)/combine_terminator_construct_qPCR_and_design_figure.Rout : $(MOTIF_QPCR_ANALYSIS_FILES_MD) $(ANALYSIS_FOLDER)/combine_terminator_construct_qPCR_and_design_figure.R
+	R CMD BATCH $(ANALYSIS_FOLDER)/combine_terminator_construct_qPCR_and_design_figure.R $(ANALYSIS_FOLDER)/combine_terminator_construct_qPCR_and_design_figure.Rout
+
 $(ANALYSIS_FOLDER)/hlife_motif_pred_vs_qpcr_abund.md : $(ANALYSIS_FOLDER)/hlife_motif_pred_vs_qpcr_abund.Rmd $(ANALYSIS_FOLDER)/train_half_life_linear_model.Rout
 	Rscript -e "knitr::knit(\"$(ANALYSIS_FOLDER)/hlife_motif_pred_vs_qpcr_abund.Rmd\",output = \"$@\")"
 	
-hlife_model_extract_motif_coef.Rout : $(ANALYSIS_FOLDER)/train_half_life_linear_model.Rout $(ANALYSIS_FOLDER)/hlife_model_extract_motif_coef.R
-	R CMD BATCH $(ANALYSIS_FOLDER)/hlife_model_extract_motif_coef.R hlife_model_extract_motif_coef.Rout
+$(ANALYSIS_FOLDER)/hlife_model_extract_motif_coef.Rout : $(ANALYSIS_FOLDER)/train_half_life_linear_model.Rout $(ANALYSIS_FOLDER)/hlife_model_extract_motif_coef.R
+	R CMD BATCH $(ANALYSIS_FOLDER)/hlife_model_extract_motif_coef.R $(ANALYSIS_FOLDER)/hlife_model_extract_motif_coef.Rout
 
 $(ANALYSIS_FOLDER)/train_half_life_linear_model.Rout :  %.Rout : %.R
 	R CMD BATCH $< $@
@@ -86,5 +95,9 @@ clean:
 	rm -fv $(ANALYSIS_FOLDER)/raw_platereader_analysis/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.md
 	rm -fv $(ANALYSIS_FOLDER)/raw_qpcr_analysis/promoter_terminator_swaps/pRPS3_pPGK1_pSRO9_tvariable_three_bio_rep.md
 	rm -fv $(ANALYSIS_FOLDER)/raw_qpcr_analysis/shortvslong_two_exp_rep.md
+	rm -frv figure
+	rm -fv $(ANALYSIS_FOLDER)/combine_terminator_construct_qPCR_and_design_figure.Rout
+	rm -fv $(ANALYSIS_FOLDER)/hlife_model_extract_motif_coef.Rout
+	rm -fv $(ANALYSIS_FOLDER)/pro_ter_swaps_platereader_and_qPCR_plot.Rout
 	
 .PHONY : clean
