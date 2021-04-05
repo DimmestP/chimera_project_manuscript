@@ -1,36 +1,32 @@
 # Introduction
 
-Our understanding of gene expression relies on the abstraction of a gene into discrete cis-regulatory elements (CRE), or ‘parts’, based on their most prominent function.
-The promoter coordinates the initiation of transcription.
-Transcription then progresses across the coding sequence to the terminator where cleavage and polyadenylation of the nascent transcript is coordinated.
-Extending the abstraction to the gene post-transcription, mRNA transcripts have untranslated regions flanking the 3' (3'UTR) and 5' (5'UTR) end of the coding sequence.
-The 5'UTR can contribute to translation regulation and the 3'UTR contributes to transcript stability and localisation.
-Assigning specific characteristics to individual elements of a gene has facilitated the assumption that "parts" are modular and, therefore, are practically interchangeable.
-This practical modularity has been implemented across molecular biology to discover and manipulate genetic determinates of gene expression. 
+Our understanding of gene expression relies on the abstraction of a gene into discrete cis-regulatory element (CRE) modules, or ‘parts’, based on their most prominent function.
+The promoter coordinates the initiation of transcription and the rate at which this occurs on DNA.
+Transcription then progresses through the 5' untranslated region (5'UTR), coding sequence (CDS), and 3' UTR, before termination and polyadenylation of the nascent transcript is coordinated by the terminator sequence.
+Post-transcriptional regulation includes effects of the 5'UTR on translation initiation, the coding sequence on translation elongation and mRNA decay, and of 3'UTR on localization and decay.
+Modern DNA synthesis and cloning techniques make gene construction practically modular: a number of standardised and modularised parts libraries have been designed to allow combinatorial assembly of parts and subsequent construction of complex pathways (Lee et al. 2015, Garcia-Ruiz et al. 2018, Andreou et al. 2018).
+These parts libraries generally approximate promoter to include the 5'UTR, and terminator to include the 3'UTR (Lee et al. 2015, Guo et al. 2015, Lubliner et al. 2013) [@Yamanishi2013].
+They also make the simplifying assumption that the parts are functionally modular, or composable: the contribution of each part to gene expression is predictable when combined with other parts.
+However, nearby parts do interact: in *E. coli* the protein expression driven by combinations of promoter and ribosomal binding site is predictable within 2-fold only 2/3 of the time (Kosuri et al., 2013).
 
-Practical modularity has been crucial to the development of toolkits for the construction of synthetic gene pathways and for simplifying the search space when detecting novel CRE's.
-Modern DNA synthesis and cloning techniques allow the construction of complex gene pathways through the combinatorial assembly of chosen "parts" [@Curran2013; @lee2015; @garcia2018; @andreou2018]. 
-However, the selection of a promoter and terminator with the desired expression levels is done with reference to standardised libraries.
-The characterisation of all possible promoter-terminator pairings is impractical.
-Therefore, reference libraries are only feasible if you assume the "parts" are modular, so any interaction effects are ignored and each "part" can be characterised independently. 
-Meanwhile, for the discovery of novel CREs, computational methods embed practical modularity into their searches by assuming Boolean logic.
-Methodologies for detecting CRE's commonly involve either; predicting functional data sets with sequence features, often using linear models [@Shalgi2005; @Cheng2017; @Vijayabaskar2019]; or, directly comparing the sequences of genes with similar characteristics to determine consensus sequences [@Hogan2008; @Kretz2013], often using the MEME suite [@Bailey2015].
-Linear models using sequences features to predict functional data simplify CRE behavior by assuming binary "on" or "off" contributions.
-Whilst consensus sequence based searches often assume each prospective CRE need occur once per gene to have an effect and ignores interactions between motifs or multi-part motifs.
-Limiting CRE's to simple toggle switches and considering CRE's found in different 'parts' to be entirely independent helps minimise the vast search space and find sequences that have clear contributions.
-Nevertheless, is the practical modularity implemented across biology justified by functional modularity in the regulatory behavior of CREs? 
+How much do cis-regulatory elements on either end of the coding sequence behave as functional modules?
+More precisely, do eukaryotic modular parts libraries behave predictably according to simple linear models? 
+In budding yeast, promoter identity can change the relative contribution of terminator up to 11-fold [@Curran2013] (Wei et al. 2017).
+Short CREs within 3' UTRs also affect protein output via recruitment of RNA-binding proteins (Singh 2015) including through shaping transcription termination (Shalem 2013),  post-transcriptional localization and decay (Puf protein cite), and other mechanisms (Ito et al., 2016).
+However, it is unclear to what extent the function of CREs in 3'UTRs is consistent across distinct promoters.
 
-Despite the extensive use of practical modularity, a comprehensive exploration of the limits of this assumption and the implications for the discovery and manipulation of complex regulatory mechanisms remains to be conducted.
-Previous studies have measured libraries of combinations of well-charactorised CREs, such as; promoters and ribosomal binding sites (RBS) [@Kosuri2013] or promoters and terminators [@Wei2017]. 
-These studies have shown non-linear interactions between CREs suggesting the regulatory behavour of CREs is not modular. 
-Constructs pairing highly expressing promoters with highly expressing terminators have exhibited lower overall expression levels than the same promoters paired with lowly expressing terminators. 
-For promoter-RBS combinations, 20% of the constructs had a >2-fold deviation from a linear model predicting gene expression, with 5% of constructs having a 13-fold deviation.
-These observations suggest that regulatory regions regularly breach the assumption of modularity, but how short CREs, such as RNA-binding protein (RBP) motifs, behave remains to be understood.  
+Experimental and computational methods to identify CREs within genes generally operate under an assumption of independence.
+Lists of suspected cis-regulatory elements have been collated by searching for common sequence motifs in genes grouped by similar characteristics, such as transcript half lives, [@Shalgi2005; @Cheng2017] or protein binding (Hogan 2008; Kretz et al. 2013, Siprashvili et al. 2016).
+Alternatively, direct evidence for protein binding sites on transcripts can be obtained by cross-linking assays (Zhao et al., 2010; cite a recent Jernej Ule review) [@Granneman2009].
+Computational packages such as MEME-suite [@Bailey2015] and BAMM motif (Siebert and Söding 2016) excel at determining short consensus sequences with some redundant positions, but do not support interacting effects between motifs or regions.
+Alternatively, gene regions can be broken into sequences called k-mers, typically less then 10 nucleotides in length, which are then tested for regulatory effects. 
+Restricting searches to k-mers allows for the detection of large numbers of exact motifs with model selection algorithms, such as penalised linear regression [@Friedman2010]. 
+Many k-mer searches consider the effect of motifs in isolation of  overall context [@Vijayabaskar2019], although some methods use latent variables to label motif instances as active or inactive (Dai et al., 2017).
+CRE context matters and inactive motifs are real: in mice, most high-affinity RBP motifs in expressed RNAs are not bound *in vivo* (Taliaferro et al., 2016).
 
-Here, we provide further evidence for the limitations of practical modularity in explaining the behaviour of regulatory regions and, for the first time, show that short CREs exhibit similar non-linear behaviour. 
-First, we use modular cloning to construct 120 combinations of promoter-5'UTR, coding sequence, and 3'UTR-terminator modules, showing that the quantitative effect of terminators depends on both promoter and coding sequence.
-We then investigate the effect of promoter and terminator context on the regulatory behaviour of short CREs by inserting shortlisted 3'UTR motifs into different constructs.
-In order to select for suitable 3'UTR motifs, we adapt a method to computationally predict mRNA log2-half-life as a linear combination of codon usage and motif counts [@Cheng2017].
-We then quantify their effect on mRNA and protein output when inserted in, or removed from, distinct 3'UTRs in reporter genes.
+Here, we investigate the contribution of 3'UTR cis-regulation to gene expression using reporter genes combined with computational analysis. 
+We use modular cloning to construct 120 combinations of promoter-5'UTR, coding sequence, and 3'UTR-terminator modules, showing that the quantitative effect of terminators depends on both promoter adn coding sequence.
+We then investigate the effect of motifs in 3'UTRs by adapting a method to computationally predict mRNA log2-half-life as a linear combination of codon usage and motif counts [@Cheng2017].
+Having selected putative stabilisation and decay motifs, we quantify their effect on mRNA and protein output when inserted in, or removed from, distinct 3'UTRs in reporter genes.
 We further explore the dependence of promoter selection on the relationship between these motifs and mRNA abundance.
-Our results demonstrate that the incorporation of candidate decay motifs indeed results in a decrease in RNA abundance, however their quantitative contribution depends the host 3'UTR, paired promoter and chosen ORF.
+Our results demonstrate that the incorporation of candidate decay motifs indeed results in a decrease in RNA abundance, however their quantitative contribution depends both on the 3'UTR and on the promoter.
