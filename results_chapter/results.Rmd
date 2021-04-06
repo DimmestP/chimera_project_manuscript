@@ -8,23 +8,32 @@ knitr::opts_chunk$set(fig.pos = "p", dpi = 300)
 ## Terminator effects on gene expression depend on cis-regulatory context
 
 To investigate the context dependence of regulatory regions, we created a library of 120 constructs containing all combinations of 6 promoters (including 5'UTR), 2 coding sequences, and 10 terminators (including 3'UTR).
-We selected promoters and terminators from native yeast genes spanning a variety of different expression patterns, including the highly-expressed glycolytic enzyme PGK1, two ribosomal proteins RPS3 and RPS13, RNA-binding proteins PAB1 and SRO9, heat-induced HSP26, cell cyclin CLN2, cell wall proteins SUN4 and TOS6, and plasma membrane ATPase PMA1.
-We selected coding sequences expressimg mCherry or mTurqouise fluorescent proteins, which have different origins and low sequence identity. 
-First we measured protein output from each construct using a fluorescence platereader.
-Promoter choice dominated overall protein output,  with over 100-fold changes in fluorescence between the four highest expressing promoters, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)A, and the two lowest expressing promoters, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)B.
-The effect of terminator choice alone can also be seen as up to 5 fold changes in fluorescence within smae promoter-ORf sets.
+We selected promoters and terminators from native yeast genes spanning a variety of different expression patterns: the highly-expressed glycolytic enzyme PGK1, two ribosomal proteins RPS3 and RPS13, RNA-binding proteins PAB1 and SRO9, heat shock protein HSP26, cell cyclin CLN2, cell wall proteins SUN4 and TOS6, and plasma membrane ATPase PMA1.
+We selected coding sequences (CDS) expressing mCherry or mTurquoise2 fluorescent proteins, which are bright fluorophores with only 30% amino acid identity [@Shaner2004, @Goedhart2012].
+We assembled all constructs in a centromeric plasmid using the YeastFab system [@Garcia2018], and expressed them in BY4741 yeast. 
+
+Measuring fluorescence with a plate reader showed that, as expected, promoter choice dominated overall protein output.
+We observed 100-fold changes in fluorescence between the four highest expressing promoters, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)A, and the two lowest expressing promoters, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)B, across both coding sequences.
+Expression from the stress-induced pHSP26 was notably more variable than from pPGK1 and pRPS's, across 6 biological replicates, when combined with both coding sequences and a variety of terminators.
 
 To investigate the correlation of mRNA abundance and protein output, we checked a subset of mCherry constructs using RT-qPCR. 
 This confirms that most differences in protein outputs are already present in mRNA abundance, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)C.
 
-To explore the effect of terminators in different contexts, we normalised the fluorescence of each construct to the PGK1 terminator its promoter-coding sequence set set, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)A.
-SRO9 and CLN2 promoter were removed due to the poor signal to noise ratio at low fluorescence levels.
-tPAB1 exhibits promoter dependent regulatory behaviour as it is consistantly the most highly expressed terminator in mTurq constructs but not in mCherry constructs.
-tPGK1 exhibits promoter dependent regulatory behaviour as it changes from being one of the most hirghly expressing terminators when paired with pHSP26 to less than the median value when paired with pRPS13.
-The behaviour of tPGK1 is repeated across both ORFs.
-To further examine terminator contributions to gene expression, we chose two widely used native genes and adjusted the number of nucleotides after the stop codon used to denote the terminator region.
-The lengths used were close to or significantly longer than previously reported 3'UTR lengths for the gene's transcripts.
-For both native genes, selecting a terminator length longer than the suspected 3'UTR enables greater mRNA expression, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B. 
+Terminators also affect protein output, seen by 5-fold changes in fluorescence within the same promoter-CDS sets, normalised to the tPGK1 terminator, in Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)A.
+pSRO9 and pCLN2 were removed due to the poor signal to noise ratio at low fluorescence levels.
+Terminators that have consistently low expression include tSUN4 and tTOS6, taken from cell wall proteins whose transcripts are bound and regulated by overlapping RNA-binding proteins [@Hogan2008].
+The effect of terminators depends on coding sequence: tPAB1 is consistently the most highly expressed terminator in mTurq constructs, but not in mCherry constructs.
+The effect of terminators also depends on the promoter: tPGK1 is one of the most highly expressing terminators when paired with pPGK1 and pHSP26, but is up to 40% lower in expression when paired with pRPS3 or pRPS13.
+Terminators have similar effects when paired with either of the two ribosomal protein promoters pRPS3 or pRPS13, which is consistent with the co-regulation of ribosomal proteins in cells.
+Overall, our results show that the contributions of terminators (including 3'UTRs) to gene expression depend on the sequences in other parts of the gene, and are consistent between co-regulated genes.
+
+To further validate our assay, we tested the effect of truncated terminators, because disruption of termination signals lowers expression [@Guo1996,@Shalem2015].
+We chose two 200bp terminators from the YeastFab parts library [@Guo2015], tRPS3 and tSRO9.
+The median length of the native RPS3 3'UTR is 86nt [@Pelechano2013]; truncating the terminator to 86bp or 59bp reduces protein output by almost 2-fold, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B.
+The median length of the native SRO9 3'UTR is 543nt [@Pelechano2013]; extending the terminator length to 543bp increases protein output by almost 2-fold, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B.
+Note that we used the longer 543bp SRO9 terminator, and a similarly extended 421bp tPMA1, for the constructs in Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw); we used 200bp terminator parts for the other modules whose measured  3'UTR length was below 200nt.
+This validates our assay's ability to detect known regulatory signals affecting transcription termination, while highlighting the importance of using well-informed annotations to construct parts libraries for synthetic biology.
+
 
 ```{r pro-ter-platereader-mCherry-mTurq-raw, fig.cap="\\textbf{Both terminator and promoter contribute to mCherry and mTurq gene expresion.}  (\\textbf{A}) mCherry and mTurq fluorescence measured at the time of each sample's maximum growth rate for 10 termintators paired with 4 high expressing promoters. Negative fluorescence values arising from instrument noise dominating measurements of constructs with neglegible fluorescence are automatically set to 0. (\\textbf{B}) Same as above but for 2 low expressing promoters. (\\textbf{C}) mCherry fluorescence vs RT-qPCR mRNA abundance for 3 promoters paired with all 10 terminators.", fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png"))
