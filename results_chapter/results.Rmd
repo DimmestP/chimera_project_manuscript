@@ -5,16 +5,19 @@ library(here)
 knitr::opts_chunk$set(fig.pos = "p", dpi = 300)
 ```
 
-## Terminator effects on gene expression are context dependent
+## Terminator effects on gene expression depend on cis-regulatory context
 
-To investigate the context dependence of regulatory regions, we created a library of 120 constructs containing all combindations of 10 terminators, 6 promoters and 2 ORFs.
-We added t and p prefixes to native gene names to denote references to terminator/promoter regions.
-The ORF either encoded a mCherry or mTurq fluorescent protein and a platereader assay measured each construct's fluorescence.
-Promoter choice dominated overall gene expression with over 100 fold changes in fluorescence between the four highest expressing promoters, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)A, and the two lowest expressing promoters, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)B.
+To investigate the context dependence of regulatory regions, we created a library of 120 constructs containing all combinations of 6 promoters (including 5'UTR), 2 coding sequences, and 10 terminators (including 3'UTR).
+We selected promoters and terminators from native yeast genes spanning a variety of different expression patterns, including the highly-expressed glycolytic enzyme PGK1, two ribosomal proteins RPS3 and RPS13, RNA-binding proteins PAB1 and SRO9, heat-induced HSP26, cell cyclin CLN2, cell wall proteins SUN4 and TOS6, and plasma membrane ATPase PMA1.
+We selected coding sequences expressimg mCherry or mTurqouise fluorescent proteins, which have different origins and low sequence identity. 
+First we measured protein output from each construct using a fluorescence platereader.
+Promoter choice dominated overall protein output,  with over 100-fold changes in fluorescence between the four highest expressing promoters, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)A, and the two lowest expressing promoters, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)B.
 The effect of terminator choice alone can also be seen as up to 5 fold changes in fluorescence within smae promoter-ORf sets.
-We also measured the mRNA levels of a subset of mCherry constructs and confirmed the effects seen on protein expression correlate with transcript levels, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)C.
 
-We normalised the fluorescence of each construct to the PGK1 terminator its promoter-ORF set in order to explore the context dependence of each terminator, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)A.
+To investigate the correlation of mRNA abundance and protein output, we checked a subset of mCherry constructs using RT-qPCR. 
+This confirms that most differences in protein outputs are already present in mRNA abundance, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)C.
+
+To explore the effect of terminators in different contexts, we normalised the fluorescence of each construct to the PGK1 terminator its promoter-coding sequence set set, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)A.
 SRO9 and CLN2 promoter were removed due to the poor signal to noise ratio at low fluorescence levels.
 tPAB1 exhibits promoter dependent regulatory behaviour as it is consistantly the most highly expressed terminator in mTurq constructs but not in mCherry constructs.
 tPGK1 exhibits promoter dependent regulatory behaviour as it changes from being one of the most hirghly expressing terminators when paired with pHSP26 to less than the median value when paired with pRPS13.
