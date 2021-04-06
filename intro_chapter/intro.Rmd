@@ -13,7 +13,7 @@ Modern DNA synthesis and cloning techniques allow the construction of complex ge
 However, the selection of a promoter and terminator with the desired expression levels is done with reference to standardised libraries.
 The characterisation of all possible promoter-terminator pairings is impractical.
 Therefore, reference libraries are only feasible if you assume the "parts" are modular, so any interaction effects are ignored and each "part" can be characterised independently. 
-Meanwhile, for the discovery of novel CREs, computational methods embed practical modularity into their searches by assuming Boolean logic.
+Meanwhile, for the discovery of novel CREs, computational methods embed practical modularity into their searches by assuming motif contributions are binary and independent of context.
 Methodologies for detecting CRE's commonly involve either; predicting functional data sets with sequence features, often using linear models [@Shalgi2005; @Cheng2017; @Vijayabaskar2019]; or, directly comparing the sequences of genes with similar characteristics to determine consensus sequences [@Hogan2008; @Kretz2013], often using the MEME suite [@Bailey2015].
 Linear models using sequences features to predict functional data simplify CRE behavior by assuming binary "on" or "off" contributions.
 Whilst consensus sequence based searches often assume each prospective CRE need occur once per gene to have an effect and ignores interactions between motifs or multi-part motifs.
@@ -22,12 +22,12 @@ Nevertheless, is the practical modularity implemented across biology justified b
 
 Despite the extensive use of practical modularity, a comprehensive exploration of the limits of this assumption and the implications for the discovery and manipulation of complex regulatory mechanisms remains to be conducted.
 Previous studies have measured libraries of combinations of well-charactorised CREs, such as; promoters and ribosomal binding sites (RBS) [@Kosuri2013] or promoters and terminators [@Wei2017]. 
-These studies have shown non-linear interactions between CREs suggesting the regulatory behavour of CREs is not modular. 
+These studies have shown interactions between CREs, often 100's of nucleotides apart, suggesting that the regulatory behavour of CREs is not modular. 
 Constructs pairing highly expressing promoters with highly expressing terminators have exhibited lower overall expression levels than the same promoters paired with lowly expressing terminators. 
 For promoter-RBS combinations, 20% of the constructs had a >2-fold deviation from a linear model predicting gene expression, with 5% of constructs having a 13-fold deviation.
 These observations suggest that regulatory regions regularly breach the assumption of modularity, but how short CREs, such as RNA-binding protein (RBP) motifs, behave remains to be understood.  
 
-Here, we provide further evidence for the limitations of practical modularity in explaining the behaviour of regulatory regions and, for the first time, show that short CREs exhibit similar non-linear behaviour. 
+Here, we provide further evidence for the limitations of practical modularity in explaining the behaviour of regulatory regions and, for the first time, show that short CREs are highly dependent on host gene context. 
 First, we use modular cloning to construct 120 combinations of promoter-5'UTR, coding sequence, and 3'UTR-terminator modules, showing that the quantitative effect of terminators depends on both promoter and coding sequence.
 We then investigate the effect of promoter and terminator context on the regulatory behaviour of short CREs by inserting shortlisted 3'UTR motifs into different constructs.
 In order to select for suitable 3'UTR motifs, we adapt a method to computationally predict mRNA log2-half-life as a linear combination of codon usage and motif counts [@Cheng2017].
