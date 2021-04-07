@@ -5,20 +5,17 @@ output:
 ---
 # Discussion
 
-The simplicity of assuming CREs are practically modular in their regulation of gene expression has enabled the successful manipulation and understanding of regulation pathways.
+The simplicity of assuming CREs are modular in their regulation of gene expression has enabled the successful manipulation and understanding of regulation pathways.
 Our quantitative measurements of 120 combinations of promoter-terminator pairings shows, unsurprisingly, that expression levels are dominated by promoter choice, up to 100 fold changes in fluorescence, and then terminator choice, up to 5 fold changes in fluorescence. 
-However, with up to 1/2 fold change in the relative expression of terminators depending on coding sequence and promoter choice there is a limit to the assumption of practically modularity. 
+However, with up to 1/2 fold change in the relative expression of terminators depending on coding sequence and promoter choice we have shown that CREs contributions to gene expression cannot be assumed to be binary. 
 
-Furthermore, we find that the effect of short regulatory motifs in the 3'UTR depends both on their immediate sequence context in the 3'UTR, and on the sequence of the promoter.
-The contribution of cis-regulatory motifs as inferred from transcriptome-wide studies of mRNA decay correlated with their effect on the abundance of reporter genes.
-However, motif contributions to mRNA abundance depend on contest: TGTAHMNTA has no measurable effect when inserted into tRPS3, ATATTC has little to no effect in tTSA1, meanwhile HWNCATTWY either decreases or increases RNA levels when removed from tPIR1 depending on the promoter.
-The disparity between practical modularity and functional modularity raises questions with current methods for discovering novel cis-regulatory elements, and more generally for understanding and engineering gene regulation.
-
-We have also shown that the effect of short CREs are dependent on their context.
-In figure \@ref(fig:hlife-decay-model)C, the behaviour of the TGTAAATA motif was predicted to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
-As a known binding motif for puf3, the CRE's behaviour is intrinsically linked to the behaviour of puf3.
-Since puf3 is known to change function in carbon deficient conditions [@Miller2014], which were likely present due to the bespoke CSM-lowURA media used by [@Chan2018], our results highlight that the same motif can have differing effects in different contexts. 
-
+Furthermore, we find that the effect of short CREs, namely 3'UTR motifs, depends both on the sequence context of their host transcript together with external effects.
+The contribution of our shortlisted motifs to mRNA stability, as inferred from transcriptome-wide studies of mRNA decay, correlated with their effect on the abundance of reporter constructs, providing evidence for them  being active CREs.
+However, their contributions to mRNA abundance were inconsistent and dependent on contest: TGTAHMNTA has no measurable effect when inserted into tRPS3 but the expected effect in tTSA1, ATATTC has the expected effect in tRPS3 but little effect in tTSA1 and HWNCATTWY can either decrease or increase RNA levels when removed from tPIR1 depending on the promoter.
+In addition, our original motif search predicted the behaviour of a TGTAAATA motif to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
+TGTAAATA changed its contribution in the two data sets because, as a known binding motif for puf3, carbon deficient conditions triggers puf3 to degrade its targets [@Miller2014].
+Carbon deficient conditions were likely present due to the bespoke CSM-lowURA media used by [@Chan2018].
+These disparities in predicted and experimentally verified regulatory behaviour raises questions about current methods for discovering novel cis-regulatory elements and, more generally, for understanding and manipulating regulatory pathways.
 
 ## Mechanisms for motif terminator context dependence
 
@@ -42,16 +39,11 @@ It encodes a small RNA transcript that binds to a repeated 3'UTR motif and inhib
 Lin-14 is required for the first stage of larval development but it inhibits the progression to the second stage.
 Therefore, since lin-4 is only expressed at the end of the first development stage, the 3'UTR motifs in lin-14 only begin to inhibit its translation late into stage 1, initiating the start of stage 2. [@Olsen1999]
 
-
-
 The internal context of a motif can be critical in enabling regulation.
 Motifs will are dependent on the secondary structure and presence (or absence) of other regulatory elements within the host transcript.
 Secondary structures can be integral to a motifs function, such as the SHE2 binding motif spread across stem loops within ASH1 transcripts or the Smg recognition elements found in transcript targets of Vts1p [@Olivier2005; @Aviv2006]. 
-In other cases secondary structures can have an overall inhibitory effect on binding, with the presence of stable stem loops within the 3’UTR reducing the binding of known destabilising RBPs [@Geisberg2020].
-Other motifs can only effectively bind their TREs in the presence of bound cooperative proteins.
-In human cells, microRNAs in association with Argonaute (AGO) proteins have been shown to be bind to target mRNA cooperatively with PUM1.  
-For certain AGO mRNA targets its binding affinity is negligible unless the target's secondary structure is switched by the binding of PUM1 to its own motif. [@Sternburg2018]
-As AGO is involved in RNA silencing and its targets are key for cell cycle control, it has been shown that certain cancer cells remove PUM binding sites through alternative polyadenlytion in order to avoid cell cycle regulation. [@Miles2012]
+In other cases, secondary structures can have an overall inhibitory effect on binding, with the presence of stable stem loops within the 3’UTR reducing the binding of known destabilising RBPs [@Geisberg2020].Transcripts often contain multiple motifs for efficient binding as some effector proteins bind indirectly through multiple recruiter proteins, for example Ski2 or Mtr4 recruitment of the exosome for 5'-3' mRNA decay in the cytoplasm or nucleus respectively (Thom et al., 2015; Weick and Lima, 2021), or bind directly with multi-partite motifs separated by unconserved gaps of varying length, such as SSD1's general binding motif CNYUCNYU and upstream CCAACU supplementary motif (Bayne et al., 2020) or PUF3's two bipartite motifs (Jackson et al., 2004). 
+
 
 ## Implications for novel cis-regulatory element searches
 
@@ -64,7 +56,6 @@ In addition, linear models will also struggle with the behavior of some extrinsi
 These are either dominant predictors of motif efficacy or entirely irrelevant with such extreme behavior being poorly modeled by linear regression. 
 Combining partitioning algorithms to separate transcripts with dichotomised features followed by training linear regression models on the separate pool could best predict functional data sets, although overfitting will be serious concern. 
 
-Transcripts often contain multiple motifs for efficient binding as some effector proteins bind indirectly through multiple recruiter proteins, for example Ski2 or Mtr4 recruitment of the exosome for 5'-3' mRNA decay in the cytoplasm or nucleus respectively (Thom et al., 2015; Weick and Lima, 2021), or bind directly with multi-partite motifs separated by unconserved gaps of varying length, such as SSD1's general binding motif CNYUCNYU and upstream CCAACU supplementary motif (Bayne et al., 2020) or PUF3's two bipartite motifs (Jackson et al., 2004). 
 
 
 The growing catalogue of RBPs with multiple binding motifs has lead to a demand for methods that discover multi-partite motifs, which may be separated in a transcript's linear sequence but adjacent in the final 3D structure.
@@ -73,6 +64,8 @@ k-mer based searches ignore motif position, enabling for the detection of separa
 Deep learning algorithms can accurately model complex motif interactions, but interpreting the model features into biologically relevant motifs remains a serious constraint.
 
 ## Implications for experimental biology
+
+Unpredictable effects when combining promoters/terminators
 
 Our results show that sequence motifs within the 3'UTR have a significant effect on gene expression.
 However it is important to note that there is evidence of dependence between the motifs and the sequence context suggesting that post-transcriptional cross-talk between RNA binding proteins can result in the fine-tuning of mRNA stability and translation. 
