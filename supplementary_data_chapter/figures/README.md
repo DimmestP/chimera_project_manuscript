@@ -8,3 +8,6 @@ Comparison of terminator lengths for native RPS3 and SRO9 genes checking if full
 
 ### RPS3_TSA1_PIR1_protein_and_RNA_plot.png
 Comparison of gene expression of motif insertion construct in RPS3, TSA1 and PIR1 native promoter-terminator pairings. Created in raw_data_analysis/code/raw_platereader_analysis/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.Rmd
+
+### secondary_structure.png
+Secondary structure prediction of RPS3 and PIR1 3'UTRs obtained from RNAfold and annotations of the location of the inserted motifs/random sequence within the 3'UTR designs
