@@ -24,24 +24,27 @@ PIR1_colour_scheme <- c("#971c9c","#1e1c9c","#5d1c9c",
                         "#CC6666","black")
 
 RNA_relative_abundance_figure_options <- list(
-  geom_point(aes(rel_abund_delta_deltacq,UTR3,colour=UTR3), size = 2),
-    scale_x_log2nice(omag = seq(-5,5),scilabels=FALSE),
-    guides(colour=FALSE),
-    theme(axis.text.x=element_text(angle=0,vjust=0.5),
-          axis.title.x=element_text(vjust=-2),
-          legend.position="bottom",
-          legend.box.margin=margin(20,10,10,180)),
+  geom_point(aes(rel_abund_delta_deltacq,UTR3,colour=UTR3),
+             shape = 18, size = 2),
+  scale_x_log2nice(omag = seq(-5,5),scilabels=FALSE),
+  guides(colour=FALSE),
+  theme(axis.text.x=element_text(angle=0,vjust=0.5),
+        axis.title.x=element_text(vjust=-2),
+        legend.position="bottom",
+        legend.box.margin=margin(20,10,10,180)),
   stat_summary(aes(x=rel_abund_delta_deltacq,y=UTR3),
                fun="mean",colour="black",
-               geom="crossbar"))
+               geom="crossbar", size=0.3, width=0.9)
+  )
 
 protein_raw_abundance_figure_options <- list(
-  geom_point(aes(y=Terminator,x=fluo_per_OD_at_max_gr, colour = Terminator)),
+  geom_point(aes(y=Terminator,x=fluo_per_OD_at_max_gr, colour = Terminator),
+             shape = 18, size = 2),
   scale_colour_hue(h = c(0, 360)+20,l=60,c=60),
   geom_vline(xintercept=1, linetype="dotted", color = "grey50"),
   stat_summary(aes(y=Terminator,x=fluo_per_OD_at_max_gr),
                fun="mean",colour="black",
-               geom="crossbar"),
+               geom="crossbar", size=0.3, width=0.9),
   theme(legend.position = "none"),
   scale_x_continuous(oob=oob_squish, limits = c(0,NA))
 )
@@ -64,6 +67,4 @@ protein_relative_abundance_figure_options <- list(
 update_geom_defaults("point", list(size = 2))
 update_geom_defaults("errorbar", list(size = 1))
 update_geom_defaults("errorbarh", list(size = 1))
-update_geom_defaults("crossbar", list(size=0.5, width=2.5))
-
 
