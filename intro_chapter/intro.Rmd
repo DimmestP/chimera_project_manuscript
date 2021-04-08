@@ -9,7 +9,7 @@ Assigning specific characteristics to individual elements of a gene has facilita
 This practical modularity has been implemented across molecular biology to discover and manipulate genetic determinates of gene expression. 
 
 Practical modularity has been crucial to the development of toolkits for the construction of synthetic gene pathways and for simplifying the search space when detecting novel CRE's.
-Modern DNA synthesis and cloning techniques allow the construction of complex gene pathways through the combinatorial assembly of chosen "parts" [@Curran2013; @lee2015; @garcia2018; @andreou2018]. 
+Modern DNA synthesis and cloning techniques allow the construction of complex gene pathways through the combinatorial assembly of chosen "parts" [@Curran2013; @Lee2015; @Garcia2018; @Andreou2018]. 
 However, the selection of a promoter and terminator with the desired expression levels is done with reference to standardised libraries.
 The characterisation of all possible promoter-terminator pairings is impractical.
 Therefore, reference libraries are only feasible if you assume the "parts" are modular, so any interaction effects are ignored and each "part" can be characterised independently. 
