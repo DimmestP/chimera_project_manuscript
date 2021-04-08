@@ -1,31 +1,32 @@
 # Introduction
 
-Our understanding of gene expression relies on the abstraction of a gene into discrete cis-regulatory elements (CRE), or ‘parts’, based on their most prominent function.
+Our understanding of gene expression relies on the abstraction of a gene into discrete cis-regulatory elements (CRE), or parts, based on their most prominent function.
 The promoter coordinates the initiation of transcription.
-Transcription then progresses across exons and introns to the terminator, where cleavage and polyadenylation of the nascent RNA transcript is coordinated.
+Transcription then progresses across until it reaches the terminator, where cleavage and polyadenylation of the nascent RNA transcript is coordinated.
 Extending the abstraction to the mature messenger RNA transcript, the coding sequence is flanked by untranslated regions (UTRs) at its 5' and  3' ends.
 The 5'UTR contributes to translation regulation and the 3'UTR contributes to transcript stability and localisation.
-Assigning specific characteristics to individual elements of a gene has facilitated the assumption that "parts" are modular or interchangeable with other parts.
-However, it is important to distinguish two concepts: modular assembly, by which we mean how easy it is to make combinations of parts; and, composability, by which we mean how the function of combinations of parts can be predicted from the function of those parts in other contexts.
+Assigning specific characteristics to individual elements of a gene has facilitated the assumption that parts are modular or interchangeable with other parts.
+However, it is important to distinguish between two concepts of modularity: modular assembly, how easy it is to synthesis constructs consisting of combinations of parts; and composability, how the regulation of the expression of a gene can be decomposed into contributions from individual parts.
 
 Modular assembly is now routine: modern DNA synthesis and cloning techniques allow the construction of complex gene pathways through the combinatorial assembly of chosen parts [@Curran2013; @Lee2015; @Garcia2018; @Andreou2018]. 
 Several groups have constructed standardised libraries comprising promoter (including 5'UTR) and terminator (including 3'UTR) parts, which can be combined to achieve desired expression of synthesized proteins.
 The characterisation of all possible promoter-terminator pairings is impractical, so standardised libraries generally characterise parts independently, for example testing many promoters with the same coding sequence and terminator [@Lee2015].
 Similarly, even massively parallel approaches to characterise smaller CREs usually explore a large library of promoter elements with a single terminator [@Sharon2012], or conversely a library of promoters with a single terminator [@Shalem2015].
-These experiments do not measure interactions of different parts, so are not informative about the composability of the parts used.
+These experiments cannot measure interactions between different parts and, therefore, implicitly assume that gene expression is composed of independent contributions of parts.
 
-Computational methods for discovery and quantification of short CREs, such as sequence motifs recognised by regulatory proteins, also tend to rely on composability.
-Prominent methodologies for detecting CRE's include predicting functional data with sequence features, often using linear models [@Shalgi2005; @Cheng2017; @Vijayabaskar2019]; or, directly comparing the sequences of genes with similar characteristics to determine the presence of consensus sequence motifs [@Hogan2008; @Kretz2013] using motif discovery software [@Elemento2007; @Bailey2015].
-Both these approaches make the implicit approximation that the contribution of short CREs is independent of context, so that the effect of combining motifs is "composed" by a linear sum (on the appropriate scale) of the individual CRE contributions.
-These approximations miss multi-part motifs, interactions between motifs, and the fact that motifs may be active only in specific contexts.
+Computational methods for the discovery and quantification of short CREs, such as sequence motifs recognised by regulatory proteins, also tend to rely on an independent model of composability.
+Prominent methodologies for detecting CRE's include predicting functional data with short sequence features, often using linear models [@Shalgi2005; @Cheng2017; @Vijayabaskar2019]; or, directly comparing the sequences of genes with similar characteristics to determine the presence of short consensus sequence motifs [@Hogan2008; @Kretz2013] using motif discovery software [@Elemento2007; @Bailey2015].
+Both these approaches make the implicit approximation that the contribution of a short CRE is independent of context, so that the effect of combining motifs is composed of a linear sum (on the appropriate scale) of the individual CRE contributions.
 The approximation that short CREs act independently helps to find elements that have clear contributions, and to simplify a vast search space that would be made exponentially larger by accounting for CRE interactions.
+However, framing the search for composability around independent contributions from the shortest possible sequences overlooks multi-part motifs, interactions between motifs, and the fact that motifs may be active only in specific contexts.
 
-However, the importance of CRE interactions has been clear since the discovery of cooperative DNA binding by transcription factors [@Giniger1988].
-For example, post-transcriptional regulatory CREs are functional or not depending on the RNA sequence context [@Taliaferro2016]. (NOTE: maybe move that last ref to the discussion?)
-One large-scale study of bacterial promoters and ribosomal binding sites showed that they are largely composable; however, gene expression output of 20% of the constructs had a over 2-fold deviation from predictions of a linear model without interactions [@Kosuri2013].
-Another study of promoter-terminator swaps in budding yeast revealed some promoter-terminator interactions [@Wei2017], even though these CREs are separated by 700nt of coding sequence. 
+The importance of the interactions between CRE alone has been clear since the discovery of cooperative DNA binding by transcription factors [@Giniger1988].
+For example, whether post-transcriptional regulatory CREs are functional or not depends on the RNA sequence context [@Taliaferro2016].
+One large-scale study of synthetic combinations of bacterial promoters and ribosomal binding sites showed that expression was largely composed of independent contributions; 64% of constructs had protein expression levels with less than a 2-fold deviation from the predictions of a linear model without interactions. 
+However, 5% of the constructs had, on average, a 13-fold deviation [@Kosuri2013].
+Another study of promoter-terminator swaps in budding yeast revealed 0.5 relative fold changes due to promoter-terminator interactions [@Ito2013], even though these CREs are separated by 700nt of coding sequence. 
 
-Here, we provide further evidence for the importance of interactions between regulatory regions, and show that the effect of short CREs depends on multiple aspects of host gene context. 
+Here, we provide further evidence for the importance of interactions between regulatory regions, and show the limitations of decomposing gene expression into discrete contributions from short CREs. 
 First, we use modular cloning to construct 120 combinations of promoter (including 5'UTR), coding sequence, and terminator (including 3'UTR) modules, showing that the quantitative effect of terminators on protein production depends on both promoter and coding sequence.
 We then investigate the effect of promoter and terminator context on the regulatory behaviour of short CREs in 3'UTRs.
 In order to select suitable 3'UTR motifs, we adapt a method to computationally predict mRNA log2-half-life as a linear combination of codon usage and motif counts [@Cheng2017].
