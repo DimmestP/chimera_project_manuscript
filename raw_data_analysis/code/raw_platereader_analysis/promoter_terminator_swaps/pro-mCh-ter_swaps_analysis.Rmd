@@ -375,5 +375,4 @@ mCh_platereader_figure <- ggplot(data=norm_pro_mCh_ter_all %>% mutate(Terminator
   facet_wrap(~Promoter, nrow=2) +
   protein_raw_abundance_figure_options
 
-ggsave(here("./results_chapter/figures/pro_ter_platereader_mCh.png"),mCh_platereader_figure,width = 7, height = 5)
 ```
