@@ -66,8 +66,8 @@ insertion_construct_plot <- wrap_elements(full = (wrap_elements(full = (ggdraw()
   wrap_elements(full = (ggdraw() + 
                           draw_image(image_read_svg(here("raw_data_analysis/figures/terminator_construct_designs/tRPS3-tTSA1_design.svg"), width = 520, height = 354))))+
     plot_layout(design = insertion_layout))) /
-  TSA1_deltadeltacq_plot /
-  RPS3_deltadeltacq_plot +
+  RPS3_deltadeltacq_plot /
+  TSA1_deltadeltacq_plot +
   plot_annotation(tag_levels = "A") +
   plot_layout(heights = c(4,1,1))
 
