@@ -24,7 +24,7 @@ PIR1_colour_scheme <- c("#971c9c","#1e1c9c","#5d1c9c",
                         "#CC6666","black")
 
 RNA_relative_abundance_figure_options <- list(
-  geom_point(aes(rel_abund_delta_deltacq,UTR3,colour=UTR3),
+  geom_point(aes(x=rel_abund_delta_deltacq,y=UTR3,colour=UTR3),
              shape = 18, size = 2),
   scale_x_log2nice(omag = seq(-5,5),scilabels=FALSE),
   guides(colour=FALSE),

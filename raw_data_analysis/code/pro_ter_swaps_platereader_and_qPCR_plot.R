@@ -87,7 +87,7 @@ ggsave(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png
           (low_exp_mCh_mTurq_platereader_raw_figure + mCherry_protein_vs_RNA_figure + 
              plot_layout(widths = c(1.85,1)))) +
          plot_annotation(tag_levels = "A"),
-       width = 165, height = 200, units = "mm")
+       width = 165, height = 200, units = "mm", dpi=300)
 
 # Create Normalised Platereader plot and add qPCR of short-vs-long
 
@@ -134,5 +134,5 @@ norm_layout <- "A
 
 ggsave(here("./results_chapter/figures/pro_ter_platereader_norm_mTurq_and_mCh.png"), 
        norm_mTurq_and_mCherry_figure + (normalised_plot_RPS3 + (normalised_plot_SRO9 + plot_layout(tag_level = "new"))) + plot_layout(design = norm_layout) + plot_annotation(tag_levels = "A"),
-       width = 165, height = 150, units = "mm")
+       width = 165, height = 150, units = "mm", dpi = 300)
 
