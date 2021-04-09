@@ -77,7 +77,8 @@ insertion_construct_plot <- wrap_elements(full = (wrap_elements(full = (ggdraw()
 ggsave(filename = here("results_chapter/figures/insertion_constructs_design_and_qpcr.png"),
        width = 163,
        height = 200,
-       unit = "mm")
+       unit = "mm",
+       dpi = 300)
 
 ### PIR1 deletion diagram
 
@@ -136,4 +137,5 @@ ggsave(here("results_chapter/figures/tPIR1_design_and_qpcr.png"),
        deletion_construct_plot,
        width = 163,
        height = 150,
-       units = "mm")
+       units = "mm",
+       dpi = 300)
