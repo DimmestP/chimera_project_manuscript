@@ -39,31 +39,25 @@ It encodes a small RNA transcript that binds to a repeated 3'UTR motif and inhib
 Lin-14 is required for the first stage of larval development but it inhibits the progression to the second stage.
 Therefore, since lin-4 is only expressed at the end of the first development stage, the 3'UTR motifs in lin-14 only begin to inhibit its translation late into stage 1, initiating the start of stage 2. [@Olsen1999]
 
-The internal context of a motif can be critical in enabling regulation.
-Motifs will are dependent on the secondary structure and presence (or absence) of other regulatory elements within the host transcript.
+Motif behaviour can also be affected by the internal context of the entire host transcript.
 Secondary structures can be integral to a motifs function, such as the SHE2 binding motif spread across stem loops within ASH1 transcripts or the Smg recognition elements found in transcript targets of Vts1p [@Olivier2005; @Aviv2006]. 
 In other cases, secondary structures can have an overall inhibitory effect on binding, with the presence of stable stem loops within the 3’UTR reducing the binding of known destabilising RBPs [@Geisberg2020].
-Alternatively, motifs often need to be repeated in the same transcript or appear alongside other motifs.
-For efficient binding as some effector proteins bind indirectly through multiple recruiter proteins, for example Ski2 or Mtr4 recruitment of the exosome for 5'-3' mRNA decay in the cytoplasm or nucleus respectively (Thom et al., 2015; Weick and Lima, 2021), or bind directly with multi-partite motifs separated by unconserved gaps of varying length, such as SSD1's general binding motif CNYUCNYU and upstream CCAACU supplementary motif (Bayne et al., 2020) or PUF3's two bipartite motifs (Jackson et al., 2004). 
+For others still, multiple motifs, or multiple copies of the same motif, must occur together to enable recruitment of the effector protein.  
+Recruitment of the Puf3, for example, in the signaling of mRNA transcript decay requires two motifs to be appear in the 3'UTR [@Jackson2004].
 
 
 ## Implications for novel cis-regulatory element searches
 
-Future motif detecting algorithms need to incorporate transcript context: secondary structure, localisation and cell cycle expression, for more accurate and comprehensive search results.
-Secondary structure features can be included in motif searches a priori by setting nucleotides within single stranded regions to be more likely to be part of motifs, by incorporating predicted binding energy.
-Non-linear relationships between intrinsic and extrinsic transcript characteristics can be modeled by partition regression techniques, such as random forests.
-Linear regression algorithms assume increased motif occurrence must increase protein binding, which causes a subsequent increase in the protein's functional effect.
-However, some motifs may need to be present above a threshold before sufficiently affecting binding or can behave differently in the presence of other co-regulatory motifs.
-In addition, linear models will also struggle with the behavior of some extrinsic effects, such as the availability of a binding protein in a particular organelle or at a cell cycle stage.
-These are either dominant predictors of motif efficacy or entirely irrelevant with such extreme behavior being poorly modeled by linear regression. 
-Combining partitioning algorithms to separate transcripts with dichotomised features followed by training linear regression models on the separate pool could best predict functional data sets, although overfitting will be serious concern. 
+Motif detection algorithms need to remove the assumption that the presence of a motif alone ensures its functional effect.
+The effect of a motif is not only dependent on its external and internal context, but also on experimental factors, such as; growth conditions and time of measurement.
+Uncertainty around the active state of a motif could be introduced using latent variables, as used in transcription factor (TF) binding site prediction algorithms to represent the proportion of active TF sites [@Dai2017; @Sanguinetti2006].
+Alternatively, non-linear relationships between factors affecting motif activity can be modeled by partition regression techniques, such as random forests.
+Again looking at TF algorithms, partitioning algorithms could be used to predict functional data sets using short sub-sequences of transcripts [@BehjatiArdakani2019]. 
 
-
-
-The growing catalogue of RBPs with multiple binding motifs has lead to a demand for methods that discover multi-partite motifs, which may be separated in a transcript's linear sequence but adjacent in the final 3D structure.
-Algorithms that determine position weight matrices for a linear segment of fixed length are unreliable when searching for motifs of variable widths and struggle with multi-partate motifs unless parts are directly adjacent in the linear sequence.
-k-mer based searches ignore motif position, enabling for the detection of separated, multi-partate motifs, but can only detect exact matches, therefore motifs with highly redundant nucleotides are missed.
-Deep learning algorithms can accurately model complex motif interactions, but interpreting the model features into biologically relevant motifs remains a serious constraint.
+Reductionist search algorithms that attempt to discover the shortest possible sequence contributing to expression are limiting the discovery of novel CREs. 
+High resolution maps of protein-RNA interactions are revealing RBPs with gapped, multi-partite motifs [@Bayne2020] or motifs that must be repeated in the same transcript to be effective (???????).
+Common motif searching algorithms, such as MEME Suite [@Bailey2015], have extended beyond fixed length, gapless motifs but still assume motifs occur independently and only once per transcript [@Frith2008].
+Although reducing the search constraints to allow longer, gaped motifs does increase the false discovery rate, the availability of precise interactome data sets shifts the priority towards more flexible search algorithms.
 
 ## Implications for experimental biology
 
