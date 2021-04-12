@@ -14,8 +14,8 @@ To prepare BY4741 for transomation, we grew in YPDA medium, containing 2% pepton
 ## Construction of chimeric reporter plasmids
 
 All fluorescence reporter plasmids were constructed by Golden Gate assembly using the YeastFab system as described in @Garcia2018. 
-Promoters, ORFs and terminators were either amplified from the yeast genome or synthesised by a commercial vendor (IDT) then cloned into a parts accepting plasmids (HcKan_P for promoters, HcKan_O for ORFs and HcKan_T for terminators) by Golden Gate assembly using Bsa1-HFv2 (NEB) to create the promoter-HcKan_P, ORF-HcKan_O and terminator-HcKan_T parts libraries. 
-Using these parts libraries, the promoter, ORF and terminators were assembled together by into the transcription unit acceptor plasmids (POT1-ccdB) by Golden Gate assembly using Esp31 (NEB); these are low-copy centromeric plasmids with URA3 selection, as described in @Garcia2018.
+Promoters, ORFs and terminators were either amplified from the yeast genome or synthesised by a commercial vendor (IDT) then cloned into a parts accepting plasmid (HcKan_P for promoters, HcKan_O for ORFs and HcKan_T for terminators) by Golden Gate assembly using Bsa1-HFv2 (NEB) to create the promoter-HcKan_P, ORF-HcKan_O and terminator-HcKan_T parts libraries. 
+Using these parts libraries, the promoters, ORFs and terminators were assembled together into the transcription unit acceptor plasmids (POT1-ccdB) by Golden Gate assembly using Esp31 (NEB); these are low-copy centromeric plasmids with URA3 selection, as described in @Garcia2018.
 Plasmid inserts were confirmed by Sanger sequencing (MRC PPU DNA Sequencing and Services, Dundee). 
 DNA sequences used in this study are summarised in **Supplementary table X**. 
 Assembled plasmids were transformed into yeast BY4741 using lithium acetate transformation [@Gietz2002a], and selected in SC-URA agar plates to isolate successful transformants.
@@ -61,7 +61,7 @@ Complete scripts for qPCR analysis, quality control, and figure generation are a
 
 ## Fluorescence measurements: Plate reader analysis of strain growth and fluorescence
 
-Yeast with plasmids were grown were grown in a 96 deepwell plate (VWR) containing 100$\mu$l  of SC -URA medium with 2% glucose and grown for ~12 hours at 30&deg;C in a shaking incbator set at 250 rpm. 
+Yeast with plasmids were grown in a 96 deepwell plate (VWR) containing 100$\mu$l  of SC -URA medium with 2% glucose and grown for ~12 hours at 30&deg;C in a shaking incubator set at 250 rpm. 
 The next day, 1 ml of SC -URA medium with 2% glucose was added to each culture and the OD was measured using the Tecan Infinity M200 series plate reader.
 Each culture was diluted to a starting OD of 0.2. 
 For each culture, 3 technical replicates of 200$\mu$l of each were transferred to a 96 well black microtiter plate (Corning) and grown according to the protocol described in @Lichten2014. 
@@ -88,11 +88,11 @@ Explain the greedy algorithm for motif selection, with references.
 ## Design of modified 3'UTRs for testing the effects of mutated motifs
 
 3'UTR was selected for screening the effect of removing motifs of interest individually or in combination to determine their impact on RNA abundance.
-To this end, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following critera; 1) contains all 3 motifs of motifs of interest (ATATTC, UGUAMNUA, HWNCAUUWY) and 2) < 300 nt in length (**abundance criteria?**).
+To this end, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following critera; 1) contains all 3 motifs of motifs of interest (ATATTC, UGUAMNUA, HWNCAUUWY), 2) < 300 nt in length and 3) in the top 10% most abundant genes according to @Nadal2019 single cell RNAseq data set.
 The resulting candidates are summarised in the supplementary table.
 The mutation of motifs for their removal from the 3'UTR were carried out according to the following criteria: 1) at least 50% of the motif sequence (specifically the motif consensus sequence) was mutated to a base that does not correspond to the consensus sequence.
 2) GC content was minimally altered.
-3) Mutations that resulted in a limited change in the prediicted secondary structure and minimum free energy (MFE) (according to the RNAfold - http://rna.tbi.univie.ac.at//cgi-bin/RNAWebSuite/RNAfold.cgi). 
+3) Mutations that resulted in a limited change in the predicted secondary structure and minimum free energy (MFE) (according to the RNAfold - http://rna.tbi.univie.ac.at//cgi-bin/RNAWebSuite/RNAfold.cgi). 
 
 The native and modified candidate 3'UTRs were screened for the presesnce of Esp31 and Bsa1 sites within the sequence.
 100 nt downstream of the native 3'UTR was added to the candidate and verified for whether they can be synthesised by IDT using the gBlock entry form (https://eu.idtdna.com/site/order/gblockentry).
@@ -125,7 +125,7 @@ The steady state solution for the average number of transcripts, $\langle m \ran
 $$\langle m \rangle = \frac{k}{\delta}$$ 
 where k is the rate of transcription, which can include multiple active states, and $\delta$ is the rate of decay for the transcript [@Sanchez2008]. 
 
-Now consider a control transcript $m_0$, and a similar transcript with an altered terminator $m_a$. Assuming the alterations to the host gene's terminator have a minimal impact on the transcription rate, the above equation says that the ratio of predicted abundance $\langle m_a \rangle$ to the control transcipt abundance, $\langle m_0 \rangle$, is the same as the ratio of their half-lives:
+Now consider a control transcript $m_0$, and a similar transcript with an altered terminator $m_a$. Assuming the alterations to the host gene's terminator have a minimal impact on the transcription rate, the above equation says that the ratio of predicted abundance $\langle m_a \rangle$ to the control transcript abundance, $\langle m_0 \rangle$, is the same as the ratio of their half-lives:
 $$\frac{\langle m_a \rangle}{\langle m_0 \rangle} = \frac{\delta_0}{\delta_a} =\frac{\lambda^{1/2}_a}{\lambda^{1/2}_0}$$ 
 This gives a linear effect on the log-scale abundance
 $$\log\langle m_a \rangle =\Delta \log\lambda^{1/2} + \log\langle m_0 \rangle$$
