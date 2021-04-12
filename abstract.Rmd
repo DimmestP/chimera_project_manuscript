@@ -18,12 +18,12 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 library(bookdown)
 ```
 \begin{abstract}
-Cis-regulatory elements (CREs) determining gene expression are abstracted into discrete modules, such as promoter, coding sequence, and terminator, and short sequence motifs within those.
-Current cloning techniques mean that CREs are easy to construct and combine, i.e. they are practically modular.
-However, it is unclear how much the effect of CREs on gene expression outcomes depends on other elements present in the same gene: are they functionally modular?
-We probe the limitations of assuming independent effects in budding yeast, by confirming that the quantitative effect of a terminator depends on both promoter and coding sequence.
+In order to understand gene expression, genes are commonly abstracted into cis-regulatory elements (CREs), such as promoter, coding sequence, and terminator, and short sequence motifs within those.
+Current cloning techniques assume CREs are discrete modules and, therefore, that they are easy to construct and combine.
+However, it is unclear how dependent the contributions of CREs to gene expression are on the context of its host gene.
+Using the model organism S.cer, we probe the limitations of assuming independent effects and confirm that the quantitative effect of a terminator depends on both promoter and coding sequence.
 Next, we explore whether individual cis-regulatory motifs within terminator regions display similar context dependence.
-We focus on suspected protein binding motifs in mRNA transcript 3'UTRs, inferred from transcriptome-wide datasets of mRNA decay.
+We focus on suspected protein binding motifs in mRNA transcript 3’UTRs, inferred from transcriptome-wide datasets of mRNA decay.
 Then we construct reporter genes with different combinations of inserted or removed motifs in 3 different terminator contexts, each expressed from 3 different promoters.
 Our results show that the effects of individual CREs depend both on their host terminator, and also on the paired promoter at the opposite end of the coding sequence.
 Observations that the same CRE can regulate gene expression differently in different host genes suggests that complex regulatory patterns are ubiquitous and need to be accounted for in designing synthetic genes.
