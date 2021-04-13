@@ -182,5 +182,6 @@ ggsave(pred_vs_abundance_combined,
        file = here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"), 
        width = 160, 
        height = 200,
-       units = "mm")
+       units = "mm",
+       dpi = 300)
 ```

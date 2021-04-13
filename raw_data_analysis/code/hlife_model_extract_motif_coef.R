@@ -50,7 +50,8 @@ ggsave2(here("results_chapter/figures/hlife_model_multi_fig.png"),
           plot_annotation(tag_levels = "A"), 
         width = 163, 
         height = 180,
-        units = "mm")
+        units = "mm",
+        dpi = 300)
 
 # output list of chan motif coefficients with error
 write_csv( chan_motif_coefficients %>% select(term, estimate, std.error) %>% rename( "Motif"= "term", "Coefficient"= "estimate"), here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv"))
