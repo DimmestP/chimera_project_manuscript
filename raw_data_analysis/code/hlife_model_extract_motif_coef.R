@@ -27,29 +27,61 @@ combined_motif_coefficients <- broom::tidy(chan_shortlisted_motif_model) %>%
   inner_join(broom::tidy(sun_shortlisted_motif_model) %>% 
               filter(!(term %in% codon_no_TTT), term != "(Intercept)",term != "UTR3_length"),
              by = "term",
-             suffix = c("_C", "_S"))
+             suffix = c("_C", "_S")) %>%
+  # the next two lines make the legend labels to match the order in the plot
+  arrange(desc(estimate_C)) %>%
+  mutate(term_descending = factor(term, levels = term)) 
 
 # output motif coefficients graph
-model_coefficients <-   ggplot(combined_motif_coefficients, aes(y = estimate_C, x = estimate_S, ymin=estimate_C - std.error_C ,ymax=estimate_C + std.error_C, xmin=estimate_S - std.error_S, xmax=estimate_S + std.error_S, colour=term)) +
+model_coefficients <-   ggplot(combined_motif_coefficients, 
+                               aes(y = estimate_C, 
+                                   x = estimate_S, 
+                                   ymin = estimate_C - std.error_C ,
+                                   ymax = estimate_C + std.error_C, 
+                                   xmin = estimate_S - std.error_S, 
+                                   xmax = estimate_S + std.error_S, 
+                                   colour = term_descending)) +
+  geom_abline(intercept = 0, slope = 1, size = 0.2, linetype = "dashed") +
   geom_hline(yintercept = 0,size = 0.2) +
+  geom_vline(xintercept = 0,size = 0.2) +
   geom_errorbar() +
   geom_errorbarh() +
-  theme(axis.text.x=element_text(angle=90,vjust = 0.5),
-        panel.grid.minor=element_blank(),
-        legend.position = "bottom") +
-  labs(x=TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Sun}$"),y=TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Chan}$"), colour = "Motif") +
-  scale_shape_manual(values=1:7) +
+  theme(axis.text.x = element_text(angle=90,vjust = 0.5),
+        panel.grid.minor = element_blank(),
+        legend.position = "right",
+        legend.text = element_text(size = 9)) +
+  labs(x = TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Sun}$"),
+       y = TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Chan}$"), 
+       colour = "Motif") +
   coord_equal() +
-  scale_colour_discrete(guide = guide_legend(nrow = 3))
+  scale_y_continuous(breaks = c(-0.5,-0.25, 0, 0.25, 0.5),
+                     labels = c("-0.5","","0","","0.5")) +
+  scale_x_continuous(breaks = c(-0.5,-0.25, 0, 0.25, 0.5),
+                     labels = c("-0.5","","0","","0.5")) + 
+  scale_colour_brewer(type = "qual", palette = "Dark2")
 
 # Create full hlife model summary figure
 
-ggsave2(here("results_chapter/figures/hlife_model_multi_fig.png"), 
-        (dataset_comparison + model_coefficients) / 
+ggsave2(filename = here("results_chapter/figures/hlife_model_multi_fig_patchwork.png"), 
+        plot = (dataset_comparison + model_coefficients) / 
           (chan_pred_vs_obvs_plot + (sun_pred_vs_obvs_plot + plot_layout(tag_level = "new"))) + 
           plot_annotation(tag_levels = "A"), 
         width = 163, 
-        height = 180,
+        height = 140,
+        units = "mm",
+        dpi = 300)
+
+ggsave2(filename = here("results_chapter/figures/hlife_model_multi_fig.png"), 
+        plot = plot_grid(dataset_comparison,
+                         model_coefficients + theme(legend.position = "none"),
+                         get_legend(model_coefficients),
+                         chan_pred_vs_obvs_plot,
+                         sun_pred_vs_obvs_plot,
+                         labels = c("A","B","","C",""),
+                         nrow = 2,
+                         rel_widths = c(1,1,0.5,1,1)),
+        width = 163, 
+        height = 140,
         units = "mm",
         dpi = 300)
 
