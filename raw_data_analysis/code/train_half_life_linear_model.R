@@ -223,7 +223,7 @@ dataset_comparison <-
        x = TeX("$\\lambda^{1/2}_{Chan}$")) +
   annotate("text",
            label = paste0("R = ",signif(decay_data_set_cor,2)),
-           size = 4, x = 15, y = 1.1, hjust = 0, vjust = 0)
+           size = 4, x = 11, y = 1.1, hjust = 0, vjust = 0)
 
 
 # output model predictive power and dataset comparison figures
