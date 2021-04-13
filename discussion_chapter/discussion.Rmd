@@ -55,15 +55,13 @@ Alternatively, non-linear relationships between factors affecting motif activity
 Again looking at TF algorithms, partitioning algorithms could be used to predict functional data sets using short sub-sequences of transcripts [@BehjatiArdakani2019]. 
 
 Reductionist search algorithms that attempt to discover the shortest possible sequence contributing to expression are limiting the discovery of novel CREs. 
-High resolution maps of protein-RNA interactions are revealing RBPs with gapped, multi-partite motifs [@Bayne2020] or motifs that must be repeated in the same transcript to be effective (???????).
+High resolution maps of protein-RNA interactions are revealing RBPs with gapped, multi-partite motifs [@Bayne2020] or motifs that must be repeated in the same transcript to be effective [@Gu2004].
 Common motif searching algorithms, such as MEME Suite [@Bailey2015], have extended beyond fixed length, gapless motifs but still assume motifs occur independently and only once per transcript [@Frith2008].
 Although reducing the search constraints to allow longer, gaped motifs does increase the false discovery rate, the availability of precise interactome data sets shifts the priority towards more flexible search algorithms.
 
 ## Implications for experimental biology
 
-Unpredictable effects when combining promoters/terminators
-
-Our results show that sequence motifs within the 3'UTR have a significant effect on gene expression.
-However it is important to note that there is evidence of dependence between the motifs and the sequence context suggesting that post-transcriptional cross-talk between RNA binding proteins can result in the fine-tuning of mRNA stability and translation. 
-
-Further, these different UTR compositions can enable more rapid, dynamic post-transcriptional modulations of expression to be achieved with improved understanding of how different combinations of motifs and secondary structures lead to modulations in expression under different cell conditions, facilitating the generation of more complex phenotypes and enabling more predictable control of flux through metabolic pathway circuits.
+Our results support previous studies showing the unpredictability in the expression of combinations of otherwise well-characterised regulatory elements.
+In the creation of biological circuits, for example, time-consuming directed evolution assays have been implemented to overcome mis-matched in component expression levels [@Yokobayashi2002].
+However, the availability of extensively characterised parts libraries now enables large scale searches for CREs with suitible expression.
+Together with high-throughput, multiplexed RNAseq assays pools of combinations of suitable CREs can be quickly screened for the correct expression levels [@Kosuri2013]. 
