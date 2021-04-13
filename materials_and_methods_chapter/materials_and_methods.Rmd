@@ -88,11 +88,11 @@ Explain the greedy algorithm for motif selection, with references.
 ## Design of modified 3'UTRs for testing the effects of mutated motifs
 
 3'UTR was selected for screening the effect of removing motifs of interest individually or in combination to determine their impact on RNA abundance.
-To this end, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following critera; 1) contains all 3 motifs of motifs of interest (ATATTC, UGUAMNUA, HWNCAUUWY), 2) < 300 nt in length and 3) in the top 10% most abundant genes according to @Nadal2019 single cell RNAseq data set.
+To this end, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following critera; 1) contains all 3 motifs of motifs of interest (ATATTC, UGUAMNUA, HWNCAUUWY), 2) < 300 nt in length and 3) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq data set.
 The resulting candidates are summarised in the supplementary table.
 The mutation of motifs for their removal from the 3'UTR were carried out according to the following criteria: 1) at least 50% of the motif sequence (specifically the motif consensus sequence) was mutated to a base that does not correspond to the consensus sequence.
 2) GC content was minimally altered.
-3) Mutations that resulted in a limited change in the predicted secondary structure and minimum free energy (MFE) (according to the RNAfold - http://rna.tbi.univie.ac.at//cgi-bin/RNAWebSuite/RNAfold.cgi). 
+3) Mutations that resulted in a limited change in the predicted secondary structure and minimum free energy (MFE) (according to the RNAfold [@Lorenz2011] - http://rna.tbi.univie.ac.at//cgi-bin/RNAWebSuite/RNAfold.cgi). 
 
 The native and modified candidate 3'UTRs were screened for the presesnce of Esp31 and Bsa1 sites within the sequence.
 100 nt downstream of the native 3'UTR was added to the candidate and verified for whether they can be synthesised by IDT using the gBlock entry form (https://eu.idtdna.com/site/order/gblockentry).
