@@ -68,7 +68,7 @@ The final selected motif was ATATTC, that is a statistically significant decay m
 It is not known how ATATTC occurrences lead to mRNA decay.
 
 
-```{r hlife-decay-model, fig.cap="\\textbf{A linear model predicting transcript half life verifies candidate RBP motifs regulate gene expression.} (\\textbf{A}) Predicted vs actual log2 transcript half lives calculated by a linear model of codon and motif usage trained on the Chan et al (2017) and Sun et al (2013) data sets. (\\textbf{B}) Correlation between the two log2 transcript half lives reported in the Sun et al (2013) and Chan et al (2017) data sets. (\\textbf{C}) Predicted contributons to log2 half life for choosen motifs in the Sun et al (2013) and Chan et al (2017) datasets. Motifs not detected to be significant in the Sun et al (2013) data set are plotted with an x-axis value of 0.", fig.align='center'}
+```{r hlife-decay-model, fig.cap="\\textbf{A linear model predicting transcript half life verifies candidate RBP motifs regulate gene expression.} (\\textbf{A}) Predicted vs actual log2 transcript half lives calculated by a linear model of codon and motif usage trained on the Chan et al (2017) and Sun et al (2013) data sets. (\\textbf{B}) Correlation between the two log2 transcript half lives reported in the Sun et al (2013) and Chan et al (2017) data sets. (\\textbf{C}) Predicted contributons to log2 half life for chosen motifs in the Sun et al (2013) and Chan et al (2017) datasets.", fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/hlife_model_multi_fig.png"))
 ```
 
