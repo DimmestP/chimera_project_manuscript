@@ -1,5 +1,8 @@
 # Supplementary Data
-
+\makeatletter
+\renewcommand{\fnum@figure}{Figure S\thefigure}
+\makeatother
+\setcounter{figure}{0}
 ## Motif effects on transcript expression is repeated in protein expression data
 
 The effects of motif presence on protein expression was investigate with a platereader assay detecting the fluorescence of the mCherry reporter gene on the pRPS3-tRPS3 and pTSA1-tTSA1 constructs.
