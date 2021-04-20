@@ -51,12 +51,12 @@ All were suspected sequence motifs for RNA binding proteins, several directly as
 Any motifs that were found in fewer than 6 gene 3'UTRs, as annotated by @Pelechano2013, were removed.
 
 We quantified the regulatory effects of the remaining 38 candidate CREs by applying a linear model predicting half life to two recent transcriptome-wide analyses of mRNA decay using metabolic labeling [@Sun2013; @Chan2018].
-These two datasets are loosely correlated in their half-life measurements across (how many?) genes reported in both datasets, $R = 0.63$ (Fig \@ref(fig:hlife-decay-model)A). However, @Chan2018, which has greater coverage of genes in the yeast genome and used multiple time points to determine half lives, estimates substantially smaller half lives.
+These two datasets are loosely correlated in their half-life measurements across 4188 genes reported in both datasets, $R = 0.63$ (Fig \@ref(fig:hlife-decay-model)A). However, @Chan2018, which has greater coverage of genes in the yeast genome, 5529 vs 4304,  and used multiple time points to determine half lives, estimating substantially smaller half lives.
 Following @Cheng2017, we constructed a linear model to predict a transcript's half life using the counts of motifs in its median length 3'UTR, the 3'UTR length, and the relative codon usage in each transcript's ORF (see Material and Methods). 
 This model performed similarly on both datasets by explaining 44% and 41% of the variability in half lives for the @Chan2018 and @Sun2013 data sets respectively, Fig \@ref(fig:hlife-decay-model)C.
 This predictive power is comparable to the squared correlation between the datasets ($R^2 = 0.40$).
 CREs that did not significantly contribute to the model were automatically filtered out using a greedy algorithm maximising the Akaike information criterion (AIC) during both training stages.
-Approximately X% of the variance is explained by these 7 motifs, with X% explained by codon usage, consistent with previous analyses [@Presnyak2015;@Cheng2017].
+Approximately 1.6% of the variance is explained by these 7 motifs, with 42.0% explained by codon usage, consistent with previous analyses [@Presnyak2015;@Cheng2017].
 The top 7 most significant motifs from the @Chan2018 data showed similar regulatory behaviour in the @Sun2013 data, except for TGTAAATA which swap from being stabilising to destabilising, Fig \@ref(fig:hlife-decay-model)B.
 
 
