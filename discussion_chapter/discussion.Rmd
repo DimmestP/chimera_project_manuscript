@@ -61,7 +61,10 @@ Although reducing the search constraints to allow longer, gaped motifs does incr
 
 ## Implications for experimental biology
 
-Our results support previous studies showing the unpredictability in the expression of combinations of otherwise well-characterised regulatory elements.
-In the creation of biological circuits, for example, time-consuming directed evolution assays have been implemented to overcome mis-matched in component expression levels [@Yokobayashi2002].
-However, the availability of extensively characterised parts libraries now enables large scale searches for CREs with suitible expression.
-Together with high-throughput, multiplexed RNAseq assays pools of combinations of suitable CREs can be quickly screened for the correct expression levels [@Kosuri2013]. 
+Our results support previous studies showing unpredictability in the expression of combinations of otherwise well-characterised regulatory elements.
+In the creation of biological circuits, for example, time-consuming directed evolution assays have been implemented to overcome mis-matches in component expression levels [@Yokobayashi2002].
+The availability of extensively characterised parts libraries now enables large scale searches for CREs with suitable expression.
+Together with high-throughput assays, pools of combinations of suitable CREs can be quickly screened for the correct expression levels [@Kosuri2013]. 
+
+Future work on CREs will need to respect the fact that characterisation of elements' function in a single context is not enough to make generalisable conclusions.
+Both small- and large-scale studies of CREs should ideally be carried out with multiple combinations of other regulatory elements, in cells in multiple growth conditions, to build a comprehensive understanding of transcriptional and post-transcriptional regulation.
