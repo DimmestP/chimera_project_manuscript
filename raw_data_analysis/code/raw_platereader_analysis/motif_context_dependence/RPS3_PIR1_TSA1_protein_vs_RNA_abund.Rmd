@@ -10,6 +10,7 @@ library(dplyr)
 library(tibble)
 library(stringr)
 library(readr)
+library(patchwork)
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 ```
 
@@ -22,13 +23,10 @@ construct_extraction <- function(strain_name){
 }
 
 construct_to_label_dictionary_TSA1_RPS3 = tibble(construct = c("WT","modC","modE","modD","modA","modB","mod0"), 
-                                       label = c("WT", "mod_NGG", "mod_HTH", "mod_HNH", "mod_NTN", "mod_NAA", "mod_NNN"),
-                                       TSA1_UTR3 = str_c("tTSA1_",construct),
-                                       RPS3_UTR3 = str_c("tRPS3_",construct))
+                                       label = c("WT", "mod_NGG", "mod_HTH", "mod_HNH", "mod_NTN", "mod_NAA", "mod_NNN"))
 
 construct_to_label_dictionary_PIR1 = tibble(construct = c("modG", "modF", "modE", "modD", "modC", "modA", "modB", "WT"), 
-                                                 label = c("mod_NTNNN", "mod_ANNNN", "mod_ATNNN", "mod_ATHNH", "mod_ATNHH", "mod_ANHHH", "mod_NTHHH", "WT"),
-                                                 PIR1_UTR3 = str_c("tPIR1_",construct))
+                                                 label = c("mod_NTNNN", "mod_ANNNN", "mod_ATNNN", "mod_ATHNH", "mod_ATNHH", "mod_ANHHH", "mod_NTHHH", "WT"))
 
 RPS3_protein <- read.csv(here("raw_data_analysis/data/norm_platereader/motif_context_dependence/pRPS3-mCh-tRPS3/pRPS3-mCh-tRPS3_both_reps.csv")) %>%
   filter(strain != c("null")) %>%
@@ -40,7 +38,7 @@ TSA1_protein <- read.csv(here("raw_data_analysis/data/norm_platereader/motif_con
   separate(strain,into = c("strain","bio_rep"),sep = " clone ") %>%
   mutate(promoter = "pTSA1")
 
-RPS3_TSA1_protein_data <- RPS3_protein %>%
+RPS3_TSA1_protein <- RPS3_protein %>%
   bind_rows(TSA1_protein) %>%
   filter(strain != "POT1-ccdB") %>% 
   mutate(construct =construct_extraction(strain),
@@ -51,15 +49,27 @@ RPS3_TSA1_protein_data <- RPS3_protein %>%
   mutate( relative_abundance_protein = c_mCherry_100_per_OD_at_max_local_gr / mod0_fluor) %>%
   inner_join(construct_to_label_dictionary_TSA1_RPS3) %>%
   ungroup() %>%
-  select(-experiment, -X, -strain, - c_mCherry_100_per_OD_at_max_local_gr, - mod0_fluor, -construct, -TSA1_UTR3, -RPS3_UTR3)
+  select(-experiment, -X, -strain, - c_mCherry_100_per_OD_at_max_local_gr, - mod0_fluor, -construct)
 
 PIR1_protein <- read.csv(here("raw_data_analysis/data/norm_platereader/motif_context_dependence/pPIR1-mCh-tPIR1/pPIR1-mCh-tPIR1_both_reps.csv")) %>%
   filter(strain != "null") %>%
   separate(strain,into = c("strain","bio_rep"),sep = " clone ") %>%
-  mutate(promoter = "pPIR1")
+  mutate(promoter = "pPIR1") %>%
+  filter(strain != "POT1-ccdB") %>% 
+  mutate(construct =construct_extraction(strain),
+         WT_fluor = filter(., construct == "WT") %>%
+           pull(c_mCherry_100_per_OD_at_max_local_gr) %>%
+           mean()) %>%
+  group_by(construct) %>%
+  mutate( relative_abundance_protein = c_mCherry_100_per_OD_at_max_local_gr / WT_fluor) %>%
+  inner_join(construct_to_label_dictionary_PIR1) %>%
+  ungroup() %>%
+  select(-experiment, -X, -strain, - c_mCherry_100_per_OD_at_max_local_gr, - WT_fluor, -construct)
 
-RPS3_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv")) %>%
+RPS3_TSA1_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pRPS3_pPGK1_pSRO9_tRPS3_deltacq_platesnorm_summarise.csv")) %>%
   filter(promoter == "pRPS3") %>%
+  bind_rows(read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pTSA1_pPGK1_pSRO9_tTSA1_deltacq_platesnorm_summarise.csv")) %>%
+  filter(promoter == "pTSA1")) %>%
   group_by(construct, bio_rep, promoter) %>%
   summarise(delta_cq = median(deltacq), .groups = "drop") %>%
   mutate(mod0_delta_cq = filter(., construct == "mod0") %>% pull(delta_cq) %>% mean(),
@@ -67,22 +77,8 @@ RPS3_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_depe
   group_by(construct) %>%
   mutate( relative_abundance_mrna = 2^(-delta_cq + mod0_delta_cq)) %>%
   ungroup() %>%
-  mutate(construct = factor(construct, 
-                            c("modC", "modE", "modD", "modA", "modB", "mod0", "WT"))) %>%
-  select(- mod0_delta_cq, - delta_cq)
-
-TSA1_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pTSA1_pPGK1_pSRO9_tTSA1_deltacq_platesnorm_summarise.csv")) %>%
-  filter(promoter == "pTSA1") %>%
-  group_by(construct, bio_rep, promoter) %>%
-  summarise(delta_cq = median(deltacq, na.rm = TRUE), .groups = "drop") %>%
-  mutate(mod0_delta_cq = filter(., construct == "mod0") %>% pull(delta_cq) %>% mean(),
-         bio_rep = str_remove(bio_rep, "bio_rep")) %>%
-  group_by(construct) %>%
-  mutate( relative_abundance_mrna = 2^(-delta_cq + mod0_delta_cq)) %>%
-  ungroup() %>%
-  mutate(construct = factor(construct, 
-                            c("modC", "modE", "modD", "modA", "modB", "mod0", "WT"))) %>%
-  select(- mod0_delta_cq, - delta_cq)
+  inner_join(construct_to_label_dictionary_TSA1_RPS3) %>%
+  select(- mod0_delta_cq, - delta_cq, -construct)
 
 PIR1_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_dependence/pPIR1_pPGK1_pSRO9_tPIR1_deltacq_platesnorm_summarise.csv")) %>%
   filter(promoter == "pPIR1") %>%
@@ -93,26 +89,50 @@ PIR1_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_depe
   group_by(construct) %>%
   mutate( relative_abundance_mrna = 2^(-delta_cq + WT_delta_cq)) %>%
   ungroup() %>%
-  mutate(construct = factor(construct, 
-                            c("modG", "modF", "modE", "modD", "modC", "modB", "modA", "WT"))) %>%
-  select(- WT_delta_cq, - delta_cq)
+  inner_join(construct_to_label_dictionary_PIR1)%>%
+  select(- WT_delta_cq, - delta_cq, -construct)
 
-RPS3_TSA1_PIR1_protein_and_RNA_data <- RPS3_protein %>%
-  bind_rows(TSA1_protein)  %>%
-  bind_rows(PIR1_protein)  %>%
-  inner_join( bind_rows(RPS3_RNA)  %>%
-  bind_rows(TSA1_RNA)  %>%
-  bind_rows(PIR1_RNA)) %>%
-  mutate(promoter = factor(str_remove(promoter, "p"), levels = c("RPS3", "TSA1", "PIR1")),
-         construct = factor(construct, levels = c("modG", "modF", "modE", "modD", "modC", "modB", "modA", "mod0", "WT")))
+RPS3_TSA1_protein_and_RNA_data <- RPS3_TSA1_protein %>%
+  inner_join( bind_rows(RPS3_TSA1_RNA)) %>%
+  mutate(promoter = factor(str_remove(promoter, "p"), levels = c("RPS3", "TSA1")))
+
+PIR1_protein_and_RNA_data <- PIR1_protein  %>%
+  inner_join(PIR1_RNA) %>%
+  mutate(promoter =str_remove(promoter, "p"))
 ```
 
 ```{r plot_protein_vs_rna}
-RPS3_TSA1_PIR1_protein_and_RNA_plot<- ggplot(RPS3_TSA1_PIR1_protein_and_RNA_data) + 
-  geom_point(aes(y = relative_abundance_protein, x = relative_abundance_mrna, colour = construct), alpha = 0.5) +
-  facet_grid(promoter~.) + 
-  labs(y="Relative Protein Abundance", x = "Relative mRNA Abundance")
+r_cor_data_RPS3_TSA1 <- RPS3_TSA1_protein_and_RNA_data %>% group_by(promoter) %>% summarise(cor = round(cor(relative_abundance_mrna,relative_abundance_protein),2)) %>%
+  mutate(cor_label = str_c("R = ", cor))
 
-ggsave(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"),RPS3_TSA1_PIR1_protein_and_RNA_plot, width=5,height=7)
+r_cor_data_PIR1 <- PIR1_protein_and_RNA_data %>% group_by(promoter) %>% summarise(cor = round(cor(relative_abundance_mrna,relative_abundance_protein),2)) %>%
+  mutate(cor_label = str_c("R = ", cor))
+
+RPS3_TSA1_protein_and_RNA_plot<- ggplot(RPS3_TSA1_protein_and_RNA_data) + 
+  geom_point(aes(y = relative_abundance_protein, x = relative_abundance_mrna, colour = label), alpha = 0.5) +
+  facet_grid(promoter~.) + 
+  labs(y="Relative Protein Abundance", x = "Relative mRNA Abundance", colour = "Construct") +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(0,2) +
+  ylim(0,2) +
+  geom_text(aes(label = cor_label), data = r_cor_data_RPS3_TSA1, y = 0.5, x= 1.6, size = 3)
+
+PIR1_protein_and_RNA_plot<- ggplot(PIR1_protein_and_RNA_data) + 
+  geom_point(aes(y = relative_abundance_protein, x = relative_abundance_mrna, colour = label), alpha = 0.5) + 
+  labs(y="Relative Protein Abundance", x = "Relative mRNA Abundance", colour = "Construct") +
+  facet_grid(promoter~.) +
+  geom_abline(slope = 1, intercept = 0) +
+  geom_text(aes(label = cor_label), data = r_cor_data_PIR1, y = 0.75, x= 1.25, size = 3) +
+  scale_x_continuous(breaks = c(0.5,1,1.5), limits = c(0.5,1.5))
+
+RPS3_TSA1_PIR1_protein_and_RNA_plot <- RPS3_TSA1_protein_and_RNA_plot + 
+  PIR1_protein_and_RNA_plot + 
+  patchwork::plot_layout(heights = c(2,1))
+
+ggsave(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"),RPS3_TSA1_PIR1_protein_and_RNA_plot,
+       width = 100, 
+       height = 160,
+       units = "mm",
+       dpi = 300)
 
 ```
