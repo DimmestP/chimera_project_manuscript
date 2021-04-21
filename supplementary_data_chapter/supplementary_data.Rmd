@@ -44,6 +44,14 @@ The selection process is summarised in supplementary figure 1 with supplementary
 - Comparison of our qPCR data of modB with that of Cheng et al. (2017)
 
 ## Secondary structure prediction of RPS3 and PIR1 3'UTR native and modified designs
-```{r secondary_structure, fig.cap="\\textbf{Designs of modified 3'UTRs aimed at minimsing disruption to the secondary structure.} The computed minimum fre energy (MFE) and the corresponding structure result using RNAfold. The modified 3'UTRs were designed, taking into consideration the MFE, and tailoring designs that would result in minimal change to the MFE.", out.height='110mm', out.width= '', fig.align='center'}
-#knitr::include_graphics(here("supplementary_data_chapter/figures/secondary_structure.png"))
+```{r secondary-structure-RPS3, fig.cap="\\textbf{Designs of modified RPS3 3'UTRs aimed at minimsing disruption to the secondary structure.} The computed minimum fre energy (MFE) and the corresponding structure result using RNAfold. The modified 3'UTRs were designed, taking into consideration the MFE, and tailoring designs that would result in minimal change to the MFE.", fig.align='center'}
+knitr::include_graphics(here("supplementary_data_chapter/figures/secondary_structures_rps3_small.png"), dpi = 300)
+```
+
+```{r secondary-structure-TSA1, fig.cap="\\textbf{Designs of modified RPS3 3'UTRs aimed at minimsing disruption to the secondary structure.}", fig.align='center'}
+knitr::include_graphics(here("supplementary_data_chapter/figures/secondary_structures_tsa1_small.png"), dpi = 300)
+```
+
+```{r secondary-structure-PIR1, fig.cap="\\textbf{Designs of modified RPS3 3'UTRs aimed at minimsing disruption to the secondary structure.}", fig.align='center'}
+knitr::include_graphics(here("supplementary_data_chapter/figures/secondary_structures_pir1_small.png"), dpi = 300)
 ```
