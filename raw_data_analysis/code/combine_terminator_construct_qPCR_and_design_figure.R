@@ -31,7 +31,7 @@ TSA1_deltadeltacq_plot <- ggplot(data = TSA1_deltadeltacq)+
   RNA_relative_abundance_figure_options +
   scale_colour_manual(values=RPS3_TSA1_colour_scheme) +
   theme(axis.text.y=element_text(colour=RPS3_TSA1_colour_scheme)) +
-  labs(x ="Fold change in RNA abundance relative to tTSA1-mod0 (log2 scale)", y = "") +
+  labs(x ="Fold change in RNA abundance relative to tTSA1 mod_NNN (log2 scale)", y = "") +
   facet_wrap(~promoter,ncol = 3) +
   scale_y_discrete(breaks = construct_to_label_dictionary_TSA1_RPS3$TSA1_UTR3, labels = construct_to_label_dictionary_TSA1_RPS3$label)
 
@@ -94,7 +94,7 @@ PIR1_deltadeltacq_plot <- ggplot(data = PIR1_deltadeltacq)+
   RNA_relative_abundance_figure_options +
   scale_colour_manual(values=PIR1_colour_scheme) +
   theme(axis.text.y=element_text(colour=PIR1_colour_scheme)) +
-  labs(x ="Fold change in RNA abundance relative to tPIR1 mod_NNN (log2 scale)", y = "") +
+  labs(x ="Fold change in RNA abundance relative to tPIR1 mod_WT (log2 scale)", y = "") +
   facet_wrap(~promoter,ncol = 3) +
   scale_y_discrete(breaks = construct_to_label_dictionary_PIR1$PIR1_UTR3, labels = construct_to_label_dictionary_PIR1$label)
 

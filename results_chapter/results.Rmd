@@ -112,7 +112,7 @@ Comparison of mRNA abundance across all constructs, (Figs \@ref(fig:tRPS3-tTSA1-
 The insertion of almost any decay motif into tTSA1 or tRPS3 results in a decrease in mRNA abundance, and removal of these from from tPIR1 results in an increase in mRNA abundance.
 However, the quantitative effects vary depending both on the immediate motif context in the host terminator and on the more distant context given by the promoter.
 
-```{r tRPS3-tTSA1-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs inserted into RPS3 and TSA1 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Library design and diagram of motif insertion sites in native RPS3 and TSA1 terminators. (\\textbf{B}) Fold changes in transcript abundance for tRPS3 constructs paired with three promoters; pRPS3, pPGK1 and pSRO9. (\\textbf{C}) Fold changes in transcript abundance for tTSA1 constructs paired with three promoters; pTSA1, pPGK1 and pSRO9. Fold changes are relative to the abundance of the mod0 construct", fig.align='center'}
+```{r tRPS3-tTSA1-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs inserted into RPS3 and TSA1 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Library design and diagram of motif insertion sites in native RPS3 and TSA1 terminators. (\\textbf{B}) Fold changes in transcript abundance for tRPS3 constructs paired with three promoters; pRPS3, pPGK1 and pSRO9. (\\textbf{C}) Fold changes in transcript abundance for tTSA1 constructs paired with three promoters; pTSA1, pPGK1 and pSRO9. Fold changes are relative to the abundance of the mod_NNN construct", fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/insertion_constructs_design_and_qpcr.png"))
 ```
 
