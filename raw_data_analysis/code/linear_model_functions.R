@@ -64,13 +64,12 @@ expand_regex_to_redundent_strings <- function(motif_regex){
 # alt_motif_name is an optional argument that can be used to change column names associated with the regex motifs
 # gene_name is an optional argument that adds the gene name associated with a sequence
 # returns a tibble consisting of a column for each given motif containing its counts in the respective sequence
-motif_count_function <- function(regex_motifs, transcript_seq, min_count_filter = 5, alt_motif_name = NA , gene_name = NA){
+motif_count_function <- function(regex_motifs, transcript_seq, min_count_filter = 5, gene_name = NA){
   motif_freq <- tibble(transcriptSequence = transcript_seq)
   for (i in 1:length(regex_motifs)){
     motif_count <- str_count(transcript_seq, regex_motifs[i])
     if(sum(motif_count) > min_count_filter)  motif_freq <- mutate(motif_freq, !!regex_motifs[i] := motif_count)
   }
-  if(!is.na(alt_motif_name)) colnames(motif_freq) <- c("transcriptSequence",alt_motif_name)
   if(!is.na(gene_name)) motif_freq <- motif_freq %>% mutate(geneName = gene_name) %>% relocate(geneName)
   return(motif_freq)
 }

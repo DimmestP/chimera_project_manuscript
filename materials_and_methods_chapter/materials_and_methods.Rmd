@@ -84,6 +84,7 @@ To select motifs...
 We initially selected 69 3'UTR motifs to investigate from three separate studies of cis-regulatory sequences suspected to regulate mRNA decay [@Shalgi2005;@Hogan2008; @Cheng2017].
 Explain the greedy algorithm for motif selection, with references.
 
+Finally, we selected the specific versions of the HWNCATTWY and TGTAHMNTA motifs by running separate linear models predicting half life containing only the different versions of each consensus sequence. The results coefficients deduced for the significant motif versions can be found in Supplementary Table ?? and ??. We considered the magnitude and significance of each motifs contribution to the linear model as well as the absolute number of times the motif occurs in native transcripts. We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA we chose TGTACAATA over the more significant motif, TGTATATTA, which we though was too similar to ATATTC.
 
 ## Design of modified 3'UTRs for testing the effects of mutated motifs
 
