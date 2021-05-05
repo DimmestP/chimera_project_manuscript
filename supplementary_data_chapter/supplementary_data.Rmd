@@ -30,6 +30,22 @@ The differences could be caused either by new polyadenylation signals introduced
 knitr::include_graphics(here("supplementary_data_chapter/figures/alternative_polyadenylation_RPS3_5PSeq.png"))
 ```
 
+## Selecting the HWNCAUUWY motif, TTTCATTTC
+
+```{r TGTACAAUA_motif_coef}
+TGTACAAUA_motif_table <- read.csv(here("./supplementary_data_chapter/data/HWNCAUUWY_shortlisted_motif_table.csv")) %>%
+  rename("term" = "Motif", "total_count" = "Total Count")
+knitr::kable(TGTACAAUA_motif_table)
+```
+
+## Selecting the UGUAHMNUA motif, TGTACAAUA
+
+```{r TTTCATTTC_motif_coef}
+TTTCATTTC_motif_table <- read.csv(here("./supplementary_data_chapter/data/UGUAHMNUA_shortlisted_motif_table.csv")) %>%
+  rename("term" = "Motif", "total_count" = "Total Count")
+knitr::kable(TTTCATTTC_motif_table)
+```
+
 ## Comparison of whole-genome ATATTC motif effect vs. reporter-gene ATATTC motif effect
 - Comparison of our qPCR data of modB with that of Cheng et al. (2017)
 

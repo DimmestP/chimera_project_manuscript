@@ -72,12 +72,6 @@ It is not known how ATATTC occurrences lead to mRNA decay.
 knitr::include_graphics(here("results_chapter/figures/hlife_model_multi_fig.png"))
 ```
 
-
-```{r chan_motif_coef,include = FALSE}
-chan_motif_table <- read.csv(here("./results_chapter/data/chan_motif_coefficients.csv"))
-knitr::kable(chan_motif_table)
-```
-
 ## Quantification of cis-regulatory effects via CRE insertion or mutagenesis in multiple 3'UTRs
 
 We next designed a further set of reporter constructs to quantify the effect of selected short CREs in different contexts (Fig \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).

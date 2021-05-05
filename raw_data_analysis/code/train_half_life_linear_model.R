@@ -104,7 +104,7 @@ deduplicated_motifs <- motifs_duplication_match %>%
   select(-motifIUPAC,-motifsRegex)
 
 # Create 'empty' motif count tibble for median length 3'UTRs 
-single_count_median_3UTR_motifs_freq <-  yeast_3UTRs %>%
+single_count_median_3UTR_threePrimeUTR <-  yeast_3UTRs %>%
   filter(!is.na(threePrimeUTR))
 
 # Unduplicated motifs
@@ -112,10 +112,13 @@ unique_IUPAC <- deduplicated_motifs %>% distinct(newMotifsRegex,.keep_all = TRUE
 
 #Search and add frequency of each c(motif) as a column in ref dataset
 print("Counting occurences of each motif in each 3'UTR")
-for (i in 1:length(unique_IUPAC)){
-  motif_count <- str_count(single_count_median_3UTR_motifs_freq$threePrimeUTR, str_c(deduplicated_motifs %>% filter(newMotifIUPAC == unique_IUPAC[i]) %>% pull(motifsStrings),collapse = "|"))
-  if(sum(motif_count) > 5)  single_count_median_3UTR_motifs_freq <- mutate(single_count_median_3UTR_motifs_freq %>% ungroup(), !!unique_IUPAC[i] := motif_count)
-}
+motif_regex<- deduplicated_motifs %>% 
+  group_by(newMotifIUPAC) %>% 
+  summarise(regex = str_c(unique(motifsStrings),collapse = "|"))
+
+single_count_median_3UTR_motifs_freq <- motif_count_function(motif_regex$regex, single_count_median_3UTR_threePrimeUTR$threePrimeUTR, gene_name = single_count_median_3UTR_motifs_freq$transcriptName)
+
+colnames(single_count_median_3UTR_motifs_freq) <-  c("geneName", "transcriptSeque", motif_regex$newMotifIUPAC)
 
 # combine motif,codon and chan decay datasets
 single_count_decay_prediction_dataset_chan <- single_count_median_3UTR_motifs_freq %>%
@@ -149,8 +152,75 @@ chan_motif_coefficients <- broom::tidy(single_motif_chan_decay_step_model_chan) 
   filter(p.value < 0.05) %>% 
   arrange(desc(abs(estimate)))
 
+# For the significant motifs HWNCAUUWY and UGUAHMNUA, save a file containing all versions 
+# of the consensus sequence
+expand_HWNCAUUWY_UGUAHMNUA_consensus_seq <- motifs_duplication_match %>% 
+  filter(motifIUPAC %in% c("HWNCAUUWY","UGUAHMNUA")) %>% 
+  distinct(motifsStrings, .keep_all = TRUE) %>% 
+  select(motifIUPAC,motifsStrings)
 
-# Compare model performanace on both decay datasets
+write_csv(expand_HWNCAUUWY_UGUAHMNUA_consensus_seq, here("raw_data_analysis/data/half_life_data/expand_HWNCAUUWY_UGUAHMNUA_consensus_seq.csv"))
+
+# Count the number of each different version of the HWNCAUUWY and UGUAHMNUA motifs
+count_expanded_HWNCAUUWY <- motif_count_function(expand_HWNCAUUWY_UGUAHMNUA_consensus_seq %>% 
+                                                   filter(motifIUPAC == "HWNCAUUWY") %>% 
+                                                   pull(motifsStrings), 
+                                                 single_count_median_3UTR_threePrimeUTR$threePrimeUTR, gene_name = single_count_median_3UTR_threePrimeUTR$transcriptName)
+
+count_expanded_UGUAHMNUA <- motif_count_function(expand_HWNCAUUWY_UGUAHMNUA_consensus_seq %>% 
+                                                   filter(motifIUPAC == "UGUAHMNUA") %>% 
+                                                   pull(motifsStrings), 
+                                                 single_count_median_3UTR_threePrimeUTR$threePrimeUTR, gene_name = single_count_median_3UTR_threePrimeUTR$transcriptName)
+
+detected_HWNCAUUWY_motifs <- expand_HWNCAUUWY_UGUAHMNUA_consensus_seq %>% 
+  filter(motifIUPAC == "HWNCAUUWY", motifsStrings %in% colnames(count_expanded_HWNCAUUWY)) %>% 
+  pull(motifsStrings)
+
+detected_UGUAHMNUA_motifs <- expand_HWNCAUUWY_UGUAHMNUA_consensus_seq %>% 
+  filter(motifIUPAC == "UGUAHMNUA", motifsStrings %in% colnames(count_expanded_UGUAHMNUA)) %>% 
+  pull(motifsStrings)
+
+total_count_expanded_HWNCAUUWY <- count_expanded_HWNCAUUWY %>% 
+  select(-transcriptSequence) %>% 
+  pivot_longer(-geneName, names_to = "term") %>% 
+  group_by(term) %>% 
+  summarise(total_count = sum(value)) %>% arrange(desc(total_count))
+
+total_count_expanded_UGUAHMNUA <- count_expanded_UGUAHMNUA %>% 
+  select(-transcriptSequence) %>% 
+  pivot_longer(-geneName, names_to = "term") %>% 
+  group_by(term) %>% 
+  summarise(total_count = sum(value)) %>% arrange(desc(total_count))
+
+# Run simple linear model to pick best HWNCAUUWY and UGUAHMNUA motifs
+HWNCAUUWY_UGUAHMNUA_decay_prediction_dataset_chan <- count_expanded_HWNCAUUWY %>%
+  inner_join(count_expanded_UGUAHMNUA) %>%
+  rename("geneName" = "transcriptName") %>%
+  inner_join(chan_decay_hlife) %>%
+  inner_join(codon_freq) %>%
+  mutate(UTR3_length = str_length(transcriptSequence))
+
+HWNCAUUWY_shortlisted_motif_model <- lm(paste0("log2(hlife)~", str_flatten(codon_no_TTT, "+"), "+ UTR3_length +", str_flatten(detected_HWNCAUUWY_motifs, "+")), data = HWNCAUUWY_UGUAHMNUA_decay_prediction_dataset_chan)
+
+UGUAHMNUA_shortlisted_motif_model <- lm(paste0("log2(hlife)~", str_flatten(codon_no_TTT, "+"), "+ UTR3_length +", str_flatten(detected_UGUAHMNUA_motifs, "+")), data = HWNCAUUWY_UGUAHMNUA_decay_prediction_dataset_chan)
+
+HWNCAUUWY_shortlisted_motif_table <- HWNCAUUWY_shortlisted_motif_model %>% 
+  broom::tidy() %>% 
+  filter(term %in% detected_HWNCAUUWY_motifs, p.value < 0.05) %>% 
+  arrange(p.value) %>%
+  inner_join(total_count_expanded_HWNCAUUWY)
+
+UGUAHMNUA_shortlisted_motif_table <- UGUAHMNUA_shortlisted_motif_model %>% 
+  broom::tidy() %>% 
+  filter(term %in% detected_UGUAHMNUA_motifs, p.value < 0.05) %>% 
+  arrange(p.value) %>%
+  inner_join(total_count_expanded_UGUAHMNUA)
+
+write_csv(HWNCAUUWY_shortlisted_motif_table, here("supplementary_data_chapter/data/HWNCAUUWY_shortlisted_motif_table.csv"))
+
+write_csv(UGUAHMNUA_shortlisted_motif_table, here("supplementary_data_chapter/data/UGUAHMNUA_shortlisted_motif_table.csv"))
+
+# Compare model performance on both decay datasets
 two_data_sets_predictive_power_tibble <- single_count_decay_prediction_dataset_chan %>%
   select(transcriptName,hlife) %>%
   mutate(Measured_Half_Life = hlife, Predicted_Half_Life = 2^predict(single_motif_chan_decay_step_model_chan),Data_Set = "Chan") %>%
