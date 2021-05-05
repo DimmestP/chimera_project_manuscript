@@ -32,10 +32,10 @@ knitr::include_graphics(here("supplementary_data_chapter/figures/alternative_pol
 
 ## Selecting the HWNCAUUWY motif, TTTCATTTC
 
-```{r TGTACAAUA_motif_coef}
-TGTACAAUA_motif_table <- read.csv(here("./supplementary_data_chapter/data/HWNCAUUWY_shortlisted_motif_table.csv")) %>%
+```{r TGTACAATA_motif_coef}
+TGTACAATA_motif_table <- read.csv(here("./supplementary_data_chapter/data/HWNCAUUWY_shortlisted_motif_table.csv")) %>%
   rename("term" = "Motif", "total_count" = "Total Count")
-knitr::kable(TGTACAAUA_motif_table)
+knitr::kable(TGTACAATA_motif_table)
 ```
 
 ## Selecting the UGUAHMNUA motif, TGTACAAUA
