@@ -30,20 +30,18 @@ The differences could be caused either by new polyadenylation signals introduced
 knitr::include_graphics(here("supplementary_data_chapter/figures/alternative_polyadenylation_RPS3_5PSeq.png"))
 ```
 
-# Selecting PIR1 and TSA1
-Terminators suitable for insertion were required to have less than two of the motifs detected to be significant according to the [@Chan2018] trained linear model.
-Meanwhile, terminators suitable for deletion had to have all of the motifs present except the stability motif GTATACCTA as this only occurs in limited number of native terminators.
-In addition, all terminators were chosen to contain relatively short, <300nt median 3'UTRs according to [@Pelechano2013], to minimise confounding effects from the formation of complex secondary structures.
-Terminators were also selected to be within the top 5% most abundant genes according to the [@Nadal2019] scRNA-seq dataset.
-The terminators selected for insertion had an addition constraint of a minimum median 3'UTR length of 50nt to enable some flexibly in the positions of insertion to reduce the likelihood of affecting other cis-regulatory elements known to contribute significantly to transcription rates, such as efficiency elements and polyadenylation sites. 
-The shortlisted terminators for insertion were RPS3, a ribosomal protein, and TSA1, a redox homeostasis protein, and the terminator for deletion was PIR1, a cell wall protein.
-The selection process is summarised in supplementary figure 1 with supplementary table 1 containing the shortlist of genes.
-
-
 ## Comparison of whole-genome ATATTC motif effect vs. reporter-gene ATATTC motif effect
 - Comparison of our qPCR data of modB with that of Cheng et al. (2017)
 
 ## Secondary structure prediction of RPS3 and PIR1 3'UTR native and modified designs
-```{r secondary_structure, fig.cap="\\textbf{Designs of modified 3'UTRs aimed at minimsing disruption to the secondary structure.} The computed minimum fre energy (MFE) and the corresponding structure result using RNAfold. The modified 3'UTRs were designed, taking into consideration the MFE, and tailoring designs that would result in minimal change to the MFE.", out.height='110mm', out.width= '', fig.align='center'}
-#knitr::include_graphics(here("supplementary_data_chapter/figures/secondary_structure.png"))
+```{r secondary-structure-RPS3, fig.cap="\\textbf{Designs of modified RPS3 3'UTRs aimed at minimsing disruption to the secondary structure.} The computed minimum fre energy (MFE) and the corresponding structure result using RNAfold. The modified 3'UTRs were designed, taking into consideration the MFE, and tailoring designs that would result in minimal change to the MFE.", fig.align='center'}
+knitr::include_graphics(here("supplementary_data_chapter/figures/secondary_structures_rps3_small.png"), dpi = 300)
+```
+
+```{r secondary-structure-TSA1, fig.cap="\\textbf{Designs of modified RPS3 3'UTRs aimed at minimsing disruption to the secondary structure.}", fig.align='center'}
+knitr::include_graphics(here("supplementary_data_chapter/figures/secondary_structures_tsa1_small.png"), dpi = 300)
+```
+
+```{r secondary-structure-PIR1, fig.cap="\\textbf{Designs of modified RPS3 3'UTRs aimed at minimsing disruption to the secondary structure.}", fig.align='center'}
+knitr::include_graphics(here("supplementary_data_chapter/figures/secondary_structures_pir1_small.png"), dpi = 300)
 ```

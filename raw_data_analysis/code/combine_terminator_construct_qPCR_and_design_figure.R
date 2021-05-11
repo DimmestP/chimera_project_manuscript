@@ -31,7 +31,7 @@ TSA1_deltadeltacq_plot <- ggplot(data = TSA1_deltadeltacq)+
   RNA_relative_abundance_figure_options +
   scale_colour_manual(values=RPS3_TSA1_colour_scheme) +
   theme(axis.text.y=element_text(colour=RPS3_TSA1_colour_scheme)) +
-  labs(x ="Fold change in RNA abundance relative to tTSA1-mod0 (log2 scale)", y = "") +
+  labs(x ="Fold change in RNA abundance relative to tTSA1 mod_NNN (log2 scale)", y = "") +
   facet_wrap(~promoter,ncol = 3) +
   scale_y_discrete(breaks = construct_to_label_dictionary_TSA1_RPS3$TSA1_UTR3, labels = construct_to_label_dictionary_TSA1_RPS3$label)
 
@@ -62,10 +62,10 @@ insertion_construct_plot <- wrap_elements(full = (wrap_elements(full = (ggdraw()
                           theme = ttheme_default(base_size=5,
                                                  padding = unit(c(2, 2), "mm"),
                                                  core=list(
-                                                   fg_params=list(col = c("black", "#CC6666", "#416db0", "#6f3ba1", "#a84a9a", "#288a2e", "grey50",
-                                                                          "black", "black", "black", "#6f3ba1", "#a84a9a", "black", "grey50",
-                                                                          "black", "#CC6666", "#416db0", "black", "#a84a9a", "#288a2e", "grey50",
-                                                                          "black", "#CC6666", "black", "#6f3ba1", "#a84a9a", "#288a2e", "grey50")))))) + 
+                                                   fg_params=list(col = c("black", "#C05558", "#5978BA", "#71519C", "#C288BB", "#7FBF74", "#878787",
+                                                                          "black", "black", "black", "#71519C", "#C288BB", "black", "#878787",
+                                                                          "black", "#C05558", "#5978BA", "black", "#C288BB", "#7FBF74", "#878787",
+                                                                          "black", "#C05558", "black", "#71519C", "#C288BB", "#7FBF74", "#878787")))))) + 
   wrap_elements(full = (ggdraw() + 
                           draw_image(image_read_svg(here("raw_data_analysis/figures/terminator_construct_designs/tRPS3-tTSA1_design.svg"), width = 520, height = 354))))+
     plot_layout(design = insertion_layout))) /
@@ -94,7 +94,7 @@ PIR1_deltadeltacq_plot <- ggplot(data = PIR1_deltadeltacq)+
   RNA_relative_abundance_figure_options +
   scale_colour_manual(values=PIR1_colour_scheme) +
   theme(axis.text.y=element_text(colour=PIR1_colour_scheme)) +
-  labs(x ="Fold change in RNA abundance relative to tPIR1 mod_NNN (log2 scale)", y = "") +
+  labs(x ="Fold change in RNA abundance relative to tPIR1 mod_WT (log2 scale)", y = "") +
   facet_wrap(~promoter,ncol = 3) +
   scale_y_discrete(breaks = construct_to_label_dictionary_PIR1$PIR1_UTR3, labels = construct_to_label_dictionary_PIR1$label)
 
@@ -120,12 +120,12 @@ deletion_construct_plot <- wrap_elements(full = (wrap_elements(full = (ggdraw() 
                                                                                    theme = ttheme_default(base_size=5,
                                                                                                           padding = unit(c(2, 2), "mm"),
                                                                                                           core=list(
-                                                                                                            fg_params=list(col = c("black", "#CC6666", "#416db0", "#9884ab", "#a84a9a", "#5d1c9c", "#1e1c9c", "#971c9c",
-                                                                                                                                   "black", "#CC6666", "black", "black", "black", "black", "black", "#971c9c",
-                                                                                                                                   "black", "black", "#416db0", "black", "black", "black", "#1e1c9c", "black",
-                                                                                                                                   "black", "black", "black", "#9884ab", "black", "#5d1c9c", "#1e1c9c", "#971c9c",
-                                                                                                                                   "black", "black", "black", "black", "#a84a9a", "#5d1c9c", "#1e1c9c", "#971c9c",
-                                                                                                                                   "black", "black", "black", "black", "black", "#5d1c9c", "#1e1c9c", "#971c9c")))))) + 
+                                                                                                            fg_params=list(col = c("#878787", "#C15659", "#5978BA", "#4EB0B5", "#D97F1D", "#71519C", "#968BC2", "#DD76A5",
+                                                                                                                                   "black", "#C15659", "black", "black", "black", "black", "black", "#DD76A5",
+                                                                                                                                   "black", "black", "#5978BA", "black", "black", "black", "#968BC2", "black",
+                                                                                                                                   "black", "black", "black", "#4EB0B5", "black", "#71519C", "#968BC2", "#DD76A5",
+                                                                                                                                   "black", "black", "black", "black", "#D97F1D", "#71519C", "#968BC2", "#DD76A5",
+                                                                                                                                   "black", "black", "black", "black", "black", "#71519C", "#968BC2", "#DD76A5")))))) + 
                                                     wrap_elements(full = (ggdraw() + 
                                                                             draw_image(image_read_svg(here("raw_data_analysis/figures/terminator_construct_designs/tPIR1_design.svg"), width = 520, height = 354))))+
                                                     plot_layout(design = deletion_layout))) /

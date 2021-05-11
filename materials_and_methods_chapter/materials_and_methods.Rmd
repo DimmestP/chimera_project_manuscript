@@ -75,42 +75,53 @@ To be continued...
 
 ## Determining 3'UTR decay motifs
 
-Following Cheng et al (2017), we quantified the effect of motifs on transcript half-life using a linear model predicting half life on the basis of codon usage, 3'UTR length, and 3'UTR motif frequency.
+We initially selected 69 3'UTR motifs to investigate from three separate studies of cis-regulatory sequences suspected to regulate mRNA decay [@Shalgi2005;@Hogan2008; @Cheng2017]. To shortlist this list to 4 suitable candidates to test for context dependence, we determined each motif's constribution to a linear model predicting half life. Following Cheng et al (2017), we quantified the effect of motifs on transcript half-life using a linear model predicting half life on the basis of codon usage, 3'UTR length, and 3'UTR motif frequency.
 $$log_2(\lambda_g^{1/2}) = \sum_c\beta_cp_{cg} + \sum_m\alpha_mn_{mg} + \gamma \omega_g + \epsilon_g$$
-where $\lambda_g^{1/2}$ is the half life of gene g, $\beta_c$ is the coefficient associated with codon c, $p_{cg}$ is the proportion of gene g's ORF that corresponds to codon c, $gamma$ is the coefficient associated with 3'UTR length, $\omega_g$ is the 3'UTR length of gene $g$, $\alpha_m$ is the coefficient associated with motif $m$, $n_{mg}$ is number of occurences of motif $m$ in gene $g$'s 3'UTR, and $\epsilon_g$ is the noise term.
+where $\lambda_g^{1/2}$ is the half life of gene g, $\beta_c$ is the coefficient associated with codon c, $p_{cg}$ is the proportion of gene g's ORF that corresponds to codon c, $\gamma$ is the coefficient associated with 3'UTR length, $\omega_g$ is the 3'UTR length of gene $g$, $\alpha_m$ is the coefficient associated with motif $m$, $n_{mg}$ is number of occurences of motif $m$ in gene $g$'s 3'UTR, and $\epsilon_g$ is the noise term.
 We used the median 3'UTR length estimates from the TIF-seq analysis in @Pelechano2013 for the length values and also to assess which sequence to use for motif search.
 
-To select motifs...
-We initially selected 69 3'UTR motifs to investigate from three separate studies of cis-regulatory sequences suspected to regulate mRNA decay [@Shalgi2005;@Hogan2008; @Cheng2017].
-Explain the greedy algorithm for motif selection, with references.
+We removed motifs that did not contribute to half life by using a greedy model selection algorithm that minimises the Akaike information criterion (AIC). 
+$$AIC = 2k - 2ln(\hat{L})$$
+where $k$ is the number of parameters in the model and $\hat L$ is the maximum value of the likelihood function.
+The AIC is an estimator for the prediction error of a model which also penalises models that have more parameters [@Akaike1998]. 
+Therefore, it can be used to compare models with different combinations of motifs and select ones that have the lowest error. 
+We implement this comparison using the R function step [@Rstats] [@Ripley2002]. 
+Step iteratively adds the motif which reduces the model's AIC the most until the penalty for adding news terms overcomes the benefit of including a new motif.
+Any motifs not included in the model at this point are removed.
+This procedure was ran on both decay data sets [@Chan2018] [@Sun2013]. 
 
 
 ## Design of modified 3'UTRs for testing the effects of mutated motifs
 
-3'UTR was selected for screening the effect of removing motifs of interest individually or in combination to determine their impact on RNA abundance.
-To this end, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following critera; 1) contains all 3 motifs of motifs of interest (ATATTC, UGUAMNUA, HWNCAUUWY), 2) < 300 nt in length and 3) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq data set.
+RPS3 was chosen as the first 3'UTR for inserting motifs into as it was the only terminator in the characterized library that did not contain any of the 69 original motifs of interest.
+The tRPS3 3'UTR-terminator was modified to incorporate three 9 nt insertion sites for motifs (M1, M2 and M3).
+The M1 was inserted 24 nt downstream of the stop codon, M2 was inserted 15 nt downstream of M1 and the final insert M3 was inserted 4 nt downstream of M2 (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
+These positions were selected based out key design criteria (SUP FIGURE/NOTE X).
+A control tRPS3 3'UTR mod0 was designed to incorporate scrambled/random bases in each insertion site (Figure 1A).
+Further modified 3’UTR-terminator designs were designed to incorporate individual motifs of interest previously identified, within the insertion sites described (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
+
+We chose an alternative 3'UTR for screening the effects of inserting motifs of interest with by searching for characteristics similar to RPS3.
+To this end, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following critera; 1) does not contain any of the original 69 motifs of interest, 2) < 300 nt in length and 3) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq data set.
 The resulting candidates are summarised in the supplementary table.
-The mutation of motifs for their removal from the 3'UTR were carried out according to the following criteria: 1) at least 50% of the motif sequence (specifically the motif consensus sequence) was mutated to a base that does not correspond to the consensus sequence.
+
+Similar to the modified RPS3 3'UTR-terminator designs, three 9 nt insertion sites (M1, M2 and M3).
+The M1 was designed 21 nt downstream of the stop codon, M2 was designed 20 nt downstream of M1, and M3 was designed 24 bp downstream of M2. 
+The tTSA1 mod0 construct contained scrambled/random bases in the M1, M2 and M3 sites (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
+Similar to the modified tRPS3 3'UTR-terminator designs, individual motifs of interest previously described were introduced into the insertion sites (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A), whereby modC was designed to characterise a candidate stability motif, whilst modA, modB, modD and modE were designed to characterise candidate decay motifs.
+
+Alternatively, we wanted to find a native 3'UTR that contained the 4 shortlised motifs of interest. 
+Again, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following critera; 1) contains at least 2 shortlisted motifs of interest, 2) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq data set.
+The PIR1 terminator chosen for motif deletion had to have all of the motifs present except the stability motif GTATACCTA, as this only occurs in limited number of native terminators.
+PIR1 does contain one copy each of the ATATTC and UGUAHMNU the motifs, and 3 copies of the HWNCAUUWY motifs, the position of the motifs can be seen in (Figure \@ref(fig:tPIR1-design-and-qpcr)A).
+
+The mutation of motifs for their removal from the PIR1 3'UTR were carried out according to the following criteria: 1) at least 50% of the motif sequence (specifically the motif consensus sequence) was mutated to a base that does not correspond to the consensus sequence.
 2) GC content was minimally altered.
 3) Mutations that resulted in a limited change in the predicted secondary structure and minimum free energy (MFE) (according to the RNAfold [@Lorenz2011] - http://rna.tbi.univie.ac.at//cgi-bin/RNAWebSuite/RNAfold.cgi). 
 
 The native and modified candidate 3'UTRs were screened for the presesnce of Esp31 and Bsa1 sites within the sequence.
 100 nt downstream of the native 3'UTR was added to the candidate and verified for whether they can be synthesised by IDT using the gBlock entry form (https://eu.idtdna.com/site/order/gblockentry).
 
-The tRPS3 3'UTR-terminator was modified to incorporate three 9 nt insertion sites for motifs (M1, M2 and M3).
-The M1 was inserted 24 nt downstream of the stop codon, M2 was inserted 15 nt downstream of M1 and the final insert M3 was inserted 4 nt downstream of M2 (Figure \@ref(fig:tRPS3-design-and-qpcr)).
-These positions were selected based out key design criteria (SUP FIGURE/NOTE X).
-A control tRPS3 3'UTR mod0 was designed to incorporate scrambled/random bases in each insertion site (Figure 1A).
-Further modified 3’UTR-terminator designs were designed to incorporate individual motifs of interest previously identified, within the insertion sites described (Figure \@ref(fig:tRPS3-design-and-qpcr)).
-
-Similar to the modified RPS3 3'UTR-terminator designs, three 9 nt insertion sites (M1, M2 and M3).
-The M1 was designed 21 nt downstream of the stop codon, M2 was designed 20 nt downstream of M1, and M3 was designed 24 bp downstream of M2. 
-The tTSA1 mod0 construct contained scrambled/random bases in the M1, M2 and M3 sites (Figure \@ref(fig:tTSA1-design-and-qpcr)).
-Similar to the modified tRPS3 3'UTR-terminator designs, individual motifs of interest previously described were introduced into the insertion sites (Figure \@ref(fig:tTSA1-design-and-qpcr)), whereby modC was designed to characterise a candidate stability motif, whilst modA, modB, modD and modE were designed to characterise candidate decay motifs.
-
 The sequence 'agcgtgCGTCTCgTAGC' was added to the 5'-end of the 3'UTR and the sequence 'CCTCcGAGACGcagcac' was added to the 3'-end of the 3'UTR.
-
-
 
 ## Determining motif effect on abundance
 A linear model predicting construct $\Delta$Cq's using the presence or absence of the four selected motifs was trained on each promoter-terminator pairing separately. The linear model also included a term for batch effects, between the two experimental replicates for each set of constructs, and a term to account for interactions between the UGUAMNUA and HWNCAUUWY motifs.

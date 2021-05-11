@@ -20,7 +20,7 @@ Both these approaches make the implicit approximation that the contribution of a
 The approximation that short CREs act independently helps to find elements that have clear contributions, and to simplify a vast search space that would be made exponentially larger by accounting for CRE interactions.
 However, framing the search for CREs around independent contributions from short motifs overlooks multi-part motifs, interactions between motifs, and the fact that motifs may be active only in specific contexts.
 
-The importance of the interactions between CREs alone has been clear since the discovery of cooperative DNA binding by transcription factors [@Giniger1988].
+The importance of the interactions between CREs alone has been clear since the discovery of cooperative DNA binding by transcription factors [@Ptashne1980].
 For example, whether post-transcriptional regulatory CREs are functional or not depends on the RNA sequence context [@Taliaferro2016].
 One large-scale study of synthetic combinations of bacterial promoters and ribosomal binding sites showed that expression was largely composed of independent contributions; 64% of constructs had protein expression levels with less than a 2-fold deviation from the predictions of a linear model without interactions [@Kosuri2013]. 
 However, 5% of the constructs had, on average, a 13-fold deviation.
