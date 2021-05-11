@@ -19,11 +19,30 @@ source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 ```
 
 ```{r import_functions}
-# Function to extract WT constructs or to find which construct the strain is
+# Function to extract WT constructs or to find which construct the strain is from experiment name
 construct_extraction <- function(strain_name){
   construct_name <- str_extract(strain_name,"mod[A-Z0]")
   construct_name[is.na(construct_name)] <- str_extract(strain_name[is.na(construct_name)],"WT")
   construct_name
+}
+
+# Function to extract experimental replicate from experiment name
+replicate_extraction <- function(experiment_name){
+  experimental_replicate <- str_extract(experiment_name,"(?<=_n)[12](?=/)")
+  experimental_replicate
+}
+
+# function to calculate standard error
+standard_error <- function(x) sd(x) / sqrt(length(x))
+
+# Calculate fluorescence relative to mod0 or WT
+norm_fluo_cal <- function(fluo_tibble, norm_to = "mod0"){
+  fluo_tibble %>%
+    mutate(base_fluor = filter(., construct == norm_to) %>%
+             pull(c_mCherry_100_per_OD_at_max_local_gr) %>%
+             mean()) %>%
+    group_by(construct) %>%
+  mutate( relative_abundance_protein = c_mCherry_100_per_OD_at_max_local_gr / base_fluor)
 }
 
 ## shouldn't these dictionaries be in shared_figure_formatting?
@@ -43,23 +62,30 @@ RPS3_protein <- read.csv(here("raw_data_analysis/data/norm_platereader/motif_con
   separate(strain,into = c("strain","bio_rep"),sep = "_clone_") %>%
   mutate(promoter = "pRPS3") 
 
+RPS3_protein_norm <- RPS3_protein %>%
+  filter(strain != "POT1-ccdB") %>% 
+  mutate(construct =construct_extraction(strain),
+         exp_rep = replicate_extraction(experiment)) %>%
+  group_by(exp_rep) %>%
+  group_modify(~norm_fluo_cal(.x))
+
 TSA1_protein <- read.csv(here("raw_data_analysis/data/norm_platereader/motif_context_dependence/pTSA1-mCh-tTSA1/pTSA1-mCh-tTSA1_both_reps.csv")) %>%
   filter(strain != "null") %>%
   separate(strain,into = c("strain","bio_rep"),sep = " clone ") %>%
   mutate(promoter = "pTSA1")
 
-RPS3_TSA1_protein <-
-  bind_rows(RPS3_protein, TSA1_protein) %>%
+TSA1_protein_norm <- TSA1_protein %>%
   filter(strain != "POT1-ccdB") %>% 
   mutate(construct =construct_extraction(strain),
-         mod0_fluor = filter(., construct == "mod0") %>%
-           pull(c_mCherry_100_per_OD_at_max_local_gr) %>%
-           mean()) %>%
-  group_by(construct) %>%
-  mutate( relative_abundance_protein = c_mCherry_100_per_OD_at_max_local_gr / mod0_fluor) %>%
+         exp_rep = replicate_extraction(experiment)) %>%
+  group_by(exp_rep) %>%
+  group_modify(~norm_fluo_cal(.x))
+
+RPS3_TSA1_protein <- RPS3_protein_norm %>%
+  bind_rows(TSA1_protein_norm) %>%
   inner_join(construct_to_label_dictionary_TSA1_RPS3) %>%
-  ungroup() %>%
-  select(-experiment, -X, -strain, - c_mCherry_100_per_OD_at_max_local_gr, - mod0_fluor, -construct)
+  select(-experiment, -X, -strain, - c_mCherry_100_per_OD_at_max_local_gr, - base_fluor, -construct) %>% 
+  ungroup()
 
 PIR1_protein <- read.csv(here("raw_data_analysis/data/norm_platereader/motif_context_dependence/pPIR1-mCh-tPIR1/pPIR1-mCh-tPIR1_both_reps.csv")) %>%
   filter(strain != "null") %>%
@@ -67,14 +93,12 @@ PIR1_protein <- read.csv(here("raw_data_analysis/data/norm_platereader/motif_con
   mutate(promoter = "pPIR1") %>%
   filter(strain != "POT1-ccdB") %>% 
   mutate(construct =construct_extraction(strain),
-         WT_fluor = filter(., construct == "WT") %>%
-           pull(c_mCherry_100_per_OD_at_max_local_gr) %>%
-           mean()) %>%
-  group_by(construct) %>%
-  mutate( relative_abundance_protein = c_mCherry_100_per_OD_at_max_local_gr / WT_fluor) %>%
+         exp_rep = replicate_extraction(experiment)) %>%
+  group_by(exp_rep) %>%
+  group_modify(~norm_fluo_cal(.x, "WT")) %>%
   inner_join(construct_to_label_dictionary_PIR1) %>%
   ungroup() %>%
-  select(-experiment, -X, -strain, - c_mCherry_100_per_OD_at_max_local_gr, - WT_fluor, -construct)
+  select(-experiment, -X, -strain, - c_mCherry_100_per_OD_at_max_local_gr, - base_fluor, -construct)
 ```
 
 ```{r import_data_rna}
@@ -125,17 +149,27 @@ PIR1_protein_and_RNA_data <- PIR1_protein  %>%
 PIR1_protein_and_RNA_data
 ```
 
-```{r calc_protein_rna_correlation}
+```{r mean_protein_rna_over_bio_reps}
+mean_RPS3_TSA1_protein_and_RNA_data <- RPS3_TSA1_protein_and_RNA_data %>%
+  group_by(promoter, label) %>%
+  summarise(mean_relative_abundance_protein = mean(relative_abundance_protein), se_relative_abundance_protein = standard_error(relative_abundance_protein), mean_relative_abundance_mrna = mean(relative_abundance_mrna), se_relative_abundance_mrna = standard_error(relative_abundance_mrna), .groups = "drop")
+
+mean_PIR1_protein_and_RNA_data <- PIR1_protein_and_RNA_data %>%
+  group_by(promoter, label) %>%
+  summarise(mean_relative_abundance_protein = mean(relative_abundance_protein), se_relative_abundance_protein = standard_error(relative_abundance_protein), mean_relative_abundance_mrna = mean(relative_abundance_mrna), se_relative_abundance_mrna = standard_error(relative_abundance_mrna), .groups = "drop")
+```
+
+```{r calc_mean_protein_rna_correlation}
 r_cor_data_RPS3_TSA1 <- 
-  RPS3_TSA1_protein_and_RNA_data %>% 
+  mean_RPS3_TSA1_protein_and_RNA_data %>% 
   group_by(promoter) %>% 
-  summarise(cor = round(cor(relative_abundance_mrna,relative_abundance_protein),2)) %>%
+  summarise(cor = round(cor(mean_relative_abundance_mrna,mean_relative_abundance_protein),2)) %>%
   mutate(cor_label = str_c("R = ", cor))
 
 r_cor_data_PIR1 <- 
-  PIR1_protein_and_RNA_data %>% 
+  mean_PIR1_protein_and_RNA_data %>% 
   group_by(promoter) %>% 
-  summarise(cor = round(cor(relative_abundance_mrna,relative_abundance_protein),2)) %>%
+  summarise(cor = round(cor(mean_relative_abundance_mrna,mean_relative_abundance_protein),2)) %>%
   mutate(cor_label = str_c("R = ", cor))
 ```
 
@@ -143,11 +177,18 @@ r_cor_data_PIR1 <-
 ```{r plot_protein_vs_rna_RPS3_TSA1, fig.width = 4.5, fig.height = 6}
 
 RPS3_TSA1_protein_and_RNA_plot <- 
-  ggplot(RPS3_TSA1_protein_and_RNA_data) + 
-  geom_point(aes(y = relative_abundance_protein, 
-                 x = relative_abundance_mrna, 
-                 colour = label), 
-             alpha = 0.5) +
+  ggplot(mean_RPS3_TSA1_protein_and_RNA_data) + 
+  geom_point(aes(y = mean_relative_abundance_protein, 
+                 x = mean_relative_abundance_mrna, 
+                 colour = label)) +
+  geom_errorbar(aes(ymax = mean_relative_abundance_protein + se_relative_abundance_protein,
+                    ymin = mean_relative_abundance_protein - se_relative_abundance_protein,
+                 x = mean_relative_abundance_mrna, 
+                 colour = label)) +
+  geom_errorbarh(aes(xmax = mean_relative_abundance_mrna + se_relative_abundance_mrna,
+                    xmin = mean_relative_abundance_mrna - se_relative_abundance_mrna,
+                 y = mean_relative_abundance_protein, 
+                 colour = label)) +
   facet_wrap(~ promoter, ncol = 1) +
   labs(y="Relative Protein Abundance", x = "Relative mRNA Abundance", colour = "Construct") +
   geom_abline(slope = 1, intercept = 0) +
@@ -160,8 +201,16 @@ RPS3_TSA1_protein_and_RNA_plot
 
 ```{r plot_protein_vs_rna_PIR1, fig.width = 4.5, fig.height = 6}
 PIR1_protein_and_RNA_plot <- 
-  ggplot(PIR1_protein_and_RNA_data) + 
-  geom_point(aes(y = relative_abundance_protein, x = relative_abundance_mrna, colour = label), alpha = 0.5) + 
+  ggplot(mean_PIR1_protein_and_RNA_data) + 
+  geom_point(aes(y = mean_relative_abundance_protein, x = mean_relative_abundance_mrna, colour = label)) +
+  geom_errorbar(aes(ymax = mean_relative_abundance_protein + se_relative_abundance_protein,
+                    ymin = mean_relative_abundance_protein - se_relative_abundance_protein,
+                 x = mean_relative_abundance_mrna, 
+                 colour = label)) +
+  geom_errorbarh(aes(xmax = mean_relative_abundance_mrna + se_relative_abundance_mrna,
+                    xmin = mean_relative_abundance_mrna - se_relative_abundance_mrna,
+                 y = mean_relative_abundance_protein, 
+                 colour = label)) + 
   labs(y="Relative Protein Abundance", 
        x = "Relative mRNA Abundance", 
        colour = "Construct") +
