@@ -3,6 +3,15 @@
 \renewcommand{\fnum@figure}{Figure S\thefigure}
 \makeatother
 \setcounter{figure}{0}
+
+## Variance explained by each predicate in the half life model 
+
+
+```{r hlife-variance-table}
+knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual = c("42.0%", "3.2%", "0.6%"), Drop = c("-40.5%", "-1.6%", "0.0%"), Cumulative = c("42.0%", "43.7%", "43.7%")), caption = "
+Variance explained was explored in three different ways. The variance explained by a linear containing each CRE appearing individually.  The loss in variance explained when one CRE is removed from the full model. The total variance explained when each CRE is added to the linear model in sequence.")
+```
+
 ## Motif effects on transcript expression is repeated in protein expression data
 
 The effects of motif presence on protein expression was investigate with a platereader assay detecting the fluorescence of the mCherry reporter gene on the pRPS3-tRPS3 and pTSA1-tTSA1 constructs.

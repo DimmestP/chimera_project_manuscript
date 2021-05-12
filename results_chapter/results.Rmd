@@ -56,8 +56,8 @@ Following @Cheng2017, we constructed a linear model to predict a transcript's ha
 This model performed similarly on both datasets by explaining 44% and 41% of the variability in half lives for the @Chan2018 and @Sun2013 data sets respectively, Fig \@ref(fig:hlife-decay-model)C.
 This predictive power is comparable to the squared correlation between the datasets ($R^2 = 0.40$).
 CREs that did not significantly contribute to the model were automatically filtered out using a greedy algorithm maximising the Akaike information criterion (AIC) during both training stages.
-Approximately 1.6% of the variance is explained by these 7 motifs, with 42.0% explained by codon usage, consistent with previous analyses [@Presnyak2015;@Cheng2017].
-The top 7 most significant motifs from the @Chan2018 data showed similar regulatory behaviour in the @Sun2013 data, except for TGTAAATA which swap from being stabilising to destabilising, Fig \@ref(fig:hlife-decay-model)B.
+Approximately 1.7% of the variance is explained by these 7 motifs, with 42.0% explained by codon usage see Sup Table \@ref(tab:hlife-variance-table), consistent with previous analyses [@Presnyak2015;@Cheng2017].
+The top 7 most significant motifs from the @Chan2018 data showed similar regulatory behaviour when tested on their own in the @Sun2013 data, except for TGTAAATA which swapped from being stabilising to destabilising, Fig \@ref(fig:hlife-decay-model)B.
 
 
 We selected four motifs for exploring context dependence: TGTAHMNTA, GTATACCTA, HWNCATTWY, and ATATTC.
