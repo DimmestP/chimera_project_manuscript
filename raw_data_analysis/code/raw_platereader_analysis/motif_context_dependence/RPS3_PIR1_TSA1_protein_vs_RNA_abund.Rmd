@@ -140,12 +140,14 @@ PIR1_RNA <- read_csv(here("./raw_data_analysis/data/norm_qpcr/motif_context_depe
 ```{r join_protein_rna_data,echo = TRUE, results = "show"}
 RPS3_TSA1_protein_and_RNA_data <- RPS3_TSA1_protein %>%
   inner_join( bind_rows(RPS3_TSA1_RNA)) %>%
-  mutate(promoter = factor(str_remove(promoter, "p"), levels = c("RPS3", "TSA1")))
+  mutate(promoter = factor(str_remove(promoter, "p"), levels = c("RPS3", "TSA1")),
+         label = factor(label, levels = rev(c("WT", "mod_NGG", "mod_HTH", "mod_HNH", "mod_NTN", "mod_NAA", "mod_NNN"))))
 RPS3_TSA1_protein_and_RNA_data
 
 PIR1_protein_and_RNA_data <- PIR1_protein  %>%
   inner_join(PIR1_RNA) %>%
-  mutate(promoter =str_remove(promoter, "p"))
+  mutate(promoter = factor(str_remove(promoter, "p"), levels = c("PIR1")),
+         label = factor(label, levels = c("WT", "mod_NTHHH", "mod_ANHHH", "mod_ATNHH", "mod_ATHNH", "mod_ATNNN", "mod_ANNNN", "mod_NTNNN")))
 PIR1_protein_and_RNA_data
 ```
 
@@ -194,7 +196,8 @@ RPS3_TSA1_protein_and_RNA_plot <-
   geom_abline(slope = 1, intercept = 0) +
   coord_equal(xlim = c(0, 2.0), ylim= c(0, 2.0), expand = FALSE) +
   geom_text(aes(label = cor_label), data = r_cor_data_RPS3_TSA1, 
-            y = 1.9, x= 0.1, size = 3, hjust = 0, vjust = 1)
+            y = 1.9, x= 0.1, size = 3, hjust = 0, vjust = 1) +
+ scale_color_manual(values = rev(RPS3_TSA1_colour_scheme))
 
 RPS3_TSA1_protein_and_RNA_plot
 ```
@@ -218,7 +221,8 @@ PIR1_protein_and_RNA_plot <-
   geom_abline(slope = 1, intercept = 0) +
   coord_equal(xlim = c(0, 2.0), ylim = c(0, 3.0), expand = FALSE) + 
   geom_text(aes(label = cor_label), data = r_cor_data_PIR1, 
-            y = 2.9, x= 0.1, size = 3, hjust = 0, vjust = 1)
+            y = 2.9, x= 0.1, size = 3, hjust = 0, vjust = 1) +
+ scale_color_manual(values = rev(PIR1_colour_scheme))
 
 PIR1_protein_and_RNA_plot
 ```
