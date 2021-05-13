@@ -3,23 +3,33 @@
 \renewcommand{\fnum@figure}{Figure S\thefigure}
 \makeatother
 \setcounter{figure}{0}
-## Summary of key charactoristics of all native terminators
+
+## Summary of key characteristics of native terminators used in reporter genes
+
+FIX THESE NUMBERS!
 
 ```{r terminator-summary-table}
+library(tibble)
 tibble("Gene Name" = c("PGK1", "RPS3", "RPS13", "PAB1", "HSP26", "CLN2", "SRO9", "TOS6", "SUN4", "PMA1", "TSA1", "PIR1"),
        "Systematic Name" = c("YCR012W", "YNL178W", "YDR064W", "YER165W", "YBR072W", "YPL256C", "YCL037C", "YNL300W", "YNL066W", "YGL008C", "YML028W", "YKL164C"),
-       "Medain 3\'UTR Length" = c(158, 59, 83, 126, 164, 230, 577, 256, 198, 504, 106, 258),
-       "Terminator Length"= c(189, 200, 200, 200, 200, 200, 543, 256, 198, 421, 219, 358),
-       "Usage" = c("Pro-Ter Swap", "Pro-Ter Swap, Motif Insertion", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Motif Insersion", "Motif Removal")) %>%
+       "Median 3\'UTR Length" = c(158, 59, 83, 126, 164, 230, 577, 256, 198, 504, 106, 258),
+       "Synthetic Terminator Length"= c(189, 200, 200, 200, 200, 200, 543, 256, 198, 421, 219, 358),
+       "Usage" = c("Pro-Ter Swap", "Pro-Ter Swap, Motif Insertion", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Motif Insertion", "Motif Removal")) %>%
   knitr::kable(format = "latex", align = "c") %>%
   kableExtra::column_spec(3:5, width = "2.4cm") %>%
   kableExtra::row_spec(0, bold = TRUE)
 ```
 
-## Summary of key charactoristics of shortlisted motifs
+## Summary of key characteristics of shortlisted motifs in half-life analysis
 
 ```{r motif-summary-table}
-tibble("Consenus Seq" = c("ATATTC", "TGTAHMNTA", "GTATACCTA", "HWNCATTWY"), "Insertion Motif" = c(NA,"TGTACAATA",NA,"TTTCATTTC"), "Deletion Motif" =c(NA,"TGTACATTA",NA,"CTTCATTTC, ATACATTAT,\n AATCATTAT"), Source = c("Cheng", "Hogan", "Shalgi" ,"Hogan"), "Chan Coef" = c(-0.075,-0.227,0.502,-0.084), "Sun Coef" = c(-0.169, -0.056, 0.283,-0.061), "Function" = c(NA,"PUF4", NA, "Associated with Khd1-bound transcripts")) %>%
+tibble("Consensus Seq" = c("ATATTC", "TGTAHMNTA", "GTATACCTA", "HWNCATTWY"), 
+       "Insertion Motif" = c(NA,"TGTACAATA",NA,"TTTCATTTC"), 
+       "Deletion Motif" =c(NA,"TGTACATTA",NA,"CTTCATTTC, ATACATTAT, AATCATTAT"), 
+       Source = c("Cheng", "Hogan", "Shalgi" ,"Hogan"), 
+       "Chan Coef" = c(-0.075,-0.227,0.502,-0.084), 
+       "Sun Coef" = c(-0.169, -0.056, 0.283,-0.061), 
+       "Function" = c(NA,"Puf4p binding motif", NA, "Associated with Khd1-bound transcripts")) %>%
   knitr::kable(format = "latex", align = "c") %>%
   kableExtra::column_spec(c(1,2,3,7), width = "2.3cm") %>%
   kableExtra::row_spec(0, bold = TRUE)
