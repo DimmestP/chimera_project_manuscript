@@ -9,15 +9,17 @@ Our quantitative measurements of protein output from promoter-terminator combina
 Unsurprisingly, fluorescent protein expression levels are dominated by promoter choice, up to 100 fold, and then terminator choice, up to 5 fold. 
 However, with up to 1.5 fold change in the relative effect of terminators depending on coding sequence and promoter choice, the quantitative limitations of the assumption of composability are clear. 
 
-Furthermore, we find that the effect of short CREs in 3'UTRs depends on the context of their host construct.
+Furthermore, we find that the effect of regulatory motifs in 3'UTRs depends on the context of their host construct.
 The contribution of our selected motifs to mRNA stability, as inferred from transcriptome-wide analysis, correlated with their effect on the abundance of reporter constructs.
 However, their contributions to mRNA abundance were inconsistent and dependent on context: TGTAHMNTA has no measurable effect when inserted into tRPS3 but the expected effect in tTSA1, ATATTC has the expected effect in tRPS3 but little effect in tTSA1, and HWNCATTWY can either decrease or increase RNA levels when removed from tPIR1, depending on the promoter.
-In addition, our original motif search predicted the behaviour of a TGTAAATA motif to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
-TGTAAATA changed its contribution in the two data sets because, as a known binding motif for Puf3, carbon deficient conditions trigger Puf3 to degrade its targets [@Miller2014].
-Carbon deficient conditions were likely present due to the bespoke CSM-lowURA media used by [@Chan2018], which is similar to the SC-URA media used in our assays.
 These disparities in predicted and experimentally verified regulatory behaviour raises questions about current methods for discovering novel cis-regulatory elements and, more generally, for understanding and manipulating regulatory pathways.
 
-## Mechanisms for motif terminator context dependence
+In addition, our transcriptome-wide motif analysis predicted the behaviour of a TGTAAATA motif to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
+This difference could be explained by carbon-dependent regulation of Puf3: TGTAAATA is the binding motif for Puf3, and carbon deficient conditions trigger Puf3 to degrade its targets [@Miller2014].
+Carbon deficient conditions were likely present in the CSM-lowURA media used by [@Chan2018], which is similar to the SC-URA media used in our assays, but not in the YPD-rich media used by [@Sun2013].
+This raises further questions about the need to explore CRE contributions in diverse growth conditions.
+
+## Mechanisms for CRE context dependence
 
 The regulatory behavior of a motif depends on the presence of other CREs and, often,  trans-regulatory elements (TREs). 
 Active CREs occurring alongside a motif differ not only between genes but also between transcripts from the same gene.
