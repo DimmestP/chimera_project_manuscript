@@ -4,15 +4,15 @@
 \makeatother
 \setcounter{figure}{0}
 
+
 ## Summary of key characteristics of native terminators used in reporter genes
 
-FIX THESE NUMBERS!
 
 ```{r terminator-summary-table}
 library(tibble)
 tibble("Gene Name" = c("PGK1", "RPS3", "RPS13", "PAB1", "HSP26", "CLN2", "SRO9", "TOS6", "SUN4", "PMA1", "TSA1", "PIR1"),
        "Systematic Name" = c("YCR012W", "YNL178W", "YDR064W", "YER165W", "YBR072W", "YPL256C", "YCL037C", "YNL300W", "YNL066W", "YGL008C", "YML028W", "YKL164C"),
-       "Median 3\'UTR Length" = c(158, 59, 83, 126, 164, 230, 577, 256, 198, 504, 106, 258),
+       "Median 3\'UTR Length" = c(158, 59, 83, 126, 164, 182, 577, 256, 198, 495, 106, 258),
        "Synthetic Terminator Length"= c(189, 200, 200, 200, 200, 200, 543, 256, 198, 421, 219, 358),
        "Usage" = c("Pro-Ter Swap", "Pro-Ter Swap, Motif Insertion", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Motif Insertion", "Motif Removal")) %>%
   knitr::kable(format = "latex", align = "c") %>%
@@ -34,6 +34,13 @@ tibble("Consensus Seq" = c("ATATTC", "TGTAHMNTA", "GTATACCTA", "HWNCATTWY"),
   kableExtra::column_spec(c(1,2,3,7), width = "2.3cm") %>%
   kableExtra::row_spec(0, bold = TRUE)
 ```
+## Variance explained by each predicate in the half life model 
+
+
+```{r hlife-variance-table}
+knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual = c("42.0%", "3.2%", "0.6%"), Drop = c("-40.5%", "-1.6%", "0.0%"), Cumulative = c("42.0%", "43.7%", "43.7%")), caption = "
+Variance explained was explored in three different ways. The variance explained by a linear containing each CRE appearing individually.  The loss in variance explained when one CRE is removed from the full model. The total variance explained when each CRE is added to the linear model in sequence.")
+```
 
 ## Motif effects on transcript expression is repeated in protein expression data
 
@@ -44,6 +51,23 @@ Comparing the corresponding RNA abundance levels, left column of Figure \@ref(fi
 ```{r protein-verse-RNA-plot, fig.cap="\\textbf{Motif contributions to protein abundance correlate with RNA abundance}. (\\textbf{Left}) Fold changes in mRNA abundance for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings. (\\textbf{Right}) mCherry fluorescence at the maximum growth rate for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings.", out.width='60%', fig.align='center'}
 knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"))
 ```
+
+## Selecting the HWNCAUUWY motif, TTTCATTTC
+
+```{r TGTACAATA_motif_coef}
+TGTACAATA_motif_table <- read.csv(here("./supplementary_data_chapter/data/HWNCAUUWY_shortlisted_motif_table.csv")) %>%
+  rename("term" = "Motif", "total_count" = "Total Count")
+knitr::kable(TGTACAATA_motif_table)
+```
+
+## Selecting the UGUAHMNUA motif, TGTACAAUA
+
+```{r TTTCATTTC_motif_coef}
+TTTCATTTC_motif_table <- read.csv(here("./supplementary_data_chapter/data/UGUAHMNUA_shortlisted_motif_table.csv")) %>%
+  rename("term" = "Motif", "total_count" = "Total Count")
+knitr::kable(TTTCATTTC_motif_table)
+```
+
 
 ## Comparison of whole-genome ATATTC motif effect vs. reporter-gene ATATTC motif effect
 - Comparison of our qPCR data of modB with that of Cheng et al. (2017)

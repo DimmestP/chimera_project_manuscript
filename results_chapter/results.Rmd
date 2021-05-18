@@ -51,13 +51,13 @@ All were suspected sequence motifs for RNA binding proteins, several directly as
 Any motifs that were found in fewer than 6 gene 3'UTRs, as annotated by @Pelechano2013, were removed.
 
 We quantified the regulatory effects of the remaining 38 candidate CREs by applying a linear model predicting half life to two recent transcriptome-wide analyses of mRNA decay using metabolic labeling [@Sun2013; @Chan2018].
-These two datasets are loosely correlated in their half-life measurements across (how many?) genes reported in both datasets, $R = 0.63$ (Fig \@ref(fig:hlife-decay-model)A). However, @Chan2018, which has greater coverage of genes in the yeast genome and used multiple time points to determine half lives, estimates substantially smaller half lives.
+These two datasets are loosely correlated in their half-life measurements across 4188 genes reported in both datasets, $R = 0.63$ (Fig \@ref(fig:hlife-decay-model)A). However, @Chan2018, which has greater coverage of genes in the yeast genome, 5529 vs 4304,  and used multiple time points to determine half lives, estimating substantially smaller half lives.
 Following @Cheng2017, we constructed a linear model to predict a transcript's half life using the counts of motifs in its median length 3'UTR, the 3'UTR length, and the relative codon usage in each transcript's ORF (see Material and Methods). 
 This model performed similarly on both datasets by explaining 44% and 41% of the variability in half lives for the @Chan2018 and @Sun2013 data sets respectively, Fig \@ref(fig:hlife-decay-model)C.
 This predictive power is comparable to the squared correlation between the datasets ($R^2 = 0.40$).
 CREs that did not significantly contribute to the model were automatically filtered out using a greedy algorithm maximising the Akaike information criterion (AIC) during both training stages.
-Approximately X% of the variance is explained by these 7 motifs, with X% explained by codon usage, consistent with previous analyses [@Presnyak2015;@Cheng2017].
-The top 7 most significant motifs from the @Chan2018 data showed similar regulatory behaviour in the @Sun2013 data, except for TGTAAATA which swap from being stabilising to destabilising, Fig \@ref(fig:hlife-decay-model)B.
+Approximately 1.7% of the variance is explained by these 7 motifs, with 42.0% explained by codon usage see Sup Table \@ref(tab:hlife-variance-table), consistent with previous analyses [@Presnyak2015;@Cheng2017].
+The top 7 most significant motifs from the @Chan2018 data showed similar regulatory behaviour when tested on their own in the @Sun2013 data, except for TGTAAATA which swapped from being stabilising to destabilising, Fig \@ref(fig:hlife-decay-model)B.
 
 
 We selected four motifs for exploring context dependence: TGTAHMNTA, GTATACCTA, HWNCATTWY, and ATATTC.
@@ -70,12 +70,6 @@ It is not known how ATATTC occurrences lead to mRNA decay.
 
 ```{r hlife-decay-model, fig.cap="\\textbf{A linear model predicting transcript half life verifies candidate RBP motifs regulate gene expression.} (\\textbf{A}) Predicted vs actual log2 transcript half lives calculated by a linear model of codon and motif usage trained on the Chan et al (2017) and Sun et al (2013) data sets. (\\textbf{B}) Correlation between the two log2 transcript half lives reported in the Sun et al (2013) and Chan et al (2017) data sets. (\\textbf{C}) Predicted contributons to log2 half life for chosen motifs in the Sun et al (2013) and Chan et al (2017) datasets.", fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/hlife_model_multi_fig.png"))
-```
-
-
-```{r chan_motif_coef,include = FALSE}
-chan_motif_table <- read.csv(here("./results_chapter/data/chan_motif_coefficients.csv"))
-knitr::kable(chan_motif_table)
 ```
 
 ## Quantification of cis-regulatory effects via CRE insertion or mutagenesis in multiple 3'UTRs
