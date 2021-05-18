@@ -30,6 +30,8 @@ For example, *C. elegans* lin-4 is a non-coding RNA gene crucial for regulating 
 Lin-4 is a small RNA that acts as a TRE by binding to to a repeated motif in the 3'UTR of its target mRNA lin-14, and inhibiting the translation of lin-14 [@Lee1993].
 Since lin-4 is only expressed at the end of the first larval development stage, the 3'UTR motifs in lin-14 only begin to inhibit its translation late into stage 1, initiating the start of stage 2 [@Olsen1999].
 The regulation of lin-4 by lin-14 binding to the 3'UTR thus depends on the temporal expression pattern encoded by lin-4's promoter.
+Similarly, to establish meiotic chromosome segregation in budding yeast, mRNA encoding cyclin CLB3 is transcribed in stage I of meiosis, then translationally repressed via its 5'UTR by the RNA-binding protein Rim4, which is relieved during stage II of meiosis by phosphorylation of Rim4 [@Berchowitz2013].
+Here, 5'UTR-specified translational control of CLB3 by Rim4 depends on the timing of promoter-specified transcriptional control.
 
 Spatial regulation by successive CREs is also important, as one CRE can confer localisation followed by another CRE conferring localisation-dependent regulation.
 In yeast, the Ash1 protein represses mating-type switching only in daughter cells [@Sil1996], due to localisation of the ASH1 transcript at the bud tip and subsequent localised translation (reviewed in [@Niedner2014]).
