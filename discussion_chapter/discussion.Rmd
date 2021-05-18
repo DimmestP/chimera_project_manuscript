@@ -5,7 +5,7 @@ output:
 ---
 # Discussion
 
-Our quantitative measurements of protein output from promoter-terminator combinations highlight the limitations of assuming that CREs are quantitatively composable.
+Our measurements of protein output from promoter-terminator combinations highlight the limitations of assuming that CREs are quantitatively composable.
 Unsurprisingly, fluorescent protein expression levels are dominated by promoter choice, up to 100 fold, and then terminator choice, up to 5 fold. 
 However, with up to 1.5 fold change in the relative effect of terminators depending on coding sequence and promoter choice, the quantitative limitations of the assumption of composability are clear. 
 
@@ -21,36 +21,39 @@ This raises further questions about the need to explore CRE contributions in div
 
 ## Mechanisms for CRE context dependence
 
-The regulatory behavior of a motif depends on the presence of other CREs in the host gene and, usually, on trans-regulatory elements (TREs) that are regulated in turn.
+Our results support long-standing mechanistic observations that CRE contributions depend on the presence of other CREs in the host gene and, usually, on trans-regulatory elements (TREs) that are  regulated in turn.
 These effects are not separable, because spatiotemporal regulation of gene expression conferred by one CRE can change the interaction of a second CRE with its relevant TREs.
-For example, a motif may act as the regulatory binding site of an RNA-binding protein only after the transcript is localised to a time and place where that protein is present.
+For example, a motif may act as the regulatory binding site of a TRE only after the transcript is localised to a time and place where that TRE is present, as we discuss below.
 
 Temporal regulation by successive CREs is common in developmental processes.
-For example, *C. elegans* lin-4 is a non-coding RNA gene crucial for regulating cell fates during the early stages of larval development.[@Wightman1993]
-Lin-4 is a small RNA transcript that acts as a TRE by binding to to a repeated motif in the 3'UTR of its target mRNA lin-14, and inhibiting the translation of lin-14 [@Lee1993].
+For example, *C. elegans* lin-4 is a non-coding RNA gene crucial for regulating cell fates during the early stages of larval development [@Wightman1993].
+Lin-4 is a small RNA that acts as a TRE by binding to to a repeated motif in the 3'UTR of its target mRNA lin-14, and inhibiting the translation of lin-14 [@Lee1993].
 Since lin-4 is only expressed at the end of the first larval development stage, the 3'UTR motifs in lin-14 only begin to inhibit its translation late into stage 1, initiating the start of stage 2 [@Olsen1999].
 The regulation of lin-4 by lin-14 binding to the 3'UTR thus depends on the temporal expression pattern encoded by lin-4's promoter.
 
 Spatial regulation by successive CREs is also important, as one CRE can confer localisation followed by another CRE conferring localisation-dependent regulation.
-In yeast, the Ash1 protein represses mating-type switching only in daughter cells [@Sil1996], due to localisation of the ASH1 transcript at the bud tip and subsequent localised translation [@Cosma2004].
-It is thought that recruitment of cytoplasmic factors Khd1/Hek2 and Puf6 to ASH1 depends on prior co-transcriptional recruitment of She2, both recognising cognate CREs [@Long2000].
-Conversely, successful transport by She2-She3-Myo4 complexes depends on translational repression by Khd1 and Puf6 [@Long2000].
-Later, translational activation due to phosphorylation of Khd1 and Puf6 by bud-membrane-localised kinases depends on the successful localisation of the ASH1 mRNP [@Deng2008].
-Similarly, yeast cell wall proteins such as Sun4 and Tos6 are translationally regulated by the repressive RNA-binding protein Ssd1 [@Jansen2009]. 
-Ssd1 binds the 5'UTRs of SUN4 and TOS6 transcripts [@Hogan2008,@Bayne2020], and it is thought that these transcripts are translationally activated at bud sites by the phosphorylation of Ssd1 by a localised kinase, Cbk1 [@Jansen2009].
-So, the effect of the Ssd1 CRE on a transcript depends on the co-localisation of the Ssd1-bound transcript with the Cbk1 kinase.
+In yeast, the Ash1 protein represses mating-type switching only in daughter cells [@Sil1996], due to localisation of the ASH1 transcript at the bud tip and subsequent localised translation (reviewed in [@Niedner2014]).
+It is thought that co-transcriptional recruitment of She2 is required for later recruitment of cytoplasmic factors Khd1/Hek2 and Puf6.
+Conversely, successful transport by She2-She3-Myo4 complexes depends on translational repression by Khd1 and Puf6.
+Later, translational activation due to phosphorylation of Khd1 and Puf6 by bud-membrane-localised kinases is likely to depend on the successful localisation of the ASH1 mRNP [@Paquin2007,@Deng2008].
+
+Another example where the effect of CRE on a transcript depends on co-localisation with a regulatory kinase comes from the fungal RNA-binding protein Ssd1.
+Yeast cell wall proteins such as Sun4 and Tos6 are translationally repressed by Ssd1 [@Jansen2009], which binds the 5'UTRs of their transcripts [@Hogan2008,@Bayne2020].
+It is thought that these transcripts are translationally activated at bud sites after the phosphorylation of Ssd1 by a localised kinase, Cbk1 [@Jansen2009].
+There is no direct evidence that Ssd1 is involved in RNA transport, so this localised activation presumably depends on localisation that is conferred by other CREs, that might recruit other RNA-binding proteins known to be associated with those transcripts [@Hogan2008].
+We note that post-transcriptional regulation of SUN4 and TOS6 might explain the repressive effect of their terminators iwhen paired with high-expression promoters (Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
 
 Secondary structures can be integral to motif function, and secondary structure depends on sequences beyond a motif.
-Again for ASH1, key cis-regulatory elements depend on secondary structure
-Secondary structure is required for Smg recognition elements found in transcript targets of Vts1p [@Olivier2005; @Aviv2006]. 
+Again for ASH1, key cis-regulatory elements depend on secondary structure [@Olivier2005].
+Secondary structure is also essential for Smg recognition elements found in transcript targets of Vts1p [@Aviv2006]. 
 In mammalian cells, secondary structures have an overall inhibitory effect on motif functionality [@Taliaferro2016].
 In yeast, the presence of stable stem loops within the 3’UTR reduces the binding of known destabilising RBPs [@Geisberg2020].
 
 Motif behaviour also depends on CREs across the entire host transcript.
-Regulation of ASH1 transcript depends on the concerted action of multiple CREs [@Long1999, @Gonzalez1999].
+Regulation of the ASH1 transcript depends on the concerted action of multiple CREs [@Long1999, @Gonzalez1999].
 In other cases, multiple motifs, or multiple copies of the same motif, must occur together to enable recruitment of the effector protein.
 Recruitment of Puf3 to promote mRNA transcript decay requires two Puf3 motifs in the 3'UTR [@Jackson2004].
-Clusters of short degenerate motifs, referred to as multivalent RNA motifs, have been proposed as a general regulatory feature of RNA-binding proteins [@Cereda2014]
+Indeed, clusters of short degenerate motifs have been proposed as a general regulatory feature of RNA-binding proteins [@Cereda2014]
 
 Active CREs occurring alongside a motif differ not only between genes but also between transcript isoforms.
 Alternative splicing or polyadenylation are encoded by CREs, and then affect which CREs are present on the mature transcript.
@@ -66,9 +69,9 @@ Alternatively, non-linear relationships between factors affecting motif activity
 Again looking at TF algorithms, partitioning algorithms could be used to predict functional data sets using short sub-sequences of transcripts [@BehjatiArdakani2019]. 
 
 Reductionist search algorithms that attempt to discover the shortest possible sequence contributing to expression may limit the discovery of novel CREs. 
-High resolution maps of protein-RNA interactions are revealing RBPs with gapped, multi-partite motifs [@Bayne2020] or motifs that must be repeated in the same transcript to be effective [@Gu2004].
+High resolution maps of protein-RNA interactions are revealing RBPs with gapped, multi-partite motifs [@Bayne2020] or motifs that must be repeated in the same transcript to be effective [@Gu2004,@Jackson2004].
 Common motif searching approaches, such as MEME Suite [@Bailey2015], have extended beyond fixed length, gapless motifs but may still assume motifs occur independently and only once per transcript [@Frith2008].
-Although reducing the search constraints to allow longer, gapped motifs does increase the false discovery rate, the availability of precise interactome data sets shifts the priority towards more flexible search algorithms.
+Although reducing the search constraints to allow longer, gapped motifs does increase the false discovery rate, the availability of precise interactome data sets suggests a shift in priority towards more flexible search algorithms.
 
 ## Implications for engineering biology
 
