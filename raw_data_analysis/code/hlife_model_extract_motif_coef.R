@@ -19,6 +19,26 @@ shortlisted_motifs <- chan_motif_coefficients %>%
 # run linear models using only shortlisted motifs (Chan data set)
 chan_shortlisted_motif_model <- lm(paste0("log2(hlife)~", str_flatten(codon_no_TTT, "+"), "+ UTR3_length +", str_flatten(shortlisted_motifs, "+")), data = single_count_decay_prediction_dataset_chan)
 
+# calc variance explained for motifs, codon usage and length
+train_chan_model <- function(inc_codon, inc_motif, inc_length){
+  predicates = ""
+  if(inc_codon == 1) predicates = str_flatten(codon_no_TTT, "+")
+  if(inc_motif == 1) {
+    if(inc_codon == 1) predicates = paste0(predicates, "+", str_flatten(shortlisted_motifs, "+"))
+    else predicates = str_flatten(shortlisted_motifs, "+")}
+  if(inc_length == 1) {
+    if(inc_codon == 1 | inc_motif == 1) predicates = paste0(predicates, "+ UTR3_length")
+    else predicates = "UTR3_length"}
+  lm(paste0("log2(hlife)~", predicates), data = single_count_decay_prediction_dataset_chan)
+} 
+
+all_predicate_combinations = expand_grid(codon = c(1,0), motif = c(1,0), length = c(1,0)) %>%
+  filter(codon == 1 | motif == 1 | length == 1)
+
+variance_explained <- all_predicate_combinations %>% 
+  rowwise() %>% 
+  mutate(r_squares = summary(train_chan_model(codon,motif,length))$r.squared)
+
 # run linear models using only shortlisted motifs (Sun data set)
 sun_shortlisted_motif_model <- lm(paste0("log2(hlife)~", str_flatten(codon_no_TTT, "+"), "+ UTR3_length +", str_flatten(shortlisted_motifs, "+")), data = single_count_decay_prediction_dataset_sun)
 
@@ -86,4 +106,4 @@ ggsave2(filename = here("results_chapter/figures/hlife_model_multi_fig.png"),
         dpi = 300)
 
 # output list of chan motif coefficients with error
-write_csv( chan_motif_coefficients %>% select(term, estimate, std.error) %>% rename( "Motif"= "term", "Coefficient"= "estimate"), here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv"))
+write_csv( chan_motif_coefficients %>% select(term, estimate, std.error) %>% dplyr::rename( "Motif"= "term", "Coefficient"= "estimate"), here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv"))
