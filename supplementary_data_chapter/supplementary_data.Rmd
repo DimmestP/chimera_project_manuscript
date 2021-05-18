@@ -13,6 +13,23 @@ Comparing the corresponding RNA abundance levels, left column of Figure \@ref(fi
 knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"))
 ```
 
+## Selecting the HWNCAUUWY motif, TTTCATTTC
+
+```{r TGTACAATA_motif_coef}
+TGTACAATA_motif_table <- read.csv(here("./supplementary_data_chapter/data/HWNCAUUWY_shortlisted_motif_table.csv")) %>%
+  rename("term" = "Motif", "total_count" = "Total Count")
+knitr::kable(TGTACAATA_motif_table)
+```
+
+## Selecting the UGUAHMNUA motif, TGTACAAUA
+
+```{r TTTCATTTC_motif_coef}
+TTTCATTTC_motif_table <- read.csv(here("./supplementary_data_chapter/data/UGUAHMNUA_shortlisted_motif_table.csv")) %>%
+  rename("term" = "Motif", "total_count" = "Total Count")
+knitr::kable(TTTCATTTC_motif_table)
+```
+
+
 ## Comparison of whole-genome ATATTC motif effect vs. reporter-gene ATATTC motif effect
 - Comparison of our qPCR data of modB with that of Cheng et al. (2017)
 
