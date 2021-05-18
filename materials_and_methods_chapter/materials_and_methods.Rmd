@@ -90,7 +90,7 @@ Step iteratively adds the motif which reduces the model's AIC the most until the
 Any motifs not included in the model at this point are removed.
 This procedure was ran on both decay data sets [@Chan2018] [@Sun2013]. 
 
-Finally, we selected the specific versions of the HWNCATTWY and TGTAHMNTA motifs by running separate linear models predicting half life containing only the different versions of each consensus sequence. The results coefficients deduced for the significant motif versions can be found in Supplementary Table ?? and ??. We considered the magnitude and significance of each motifs contribution to the linear model as well as the absolute number of times the motif occurs in native transcripts. We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA we chose TGTACAATA over the more significant motif, TGTATATTA, which we though was too similar to ATATTC.
+Finally, we selected the specific versions of the HWNCATTWY and TGTAHMNTA motifs by running separate linear models predicting half life containing only the different versions of each consensus sequence. The results coefficients deduced for the significant motif versions can be found in Supplementary Table ?? and ??.We chose instances with similar effect size, statistical significance, and number of occurences in native transcripts. We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA chose TGTACAATA over TGTATATTA specifically to avoid the 5nt stretch also found in ATATTC.
 
 ## Design of modified 3'UTRs for testing the effects of mutated motifs
 
