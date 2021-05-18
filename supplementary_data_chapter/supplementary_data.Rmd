@@ -13,23 +13,6 @@ Comparing the corresponding RNA abundance levels, left column of Figure \@ref(fi
 knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"))
 ```
 
-## Investigating the effects of cis-regulatory motifs in the 3'UTR using 5PSeq
-We used high-throughput 5PSeq (HT-5Pseq) technique to investigate whether modifications of 3’ UTRs influence the process of 5’-3’ co-translational degradation of mRNA, which can also serve as a proxy of translation process (Zhang & Pelechano 2020), and modify ribosome stalling in the 3’-end region of coding sequence.
-The 5PSeq method allows to investigate the process of  5’-3’ degradation of mRNA by capturing only de-capped 5’ ends of mRNA molecules, and at the same time – the polyadenylated 3’ ends.
-We generated sequencing reads with insert sizes up to 600 bp, which included entire 3’UTRs and up to 400 bp of coding sequence.  
-
-The distributions of 5’ ends did not differ significantly between the samples.
-There were major differences between distributions of 3’ ends between different constructs corresponding to different polyadenylation sites (figure \@ref(fig:alt-polyA-5PSeq)).
-In all modified 3’ UTRs we observed additional poly(A) sites at 44 nt and 56 nt from STOP codon, which corresponds to 35 nt and 47 nt in WT 3’ UTR.
-Secondly, we observed differences in the distribution of poly(A) sites between modified 3’UTRs with different motifs inserted.
-Poly(A) sites located 44 nt and 56 nt from STOP codon are more abundant in tRPS3-mod0 compared to tRPS3-modA, with tRPS3-modB between them.
-Poly(A) site at 67 nt is pronounced only in tRPS3-mod0 and at 74 nt is especially visible in tRPS3-modA and at 80 nt in tRPS3-modB.
-The differences could be caused either by new polyadenylation signals introduced into the 3’ UTR or by increased stability of these isoforms conferred by addition of new motifs.  
-
-```{r alt-polyA-5PSeq, fig.cap="\\textbf{Inserting motifs into native RPS3 termintors may cause alternative polyadenylation.} Relative polyadenylation site usage of transcripts signaled for decay for pRPS3-tRPS3 constructs, acquired using using 5PSeq.", out.width='80%', fig.align='center'}
-knitr::include_graphics(here("supplementary_data_chapter/figures/alternative_polyadenylation_RPS3_5PSeq.png"))
-```
-
 ## Selecting the HWNCAUUWY motif, TTTCATTTC
 
 ```{r TGTACAATA_motif_coef}
@@ -45,6 +28,7 @@ TTTCATTTC_motif_table <- read.csv(here("./supplementary_data_chapter/data/UGUAHM
   rename("term" = "Motif", "total_count" = "Total Count")
 knitr::kable(TTTCATTTC_motif_table)
 ```
+
 
 ## Comparison of whole-genome ATATTC motif effect vs. reporter-gene ATATTC motif effect
 - Comparison of our qPCR data of modB with that of Cheng et al. (2017)

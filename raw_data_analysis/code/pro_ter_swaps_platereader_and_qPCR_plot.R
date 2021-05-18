@@ -67,7 +67,8 @@ mCherry_protein_vs_RNA_figure <- ggplot(mCherry_protein_vs_RNA) +
   geom_text(aes(label = mCherry_protein_vs_RNA_cor_text),
             y = 1.4,
             x= -0.8, parse = TRUE, size = 4) +
-  theme(legend.position = "bottom") +
+  theme(legend.position = "bottom",
+        axis.title = element_text(size = 10)) +
   guides(shape=guide_legend(ncol=1))
 
 high_exp_mCh_mTurq_platereader_raw_figure <- ggplot(high_exp_pro_mCh_mTurq) +
@@ -93,19 +94,21 @@ ggsave(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png
 
 shortvslong_platesnorm_all_median <- read_csv(here("raw_data_analysis/data/norm_qpcr/short_vs_long/shortvslong_two_exp_rep_deltadeltacq_platesnorm_summarise.csv")) %>%
   separate(UTR3, into = c(NA, "UTR3"), sep = "_") %>%
-  mutate(UTR3 = factor(UTR3, levels = rev(c("59bp","86bp","200bp","500bp"))))
+  mutate(UTR3 = factor(UTR3, levels = rev(c("59bp","86bp","200bp","543bp"))))
 
 normalised_plot_SRO9 <- ggplot(data = shortvslong_platesnorm_all_median %>% filter(Promoter == "pSRO9")) +
   RNA_relative_abundance_figure_options +
-  labs(x="Fold change in RNA abundance \n relative to tSRO9_500bp \n (log2 scale)", title = "SRO9", y = NULL) +
+  labs(x="Fold change in RNA abundance \n relative to tSRO9_543bp \n (log2 scale)", title = "SRO9", y = NULL) +
   scale_colour_manual(values=c("#CC6666", "black")) +
-  theme(axis.text.y=element_text(colour=c("#CC6666", "black")))
+  theme(axis.text.y=element_text(colour=c("#CC6666", "black")), plot.title = element_text(face = "plain", hjust = 0.5, size = 10)) +
+  geom_vline(xintercept=1, linetype="dotted", color = "grey50")
 
 normalised_plot_RPS3 <- ggplot(data = shortvslong_platesnorm_all_median %>% filter(Promoter == "pRPS3")) +
   RNA_relative_abundance_figure_options + 
   labs(x="Fold change in RNA abundance \n relative to tRPS3_200bp \n (log2 scale)", title = "RPS3", y="Terminator \n Length") +
   scale_colour_manual(values=c("#288a2e","#a84a9a","#6f3ba1")) +
-  theme(axis.text.y=element_text(colour=c("#288a2e","#a84a9a", "#6f3ba1")))
+  theme(axis.text.y=element_text(colour=c("#288a2e","#a84a9a", "#6f3ba1")), plot.title = element_text(face = "plain", hjust = 0.5, size = 10)) +
+  geom_vline(xintercept=1, linetype="dotted", color = "grey50")
 
 norm_pro_mCh_ter_all <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCh-ter_swaps_summary_PGK1_norm.csv"))
 
