@@ -50,7 +50,7 @@ In mammalian cells, secondary structures have an overall inhibitory effect on mo
 In yeast, the presence of stable stem loops within the 3’UTR reduces the binding of known destabilising RBPs [@Geisberg2020].
 
 Motif behaviour also depends on CREs across the entire host transcript.
-Regulation of the ASH1 transcript depends on the concerted action of multiple CREs [@Long1999, @Gonzalez1999].
+Regulation of the ASH1 transcript depends on the concerted action of multiple CREs [@Chartrand1999, @Gonzalez1999].
 In other cases, multiple motifs, or multiple copies of the same motif, must occur together to enable recruitment of the effector protein.
 Recruitment of Puf3 to promote mRNA transcript decay requires two Puf3 motifs in the 3'UTR [@Jackson2004].
 Indeed, clusters of short degenerate motifs have been proposed as a general regulatory feature of RNA-binding proteins [@Cereda2014]
