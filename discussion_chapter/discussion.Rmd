@@ -34,7 +34,7 @@ Similarly, to establish meiotic chromosome segregation in budding yeast, mRNA en
 Here, 5'UTR-specified translational control of CLB3 by Rim4 depends on the timing of promoter-specified transcriptional control.
 
 Spatial regulation by successive CREs is also important, as one CRE can confer localisation followed by another CRE conferring localisation-dependent regulation.
-In yeast, the Ash1 protein represses mating-type switching only in daughter cells [@Sil1996], due to localisation of the ASH1 transcript at the bud tip and subsequent localised translation (reviewed in [@Niedner2014]).
+In yeast, the Ash1 protein represses mating-type switching only in daughter cells [@Sil1996], due to localisation of the ASH1 transcript at the bud tip and subsequent localised translation (reviewed in [@Niednery2014]).
 It is thought that co-transcriptional recruitment of She2 is required for later recruitment of cytoplasmic factors Khd1/Hek2 and Puf6.
 Conversely, successful transport by She2-She3-Myo4 complexes depends on translational repression by Khd1 and Puf6.
 Later, translational activation due to phosphorylation of Khd1 and Puf6 by bud-membrane-localised kinases is likely to depend on the successful localisation of the ASH1 mRNP [@Paquin2007,@Deng2008].
