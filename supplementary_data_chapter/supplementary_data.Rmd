@@ -3,6 +3,45 @@
 \renewcommand{\fnum@figure}{Figure S\thefigure}
 \makeatother
 \setcounter{figure}{0}
+
+
+## Summary of key characteristics of native terminators used in reporter genes
+
+
+```{r terminator-summary-table}
+library(tibble)
+tibble("Gene Name" = c("PGK1", "RPS3", "RPS13", "PAB1", "HSP26", "CLN2", "SRO9", "TOS6", "SUN4", "PMA1", "TSA1", "PIR1"),
+       "Systematic Name" = c("YCR012W", "YNL178W", "YDR064W", "YER165W", "YBR072W", "YPL256C", "YCL037C", "YNL300W", "YNL066W", "YGL008C", "YML028W", "YKL164C"),
+       "Median 3\'UTR Length" = c(158, 59, 83, 126, 164, 182, 577, 256, 198, 495, 106, 258),
+       "Synthetic Terminator Length"= c(189, 200, 200, 200, 200, 200, 543, 256, 198, 421, 219, 358),
+       "Usage" = c("Pro-Ter Swap", "Pro-Ter Swap, Motif Insertion", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Pro-Ter Swap", "Motif Insertion", "Motif Removal")) %>%
+  knitr::kable(format = "latex", align = "c") %>%
+  kableExtra::column_spec(3:5, width = "2.4cm") %>%
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+## Summary of key characteristics of shortlisted motifs in half-life analysis
+
+```{r motif-summary-table}
+tibble("Consensus Seq" = c("ATATTC", "TGTAHMNTA", "GTATACCTA", "HWNCATTWY"), 
+       "Insertion Motif" = c(NA,"TGTACAATA",NA,"TTTCATTTC"), 
+       "Deletion Motif" =c(NA,"TGTACATTA",NA,"CTTCATTTC, ATACATTAT, AATCATTAT"), 
+       Source = c("Cheng", "Hogan", "Shalgi" ,"Hogan"), 
+       "Chan Coef" = c(-0.075,-0.227,0.502,-0.084), 
+       "Sun Coef" = c(-0.169, -0.056, 0.283,-0.061), 
+       "Function" = c(NA,"Puf4p binding motif", NA, "Associated with Khd1-bound transcripts")) %>%
+  knitr::kable(format = "latex", align = "c") %>%
+  kableExtra::column_spec(c(1,2,3,7), width = "2.3cm") %>%
+  kableExtra::row_spec(0, bold = TRUE)
+```
+## Variance explained by each predicate in the half life model 
+
+
+```{r hlife-variance-table}
+knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual = c("42.0%", "3.2%", "0.6%"), Drop = c("-40.5%", "-1.6%", "0.0%"), Cumulative = c("42.0%", "43.7%", "43.7%")), caption = "
+Variance explained was explored in three different ways. The variance explained by a linear containing each CRE appearing individually.  The loss in variance explained when one CRE is removed from the full model. The total variance explained when each CRE is added to the linear model in sequence.")
+```
+
 ## Motif effects on transcript expression is repeated in protein expression data
 
 The effects of motif presence on protein expression was investigate with a platereader assay detecting the fluorescence of the mCherry reporter gene on the pRPS3-tRPS3 and pTSA1-tTSA1 constructs.
@@ -13,22 +52,22 @@ Comparing the corresponding RNA abundance levels, left column of Figure \@ref(fi
 knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"))
 ```
 
-## Investigating the effects of cis-regulatory motifs in the 3'UTR using 5PSeq
-We used high-throughput 5PSeq (HT-5Pseq) technique to investigate whether modifications of 3’ UTRs influence the process of 5’-3’ co-translational degradation of mRNA, which can also serve as a proxy of translation process (Zhang & Pelechano 2020), and modify ribosome stalling in the 3’-end region of coding sequence.
-The 5PSeq method allows to investigate the process of  5’-3’ degradation of mRNA by capturing only de-capped 5’ ends of mRNA molecules, and at the same time – the polyadenylated 3’ ends.
-We generated sequencing reads with insert sizes up to 600 bp, which included entire 3’UTRs and up to 400 bp of coding sequence.  
+## Selecting the HWNCAUUWY motif, TTTCATTTC
 
-The distributions of 5’ ends did not differ significantly between the samples.
-There were major differences between distributions of 3’ ends between different constructs corresponding to different polyadenylation sites (figure \@ref(fig:alt-polyA-5PSeq)).
-In all modified 3’ UTRs we observed additional poly(A) sites at 44 nt and 56 nt from STOP codon, which corresponds to 35 nt and 47 nt in WT 3’ UTR.
-Secondly, we observed differences in the distribution of poly(A) sites between modified 3’UTRs with different motifs inserted.
-Poly(A) sites located 44 nt and 56 nt from STOP codon are more abundant in tRPS3-mod0 compared to tRPS3-modA, with tRPS3-modB between them.
-Poly(A) site at 67 nt is pronounced only in tRPS3-mod0 and at 74 nt is especially visible in tRPS3-modA and at 80 nt in tRPS3-modB.
-The differences could be caused either by new polyadenylation signals introduced into the 3’ UTR or by increased stability of these isoforms conferred by addition of new motifs.  
-
-```{r alt-polyA-5PSeq, fig.cap="\\textbf{Inserting motifs into native RPS3 termintors may cause alternative polyadenylation.} Relative polyadenylation site usage of transcripts signaled for decay for pRPS3-tRPS3 constructs, acquired using using 5PSeq.", out.width='80%', fig.align='center'}
-knitr::include_graphics(here("supplementary_data_chapter/figures/alternative_polyadenylation_RPS3_5PSeq.png"))
+```{r TGTACAATA_motif_coef}
+TGTACAATA_motif_table <- read.csv(here("./supplementary_data_chapter/data/HWNCAUUWY_shortlisted_motif_table.csv")) %>%
+  rename("term" = "Motif", "total_count" = "Total Count")
+knitr::kable(TGTACAATA_motif_table)
 ```
+
+## Selecting the UGUAHMNUA motif, TGTACAAUA
+
+```{r TTTCATTTC_motif_coef}
+TTTCATTTC_motif_table <- read.csv(here("./supplementary_data_chapter/data/UGUAHMNUA_shortlisted_motif_table.csv")) %>%
+  rename("term" = "Motif", "total_count" = "Total Count")
+knitr::kable(TTTCATTTC_motif_table)
+```
+
 
 ## Comparison of whole-genome ATATTC motif effect vs. reporter-gene ATATTC motif effect
 - Comparison of our qPCR data of modB with that of Cheng et al. (2017)
