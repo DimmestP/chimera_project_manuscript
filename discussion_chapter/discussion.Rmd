@@ -59,11 +59,6 @@ In other cases, multiple motifs, or multiple copies of the same motif, must occu
 Recruitment of Puf3 to promote mRNA transcript decay requires two Puf3 motifs in the 3'UTR [@Jackson2004].
 Indeed, clusters of short degenerate motifs have been proposed as a general regulatory feature of RNA-binding proteins [@Cereda2014]
 
-Active CREs occurring alongside a motif differ not only between genes but also between transcript isoforms.
-Alternative splicing or polyadenylation are encoded by CREs, and then affect which CREs are present on the mature transcript.
-HERE WE NEED A COUPLE OF EXAMPLES (Geisberg?) OR TO REMOVE THE PARAGRAPH.
-
-
 ## Implications for novel cis-regulatory element searches
 
 Motif detection algorithms need to revisit the assumption that the presence of a motif alone ensures its functional effect.
