@@ -1,5 +1,5 @@
-Gene Name, Systematic Name, Median 3UTR Length, Weighted Median 3UTR Length, Usage, Ontology
- PGK1, YCR012W, 158, 158, S, Glycolytic
+Gene Name, Systematic Name, Median 3UTR Length, Weighted Median 3UTR Length, Usage, Function
+ PGK1, YCR012W, 158, 158, S, Glycolysis
  RPS3, YNL178W, 86, 59, M&S, Ribosomal
  RPS13, YDR064W, 92, 83, S, Ribosomal
  PAB1, YER165W, 150, 126, S, RNA Binding
