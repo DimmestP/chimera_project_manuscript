@@ -179,7 +179,8 @@ r_cor_data_PIR1 <-
 ```{r plot_protein_vs_rna_RPS3_TSA1, fig.width = 4.5, fig.height = 6}
 
 RPS3_TSA1_protein_and_RNA_plot <- 
-  ggplot(mean_RPS3_TSA1_protein_and_RNA_data) + 
+  ggplot(mean_RPS3_TSA1_protein_and_RNA_data) +
+  geom_abline(slope = 1, intercept = 0) + 
   geom_point(aes(y = mean_relative_abundance_protein, 
                  x = mean_relative_abundance_mrna, 
                  colour = label)) +
@@ -193,18 +194,20 @@ RPS3_TSA1_protein_and_RNA_plot <-
                  colour = label)) +
   facet_wrap(~ promoter, ncol = 1) +
   labs(y="Relative Protein Abundance", x = "Relative mRNA Abundance", colour = "Construct") +
-  geom_abline(slope = 1, intercept = 0) +
-  coord_equal(xlim = c(0, 2.0), ylim= c(0, 2.0), expand = FALSE) +
+  coord_equal(xlim = c(0.5, 2.0), ylim= c(0.3, 2.0), expand = FALSE) +
   geom_text(aes(label = cor_label), data = r_cor_data_RPS3_TSA1, 
             y = 1.9, x= 0.1, size = 3, hjust = 0, vjust = 1) +
- scale_color_manual(values = rev(RPS3_TSA1_colour_scheme))
+ scale_color_manual(values = rev(RPS3_TSA1_colour_scheme))+
+  scale_x_log2nice() +
+  scale_y_log2nice()
 
 RPS3_TSA1_protein_and_RNA_plot
 ```
 
 ```{r plot_protein_vs_rna_PIR1, fig.width = 4.5, fig.height = 6}
 PIR1_protein_and_RNA_plot <- 
-  ggplot(mean_PIR1_protein_and_RNA_data) + 
+  ggplot(mean_PIR1_protein_and_RNA_data) +
+  geom_abline(slope = 1, intercept = 0) + 
   geom_point(aes(y = mean_relative_abundance_protein, x = mean_relative_abundance_mrna, colour = label)) +
   geom_errorbar(aes(ymax = mean_relative_abundance_protein + se_relative_abundance_protein,
                     ymin = mean_relative_abundance_protein - se_relative_abundance_protein,
@@ -214,15 +217,16 @@ PIR1_protein_and_RNA_plot <-
                     xmin = mean_relative_abundance_mrna - se_relative_abundance_mrna,
                  y = mean_relative_abundance_protein, 
                  colour = label)) + 
-  labs(y="Relative Protein Abundance", 
+  labs(y="Relative Protein\n Abundance", 
        x = "Relative mRNA Abundance", 
        colour = "Construct") +
-  facet_wrap(~ promoter, ncol = 1) +
-  geom_abline(slope = 1, intercept = 0) +
-  coord_equal(xlim = c(0, 2.0), ylim = c(0, 3.0), expand = FALSE) + 
+  facet_wrap(~ promoter, ncol = 1)  +
+  coord_equal(xlim = c(0.5, 2.0), ylim = c(0.5, 3.0), expand = FALSE) + 
   geom_text(aes(label = cor_label), data = r_cor_data_PIR1, 
             y = 2.9, x= 0.1, size = 3, hjust = 0, vjust = 1) +
- scale_color_manual(values = rev(PIR1_colour_scheme))
+ scale_color_manual(values = rev(PIR1_colour_scheme)) +
+  scale_x_log2nice() +
+  scale_y_log2nice()
 
 PIR1_protein_and_RNA_plot
 ```
