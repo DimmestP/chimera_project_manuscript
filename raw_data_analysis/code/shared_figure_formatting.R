@@ -16,12 +16,12 @@ theme_set(
     )
 )
 
-RPS3_TSA1_colour_scheme <- c( "#878787", "#7FBF74","#C288BB", 
+RPS3_TSA1_colour_scheme <- c( "#6c6c6c", "#7FBF74","#C288BB", 
                               "#71519C","#5978BA","#C05558","black")
 
 PIR1_colour_scheme <- c("#DD76A5","#968BC2","#71519C",
                         "#D97F1D","#4EB0B5","#5978BA",
-                        "#C15659","#878787")
+                        "#C15659","#6c6c6c")
 
 RNA_relative_abundance_figure_options <- list(
   geom_point(aes(x=rel_abund_delta_deltacq,y=UTR3,colour=UTR3),
