@@ -65,7 +65,7 @@ Following @Cheng2017, we constructed a linear model to predict a transcript's ha
 This model performed similarly on both datasets by explaining 44% and 41% of the variability in half lives for the @Chan2018 and @Sun2013 data sets respectively, Fig \@ref(fig:hlife-decay-model)C.
 This predictive power is comparable to the squared correlation between the datasets ($R^2 = 0.40$).
 CREs that did not significantly contribute to the model were automatically filtered out using a greedy algorithm maximising the Akaike information criterion (AIC) during both training stages.
-Approximately 1.7% of the variance is explained by these 7 motifs, with 42.0% explained by codon usage see Sup Table \@ref(tab:hlife-variance-table), consistent with previous analyses [@Presnyak2015;@Cheng2017].
+Approximately 1.7% of the variance is explained by these 7 motifs, with 42.0% explained by codon usage see Supp. Table \@ref(tab:hlife-variance-table), consistent with previous analyses [@Presnyak2015;@Cheng2017].
 The top 7 most significant motifs from the @Chan2018 data showed similar regulatory behaviour when tested on their own in the @Sun2013 data, except for TGTAAATA which swapped from being stabilising to destabilising, Fig \@ref(fig:hlife-decay-model)B.
 
 
@@ -78,7 +78,7 @@ It is not known how ATATTC occurrences lead to mRNA decay.
 
 ```{r motif-summary-table}
 readr::read_csv(here("results_chapter/data/motif_summary_table.csv")) %>%
-  knitr::kable(format = "latex", align = "c", caption = "\\textbf{Summary of shortlisted motif charactoristics.} The first three columns hold the consensus sequences for each motif and, if appropriate, the exact versions removed from or inserted into host terminators. Each motif's coefficent given by the linear model predicting either \\cite{Chan2018} or \\cite{Sun2013} half life data sets are included. Finally, the table includes any suggested motif functions.") %>%
+  knitr::kable(format = "latex", align = "c", caption = "\\textbf{Summary of shortlisted motif charactoristics.} The first three columns hold the consensus sequences for each motif and the exact versions removed from or inserted into host terminators. Each motif's coefficent given by the linear model predicting either \\cite{Chan2018} or \\cite{Sun2013} half life data sets are included. Finally, the table includes notes on motif functions.") %>%
   kableExtra::column_spec(c(1,2,3,7), width = "2.3cm") %>%
   kableExtra::column_spec(c(5,6), width = "1.3cm") %>%
   kableExtra::row_spec(0, bold = TRUE)
