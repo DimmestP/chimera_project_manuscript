@@ -16,7 +16,11 @@ The two coding sequences (CDS) expressed mCherry or mTurquoise2 fluorescent prot
 ```{r terminator-summary-table}
 readr::read_csv(here("results_chapter/data/terminator_summary_table.csv")) %>%
   knitr::kable(format = "latex", align = "c", caption = "\\textbf{Summary of terminator library.} The common gene name from which the terminator is extracted from is included alongside its systematic name. The median 3'UTR reported by \\cite{Pelechano2013} is a median over the lengths of each distinct isoform they detect. Our weighted median is weighted by the number of reads mapped to each isoform. The inferred terminator length used in this paper includes up to 100bp downstream of the median Pelechano 3'UTR length. The usage of each motif is signified by S, for promoter-terminator swaps, or M, for motif insertion or deletion. A short summary of the protein function is included.") %>%
-  kableExtra::column_spec(2:5, width = "1.7cm") %>%
+  kableExtra::column_spec(2:4, width = "1.8cm") %>%
+  kableExtra::column_spec(5, width = "2cm") %>%
+  kableExtra::column_spec(6, width = "1.4cm") %>%
+  kableExtra::column_spec(7, width = "2.3cm") %>%
+  kableExtra::column_spec(1, width = "1.4cm") %>%
   kableExtra::row_spec(0, bold = TRUE)
 ```
 
