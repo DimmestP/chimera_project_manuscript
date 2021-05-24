@@ -2,6 +2,7 @@
 
 ```{r}
 library(here)
+library(tidyr)
 knitr::opts_chunk$set(fig.pos = "p", dpi = 300)
 ```
 
