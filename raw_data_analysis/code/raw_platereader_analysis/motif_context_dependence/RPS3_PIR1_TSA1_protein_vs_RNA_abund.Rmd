@@ -142,7 +142,7 @@ RPS3_TSA1_protein_and_RNA_data <- RPS3_TSA1_protein %>%
          label = factor(label, levels = rev(c("WT", "mod_NGG", "mod_HTH", "mod_HNH", "mod_NTN", "mod_NAA", "mod_NNN"))))
 RPS3_TSA1_protein_and_RNA_data
 
-PIR1_protein_and_RNA_data <- PIR1_protein  %>%
+PIR1_protein_and_RNA_data <- PIR1_protein_norm  %>%
   inner_join(PIR1_RNA) %>%
   mutate(promoter = factor(str_remove(promoter, "p"), levels = c("PIR1")),
          label = factor(label, levels = c("WT", "mod_NTHHH", "mod_ANHHH", "mod_ATNHH", "mod_ATHNH", "mod_ATNNN", "mod_ANNNN", "mod_NTNNN")))
