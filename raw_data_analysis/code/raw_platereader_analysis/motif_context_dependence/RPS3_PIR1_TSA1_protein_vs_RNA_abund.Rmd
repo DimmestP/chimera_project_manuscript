@@ -3,11 +3,8 @@ title: "Comparison of protein vs mRNA levels of motifs inserted in RPS3, TSA1 an
 output: html_document
 ---
 
-The goal of this is to make a plot comparing protein abundance with mRNA abundance, for constructs with different motif insertions in 
+The goal of this is to make a plot comparing protein abundance with mRNA abundance, for constructs with different motif insertions in 3'UTRs, expressed from different promoters.
 
-The current version plots a point for each biological replicate.
-That is probably not appropriate because the protein abundance (by plate reader) was a separate set of experiments from the RNA abundance (by qPCR), so there is no reason to pair "biorep 1" of protein data with "biorep 1" from RNA data.
-It would be more appropriate to do a star plot with point estimate and confidence intervals for each construct.
 
 ```{r setup}
 library(here)
