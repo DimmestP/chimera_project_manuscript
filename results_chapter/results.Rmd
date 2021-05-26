@@ -138,7 +138,7 @@ knitr::include_graphics(here("results_chapter/figures/tPIR1_design_and_qpcr.png"
 
 ## Motif effects on gene expression depend both on terminator context and promoter pairing
 
-We next compared our predictive model of the effects of short CREs -- inferred from transcriptome-wide measurements of half-life -- and their effects when inserted or removed from reporter constructs.
+We next compared our predictive model of the effects of cis-regulatory motifs -- inferred from transcriptome-wide measurements of half-life -- and their effects when inserted or removed from reporter constructs.
 A simple model of transcript production and decay argues that changes in RNA half-life are directly proportional to changes in RNA abundance (see methods).
 So, for each promoter and host terminator combination, we trained a linear model to predict the log2 RNA abundance (i.e. $\Delta Cq$) values from the RT-qPCR using only motif presence, and compared this with the log2 half-life effect of the motif from our transcriptome-wide analysis of @Chan2018.
 Figure \@ref(fig:hlife-predict-vs-abundance-and-motif-context-dependence)A shows that the effect of short CREs in reporter constructs is correlated with the predictive model, but that the strength of the correlation depends on context.
@@ -164,3 +164,5 @@ knitr::include_graphics(here("results_chapter/figures/qPCR_model_coef_and_pred_v
 ```
 
 
+We checked if differences in RNA abundance were reflected in protein expression, by comparing the RT-qPCR with fluorescence plate reader measurements for a a subset of constructs with native promoter-terminator pairings (Fig \@ref(fig:protein-vs-RNA-plot-motifs)). 
+The high correlation ($R = 0.96, 0.68, 0.96$ for tRPS3, tTSA1, tPIR1 constructs respectively) argues that these combinations of decay motifs that change RNA abundance also change the protein output, as predicted.
