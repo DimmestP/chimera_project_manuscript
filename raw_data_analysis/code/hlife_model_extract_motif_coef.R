@@ -72,7 +72,7 @@ model_coefficients <-   ggplot(combined_motif_coefficients,
         legend.text = element_text(size = 9)) +
   labs(x = TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Sun}$"),
        y = TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Chan}$"), 
-       colour = "3′UTR Motif") +
+       colour = "3'UTR Motif") +
   coord_equal() +
   scale_y_continuous(breaks = c(-0.5,-0.25, 0, 0.25, 0.5),
                      labels = c("-0.5","","0","","0.5")) +
