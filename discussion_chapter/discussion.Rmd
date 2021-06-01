@@ -9,6 +9,10 @@ Our measurements of protein output from promoter-terminator combinations highlig
 Unsurprisingly, fluorescent protein expression levels are dominated by promoter choice, up to 100 fold, and then terminator choice, up to 5 fold. 
 However, with up to 1.5 fold change in the relative effect of terminators depending on coding sequence and promoter choice, the quantitative limitations of the assumption of composability are clear. 
 
+
+Terminators that have consistently low expression include tSUN4 and tTOS6, taken from cell wall proteins whose transcripts are bound and regulated by shared RNA-binding proteins [@Hogan2008].
+Terminators have similar effects when paired with either of the two ribosomal protein promoters pRPS3 or pRPS13, which is consistent with the co-regulation of ribosomal proteins in cells.
+
 Furthermore, we find that the effect of short CREs in 3'UTRs depends on the context of their host construct.
 The contribution of our selected motifs to mRNA stability, as inferred from transcriptome-wide analysis, correlated with their effect on the abundance of reporter constructs.
 However, their contributions to mRNA abundance were inconsistent and dependent on context: TGTAHMNTA has no measurable effect when inserted into tRPS3 but the expected effect in tTSA1, ATATTC has the expected effect in tRPS3 but little effect in tTSA1, and HWNCATTWY can either decrease or increase RNA levels when removed from tPIR1, depending on the promoter.
