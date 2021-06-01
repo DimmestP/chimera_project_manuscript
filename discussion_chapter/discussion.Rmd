@@ -83,3 +83,6 @@ Together with high-throughput assays, pools of combinations of suitable CREs can
 
 Future work on CREs will need to respect the fact that characterisation of elements' function in a single context is not enough to make generalisable conclusions.
 Both small- and large-scale studies of CREs should ideally be carried out with multiple combinations of other regulatory elements, in cells in multiple growth conditions, to build a comprehensive understanding of transcriptional and post-transcriptional regulation.
+
+::: {#refs}
+:::
