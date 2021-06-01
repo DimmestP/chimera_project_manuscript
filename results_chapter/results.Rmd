@@ -75,7 +75,7 @@ We selected four motifs for exploring context dependence: TGTAHMNTA, GTATACCTA, 
 TGTAHMNTA and GTATACCTA were chosen as they had the largest coefficients for significant decay and stability motifs, respectively.
 HWNCATTWY was chosen due to its statistically significant effect in both data sets and as a candidate for testing motif interactions, as it co-occurs with TGTAHMNTA in 68 native 3'UTRs.
 TGTAHMNTA is the binding motif for Puf4p, and HWNCATTWY is associated with Khd1p/Hek2p-bound transcripts [@Hogan2008].
-The final selected motif was ATATTC, that is a statistically significant decay motif in both data sets, and that lowers mRNA abundance when inserted in reporter genes [@Cheng2017].
+The final selected motif was ATATTC, that is a statistically significant decay motif in both data sets, and that lowers mRNA abundance when inserted in reporter constructs [@Cheng2017].
 It is not known how ATATTC occurrences lead to mRNA decay.
 
 ```{r motif-summary-table}
