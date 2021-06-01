@@ -107,8 +107,8 @@ We measured mRNA abundance by RT-qPCR across 6 biological replicates, each quant
 Insertion of two copies of ATATTC into generally lowers the mRNA abundance, as much as 4-fold when paired with the pRPS3 promoter. 
 Insertion of either TGTAHMNTA, or 2 copies of HWNCATTWY, tends to decrease mRNA abundance, and the combination tends to further decrease mRNA abundance.
 However, the putative stability motif GTATACCTA does not consistently or strongly affect mRNA abundance.
-Protein fluorescence results show a loose correlation between mRNA expression and protein expression (Sup Fig ?).
-However, comparison of the WT and control (mod_NNN) terminators does show that the creation of the insertion sites alone has an effect on gene expression.
+Protein fluorescence results show a correlation between mRNA expression and protein expression (Sup Fig \@ref(fig:protein-vs-RNA-plot-motifs).
+However, comparison of the WT and control (mod_NNN) terminators does show that the creation of the insertion sites alone has an effect on mRNA levels
 
 Inserting the same motifs into our second host terminator gives qualitatively similar results \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
 Decay motifs generally lead to decay, although ATATTC has a weaker effect in tTSA1 than in tRPS3, and TGTAHMNTA has a stronger effect in tTSA1 than tRPS3.
@@ -147,7 +147,7 @@ Interestingly, motifs appear to have consistently greater than predicted effects
 We next compared the inferred coefficients for individual motifs in each promoter-host terminator pair (Fig \@ref(fig:hlife-predict-vs-abundance-and-motif-context-dependence)B).
 The effect of a motif depends on terminator context, for example, ATATTCA reduces mRNA abundance substantially more when inserted in tRPS3 than in tTSA1. 
 Meanwhile, TGTACAATA significantly reduces mRNA abundance inserted in tTSA1, but not tRPS3, whichever promoter is chosen.
-Promoter choice influences the magnitude of a motifs contribution to gene expression.
+Promoter choice influences the magnitude of a motifs contribution to mRNA levels.
 For the ATATTC, TGTACAATA and TTTCATTTC motifs the greatest reduction in mRNA abundance occurred when native promoter-terminator pairings are measured.
 This is true for all three motifs across all three host terminators, except for TTTCATTTC in pRPS3-tRPS3 constructs.
 
