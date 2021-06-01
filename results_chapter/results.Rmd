@@ -58,7 +58,7 @@ knitr::include_graphics(here("results_chapter/figures/pro_ter_platereader_norm_m
 
 Next, we  investigated how the regulatory effects of short CREs contained within terminator regions depend on their context.
 First, 69 suitable CREs to test for context dependence were found through a literature search. 
-All were suspected sequence motifs for RNA binding proteins, several directly associated with proteins involved in mRNA degradation [@Hogan2008; @Shalgi2005; @Cheng2017].
+All were suspected sequence motifs for mRNA binding proteins, several directly associated with proteins involved in mRNA degradation [@Hogan2008; @Shalgi2005; @Cheng2017].
 Any motifs that were found in fewer than 6 gene 3'UTRs, as annotated by @Pelechano2013, were removed.
 
 We quantified the regulatory effects of the remaining 38 candidate CREs by applying a linear model predicting half life to two recent transcriptome-wide analyses of mRNA decay using metabolic labeling [@Sun2013; @Chan2018].
@@ -103,10 +103,10 @@ Altogether 7 constructs were designed for these two host terminators; the wildty
 For each terminator, we created constructs paired with each of the native promoter (pRPS3 or pTSA1), the high-expression pPGK1, and the low-expression pSRO9.
 
 Motifs predicted to affect half-life indeed affect mRNA abundance when inserted into tRPS3 in reporter constructs(Fig \@ref(fig:tRPS3-tTSA1-design-and-qpcr)B).
-We measured RNA abundance by RT-qPCR across 6 biological replicates, each quantufied in 3 technical replicates and normalised by the $\Delta Cq$ method against values from 3 reference RNAs (see methods - CHECK THIS).
+We measured mRNA abundance by RT-qPCR across 6 biological replicates, each quantufied in 3 technical replicates and normalised by the $\Delta Cq$ method against values from 3 reference mRNAs (see methods - CHECK THIS).
 Insertion of two copies of ATATTC into generally lowers the mRNA abundance, as much as 4-fold when paired with the pRPS3 promoter. 
-Insertion of either TGTAHMNTA, or 2 copies of HWNCATTWY, tends to decrease RNA abundance, and the combination tends to further decrease RNA abundance.
-However, the putative stability motif GTATACCTA does not consistently or strongly affect RNA abundance.
+Insertion of either TGTAHMNTA, or 2 copies of HWNCATTWY, tends to decrease mRNA abundance, and the combination tends to further decrease mRNA abundance.
+However, the putative stability motif GTATACCTA does not consistently or strongly affect mRNA abundance.
 Protein fluorescence results show a loose correlation between mRNA expression and protein expression (Sup Fig ?).
 However, comparison of the WT and control (mod_NNN) terminators does show that the creation of the insertion sites alone has an effect on gene expression.
 
@@ -137,18 +137,18 @@ knitr::include_graphics(here("results_chapter/figures/tPIR1_design_and_qpcr.png"
 ## Motif effects on gene expression depend both on terminator context and promoter pairing
 
 We next compared our predictive model of the effects of cis-regulatory motifs -- inferred from transcriptome-wide measurements of half-life -- and their effects when inserted or removed from reporter constructs.
-A simple model of transcript production and decay argues that changes in RNA half-life are directly proportional to changes in RNA abundance (see methods).
-So, for each promoter and host terminator combination, we trained a linear model to predict the log2 RNA abundance (i.e. $\Delta Cq$) values from the RT-qPCR using only motif presence, and compared this with the log2 half-life effect of the motif from our transcriptome-wide analysis of @Chan2018.
+A simple model of transcript production and decay argues that changes in mRNA half-life are directly proportional to changes in mRNA abundance (see methods).
+So, for each promoter and host terminator combination, we trained a linear model to predict the log2 mRNA abundance (i.e. $\Delta Cq$) values from the RT-qPCR using only motif presence, and compared this with the log2 half-life effect of the motif from our transcriptome-wide analysis of @Chan2018.
 Figure \@ref(fig:hlife-predict-vs-abundance-and-motif-context-dependence)A shows that the effect of short CREs in reporter constructs is correlated with the predictive model, but that the strength of the correlation depends on context.
 Constructs inserting motifs into terminators had a lower correlation with predicted effects than the construct where we remove motifs from a native terminator.
 Interestingly, motifs appear to have consistently greater than predicted effects on mRNA abundance when their host terminator is paired with its native promoter. 
 
 
 We next compared the inferred coefficients for individual motifs in each promoter-host terminator pair (Fig \@ref(fig:hlife-predict-vs-abundance-and-motif-context-dependence)B).
-The effect of a motif depends on terminator context, for example, ATATTCA reduces RNA abundance substantially more when inserted in tRPS3 than in tTSA1. 
-Meanwhile, TGTACAATA significantly reduces RNA abundance inserted in tTSA1, but not tRPS3, whichever promoter is chosen.
+The effect of a motif depends on terminator context, for example, ATATTCA reduces mRNA abundance substantially more when inserted in tRPS3 than in tTSA1. 
+Meanwhile, TGTACAATA significantly reduces mRNA abundance inserted in tTSA1, but not tRPS3, whichever promoter is chosen.
 Promoter choice influences the magnitude of a motifs contribution to gene expression.
-For the ATATTC, TGTACAATA and TTTCATTTC motifs the greatest reduction in RNA abundance occurred when native promoter-terminator pairings are measured.
+For the ATATTC, TGTACAATA and TTTCATTTC motifs the greatest reduction in mRNA abundance occurred when native promoter-terminator pairings are measured.
 This is true for all three motifs across all three host terminators, except for TTTCATTTC in pRPS3-tRPS3 constructs.
 
 Regulatory interactions between two different motifs inserted into a terminator also change depending on both host terminator and promoter context.
@@ -157,10 +157,10 @@ The combination of TGTACAATA and TTTCATTTC in tRPS3 has no additional effect whe
 The combination of TGTACAATA and TTTCATTTC in tTSA1 is significantly more stable than expected, but only when paired with pPGK1.
 
 
-```{r hlife-predict-vs-abundance-and-motif-context-dependence, fig.cap="\\textbf{Promoter and terminator context alter the regulatory behaviour of shortlisted motifs} (\\textbf{A}) Predicted transcript abundance inferred from motif contributions to half life vs RT-qPCR measured transcript abundance. (\\textbf{B}) Motif contributions to fold changes in RNA abundance for different promoter and terminator contexts. The fold change is relative to the mod0 construct in each promoter-terminator pairing for the tRPS3 and tTSA1 sets. For the tPIR1 sets the fold change is relative to the WT constructs. Confidence intervals are within a standard error.", fig.align='center'}
+```{r hlife-predict-vs-abundance-and-motif-context-dependence, fig.cap="\\textbf{Promoter and terminator context alter the regulatory behaviour of shortlisted motifs} (\\textbf{A}) Predicted transcript abundance inferred from motif contributions to half life vs RT-qPCR measured transcript abundance. (\\textbf{B}) Motif contributions to fold changes in mRNA abundance for different promoter and terminator contexts. The fold change is relative to the mod0 construct in each promoter-terminator pairing for the tRPS3 and tTSA1 sets. For the tPIR1 sets the fold change is relative to the WT constructs. Confidence intervals are within a standard error.", fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"))
 ```
 
 
-We checked if differences in RNA abundance were reflected in protein expression, by comparing the RT-qPCR with fluorescence plate reader measurements for a a subset of constructs with native promoter-terminator pairings (Fig \@ref(fig:protein-vs-RNA-plot-motifs)). 
-The high correlation ($R = 0.96, 0.68, 0.96$ for tRPS3, tTSA1, tPIR1 constructs respectively) argues that these combinations of decay motifs that change RNA abundance also change the protein output, as predicted.
+We checked if differences in mRNA abundance were reflected in protein expression, by comparing the RT-qPCR with fluorescence plate reader measurements for a a subset of constructs with native promoter-terminator pairings (Fig \@ref(fig:protein-vs-RNA-plot-motifs)). 
+The high correlation ($R = 0.96, 0.68, 0.96$ for tRPS3, tTSA1, tPIR1 constructs respectively) argues that these combinations of decay motifs that change mRNA abundance also change the protein output, as predicted.

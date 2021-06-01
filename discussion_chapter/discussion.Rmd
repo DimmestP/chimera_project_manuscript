@@ -15,7 +15,7 @@ Terminators have similar effects when paired with either of the two ribosomal pr
 
 Furthermore, we find that the effect of short CREs in 3'UTRs depends on the context of their host construct.
 The contribution of our selected motifs to mRNA stability, as inferred from transcriptome-wide analysis, correlated with their effect on the abundance of reporter constructs.
-However, their contributions to mRNA abundance were inconsistent and dependent on context: TGTAHMNTA has no measurable effect when inserted into tRPS3 but the expected effect in tTSA1, ATATTC has the expected effect in tRPS3 but little effect in tTSA1, and HWNCATTWY can either decrease or increase RNA levels when removed from tPIR1, depending on the promoter.
+However, their contributions to mRNA abundance were inconsistent and dependent on context: TGTAHMNTA has no measurable effect when inserted into tRPS3 but the expected effect in tTSA1, ATATTC has the expected effect in tRPS3 but little effect in tTSA1, and HWNCATTWY can either decrease or increase mRNA levels when removed from tPIR1, depending on the promoter.
 In addition, our original motif search predicted the behaviour of a TGTAAATA motif to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
 TGTAAATA changed its contribution in the two data sets because, as a known binding motif for Puf3, carbon deficient conditions trigger Puf3 to degrade its targets [@Miller2014].
 Carbon deficient conditions were likely present due to the bespoke CSM-lowURA media used by [@Chan2018], which is similar to the SC-URA media used in our assays.

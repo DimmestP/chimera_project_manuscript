@@ -31,4 +31,4 @@ First, we use modular cloning to construct 120 combinations of promoter (includi
 We then investigate the effect of promoter and terminator context on the regulatory behaviour of short CREs in 3'UTRs.
 In order to select suitable 3'UTR motifs, we adapt a method to computationally predict mRNA log2-half-life as a linear combination of codon usage and motif counts [@Cheng2017].
 We then quantify the effect on mRNA and protein levels of selected 3'UTR motifs when inserted in, or removed from, diverse reporter genes.
-Our results demonstrate that the incorporation of candidate decay motifs indeed results in a decrease in RNA abundance, however their quantitative contribution depends on the host 3'UTR and the paired promoter.
+Our results demonstrate that the incorporation of candidate decay motifs indeed results in a decrease in mRNA abundance, however their quantitative contribution depends on the host 3'UTR and the paired promoter.
