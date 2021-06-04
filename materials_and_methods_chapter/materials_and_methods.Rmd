@@ -143,3 +143,5 @@ $$\frac{\langle m_a \rangle}{\langle m_0 \rangle} = \frac{\delta_0}{\delta_a} =\
 This gives a linear effect on the log-scale abundance
 $$\log\langle m_a \rangle =\Delta \log\lambda^{1/2} + \log\langle m_0 \rangle$$
 and because PCR quantification cycle Cq is proportional to $\log2(m)$, this directly leads to a linear effect on Cq.
+
+All analysis made extensive use of the tidyverse [@Wickham2019] and plotting was completed with ggplot2 [@Wickham2016]
