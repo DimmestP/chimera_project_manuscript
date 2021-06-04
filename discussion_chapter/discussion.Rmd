@@ -41,10 +41,10 @@ Spatial regulation by successive CREs is also important, as one CRE can facilita
 In yeast, the Ash1 protein represses mating-type switching only in daughter cells [@Sil1996], due to localisation of the ASH1 transcript at the bud tip and subsequent localised translation (reviewed in [@Niednery2014]).
 It is thought that co-transcriptional recruitment of She2 is required for later recruitment of cytoplasmic factors Khd1/Hek2 and Puf6.
 Conversely, successful transport by She2-She3-Myo4 complexes depends on translational repression by Khd1 and Puf6.
-Later, translational activation due to phosphorylation of Khd1 and Puf6 by bud-membrane-localised kinases is likely to depend on the successful localisation of the ASH1 mRNP [@Paquin2007,@Deng2008].
+Later, translational activation due to phosphorylation of Khd1 and Puf6 by bud-membrane-localised kinases is likely to depend on the successful localisation of the ASH1 mRNP [@Paquin2007; @Deng2008].
 
 Another example where the effect of CRE on a transcript depends on co-localisation with a regulatory kinase comes from the fungal RNA-binding protein Ssd1.
-Yeast cell wall proteins such as Sun4 and Tos6 are translationally repressed by Ssd1 [@Jansen2009], which binds the 5'UTRs of their transcripts [@Hogan2008,@Bayne2020].
+Yeast cell wall proteins such as Sun4 and Tos6 are translationally repressed by Ssd1 [@Jansen2009], which binds the 5'UTRs of their transcripts [@Hogan2008; @Bayne2020].
 It is thought that these transcripts are translationally activated at bud sites after the phosphorylation of Ssd1 by a localised kinase, Cbk1 [@Jansen2009].
 There is no direct evidence that Ssd1 is involved in RNA transport, so this localised activation presumably depends on localisation that is conferred by other CREs, that might recruit other RNA-binding proteins known to be associated with those transcripts [@Hogan2008].
 We note that post-transcriptional regulation of SUN4 and TOS6 might explain the repressive effect of their terminators iwhen paired with high-expression promoters (Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
@@ -56,7 +56,7 @@ In mammalian cells, secondary structures have an overall inhibitory effect on mo
 In yeast, the presence of stable stem loops within the 3’UTR reduces the binding of known destabilising RBPs [@Geisberg2020].
 
 Motif behaviour also depends on CREs across the entire host transcript.
-Regulation of the ASH1 transcript depends on the concerted action of multiple CREs [@Chartrand1999, @Gonzalez1999].
+Regulation of the ASH1 transcript depends on the concerted action of multiple CREs [@Chartrand1999; @Gonzalez1999].
 In other cases, multiple motifs, or multiple copies of the same motif, must occur together to enable recruitment of the effector protein.
 Recruitment of Puf3 to promote mRNA transcript decay requires two Puf3 motifs in the 3'UTR [@Jackson2004].
 Indeed, clusters of short degenerate motifs have been proposed as a general regulatory feature of RNA-binding proteins [@Cereda2014]
@@ -70,7 +70,7 @@ Alternatively, non-linear relationships between factors affecting motif activity
 Again looking at TF algorithms, partitioning algorithms could be used to predict functional data sets using short sub-sequences of transcripts [@BehjatiArdakani2019]. 
 
 Reductionist search algorithms that attempt to discover the shortest possible sequence contributing to expression may limit the discovery of novel CREs. 
-High resolution maps of protein-RNA interactions are revealing RBPs with gapped, multi-partite motifs [@Bayne2020] or motifs that must be repeated in the same transcript to be effective [@Gu2004,@Jackson2004].
+High resolution maps of protein-RNA interactions are revealing RBPs with gapped, multi-partite motifs [@Bayne2020] or motifs that must be repeated in the same transcript to be effective [@Gu2004;@Jackson2004].
 Common motif searching approaches, such as MEME Suite [@Bailey2015], have extended beyond fixed length, gapless motifs but may still assume motifs occur independently and only once per transcript [@Frith2008].
 Although reducing the search constraints to allow longer, gapped motifs does increase the false discovery rate, the availability of precise interactome data sets suggests a shift in priority towards more flexible search algorithms.
 
@@ -84,5 +84,9 @@ Together with high-throughput assays, pools of combinations of suitable CREs can
 Future work on CREs will need to respect the fact that characterisation of elements' function in a single context is not enough to make generalisable conclusions.
 Both small- and large-scale studies of CREs should ideally be carried out with multiple combinations of other regulatory elements, in cells in multiple growth conditions, to build a comprehensive understanding of transcriptional and post-transcriptional regulation.
 
+# References
+
 ::: {#refs}
 :::
+
+\newpage

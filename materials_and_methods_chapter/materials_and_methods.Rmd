@@ -100,7 +100,7 @@ The tRPS3 3'UTR-terminator was modified to incorporate three 9 nt insertion site
 The M1 was inserted 24 nt downstream of the stop codon, M2 was inserted 15 nt downstream of M1 and the final insert M3 was inserted 4 nt downstream of M2 (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
 These positions were selected based out key design criteria (SUP FIGURE/NOTE X).
 A control tRPS3 3'UTR mod0 was designed to incorporate scrambled/random bases in each insertion site (Figure 1A).
-Further modified 3’UTR-terminator designs were designed to incorporate individual motifs of interest previously identified, within the insertion sites described (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
+Further modified 3'UTR-terminator designs were designed to incorporate individual motifs of interest previously identified, within the insertion sites described (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
 
 We chose an alternative 3'UTR for screening the effects of inserting motifs of interest with by searching for characteristics similar to RPS3.
 To this end, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following critera; 1) does not contain any of the original 69 motifs of interest, 2) < 300 nt in length and 3) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq data set.

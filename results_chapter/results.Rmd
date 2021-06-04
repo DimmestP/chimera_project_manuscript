@@ -10,12 +10,13 @@ knitr::opts_chunk$set(fig.pos = "p", dpi = 300)
 
 To investigate the context dependence of regulatory regions, we created a library of 120 constructs containing all combinations of 6 promoters (including 5'UTR), 2 coding sequences, and 10 terminators (including 3'UTR).
 We selected promoters and terminators from native yeast genes spanning a variety of different expression patterns and functions, summarised in Table \ref{tab:terminator-summary-table}.
-The two coding sequences (CDS) expressed mCherry or mTurquoise2 fluorescent proteins, which are bright fluorophores with only 30% amino acid identity [@Shaner2004, @Goedhart2012].
+The two coding sequences (CDS) expressed mCherry or mTurquoise2 fluorescent proteins, which are bright fluorophores with only 30% amino acid identity [@Shaner2004; @Goedhart2012].
 
+(ref:tab-1-caption) \textbf{Summary of terminator library.} The common gene name from which the terminator is extracted from is included alongside its systematic name. The median 3'UTR reported by [@Pelechano2013] is a median over the lengths of each distinct isoform they detect. The usage of each motif is signified by S, for promoter-terminator swaps, or M, for motif insertion or deletion. A short summary of the protein function is included.
 
 ```{r terminator-summary-table}
 readr::read_csv(here("results_chapter/data/terminator_summary_table.csv")) %>%
-  knitr::kable(format = "latex", align = "c", caption = "\\textbf{Summary of terminator library.} The common gene name from which the terminator is extracted from is included alongside its systematic name. The median 3'UTR reported by \\cite{Pelechano2013} is a median over the lengths of each distinct isoform they detect. The usage of each motif is signified by S, for promoter-terminator swaps, or M, for motif insertion or deletion. A short summary of the protein function is included.") %>%
+  knitr::kable(format = "latex", align = "c", caption = "(ref:tab-1-caption)") %>%
   kableExtra::column_spec(2:3, width = "1.8cm") %>%
   kableExtra::column_spec(4, width = "2cm") %>%
   kableExtra::column_spec(5, width = "1.4cm") %>%
@@ -38,7 +39,7 @@ Meanwhile, tPGK1 reveals the effect of promoter on terminators expression.
 It is one of the most highly expressing terminators when paired with pPGK1 and pHSP26, but is up to 40% lower in expression when paired with pRPS3 or pRPS13.
 Overall, our results show that the contributions of terminators (including 3'UTRs) to gene expression depend on the sequences in other parts of the gene.
 
-To further validate our assay, we tested the effect of truncated terminators, because disruption of termination signals lowers expression [@Guo1996,@Shalem2015].
+To further validate our assay, we tested the effect of truncated terminators, because disruption of termination signals lowers expression [@Guo1996; @Shalem2015].
 We chose two 200bp terminators from the YeastFab parts library [@Guo2015], tRPS3 and tSRO9.
 The median length of the native RPS3 3'UTR is 86nt [@Pelechano2013]; truncating the terminator to 86bp or 59bp reduces protein output by almost 2-fold, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B.
 The median length of the native SRO9 3'UTR is 543nt [@Pelechano2013]; extending the terminator length to 543bp increases protein output by almost 2-fold, Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B.
@@ -78,9 +79,11 @@ TGTAHMNTA is the binding motif for Puf4p, and HWNCATTWY is associated with Khd1p
 The final selected motif was ATATTC, that is a statistically significant decay motif in both data sets, and that lowers mRNA abundance when inserted in reporter constructs [@Cheng2017].
 It is not known how ATATTC occurrences lead to mRNA decay.
 
+(ref:tab-2-caption) \textbf{Summary of shortlisted motif charactoristics.} The first three columns hold the consensus sequences for each motif and the exact versions removed from or inserted into host terminators. Each motif's coefficent given by the linear model predicting either [@Chan2018] or [@Sun2013] half life data sets are included. Finally, the table includes notes on motif functions.
+
 ```{r motif-summary-table}
 readr::read_csv(here("results_chapter/data/motif_summary_table.csv")) %>%
-  knitr::kable(format = "latex", align = "c", caption = "\\textbf{Summary of shortlisted motif charactoristics.} The first three columns hold the consensus sequences for each motif and the exact versions removed from or inserted into host terminators. Each motif's coefficent given by the linear model predicting either \\cite{Chan2018} or \\cite{Sun2013} half life data sets are included. Finally, the table includes notes on motif functions.") %>%
+  knitr::kable(format = "latex", align = "c", caption = "(ref:tab-2-caption)") %>%
   kableExtra::column_spec(c(1,2,3,7), width = "2.3cm") %>%
   kableExtra::column_spec(c(5,6), width = "1.3cm") %>%
   kableExtra::row_spec(0, bold = TRUE)
