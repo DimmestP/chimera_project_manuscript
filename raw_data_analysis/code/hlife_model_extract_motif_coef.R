@@ -5,7 +5,6 @@ library(dplyr)
 library(tibble)
 library(stringr)
 library(readr)
-library(patchwork)
 # requires train_hlife_life_linear_model.R to be ran first
 #
 #
@@ -81,15 +80,6 @@ model_coefficients <-   ggplot(combined_motif_coefficients,
   scale_colour_brewer(type = "qual", palette = "Dark2")
 
 # Create full hlife model summary figure
-
-ggsave2(filename = here("results_chapter/figures/hlife_model_multi_fig_patchwork.png"), 
-        plot = (dataset_comparison + model_coefficients) / 
-          (chan_pred_vs_obvs_plot + (sun_pred_vs_obvs_plot + plot_layout(tag_level = "new"))) + 
-          plot_annotation(tag_levels = "A"), 
-        width = 163, 
-        height = 140,
-        units = "mm",
-        dpi = 300)
 
 ggsave2(filename = here("results_chapter/figures/hlife_model_multi_fig.png"), 
         plot = plot_grid(dataset_comparison,
