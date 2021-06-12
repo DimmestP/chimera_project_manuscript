@@ -4,6 +4,7 @@ library(tibble)
 library(stringr)
 library(readr)
 library(testthat)
+
 # Function to count the number of each codon in an ORF
 # ORF_name is a string containing the name of the ORFE
 # ORF_string is a charactor vector containing an ORF
@@ -21,6 +22,11 @@ count_codons <- function(ORF_string) {
 #  expect_equal(count_codons("TTTTTCTTT"),tibble(codon=c("TTC","TTT"),counts=as.integer(c(1,2))))
 #})
 
+# list of sense codons
+sense_codons <- c("TTT", "TTC", "TTA", "TTG", "TCT", "TCC", "TCA", "TCG", "TAT", "TAC", "TGT", "TGC", "TGG", "CTT", "CTC", "CTA", "CTG", "CCT", "CCC", "CCA", "CCG", "CAT", "CAC", "CAA", "CAG", "CGT", "CGC", "CGA", "CGG", "ATT", "ATC", "ATA", "ATG", "ACT", "ACC", "ACA", "ACG", "AAT", "AAC", "AAA", "AAG", "AGT", "AGC", "AGA", "AGG", "GTT", "GTC", "GTA", "GTG", "GCT", "GCC", "GCA", "GCG", "GAT", "GAC", "GAA", "GAG", "GGT", "GGC", "GGA", "GGG")
+
+# remove one codon to remove colinearity issue in linear model
+sense_codons_no_TTT <- sense_codons[-1]
 
 # IUPAC to regex function
 iupac_to_regex <- function(iupac_string){
