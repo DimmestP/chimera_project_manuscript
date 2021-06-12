@@ -1,0 +1,13 @@
+Gene Name, Systematic Name, Median 3’UTR Length, Construct Terminator Length, Usage, Function
+ PGK1, YCR012W,158,189, S, Glycolysis
+ RPS3, YNL178W,86,200, M&S, Ribosomal
+ RPS13, YDR064W,92,200, S, Ribosomal
+ PAB1, YER165W,150,200, S, RNA Binding
+ HSP26, YBR072W,164,200, S, Heat Shock
+ CLN2, YPL256C,203,200, S, Cell Cyclin
+ SRO9, YCL037C,543,545, S, RNA Binding
+ TOS6, YNL300W,256,256, S, Cell Wall
+ SUN4, YNL066W,198,198, S, Cell Wall
+ PMA1, YGL008C,421,421, S, Transmembrane ATPase
+ TSA1, YML028W,112,219, M, Redox Homestasis
+ PIR1, YKL164C,235,358, M, Cell Wall

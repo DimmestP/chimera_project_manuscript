@@ -42,7 +42,7 @@ strainlevels_1 <- c("pRPS3-mCherry-tRPS3_WT-59bp","pRPS3-mCherry-tRPS3_WT-86bp")
 strainvalues_1 <- factor(rep(strainlevels_1,each=3),levels=strainlevels_1)
 strainlevels_2 <- c("pRPS3-mCherry-tRPS3_WT-200bp","POT1-ccdB")
 strainvalues_2 <- factor(rep(strainlevels_2,each=3),levels=strainlevels_2)
-strainlevels_3 <- c("pSRO9-mCherry-tSRO9_WT-200bp", "pSRO9-mCherry-tSRO9_WT-500bp")
+strainlevels_3 <- c("pSRO9-mCherry-tSRO9_WT-200bp", "pSRO9-mCherry-tSRO9_WT-543bp")
 strainvalues_3 <- factor(rep(strainlevels_3,each=3),levels=strainlevels_3)
 
 # labelling of BioRep attributes
@@ -69,7 +69,7 @@ plateplan3 <-label_plate_rowcol(create_blank_plate(well_row = LETTERS[11:15],wel
 plateplan_A <- bind_rows(plateplan1, plateplan2, plateplan3)%>% 
     unite(sample_id,strain,BioRep,remove=FALSE)%>%
     separate(strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator","Length"))%>%
-      mutate(UTR3 = factor(Length,levels = c("500bp","200bp","86bp","59bp")),remove = FALSE)%>%
+      mutate(UTR3 = factor(Length,levels = c("543bp","200bp","86bp","59bp")),remove = FALSE)%>%
     unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
       unite(UTR3, Terminator, Length, sep="-", remove=FALSE)
 
@@ -81,7 +81,7 @@ plateplan6 <-label_plate_rowcol(create_blank_plate(well_row = LETTERS[11:15],wel
 plateplan_B <- bind_rows(plateplan4, plateplan5, plateplan6)%>% 
     unite(sample_id,strain,BioRep,remove=FALSE)%>%
     separate(strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator","Length"))%>%
-      mutate(UTR3 = factor(Length,levels = c("500bp","200bp","86bp","59bp")),remove = FALSE)%>%
+      mutate(UTR3 = factor(Length,levels = c("543bp","200bp","86bp","59bp")),remove = FALSE)%>%
     unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
       unite(UTR3, Terminator, Length, sep="-", remove=FALSE)
 ```
@@ -139,7 +139,7 @@ ggplot(data=plates%>% filter(strain %in% c("pRPS3-mCherry-tRPS3_WT-59bp",
 ```{r unnorm_tSRO9,fig.height=3.5,fig.width=6.5, echo=FALSE}
 
 ggplot(data=plates %>% filter(strain %in% c("pSRO9-mCherry-tSRO9_WT-200bp",
-                              "pSRO9-mCherry-tSRO9_WT-500bp")), 
+                              "pSRO9-mCherry-tSRO9_WT-543bp")), 
       aes(x=target_id,y=cq)) +
       geom_point(aes(color=BioRep, shape=prep_type),
       position=position_dodge(width = 0.85),size=1.6, alpha=0.7) +
@@ -265,11 +265,11 @@ platesnorm_summarise <- platesnorm%>%
                     ungroup(strain)%>%
     mutate(strain = factor(strain,levels = c("pRPS3-mCherry-tRPS3_WT-59bp", 
                                              "pRPS3-mCherry-tRPS3_WT-86bp", "pRPS3-mCherry-tRPS3_WT-200bp",
-                                             "pSRO9-mCherry-tSRO9_WT-200bp", "pSRO9-mCherry-tSRO9_WT-500bp")),
+                                             "pSRO9-mCherry-tSRO9_WT-200bp", "pSRO9-mCherry-tSRO9_WT-543bp")),
            target_id = factor (target_id, levels = c("PGK1-ORF", "SRO9-ORF", "RPS3-ORF",
                                                    "URA3-ORF", "mCh-7")))%>%
     separate(strain, remove = FALSE,sep="-",into=c("Promoter","mCherry","Terminator","Length"))%>%
-    mutate(UTR3 = factor(Length,levels = c("500bp","200bp","86bp","59bp")),remove = FALSE)%>%
+    mutate(UTR3 = factor(Length,levels = c("543bp","200bp","86bp","59bp")),remove = FALSE)%>%
     unite(Pro_mCh,Promoter,mCherry,sep="-", remove=FALSE)%>%
     unite(UTR3, Terminator, Length, sep="-", remove=FALSE)
 ```
@@ -396,32 +396,32 @@ normalised_all + stat_summary(aes(UTR3,rel_abund_deltacq),
 # Extracting data for pSRO9 strains
 platesnorm_pSRO9_ExpRep <- platesnorm %>% filter(Promoter %in% "pSRO9", target_id %in% "mCh-7")
 
-# Calculates the mean cq value of pSRO9-mCherry-tSRO9_WT-500bp strain (4.111667)
-mean_platesnorm_S500bp_ExpRep1 <- platesnorm_pSRO9_ExpRep %>% filter(ExpRep==1)%>%
+# Calculates the mean cq value of pSRO9-mCherry-tSRO9_WT-543bp strain (4.111667)
+mean_platesnorm_S543bp_ExpRep1 <- platesnorm_pSRO9_ExpRep %>% filter(ExpRep==1)%>%
     select(c("strain","delta_cq", "BioRep", "tech_rep")) %>% 
-    filter(strain %in% c("pSRO9-mCherry-tSRO9_WT-500bp")) %>%
+    filter(strain %in% c("pSRO9-mCherry-tSRO9_WT-543bp")) %>%
     group_by(strain, BioRep)%>%
-    summarize(median_BioRep_S500bp = median(delta_cq)) %>%
+    summarize(median_BioRep_S543bp = median(delta_cq)) %>%
     ungroup()%>%
     group_by(strain)%>%
-    summarize(mean_S500bp = mean(median_BioRep_S500bp))
+    summarize(mean_S543bp = mean(median_BioRep_S543bp))
 
-# Calculates the mean cq value of pSRO9-mCherry-tSRO9_WT-500bp Samples (4.035)
-mean_platesnorm_S500bp_ExpRep2 <- platesnorm_pSRO9_ExpRep %>% 
+# Calculates the mean cq value of pSRO9-mCherry-tSRO9_WT-543bp Samples (4.035)
+mean_platesnorm_S543bp_ExpRep2 <- platesnorm_pSRO9_ExpRep %>% 
                                           filter(ExpRep==2)%>%
     select(c("strain","delta_cq", "BioRep", "tech_rep")) %>% 
-    filter(strain %in% c("pSRO9-mCherry-tSRO9_WT-500bp")) %>%
+    filter(strain %in% c("pSRO9-mCherry-tSRO9_WT-543bp")) %>%
     group_by(strain, BioRep)%>%
-    summarize(median_BioRep_S500bp = median(delta_cq)) %>%
+    summarize(median_BioRep_S543bp = median(delta_cq)) %>%
     ungroup()%>%
     group_by(strain)%>%
-    summarize(mean_S500bp = mean(median_BioRep_S500bp))
+    summarize(mean_S543bp = mean(median_BioRep_S543bp))
 
-# Calculates the delta delta cq (subtracts mean(mean_tSRO9500bp$delta_cq) from every delta_cq))
-platesnorm_by_S500bp_pSRO9_ExpRep1 <- platesnorm_pSRO9_ExpRep %>% filter(ExpRep==1)%>%
-    mutate(delta_deltacq = delta_cq - mean_platesnorm_S500bp_ExpRep1$mean_S500bp, remove=FALSE)
-platesnorm_by_S500bp_pSRO9_ExpRep2 <- platesnorm_pSRO9_ExpRep %>% filter(ExpRep==2)%>%
-    mutate(delta_deltacq = delta_cq - mean_platesnorm_S500bp_ExpRep2$mean_S500bp, remove=FALSE)
+# Calculates the delta delta cq (subtracts mean(mean_tSRO9543bp$delta_cq) from every delta_cq))
+platesnorm_by_S543bp_pSRO9_ExpRep1 <- platesnorm_pSRO9_ExpRep %>% filter(ExpRep==1)%>%
+    mutate(delta_deltacq = delta_cq - mean_platesnorm_S543bp_ExpRep1$mean_S543bp, remove=FALSE)
+platesnorm_by_S543bp_pSRO9_ExpRep2 <- platesnorm_pSRO9_ExpRep %>% filter(ExpRep==2)%>%
+    mutate(delta_deltacq = delta_cq - mean_platesnorm_S543bp_ExpRep2$mean_S543bp, remove=FALSE)
 ```
 
 
@@ -451,7 +451,7 @@ mean_platesnorm_R200bp_ExpRep2 <- platesnorm_pRPS3_ExpRep %>%
     group_by(strain)%>%
     summarize(mean_R200bp = mean(median_BioRep_R200bp))
 
-# Calculates the delta delta cq (subtracts mean(mean_tSRO9500bp$delta_cq) from every delta_cq))
+# Calculates the delta delta cq (subtracts mean(mean_tSRO9543bp$delta_cq) from every delta_cq))
 platesnorm_by_R200bp_pRPS3_ExpRep1 <- platesnorm_pRPS3_ExpRep %>% filter(ExpRep==1)%>%
     mutate(delta_deltacq = delta_cq - mean_platesnorm_R200bp_ExpRep1$mean_R200bp, remove=FALSE)
 platesnorm_by_R200bp_pRPS3_ExpRep2 <- platesnorm_pRPS3_ExpRep %>% filter(ExpRep==2)%>%
@@ -470,7 +470,7 @@ In the previous 2 chunks, we have calculated the delta-delta cq value for each t
 
 ```{r mean_rna_abund_ExpRep, echo=TRUE}
 
-platesnorm_S500bp_pSRO9_median <- bind_rows(platesnorm_by_S500bp_pSRO9_ExpRep1,platesnorm_by_S500bp_pSRO9_ExpRep2)%>%
+platesnorm_S543bp_pSRO9_median <- bind_rows(platesnorm_by_S543bp_pSRO9_ExpRep1,platesnorm_by_S543bp_pSRO9_ExpRep2)%>%
                     group_by(strain, target_id, BioRep, ExpRep)%>%
                     summarize(median_delta_deltacq = median(delta_deltacq, na.rm=TRUE),
                               rel_abund_delta_deltacq = (2^-median_delta_deltacq), na.rm=FALSE)%>%
@@ -493,7 +493,7 @@ platesnorm_R200bp_pRPS3_median <- bind_rows(platesnorm_by_R200bp_pRPS3_ExpRep1,p
   mutate(UTR3 = str_remove(UTR3,"_WT"))
 
 
-platesnorm_all_median <- bind_rows(platesnorm_S500bp_pSRO9_median,platesnorm_R200bp_pRPS3_median)
+platesnorm_all_median <- bind_rows(platesnorm_S543bp_pSRO9_median,platesnorm_R200bp_pRPS3_median)
 
 write_csv(platesnorm_all_median, here("raw_data_analysis/data/norm_qpcr/short_vs_long/shortvslong_two_exp_rep_deltadeltacq_platesnorm_summarise.csv"))
 ```
@@ -502,9 +502,9 @@ write_csv(platesnorm_all_median, here("raw_data_analysis/data/norm_qpcr/short_vs
 
 ```{r plot_delta_deltacq_SRO9,fig.height=3.5,fig.width=5, echo=FALSE}
 
-normalised_plot_SRO9 <- ggplot(data = platesnorm_S500bp_pSRO9_median) +
+normalised_plot_SRO9 <- ggplot(data = platesnorm_S543bp_pSRO9_median) +
   RNA_relative_abundance_figure_options +
-      labs(x="Fold change in RNA abundance \n relative to tSRO9_500bp \n (log2 scale)", title = "SRO9", y = NULL) +
+      labs(x="Fold change in RNA abundance \n relative to tSRO9_543bp \n (log2 scale)", title = "SRO9", y = NULL) +
     scale_colour_manual(values=c("#CC6666", "black")) +
     theme(axis.text.y=element_text(colour=c("#CC6666", "black")))
 normalised_plot_SRO9

@@ -6,7 +6,7 @@ output:
       in_header: authors.tex
     template: "./formatting/template.tex"
     toc: false
-    citation_package: natbib
+    keep_tex : TRUE
 bibliography: "./references/chimeraProject.bib"
 biblio-style: "apalike"
 link-citations: true

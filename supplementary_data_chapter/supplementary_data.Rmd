@@ -1,39 +1,39 @@
 # Supplementary Data
 \makeatletter
 \renewcommand{\fnum@figure}{Figure S\thefigure}
+\renewcommand{\fnum@table}{Table S\thetable}
 \makeatother
 \setcounter{figure}{0}
-## Motif effects on transcript expression is repeated in protein expression data
+\setcounter{table}{0}
 
-The effects of motif presence on protein expression was investigate with a platereader assay detecting the fluorescence of the mCherry reporter gene on the pRPS3-tRPS3 and pTSA1-tTSA1 constructs.
-The right column in Figure \@ref(fig:protein-verse-RNA-plot) confirms that motif effects can be detected in protein expression expression alone.
-Comparing the corresponding RNA abundance levels, left column of Figure \@ref(fig:protein-verse-RNA-plot), the same effects of the motifs on transcript abundance are seen in protein expression, together with the same context dependence. 
 
-```{r protein-verse-RNA-plot, fig.cap="\\textbf{Motif contributions to protein abundance correlate with RNA abundance}. (\\textbf{Left}) Fold changes in mRNA abundance for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings. (\\textbf{Right}) mCherry fluorescence at the maximum growth rate for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings.", out.width='60%', fig.align='center'}
-knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"))
+```{r hlife-variance-table}
+knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual = c("42.0%", "3.2%", "0.6%"), Drop = c("-40.5%", "-1.6%", "0.0%"), Cumulative = c("42.0%", "43.7%", "43.7%")), caption = "\\textbf{Variance explained by each predicate in the half life model}. Variance explained was explored in three different ways. The variance explained by a linear containing each CRE appearing individually.  The loss in variance explained when one CRE is removed from the full model. The total variance explained when each CRE is added to the linear model in sequence.", format = "latex")  %>%
+  kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
-## Investigating the effects of cis-regulatory motifs in the 3'UTR using 5PSeq
-We used high-throughput 5PSeq (HT-5Pseq) technique to investigate whether modifications of 3’ UTRs influence the process of 5’-3’ co-translational degradation of mRNA, which can also serve as a proxy of translation process (Zhang & Pelechano 2020), and modify ribosome stalling in the 3’-end region of coding sequence.
-The 5PSeq method allows to investigate the process of  5’-3’ degradation of mRNA by capturing only de-capped 5’ ends of mRNA molecules, and at the same time – the polyadenylated 3’ ends.
-We generated sequencing reads with insert sizes up to 600 bp, which included entire 3’UTRs and up to 400 bp of coding sequence.  
 
-The distributions of 5’ ends did not differ significantly between the samples.
-There were major differences between distributions of 3’ ends between different constructs corresponding to different polyadenylation sites (figure \@ref(fig:alt-polyA-5PSeq)).
-In all modified 3’ UTRs we observed additional poly(A) sites at 44 nt and 56 nt from STOP codon, which corresponds to 35 nt and 47 nt in WT 3’ UTR.
-Secondly, we observed differences in the distribution of poly(A) sites between modified 3’UTRs with different motifs inserted.
-Poly(A) sites located 44 nt and 56 nt from STOP codon are more abundant in tRPS3-mod0 compared to tRPS3-modA, with tRPS3-modB between them.
-Poly(A) site at 67 nt is pronounced only in tRPS3-mod0 and at 74 nt is especially visible in tRPS3-modA and at 80 nt in tRPS3-modB.
-The differences could be caused either by new polyadenylation signals introduced into the 3’ UTR or by increased stability of these isoforms conferred by addition of new motifs.  
-
-```{r alt-polyA-5PSeq, fig.cap="\\textbf{Inserting motifs into native RPS3 termintors may cause alternative polyadenylation.} Relative polyadenylation site usage of transcripts signaled for decay for pRPS3-tRPS3 constructs, acquired using using 5PSeq.", out.width='80%', fig.align='center'}
-knitr::include_graphics(here("supplementary_data_chapter/figures/alternative_polyadenylation_RPS3_5PSeq.png"))
+```{r protein-vs-RNA-plot-motifs, fig.cap="\\textbf{Motif contributions to protein abundance correlate with mRNA abundance}. (\\textbf{Left}) Fold changes in mRNA abundance vs fold changes in protein fluorescence for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings. Transcript abundance is relative to the mod0 construct of each promoter-terminator pairing. (\\textbf{Right}) Fold changes in mRNA abundance vs fold changes in protein fluorescence for all terminator constructs in the pPIR1-tPIR1 pairing. Transcript abundance is relative to WT construct of the promoter-terminator pairing. In all figures, the mean and standard error calculated over 6 biological replicates is plotted for each construct.", fig.align='center'}
+knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"), dpi = 300) 
 ```
 
-## Comparison of whole-genome ATATTC motif effect vs. reporter-gene ATATTC motif effect
-- Comparison of our qPCR data of modB with that of Cheng et al. (2017)
+```{r TGTACAATA-motif-coef}
+read.csv(here("./supplementary_data_chapter/data/HWNCAUUWY_shortlisted_motif_table.csv")) %>%
+  dplyr::transmute(Motif = term,  `Total Count` = total_count, Coef = estimate, `p.value`) %>%
+knitr::kable(format = "latex", caption="\\textbf{Selecting the HWNCAUUWY motif, TTTCATTTC}. Summary of the number of occurances and contributions to a linear model predecting half life for each possible version of the HWNCAUUWY motif.")  %>%
+  kableExtra::kable_styling(latex_options = "hold_position")
+```
 
-## Secondary structure prediction of RPS3 and PIR1 3'UTR native and modified designs
+
+
+```{r TTTCATTTC-motif-coef}
+read.csv(here("./supplementary_data_chapter/data/UGUAHMNUA_shortlisted_motif_table.csv")) %>%
+  dplyr::transmute(Motif = term,  `Total Count` = total_count, Coef = estimate, `p.value`)  %>%
+knitr::kable(format = "latex", caption = "\\textbf{Selecting the UGUAHMNUA motif, TGTACAAUA}. Summary of the number of occurances and contributions to a linear model predecting half life for each possible version of the UGUAHMNUA motif.")  %>%
+  kableExtra::kable_styling(latex_options = "hold_position")
+```
+
+
 ```{r secondary-structure-RPS3, fig.cap="\\textbf{Designs of modified RPS3 3'UTRs aimed at minimsing disruption to the secondary structure.} The computed minimum fre energy (MFE) and the corresponding structure result using RNAfold. The modified 3'UTRs were designed, taking into consideration the MFE, and tailoring designs that would result in minimal change to the MFE.", fig.align='center'}
 knitr::include_graphics(here("supplementary_data_chapter/figures/secondary_structures_rps3_small.png"), dpi = 300)
 ```

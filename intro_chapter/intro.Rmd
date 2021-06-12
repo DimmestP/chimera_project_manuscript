@@ -11,8 +11,8 @@ However, it is important to distinguish between two concepts of modularity: modu
 Modular assembly is now routine: modern DNA synthesis and cloning techniques allow the construction of complex gene pathways through the combinatorial assembly of chosen parts [@Curran2013; @Lee2015; @Garcia2018; @Andreou2018]. 
 Several groups have constructed standardised libraries comprising promoter (including 5'UTR) and terminator (including 3'UTR) parts, which can be combined to achieve desired expression of synthesized proteins.
 The characterisation of all possible promoter-terminator pairings is impractical, so standardised libraries generally characterise parts independently, for example testing many promoters with the same coding sequence and terminator [@Lee2015].
-Similarly, even massively parallel approaches to characterise smaller CREs usually explore a large library of promoter elements with a single terminator [@Sharon2012], or conversely a library of promoters with a single terminator [@Shalem2015].
-These experiments do not measure interactions between different parts and, therefore, an assumption of composability is required to extend their conclusions to other combinations of parts.
+Similarly, even massively parallel approaches to characterise smaller CREs usually explore a large library of promoter elements with a single terminator [@Sharon2012], or conversely a library of terminators with a single promoter [@Shalem2015].
+These experiments do not measure interactions between different parts and, therefore, an assumption of composability is required to predict their contributions to gene expression when present in other combinations.
 
 Computational methods for the discovery and quantification of short CREs, such as sequence motifs recognised by regulatory proteins, also tend to rely on models of independent effects, that is, composability.
 Prominent methodologies for detecting CRE's include predicting functional data with short sequence features, often using linear models [@Shalgi2005; @Cheng2017; @Vijayabaskar2019]; or, directly comparing the sequences of genes with similar characteristics to determine the presence of short consensus sequence motifs [@Hogan2008; @Kretz2013] using motif discovery software [@Elemento2007; @Bailey2015].
@@ -30,5 +30,5 @@ Here, we provide further evidence for the importance of interactions between reg
 First, we use modular cloning to construct 120 combinations of promoter (including 5'UTR), coding sequence, and terminator (including 3'UTR) modules, showing that the quantitative effect of terminators on protein production depends on both promoter and coding sequence.
 We then investigate the effect of promoter and terminator context on the regulatory behaviour of short CREs in 3'UTRs.
 In order to select suitable 3'UTR motifs, we adapt a method to computationally predict mRNA log2-half-life as a linear combination of codon usage and motif counts [@Cheng2017].
-We then quantify the effect on mRNA and protein levels of selected 3'UTR motifs when inserted in, or removed from, diverse reporter genes.
-Our results demonstrate that the incorporation of candidate decay motifs indeed results in a decrease in RNA abundance, however their quantitative contribution depends on the host 3'UTR and the paired promoter.
+We then quantify the effect on mRNA and protein levels of selected 3'UTR motifs when inserted in, or removed from, diverse reporter constructs.
+Our results demonstrate that the incorporation of candidate decay motifs indeed results in a decrease in mRNA abundance, however their quantitative contribution depends on the host 3'UTR and the paired promoter.
