@@ -11,9 +11,6 @@ library(Biostrings)
 library(DECIPHER)
 library(latex2exp)
 library(here)
-library(cowplot)
-library(patchwork)
-library(tidyqpcr)
 
 source(here("raw_data_analysis/code/linear_model_functions.R"))
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
@@ -116,15 +113,18 @@ motif_regex<- deduplicated_motifs %>%
   group_by(newMotifIUPAC) %>% 
   summarise(regex = str_c(unique(motifsStrings),collapse = "|"))
 
-single_count_median_3UTR_motifs_freq <- motif_count_function(motif_regex$regex, single_count_median_3UTR_threePrimeUTR$threePrimeUTR, gene_name = single_count_median_3UTR_motifs_freq$transcriptName)
-
-colnames(single_count_median_3UTR_motifs_freq) <-  c("geneName", "transcriptSeque", motif_regex$newMotifIUPAC)
+single_count_median_3UTR_motifs_freq <- 
+  motif_count_function(regex_motifs = motif_regex$regex, 
+                       transcript_seq = single_count_median_3UTR_threePrimeUTR$threePrimeUTR, 
+                       gene_name = single_count_median_3UTR_threePrimeUTR$transcriptName)  %>%
+  mutate(UTR3_length = str_length(single_count_median_3UTR_threePrimeUTR$threePrimeUTR))
+## disaster here
+colnames(single_count_median_3UTR_motifs_freq) <-  c("transcriptName", "transcriptSequence", motif_regex$newMotifIUPAC)
 
 # combine motif,codon and chan decay datasets
 single_count_decay_prediction_dataset_chan <- single_count_median_3UTR_motifs_freq %>%
   inner_join(chan_decay_hlife) %>%
-  inner_join(codon_freq) %>%
-  mutate(UTR3_length = str_length(threePrimeUTR))
+  inner_join(codon_freq)
 
 # combine motif,codon and sun decay datasets
 single_count_decay_prediction_dataset_sun <- single_count_median_3UTR_motifs_freq %>%
