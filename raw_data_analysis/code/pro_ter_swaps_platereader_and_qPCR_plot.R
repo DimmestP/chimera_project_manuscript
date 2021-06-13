@@ -1,10 +1,7 @@
-library(ggplot2)
 library(dplyr)
 library(tibble)
 library(readr)
-library(cowplot)
 library(here)
-library(patchwork)
 library(latex2exp)
 
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
@@ -83,13 +80,25 @@ low_exp_mCh_mTurq_platereader_raw_figure <- ggplot(low_exp_pro_mCh_mTurq) +
   theme(legend.position = "bottom") +
   guides(colour=guide_legend(ncol=2))
 
+bottom_row_swap_figure <- 
+    plot_grid(low_exp_mCh_mTurq_platereader_raw_figure,
+            mCherry_protein_vs_RNA_figure,
+            rel_widths = c(1.3,1),
+            ncol = 2)
+
+composite_pro_ter_swap_figure <- 
+  plot_grid(high_exp_mCh_mTurq_platereader_raw_figure,
+            bottom_row_swap_figure,
+            ncol = 1,
+            rel_heights = c(1,1.3),
+            labels = c("A","B","C"))
+composite_pro_ter_swap_figure
+
 ggsave(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png"),
-       (high_exp_mCh_mTurq_platereader_raw_figure / 
-          (low_exp_mCh_mTurq_platereader_raw_figure + mCherry_protein_vs_RNA_figure + 
-             plot_layout(widths = c(1.85,1)))) +
-         plot_annotation(tag_levels = "A"),
+       composite_pro_ter_swap_figure,
        width = 165, height = 200, units = "mm", dpi=300)
 
+#####
 # Create Normalised Platereader plot and add qPCR of short-vs-long
 
 shortvslong_platesnorm_all_median <- read_csv(here("raw_data_analysis/data/norm_qpcr/short_vs_long/shortvslong_two_exp_rep_deltadeltacq_platesnorm_summarise.csv")) %>%
@@ -130,12 +139,16 @@ norm_mTurq_and_mCherry_figure <- ggplot(data=norm_mTurq_and_mCherry %>% filter(!
   facet_grid(protein~Promoter) +
   protein_relative_abundance_figure_options
 
-norm_layout <- "A
-                A
-                A
-                B"
+UTR_length_panelB <- plot_grid(normalised_plot_RPS3, normalised_plot_SRO9, ncol = 2)
+
+composite_norm_UTRlength_figure <- plot_grid(norm_mTurq_and_mCherry_figure, 
+                              UTR_length_panelB, 
+                              labels = c("A","B"),
+                              rel_heights = c(2,1),
+                              ncol = 1)
+composite_norm_UTRlength_figure
 
 ggsave(here("./results_chapter/figures/pro_ter_platereader_norm_mTurq_and_mCh.png"), 
-       norm_mTurq_and_mCherry_figure + (normalised_plot_RPS3 + (normalised_plot_SRO9 + plot_layout(tag_level = "new"))) + plot_layout(design = norm_layout) + plot_annotation(tag_levels = "A"),
+       composite_norm_UTRlength_figure,
        width = 165, height = 150, units = "mm", dpi = 300)
 
