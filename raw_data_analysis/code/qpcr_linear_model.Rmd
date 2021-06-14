@@ -1,6 +1,6 @@
 ---
 title: "qPCR linear models"
-output: html_notebook
+output: html_document
 ---
 
 ```{r}
@@ -148,30 +148,30 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
          separate(ter_pro, into=c("promoter","terminator"), sep = "_", remove = FALSE) %>%
          filter(!term %in% c("(Intercept)", "nativeTRUE", "exp_rep")) %>%
          arrange(term,promoter),
-       aes(x=factor(promoter_type, levels = c("Native","PGK1","SRO9")), y=-estimate, colour = terminator),
-    position = position_dodge2()) +
-  geom_point() +
-  geom_errorbar(aes(ymax = -estimate + std.error, ymin = -estimate - std.error)) +
+       aes(x = factor(promoter_type, levels = c("Native","PGK1","SRO9")), 
+           y = -estimate, 
+           colour = terminator),
+    ) +
+  geom_pointrange(aes(ymax = -estimate + std.error, ymin = -estimate - std.error),
+                position = position_dodge2(width = 0.5),
+                fatten = 1) +
   labs(y = TeX("Log_2 Fold Change in\n RNA Abundance"), 
-       colour = "Terminator",
-       tag = "B") +
-  theme(strip.placement = "outside", 
-        strip.background = element_rect(fill = "white", colour = "white"), 
-        strip.text = element_text(size = 7, face = "bold"),
-        axis.title.x = element_blank(),
+       colour = "Terminator") +
+  theme(axis.title.x = element_blank(),
         axis.text.x = element_text(angle = 90, hjust = 0, vjust = 0.5),
         axis.ticks.x = element_blank(),
         panel.spacing = unit(0, units = "cm"),
         panel.grid.major.x = element_blank(),
-        axis.line.x = element_blank(),
-        plot.tag = element_text( vjust = -2)) +
+        axis.line.x = element_blank()) +
   scale_colour_manual(breaks = c("tTSA1", "tRPS3", "tPIR1"), values = c("#56B4E9", "#D55E00", "#000001")) +
   facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "TGTAHMNTA", "HWNCATTWY", "TGTAHMNTA\n+\nHWNCATTWY")), 
              scales = "free_x", 
-             space = "free_x", 
-             switch = "x") +
+             space = "free_x") +
   geom_hline(yintercept = 0)
 
+individual_linear_model_coefficients_points
+
+# replace by saving a separate figure panel???
 save(individual_linear_model_coefficients_points, file = here("raw_data_analysis/data/motif_multi_context_coefficient.Rdata"))
 
 ```
