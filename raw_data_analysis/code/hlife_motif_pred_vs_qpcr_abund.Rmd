@@ -10,7 +10,7 @@ library(tibble)
 library(stringr)
 library(readr)
 library(latex2exp)
-library(RColorBrewer)
+library(patchwork)
 
  # set default theme for graphics
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
@@ -96,11 +96,7 @@ combined_pred_vs_actual_abund_TSA1_RPS3 %>%
 ```{r plot_pred_vs_actual}
 promoter_dictionary_TSA1_RPS3 <- tibble( pro = c("pPGK1", "Native", "pSRO9", "pPGK1", "Native", "pSRO9"), promoter = c("pPGK1", "pTSA1", "pSRO9", "pPGK1", "pRPS3", "pSRO9"))
 
-construct_dictionary_TSA1_RPS3 <- tibble( construct = c("mod0", "modA", "modB", "modC", "modD", "modE", "WT"), new_construct = c("mod_NNN", "mod_NTN", "mod_NAA", "mod_NGG", "mod_HNH", "mod_HTH", "WT"))
-
 promoter_dictionary_PIR1 <- tibble( pro = c("pPGK1", "Native", "pSRO9"), promoter = c("pPGK1", "pPIR1", "pSRO9"))
-
-construct_dictionary_PIR1 <- tibble( construct = c("modA", "modB", "modC", "modD", "modE", "modF", "modG", "WT"), new_construct = c( "mod_ANHHH", "mod_NTHHH", "mod_ATNHH", "mod_ATHNH", "mod_ATNNN", "mod_ANNNN", "mod_NTNNN", "WT_ATHHH"))
 
 r_cor_data_TSA1_RPS3 <- combined_pred_vs_actual_abund_TSA1_RPS3 %>% 
   group_by(construct, terminator, promoter) %>% 
@@ -126,21 +122,20 @@ combined_pred_vs_actual_plot_data_TSA1_RPS3 <- combined_pred_vs_actual_abund_TSA
   group_by(construct, terminator, pro) %>%
   summarise(mean_delta_delta_cq = mean(delta_delta_cq), sd_ddcq = sd(delta_delta_cq), .groups = "drop") %>%
   inner_join(hlife_coefficients_TSA1_RPS3) %>% 
-  inner_join(construct_dictionary_TSA1_RPS3)
+  inner_join(construct_to_label_dictionary_TSA1_RPS3)
 
 pred_vs_actual_plot_data_PIR1 <- pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>%
   inner_join(promoter_dictionary_PIR1) %>% 
   group_by(construct, terminator, pro) %>%
   summarise(mean_delta_delta_cq = mean(delta_delta_cq), sd_ddcq = sd(delta_delta_cq), .groups = "drop") %>%
   inner_join(hlife_coefficients_PIR1) %>%
-  inner_join(construct_dictionary_PIR1)
+  inner_join(construct_to_label_dictionary_PIR1)
 
 pred_vs_abundance_figure_options <- list(
-  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = new_construct), show.legend = FALSE),
-   geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = new_construct)),
- geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = new_construct)),
+  geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = label), show.legend = FALSE),
+   geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = label)),
+ geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = label)),
   facet_grid(terminator~pro),
-  scale_color_brewer(palette = "Paired"),
   geom_abline(slope = 1, intercept = 0, colour = "grey"),
   labs(x="", y="", colour = "Construct"),
  theme(strip.text = element_text(size = 7, face = "bold"),
@@ -152,12 +147,14 @@ pred_vs_abundance_figure_options <- list(
 pred_vs_abundance_RPS3_TSA1 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS3 %>% filter(terminator %in% c("tRPS3", "tTSA1"))) + 
   pred_vs_abundance_figure_options +
   coord_fixed(ratio = 1 , xlim = c(-2.5, 1.5) ,ylim = c(-2.5, 1.5)) +
+  scale_colour_manual(values = RPS3_TSA1_colour_scheme) + 
   geom_text(aes(label = r_cor_label), data = r_cor_data_TSA1_RPS3, x = -1.1, y= 1.1, parse = TRUE, size = 4) +
   labs(y=TeX("Experimental Fold Change in $log_2$ RNA Abundance"), tag = "A")
 
 pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) + 
   pred_vs_abundance_figure_options +
   coord_fixed(ratio = 1 , xlim = c(-1, 1.2) ,ylim = c(-1, 1.2)) +
+  scale_colour_manual(values = PIR1_colour_scheme) + 
   geom_text(aes(label = r_cor_label), data = r_cor_data_PIR1, y = -0.7, x= 0, parse = TRUE, size = 4) +
   scale_x_continuous(breaks = c(-1,0,1)) +
   scale_y_continuous(breaks = c(-1,0,1)) +
@@ -165,7 +162,8 @@ pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) +
   labs(x=TeX("Predicted Fold Change in $log_2$ RNA Abundance"))
 
 
-   
+# load figure panel with coefficients.
+# this is an unpleasant way of doing it; we should replace somehow.
 load(here("raw_data_analysis/data/motif_multi_context_coefficient.Rdata"))
 
 
@@ -180,8 +178,8 @@ pred_vs_abundance_combined <- wrap_plots(pred_vs_abundance_RPS3_TSA1,
 
 ggsave(pred_vs_abundance_combined, 
        file = here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"), 
-       width = 160, 
+       width = fig_width_2column, 
        height = 200,
        units = "mm",
-       dpi = 300)
+       dpi = fig_dpi)
 ```
