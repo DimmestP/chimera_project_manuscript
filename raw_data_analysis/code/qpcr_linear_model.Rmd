@@ -153,13 +153,14 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
            colour = terminator),
     ) +
   geom_pointrange(aes(ymax = -estimate + std.error, ymin = -estimate - std.error),
-                position = position_dodge2(width = 0.5),
+                position = position_dodge2(width = 0.6),
                 fatten = 1) +
   labs(y = TeX("Log_2 Fold Change in\n RNA Abundance"), 
        colour = "Terminator") +
   theme(axis.title.x = element_blank(),
         axis.text.x = element_text(angle = 90, hjust = 0, vjust = 0.5),
         axis.ticks.x = element_blank(),
+        strip.text = element_text(size = 8, face = "bold"),
         panel.spacing = unit(0, units = "cm"),
         panel.grid.major.x = element_blank(),
         axis.line.x = element_blank()) +

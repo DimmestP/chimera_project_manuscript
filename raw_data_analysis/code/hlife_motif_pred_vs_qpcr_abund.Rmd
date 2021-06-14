@@ -10,7 +10,6 @@ library(tibble)
 library(stringr)
 library(readr)
 library(latex2exp)
-library(patchwork)
 
  # set default theme for graphics
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
@@ -148,14 +147,19 @@ pred_vs_abundance_RPS3_TSA1 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS
   pred_vs_abundance_figure_options +
   coord_fixed(ratio = 1 , xlim = c(-2.5, 1.5) ,ylim = c(-2.5, 1.5)) +
   scale_colour_manual(values = RPS3_TSA1_colour_scheme) + 
-  geom_text(aes(label = r_cor_label), data = r_cor_data_TSA1_RPS3, x = -1.1, y= 1.1, parse = TRUE, size = 4) +
-  labs(y=TeX("Experimental Fold Change in $log_2$ RNA Abundance"), tag = "A")
+  geom_text(aes(label = r_cor_label), data = r_cor_data_TSA1_RPS3, 
+            x = -0.05, y = 1.05, parse = TRUE, 
+            size = text_cor_size, hjust = 1, vjust = 0) +
+  labs(y=TeX("Experimental Fold Change in $log_2$ RNA Abundance"))
 
 pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) + 
   pred_vs_abundance_figure_options +
   coord_fixed(ratio = 1 , xlim = c(-1, 1.2) ,ylim = c(-1, 1.2)) +
   scale_colour_manual(values = PIR1_colour_scheme) + 
-  geom_text(aes(label = r_cor_label), data = r_cor_data_PIR1, y = -0.7, x= 0, parse = TRUE, size = 4) +
+  geom_text(aes(label = r_cor_label), 
+            data = r_cor_data_PIR1, 
+            x = 0.95, y = -0.95, parse = TRUE, 
+            size = text_cor_size, hjust = 1, vjust = 0) +
   scale_x_continuous(breaks = c(-1,0,1)) +
   scale_y_continuous(breaks = c(-1,0,1)) +
   theme(strip.text.x = element_blank()) +
@@ -167,11 +171,13 @@ pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) +
 load(here("raw_data_analysis/data/motif_multi_context_coefficient.Rdata"))
 
 
-pred_vs_abundance_combined <- wrap_plots(pred_vs_abundance_RPS3_TSA1,
+pred_vs_abundance_combined <- plot_grid(pred_vs_abundance_RPS3_TSA1,
            pred_vs_abundance_PIR1,
            individual_linear_model_coefficients_points,
            ncol = 1,
-           heights = c(2,1,1))
+           rel_heights = c(1.7,1,1.2),
+           align = "v", axis= "lr",
+           labels = c("A","","B"))
 
 
 # combine with motif_multi_context_coefficient figure to make two panel image
@@ -179,7 +185,7 @@ pred_vs_abundance_combined <- wrap_plots(pred_vs_abundance_RPS3_TSA1,
 ggsave(pred_vs_abundance_combined, 
        file = here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"), 
        width = fig_width_2column, 
-       height = 200,
+       height = 210,
        units = "mm",
        dpi = fig_dpi)
 ```
