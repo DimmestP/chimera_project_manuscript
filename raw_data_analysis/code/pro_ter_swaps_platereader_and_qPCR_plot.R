@@ -106,7 +106,9 @@ composite_pro_ter_swap_figure
 
 ggsave(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png"),
        composite_pro_ter_swap_figure,
-       width = 165, height = 200, units = "mm", dpi=300)
+       width = fig_width_2column, 
+       height = 200, units = "mm", 
+       dpi = fig_dpi)
 
 #####
 # Create Normalised Platereader plot and add qPCR of short-vs-long
@@ -160,5 +162,8 @@ composite_norm_UTRlength_figure
 
 ggsave(here("./results_chapter/figures/pro_ter_platereader_norm_mTurq_and_mCh.png"), 
        composite_norm_UTRlength_figure,
-       width = 165, height = 150, units = "mm", dpi = 300)
+       width = fig_width_2column, 
+       height = 150, 
+       units = "mm", 
+       dpi = fig_dpi)
 

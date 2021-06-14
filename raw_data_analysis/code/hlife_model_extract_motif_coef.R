@@ -90,10 +90,10 @@ ggsave2(filename = here("results_chapter/figures/hlife_model_multi_fig.png"),
                          labels = c("A","B","","C",""),
                          nrow = 2,
                          rel_widths = c(1,1,0.5,1,1)),
-        width = 163, 
+        width = fig_width_2column, 
         height = 140,
         units = "mm",
-        dpi = 300)
+        dpi = fig_dpi)
 
 # output list of chan motif coefficients with error
 write_csv( chan_motif_coefficients %>% select(term, estimate, std.error) %>% dplyr::rename( "Motif"= "term", "Coefficient"= "estimate"), here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv"))

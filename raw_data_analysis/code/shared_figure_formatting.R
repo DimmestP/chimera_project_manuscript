@@ -18,6 +18,9 @@ theme_set(
     )
 )
 
+# set default figure widths following cell press guidelines
+fig_width_2column = 165
+fig_dpi = 350
 
 # Update geom defaults for consistent sizes
 
@@ -36,12 +39,22 @@ construct_to_label_dictionary_PIR1 <-
   tibble(construct = c("modG", "modF", "modE", "modD", "modC", "modA", "modB", "WT"), 
          label = c("mod_NTNNN", "mod_ANNNN", "mod_ATNNN", "mod_ATHNH", "mod_ATNHH", "mod_ANHHH", "mod_NTHHH", "WT"))
 
-RPS3_TSA1_colour_scheme <- c( "#6c6c6c", "#7FBF74","#C288BB", 
-                              "#71519C","#5978BA","#C05558","black")
+RPS3_TSA1_colour_scheme <- c( "WT"      = "#6c6c6c", 
+                              "mod_NGG" = "#7FBF74",
+                              "mod_HTH" = "#C288BB", 
+                              "mod_HNH" = "#71519C",
+                              "mod_NTN" = "#5978BA",
+                              "mod_NAA" = "#C05558",
+                              "mod_NNN" = "black")
 
-PIR1_colour_scheme <- c("#DD76A5","#968BC2","#71519C",
-                        "#D97F1D","#4EB0B5","#5978BA",
-                        "#C15659","#6c6c6c")
+PIR1_colour_scheme <- c("mod_NTNNN" = "#DD76A5",
+                        "mod_ANNNN" = "#968BC2",
+                        "mod_ATNNN" = "#71519C",
+                        "mod_ATHNH" ="#D97F1D",
+                        "mod_ATNHH" = "#4EB0B5", 
+                        "mod_ANHHH" = "#5978BA",
+                        "mod_NTHHH" = "#C15659",
+                        "WT" = "#6c6c6c")
 
 # Create plotting functions for  specific data sets
 
