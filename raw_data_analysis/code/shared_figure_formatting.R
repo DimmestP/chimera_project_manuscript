@@ -19,8 +19,10 @@ theme_set(
 )
 
 
+# Update geom defaults for consistent sizes
 
 update_geom_defaults("point", list(size = 2))
+update_geom_defaults("pointrange", list(size = 1, fatten = 2))
 update_geom_defaults("errorbar", list(size = 1))
 update_geom_defaults("errorbarh", list(size = 1))
 
@@ -78,12 +80,7 @@ protein_relative_abundance_figure_options <- list(
   geom_vline(xintercept=1, linetype="dotted", color = "grey50"),
   stat_summary(aes(y=Terminator,x=fluo_per_OD_at_max_gr, colour = Terminator),
                fun.data="mean_se",
-               geom="errorbarh",
-               size=1),
-  stat_summary(aes(y=Terminator,x=fluo_per_OD_at_max_gr, colour = Terminator),
-               fun="mean",
-               geom="point",
-               size = 2),
+               geom="pointrange"),
   theme(legend.position = "none",
         axis.text = element_text(size = 7),
         axis.title = element_text(size = 10)),
