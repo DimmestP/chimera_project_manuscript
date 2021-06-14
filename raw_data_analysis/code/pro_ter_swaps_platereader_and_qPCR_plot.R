@@ -45,6 +45,7 @@ high_exp_pro_mCh_mTurq <- pro_mCh_ter_protein %>%
 mCherry_protein_vs_RNA <- pro_mCh_ter_protein %>%
   group_by(Strain) %>%
   summarise(protein = mean(fluo_per_OD_at_max_gr)) %>%
+  mutate(log2protein = log2(protein)) %>%
   inner_join(pro_mCh_ter_qPCR, by = "Strain") %>%
   separate(Strain, into = c(NA,"Terminator"), sep = "(?<=y-)", remove = FALSE) %>%
   separate(Strain, into = c("Promoter",NA), sep = "(?=-m)", remove = FALSE) %>%
@@ -56,14 +57,19 @@ mCherry_protein_vs_RNA_cor <- cor(mCherry_protein_vs_RNA$protein,
 mCherry_protein_vs_RNA_cor_text <- paste(TeX(paste0("R = ", signif(abs(mCherry_protein_vs_RNA_cor),digits = 3))))
 
 mCherry_protein_vs_RNA_figure <- ggplot(mCherry_protein_vs_RNA) +
-  geom_point(aes(y = protein, x = -mRNA, colour = Terminator, shape = Promoter)) +
-  labs(y="mCherry Fluorescence per \n OD at max growth rate", x = TeX("mRNA abundance ($\\Delta$Cq)")) +
+  geom_point(aes(y = log2protein, x = -mRNA, colour = Terminator, shape = Promoter)) +
   scale_colour_hue(h = c(0, 360)+20,l=60,c=60) +
   guides(colour="none") +
-  scale_y_log2nice(omag = seq(-10, 15)) +
-  geom_text(aes(label = mCherry_protein_vs_RNA_cor_text),
-            y = 1.4,
-            x= -0.8, parse = TRUE, size = 4) +
+  scale_y_continuous("mCherry Fluorescence per \n OD at max growth rate",
+                     breaks = log2(c(12.5, 25, 50, 100, 200, 400, 800, 1600, 3200, 6400)), 
+                     labels = c("", "25", "", "100", "", "400", "", "1600", "", "6400")) +
+  scale_x_continuous(TeX("mRNA abundance ($\\Delta$Cq)"),
+                     breaks = c(-6, -5, -4, -3, -2, -1, 0, 1),
+                     labels = c("-6", "", "-4", "", "-2", "", "0", "")) +
+  coord_equal() + 
+  annotate(geom = "text", x= -0.5, y = log2(17.5),
+             label = mCherry_protein_vs_RNA_cor_text,
+             parse = TRUE, size = 4) +
   theme(legend.position = "bottom",
         axis.title = element_text(size = 10)) +
   guides(shape=guide_legend(ncol=1))
@@ -76,22 +82,26 @@ high_exp_mCh_mTurq_platereader_raw_figure <- ggplot(high_exp_pro_mCh_mTurq) +
 low_exp_mCh_mTurq_platereader_raw_figure <- ggplot(low_exp_pro_mCh_mTurq) +
   protein_raw_abundance_figure_options +
   facet_grid(Protein~Promoter) +
-  labs(x="Fluorescence per OD \n at max growth rate") +
+  scale_x_continuous("Fluorescence per OD \n at max growth rate",
+                    breaks = c(0, 500, 1000),
+                    expand = expansion(mult = 0.025)) +
   theme(legend.position = "bottom") +
-  guides(colour=guide_legend(ncol=2))
+  guides(colour=guide_legend(ncol=2, reverse= TRUE))
 
 bottom_row_swap_figure <- 
     plot_grid(low_exp_mCh_mTurq_platereader_raw_figure,
             mCherry_protein_vs_RNA_figure,
-            rel_widths = c(1.3,1),
+            rel_widths = c(1.4,1),
+            # align = "hv", axis = "tb",
+            labels = c("B","C"),
             ncol = 2)
 
 composite_pro_ter_swap_figure <- 
   plot_grid(high_exp_mCh_mTurq_platereader_raw_figure,
             bottom_row_swap_figure,
             ncol = 1,
-            rel_heights = c(1,1.3),
-            labels = c("A","B","C"))
+            rel_heights = c(1,1.35),
+            labels = c("A",""))
 composite_pro_ter_swap_figure
 
 ggsave(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png"),
