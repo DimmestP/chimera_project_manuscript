@@ -14,7 +14,8 @@ theme_set(
     theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
           panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
           panel.grid.major = element_line(size = 0.15, linetype = 'solid',colour = "grey"),
-          strip.background = element_blank()
+          strip.background = element_blank(),
+          plot.title=element_text(face = "plain", hjust = 0.5),
     )
 )
 
@@ -25,7 +26,7 @@ fig_dpi = 350
 # Update geom defaults for consistent sizes
 
 update_geom_defaults("point", list(size = 2))
-update_geom_defaults("pointrange", list(size = 1, fatten = 1.8))
+update_geom_defaults("pointrange", list(size = 1, fatten = 1.5))
 update_geom_defaults("errorbar", list(size = 1))
 update_geom_defaults("errorbarh", list(size = 1))
 text_cor_size = 3.5
@@ -44,6 +45,8 @@ geom_diagline <- function(slope = 1,
               size = size,
               ...)
 }
+# default vertical line with intercept 1
+geom_vline1 <- geom_vline(xintercept=1, linetype="dashed", color = "black",size = 0.2)
 
 # Set general variables for motif construct names and colour schemes
 
@@ -75,14 +78,12 @@ PIR1_colour_scheme <- c("mod_NTNNN" = "#DD76A5",
 # Create plotting functions for  specific data sets
 
 RNA_relative_abundance_figure_options <- list(
+  geom_vline1,
   geom_point(aes(x=rel_abund_delta_deltacq,y=UTR3,colour=UTR3),
              shape = 18, size = 2),
   scale_x_log2nice(omag = seq(-5,5),scilabels=FALSE),
   guides(colour=FALSE),
-  geom_vline(xintercept=1, linetype="dotted", color = "grey50"),
   theme(axis.text.x=element_text(angle=0,vjust=0.5),
-        axis.text = element_text(size = 7),
-        axis.title = element_text(size = 10),
         legend.position="bottom",
         legend.box.margin=margin(20,10,10,180)),
   stat_summary(aes(x=rel_abund_delta_deltacq,y=UTR3),
@@ -91,28 +92,24 @@ RNA_relative_abundance_figure_options <- list(
   )
 
 protein_raw_abundance_figure_options <- list(
+  geom_vline1,
   geom_point(aes(y=Terminator,x=fluo_per_OD_at_max_gr, colour = Terminator),
              shape = 18, size = 2),
   scale_colour_hue(h = c(0, 360)+20,l=60,c=60),
-  geom_vline(xintercept=1, linetype="dotted", color = "grey50"),
   stat_summary(aes(y=Terminator,x=fluo_per_OD_at_max_gr),
                fun="mean",colour="black",
                geom="crossbar", size=0.3, width=0.9),
-  theme(legend.position = "none",
-        axis.text = element_text(size = 7),
-        axis.title = element_text(size = 10)),
+  theme(legend.position = "none"),
   scale_x_continuous(oob=oob_squish, limits = c(0,NA))
 )
 
 protein_relative_abundance_figure_options <- list(
   scale_colour_hue(h = c(0, 360)+20,l=60,c=60),
-  geom_vline(xintercept=1, linetype="dotted", color = "grey50"),
+  geom_vline1,
   stat_summary(aes(y=Terminator,x=fluo_per_OD_at_max_gr, colour = Terminator),
                fun.data="mean_se",
                geom="pointrange"),
-  theme(legend.position = "none",
-        axis.text = element_text(size = 7),
-        axis.title = element_text(size = 10)),
+  theme(legend.position = "none"),
   scale_x_continuous(oob=oob_squish, limits = c(0,1.9))
 )
 

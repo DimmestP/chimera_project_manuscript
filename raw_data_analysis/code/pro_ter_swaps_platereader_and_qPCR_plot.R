@@ -67,11 +67,11 @@ mCherry_protein_vs_RNA_figure <- ggplot(mCherry_protein_vs_RNA) +
                      breaks = c(-6, -5, -4, -3, -2, -1, 0, 1),
                      labels = c("-6", "", "-4", "", "-2", "", "0", "")) +
   coord_equal() + 
-  annotate(geom = "text", x= -0.5, y = log2(17.5),
-             label = mCherry_protein_vs_RNA_cor_text,
-             parse = TRUE, size = 4) +
-  theme(legend.position = "bottom",
-        axis.title = element_text(size = 10)) +
+  annotate(geom = "text", x= -0.25, y = log2(17.5),
+           label = mCherry_protein_vs_RNA_cor_text,
+           parse = TRUE, 
+           size = text_cor_size) +
+  theme(legend.position = "bottom") +
   guides(shape=guide_legend(ncol=1))
 
 high_exp_mCh_mTurq_platereader_raw_figure <- ggplot(high_exp_pro_mCh_mTurq) +
@@ -84,24 +84,21 @@ low_exp_mCh_mTurq_platereader_raw_figure <- ggplot(low_exp_pro_mCh_mTurq) +
   facet_grid(Protein~Promoter) +
   scale_x_continuous("Fluorescence per OD \n at max growth rate",
                     breaks = c(0, 500, 1000),
-                    expand = expansion(mult = 0.025)) +
-  theme(legend.position = "bottom") +
-  guides(colour=guide_legend(ncol=2, reverse= TRUE))
+                    expand = expansion(mult = 0.025))
 
 bottom_row_swap_figure <- 
     plot_grid(low_exp_mCh_mTurq_platereader_raw_figure,
             mCherry_protein_vs_RNA_figure,
-            rel_widths = c(1.4,1),
-            # align = "hv", axis = "tb",
-            labels = c("B","C"),
+            rel_widths = c(1.5,1),
+            labels = c("C","D"),
             ncol = 2)
 
 composite_pro_ter_swap_figure <- 
   plot_grid(high_exp_mCh_mTurq_platereader_raw_figure,
             bottom_row_swap_figure,
             ncol = 1,
-            rel_heights = c(1,1.35),
-            labels = c("A",""))
+            rel_heights = c(1,1.05),
+            labels = c("B",""))
 composite_pro_ter_swap_figure
 
 ggsave(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png"),
@@ -120,15 +117,15 @@ shortvslong_platesnorm_all_median <- read_csv(here("raw_data_analysis/data/norm_
 normalised_plot_SRO9 <- ggplot(data = shortvslong_platesnorm_all_median %>% filter(Promoter == "pSRO9")) +
   RNA_relative_abundance_figure_options +
   labs(x="Fold change in RNA abundance \n relative to tSRO9_543bp \n (log2 scale)", title = "SRO9", y = NULL) +
-  scale_colour_manual(values=c("#CC6666", "black")) +
-  theme(axis.text.y=element_text(colour=c("#CC6666", "black")), plot.title = element_text(face = "plain", hjust = 0.5, size = 10)) +
+  scale_colour_manual(values=c("black", "#CC6666")) +
+  # theme(axis.text.y=element_text(colour=c("black", "#CC6666"))) +
   geom_vline(xintercept=1, linetype="dotted", color = "grey50")
 
 normalised_plot_RPS3 <- ggplot(data = shortvslong_platesnorm_all_median %>% filter(Promoter == "pRPS3")) +
   RNA_relative_abundance_figure_options + 
   labs(x="Fold change in RNA abundance \n relative to tRPS3_200bp \n (log2 scale)", title = "RPS3", y="Terminator \n Length") +
-  scale_colour_manual(values=c("#288a2e","#a84a9a","#6f3ba1")) +
-  theme(axis.text.y=element_text(colour=c("#288a2e","#a84a9a", "#6f3ba1")), plot.title = element_text(face = "plain", hjust = 0.5, size = 10)) +
+  scale_colour_manual(values=c("black","#a84a9a","#6f3ba1")) +
+  # theme(axis.text.y=element_text(colour=c("black","#a84a9a", "#6f3ba1"))) +
   geom_vline(xintercept=1, linetype="dotted", color = "grey50")
 
 norm_pro_mCh_ter_all <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCh-ter_swaps_summary_PGK1_norm.csv"))
@@ -156,14 +153,14 @@ UTR_length_panelB <- plot_grid(normalised_plot_RPS3, normalised_plot_SRO9, ncol 
 composite_norm_UTRlength_figure <- plot_grid(norm_mTurq_and_mCherry_figure, 
                               UTR_length_panelB, 
                               labels = c("A","B"),
-                              rel_heights = c(2,1),
+                              rel_heights = c(2,1.2),
                               ncol = 1)
 composite_norm_UTRlength_figure
 
 ggsave(here("./results_chapter/figures/pro_ter_platereader_norm_mTurq_and_mCh.png"), 
        composite_norm_UTRlength_figure,
        width = fig_width_2column, 
-       height = 150, 
+       height = 160, 
        units = "mm", 
        dpi = fig_dpi)
 
