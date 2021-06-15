@@ -131,11 +131,11 @@ pred_vs_actual_plot_data_PIR1 <- pPIR1_pPGK1_pSRO9_tPIR1_norm_mean %>%
   inner_join(construct_to_label_dictionary_PIR1)
 
 pred_vs_abundance_figure_options <- list(
+  geom_diagline(),
   geom_point(aes(predict_motif_effect, -mean_delta_delta_cq, colour = label), show.legend = FALSE),
    geom_errorbarh(aes(y = -mean_delta_delta_cq, xmax = predict_motif_effect + predict_motif_error, xmin = predict_motif_effect - predict_motif_error, colour = label)),
  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = label)),
   facet_grid(terminator~pro),
-  geom_abline(slope = 1, intercept = 0, colour = "grey"),
   labs(x="", y="", colour = "Construct"),
  theme(strip.text = element_text(size = 7, face = "bold"),
        axis.title.y = element_text(hjust = 1.1))
@@ -146,7 +146,9 @@ pred_vs_abundance_figure_options <- list(
 pred_vs_abundance_RPS3_TSA1 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS3 %>% filter(terminator %in% c("tRPS3", "tTSA1"))) + 
   pred_vs_abundance_figure_options +
   coord_fixed(ratio = 1 , xlim = c(-2.5, 1.5) ,ylim = c(-2.5, 1.5)) +
-  scale_colour_manual(values = RPS3_TSA1_colour_scheme) + 
+  scale_colour_manual("Terminator",
+                      values = RPS3_TSA1_colour_scheme,
+                      guide = guide_legend(reverse=TRUE)) + 
   geom_text(aes(label = r_cor_label), data = r_cor_data_TSA1_RPS3, 
             x = -0.05, y = 1.05, parse = TRUE, 
             size = text_cor_size, hjust = 1, vjust = 0) +
@@ -155,7 +157,9 @@ pred_vs_abundance_RPS3_TSA1 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS
 pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) + 
   pred_vs_abundance_figure_options +
   coord_fixed(ratio = 1 , xlim = c(-1, 1.2) ,ylim = c(-1, 1.2)) +
-  scale_colour_manual(values = PIR1_colour_scheme) + 
+  scale_colour_manual("Terminator",
+                      values = PIR1_colour_scheme,
+                      guide = guide_legend(reverse=TRUE)) + 
   geom_text(aes(label = r_cor_label), 
             data = r_cor_data_PIR1, 
             x = 0.95, y = -0.95, parse = TRUE, 

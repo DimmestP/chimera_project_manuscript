@@ -8,9 +8,9 @@ library(tidyqpcr)
 theme_set(
   theme_cowplot(font_size = 12, 
                 font_family = "sans",
-                rel_small = 9/12,
-                rel_tiny = 8/12,
-                rel_large = 14/12) %+replace% 
+                rel_small = 10/12,
+                rel_tiny = 9/12,
+                rel_large = 12/12) %+replace% 
     theme(plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
           panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
           panel.grid.major = element_line(size = 0.15, linetype = 'solid',colour = "grey"),
@@ -25,10 +25,25 @@ fig_dpi = 350
 # Update geom defaults for consistent sizes
 
 update_geom_defaults("point", list(size = 2))
-update_geom_defaults("pointrange", list(size = 1, fatten = 2))
+update_geom_defaults("pointrange", list(size = 1, fatten = 1.8))
 update_geom_defaults("errorbar", list(size = 1))
 update_geom_defaults("errorbarh", list(size = 1))
 text_cor_size = 3.5
+
+# default diagonal line
+geom_diagline <- function(slope = 1, 
+                          intercept = 0, 
+                          linetype = "dashed", 
+                          colour = "black",
+                          size = 0.2,
+                          ...) {
+  geom_abline(slope = slope,
+              intercept = intercept,
+              linetype = linetype,
+              colour = colour,
+              size = size,
+              ...)
+}
 
 # Set general variables for motif construct names and colour schemes
 

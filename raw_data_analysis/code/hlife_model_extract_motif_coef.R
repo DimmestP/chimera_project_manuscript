@@ -60,7 +60,7 @@ model_coefficients <-   ggplot(combined_motif_coefficients,
                                    xmin = estimate_S - std.error_S, 
                                    xmax = estimate_S + std.error_S, 
                                    colour = term_descending)) +
-  geom_abline(intercept = 0, slope = 1, size = 0.2, linetype = "dashed") +
+  geom_diagline() + 
   geom_hline(yintercept = 0,size = 0.2) +
   geom_vline(xintercept = 0,size = 0.2) +
   geom_errorbar() +

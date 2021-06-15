@@ -242,7 +242,7 @@ halflife_limits <- c(0.9,200)
 
 options_half_life_plots <-
   list(
-    geom_abline(intercept = 0, slope = 1, size = 0.2, linetype = "dashed"),
+    geom_diagline(),
     geom_bin2d(bins = 70),
     scale_y_log10(breaks = halflife_breaks,
                   minor_breaks = halflife_minor_breaks,

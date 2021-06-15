@@ -153,7 +153,7 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
            colour = terminator),
     ) +
   geom_pointrange(aes(ymax = -estimate + std.error, ymin = -estimate - std.error),
-                position = position_dodge2(width = 0.6),
+                position = position_dodge2(width = 0.7),
                 fatten = 1) +
   labs(y = TeX("Log_2 Fold Change in\n RNA Abundance"), 
        colour = "Terminator") +
@@ -168,7 +168,8 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
   facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "TGTAHMNTA", "HWNCATTWY", "TGTAHMNTA\n+\nHWNCATTWY")), 
              scales = "free_x", 
              space = "free_x") +
-  geom_hline(yintercept = 0)
+  geom_hline(yintercept = 0)  +
+  geom_vline(xintercept = c(1.5,2.5), colour = "grey50", size = 0.1)
 
 individual_linear_model_coefficients_points
 
