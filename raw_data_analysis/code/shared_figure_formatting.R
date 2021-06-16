@@ -81,14 +81,15 @@ PIR1_colour_scheme <- c("mod_NTNNN" = "#DD76A5",
 
 RNA_relative_abundance_figure_options <- list(
   geom_vline1,
-  geom_point(aes(x=rel_abund_delta_deltacq,y=UTR3,colour=UTR3),
+  geom_point(aes(x=rel_abund_delta_deltacq,
+                 y=mod_label,colour=mod_label),
              shape = 18, size = 2),
   scale_x_log2nice(omag = seq(-5,5),scilabels=FALSE),
   guides(colour=FALSE),
   theme(axis.text.x=element_text(angle=0,vjust=0.5),
         legend.position="bottom",
         legend.box.margin=margin(20,10,10,180)),
-  stat_summary(aes(x=rel_abund_delta_deltacq,y=UTR3),
+  stat_summary(aes(x=rel_abund_delta_deltacq,y=mod_label),
                fun="mean",colour="black",
                geom="crossbar", size=0.3, width=0.9)
   )
