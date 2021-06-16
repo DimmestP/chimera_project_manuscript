@@ -137,8 +137,7 @@ pred_vs_abundance_figure_options <- list(
  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = label)),
   facet_grid(terminator~pro),
   labs(x="", y="", colour = "Construct"),
- theme(strip.text = element_text(size = 7, face = "bold"),
-       axis.title.y = element_text(hjust = 1.1))
+ theme(axis.title.y = element_text(hjust = 1.1))
 )
 
 
@@ -166,7 +165,6 @@ pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) +
             size = text_cor_size, hjust = 1, vjust = 0) +
   scale_x_continuous(breaks = c(-1,0,1)) +
   scale_y_continuous(breaks = c(-1,0,1)) +
-  theme(strip.text.x = element_blank()) +
   labs(x=TeX("Predicted Fold Change in $log_2$ RNA Abundance"))
 
 
@@ -179,7 +177,7 @@ pred_vs_abundance_combined <- plot_grid(pred_vs_abundance_RPS3_TSA1,
            pred_vs_abundance_PIR1,
            individual_linear_model_coefficients_points,
            ncol = 1,
-           rel_heights = c(1.7,1,1.2),
+           rel_heights = c(1.58, 1, 1.14),
            align = "v", axis= "lr",
            labels = c("A","","B"))
 

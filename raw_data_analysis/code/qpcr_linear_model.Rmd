@@ -164,11 +164,12 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
         panel.spacing = unit(0, units = "cm"),
         panel.grid.major.x = element_blank(),
         axis.line.x = element_blank()) +
-  scale_colour_manual(breaks = c("tTSA1", "tRPS3", "tPIR1"), values = c("#56B4E9", "#D55E00", "#000001")) +
+  scale_colour_manual(breaks = c("tTSA1", "tRPS3", "tPIR1"), values = c("#56B4E9", "#D55E00", "#000001"),
+                      guide = guide_legend(override.aes = list(size=0.5))) +
   facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "TGTAHMNTA", "HWNCATTWY", "TGTAHMNTA\n+\nHWNCATTWY")), 
              scales = "free_x", 
              space = "free_x") +
-  geom_hline(yintercept = 0)  +
+  geom_hline(yintercept = 0, linetype = "dashed", size = 0.2, colour = "black")  +
   geom_vline(xintercept = c(1.5,2.5), colour = "grey50", size = 0.1)
 
 individual_linear_model_coefficients_points

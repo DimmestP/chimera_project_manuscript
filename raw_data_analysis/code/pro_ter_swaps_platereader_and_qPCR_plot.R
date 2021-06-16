@@ -89,7 +89,7 @@ low_exp_mCh_mTurq_platereader_raw_figure <- ggplot(low_exp_pro_mCh_mTurq) +
 bottom_row_swap_figure <- 
     plot_grid(low_exp_mCh_mTurq_platereader_raw_figure,
             mCherry_protein_vs_RNA_figure,
-            rel_widths = c(1.5,1),
+            rel_widths = c(1.45,1),
             labels = c("C","D"),
             ncol = 2)
 
@@ -104,7 +104,7 @@ composite_pro_ter_swap_figure
 ggsave(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png"),
        composite_pro_ter_swap_figure,
        width = fig_width_2column, 
-       height = 200, units = "mm", 
+       height = 220, units = "mm", 
        dpi = fig_dpi)
 
 #####
@@ -160,7 +160,7 @@ composite_norm_UTRlength_figure
 ggsave(here("./results_chapter/figures/pro_ter_platereader_norm_mTurq_and_mCh.png"), 
        composite_norm_UTRlength_figure,
        width = fig_width_2column, 
-       height = 160, 
+       height = 175, 
        units = "mm", 
        dpi = fig_dpi)
 

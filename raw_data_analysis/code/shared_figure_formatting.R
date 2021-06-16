@@ -15,7 +15,8 @@ theme_set(
           panel.border=element_rect(colour = "grey50",linetype = "solid",size=0.5),
           panel.grid.major = element_line(size = 0.15, linetype = 'solid',colour = "grey"),
           strip.background = element_blank(),
-          plot.title=element_text(face = "plain", hjust = 0.5),
+          plot.title=element_text(face = "bold", hjust = 0.5),
+          strip.text=element_text(size = 10, face = "bold")
     )
 )
 
