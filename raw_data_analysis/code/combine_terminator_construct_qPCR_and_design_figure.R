@@ -103,7 +103,7 @@ deletion_layout <- "AC
 
 ## Can we modularize this plot to produce the tableGrob in one place, then call it from the draw?
 deletion_construct_plot <- wrap_elements(full = (wrap_elements(full = (ggdraw() + 
-                                                                          draw_image(image_read_svg(here("raw_data_analysis/figures/terminator_construct_designs/PIR1_motif_WT_construct_design.svg"))))) +
+                                                                          draw_image(image_read(here("raw_data_analysis/figures/terminator_construct_designs/PIR1_motif_WT_construct_design.png"))))) +
                                                     wrap_elements(full = tableGrob(tibble("Construct" = rev(c("mod_NTNNN", "mod_ANNNN", "mod_ATNNN", "mod_ATHNH", 
                                                                                                           "mod_ATNHH", "mod_ANHHH", "mod_NTHHH", "WT")), 
                                                                                           "Motif 1" = c("ATATTC", "Random", "ATATTC", 
