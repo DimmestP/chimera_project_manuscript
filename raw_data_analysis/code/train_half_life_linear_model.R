@@ -118,7 +118,7 @@ motif_regex<- deduplicated_motifs %>%
 
 single_count_median_3UTR_motifs_freq <- motif_count_function(motif_regex$regex, single_count_median_3UTR_threePrimeUTR$threePrimeUTR, gene_name = single_count_median_3UTR_motifs_freq$transcriptName)
 
-colnames(single_count_median_3UTR_motifs_freq) <-  c("transcriptName", "threePrimeUTR", motif_regex$newMotifIUPAC)
+colnames(single_count_median_3UTR_motifs_freq) <-  c("geneName", "transcriptSeque", motif_regex$newMotifIUPAC)
 
 # combine motif,codon and chan decay datasets
 single_count_decay_prediction_dataset_chan <- single_count_median_3UTR_motifs_freq %>%
