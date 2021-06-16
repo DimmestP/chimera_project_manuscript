@@ -49,7 +49,7 @@ insertion_layout <- "AC
 
 ## Can we modularize this plot to produce the tableGrob in one place, then call it from the draw?
 insertion_construct_plot <- wrap_elements(full = (wrap_elements(full = (ggdraw() + 
-                                                    draw_image(image_read_svg(here("raw_data_analysis/figures/terminator_construct_designs/RPS3_TSA1_motif_mod0_construct_design.svg"))))) +
+                                                    draw_image(image_read(here("raw_data_analysis/figures/terminator_construct_designs/RPS3_TSA1_motif_mod0_construct_design.png"))))) +
   wrap_elements(full = tableGrob(tibble("Construct" = c("mod_NNN", "mod_NAA", "mod_NTN",
                                                 "mod_HNH", "mod_HTH", "mod_NGG", "WT"), 
                                  "Motif 1" = c("Random", "Random", "Random", 
