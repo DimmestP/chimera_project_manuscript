@@ -27,6 +27,7 @@ fig_dpi = 350
 
 update_geom_defaults("point", list(size = 2))
 update_geom_defaults("pointrange", list(size = 1, fatten = 1.5))
+update_geom_defaults("linerange", list(size = 1))
 update_geom_defaults("errorbar", list(size = 1))
 update_geom_defaults("errorbarh", list(size = 1))
 text_cor_size = 3.5

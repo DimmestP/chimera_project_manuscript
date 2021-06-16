@@ -267,7 +267,8 @@ chan_pred_vs_obvs_plot <-
   annotate("text",
            label = paste0("R^2 == ",signif(chan_step_model_r_squared,2)),
            parse = TRUE,
-           size = 4, x = 15, y = 1.1, hjust = 0, vjust = 0)
+           size = text_cor_size,
+           x = 15, y = 1.1, hjust = 0, vjust = 0)
 
 sun_pred_vs_obvs_plot <- 
   ggplot(two_data_sets_predictive_power_tibble %>% filter(Data_Set == "Sun"),
@@ -277,7 +278,8 @@ sun_pred_vs_obvs_plot <-
   annotate("text",
            label = paste0("R^2 == ",signif(sun_step_model_r_squared,2)),
            parse = TRUE,
-           size = 4, x = 15, y = 1.1, hjust = 0, vjust = 0)
+           size = text_cor_size,
+           x = 15, y = 1.1, hjust = 0, vjust = 0)
 
 # output chan vs sun comparison graph
 combined_hlife_data_sets <- inner_join(sun_decay_hlife, 
@@ -296,7 +298,8 @@ dataset_comparison <-
        x = TeX("$\\lambda^{1/2}_{Chan}$")) +
   annotate("text",
            label = paste0("R = ",signif(decay_data_set_cor,2)),
-           size = 4, x = 11, y = 1.1, hjust = 0, vjust = 0)
+           size = text_cor_size,
+           x = 11, y = 1.1, hjust = 0, vjust = 0)
 
 
 # output model predictive power and dataset comparison figures
