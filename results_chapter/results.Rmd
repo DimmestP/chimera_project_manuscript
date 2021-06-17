@@ -106,21 +106,21 @@ Altogether 7 constructs were designed for these two host terminators; the wildty
 For each terminator, we created constructs paired with each of the native promoter (pRPS3 or pTSA1), the high-expression pPGK1, and the low-expression pSRO9.
 
 Motifs predicted to affect half-life indeed affect mRNA abundance when inserted into tRPS3 in reporter constructs(Fig \@ref(fig:tRPS3-tTSA1-design-and-qpcr)B).
-We measured mRNA abundance by RT-qPCR across 6 biological replicates, each quantufied in 3 technical replicates and normalised by the $\Delta Cq$ method against values from 3 reference mRNAs (see methods - CHECK THIS).
+We measured mRNA abundance by RT-qPCR across 6 biological replicates, each quantified in 3 technical replicates and normalised by the $\Delta Cq$ method against values from 3 reference mRNAs (see methods - CHECK THIS).
 Insertion of two copies of ATATTC into generally lowers the mRNA abundance, as much as 4-fold when paired with the pRPS3 promoter. 
 Insertion of either TGTAHMNTA, or 2 copies of HWNCATTWY, tends to decrease mRNA abundance, and the combination tends to further decrease mRNA abundance.
 However, the putative stability motif GTATACCTA does not consistently or strongly affect mRNA abundance.
-Protein fluorescence results show a correlation between mRNA expression and protein expression (Sup Fig \@ref(fig:protein-vs-RNA-plot-motifs).
-However, comparison of the WT and control (mod_NNN) terminators does show that the creation of the insertion sites alone has an effect on mRNA levels
+Protein fluorescence results show a correlation between mRNA expression and protein expression (Sup Fig \@ref(fig:protein-vs-RNA-plot-motifs)).
+However, comparison of the WT and control (mod_NNN) terminators does show that the creation of the insertion sites alone has an effect on mRNA levels.
 
-Inserting the same motifs into our second host terminator gives qualitatively similar results \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
+Inserting the same motifs into our second host terminator gives qualitatively similar results (\@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
 Decay motifs generally lead to decay, although ATATTC has a weaker effect in tTSA1 than in tRPS3, and TGTAHMNTA has a stronger effect in tTSA1 than tRPS3.
 The putative stability motif GTATACCTA again has little effect.
 
-We next quantified the effects of removing decay motifs from from a native yeast terminator. 
+We next quantified the effects of removing decay motifs from a native yeast terminator. 
 We selected the cell wall protein PIR1 as our host terminator, due to the presence of ATATTC, TGTAHMNTA, and HWNCATTWY motifs, within a short and de-novo-synthesizable terminator.
 We designed 8 terminators in which the motif occurrences in tPIR1 were replaced by scrambled sequences, (Fig \@ref(fig:tPIR1-design-and-qpcr)A).
-We find that the removal of almost any decay motif from tPIR1 results in an increase in mRNA levels (\@ref(fig:tPIR1-design-and-qpcr)B)).
+We find that the removal of almost any decay motif from tPIR1 results in an increase in mRNA levels (Fig \@ref(fig:tPIR1-design-and-qpcr)B)).
 
 
 Comparison of mRNA abundance across all constructs, (Figs \@ref(fig:tRPS3-tTSA1-design-and-qpcr)B, \@ref(fig:tRPS3-tTSA1-design-and-qpcr)C and \@ref(fig:tPIR1-design-and-qpcr)B), shows motif contributions change in magnitude but not direction depending on the context of the rest of the construct. 

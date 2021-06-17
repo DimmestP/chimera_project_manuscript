@@ -9,12 +9,12 @@ output:
 
 *Saccharomyces cerevisiae* strain BY4741 (*MATa his3$\Delta1$ leu2$\Delta0$ met15$\Delta0$ ura3$\Delta0$*) was used as the wild-type strain in this study, and the host for all yeast plasmid transformations.
 For all quantitative assays, plasmid-transformed strains were grown in synthetic complete medium without uracil (SC-URA), containing 0.69% yeast nitrogen base without amino acids and with ammonium sulfate (Formedium, Norfolk, UK), 0.193% amino acid drop-out supplement mixture (Formedium, Norfolk, UK) and 2% glucose.
-To prepare BY4741 for transomation, we grew in YPDA medium, containing 2% peptone, 1% yeast extract, 2% glucose and 0.004% adenine. 
+To prepare BY4741 for transformation, we grew in YPDA medium, containing 2% peptone, 1% yeast extract, 2% glucose and 0.004% adenine. 
 
 ## Construction of chimeric reporter plasmids
 
 All fluorescence reporter plasmids were constructed by Golden Gate assembly using the YeastFab system as described in @Garcia2018. 
-Promoters, coding sequnces and terminators were either amplified from the yeast genome or synthesised by a commercial vendor (IDT) then cloned into a parts accepting plasmid (HcKan_P for promoters, HcKan_O for coding sequences and HcKan_T for terminators) by Golden Gate assembly using Bsa1-HFv2 (NEB) to create the promoter-HcKan_P, ORF-HcKan_O and terminator-HcKan_T parts libraries. 
+Promoters, coding sequences and terminators were either amplified from the yeast genome or synthesised by a commercial vendor (IDT) then cloned into a parts accepting plasmid (HcKan_P for promoters, HcKan_O for coding sequences and HcKan_T for terminators) by Golden Gate assembly using Bsa1-HFv2 (NEB) to create the promoter-HcKan_P, ORF-HcKan_O and terminator-HcKan_T parts libraries. 
 Using these parts libraries, the promoters, coding sequences and terminators were assembled together into the transcription unit acceptor plasmids (POT1-ccdB) by Golden Gate assembly using Esp31 (NEB); these are low-copy centromeric plasmids with URA3 selection, as described in @Garcia2018.
 Plasmid inserts were confirmed by Sanger sequencing (MRC PPU DNA Sequencing and Services, Dundee). 
 DNA sequences used in this study are summarised in **Supplementary table X**. 
@@ -30,8 +30,8 @@ Diluted cultures were grown at 30&deg;C in a shaking incubator set at 90 rpm to 
 All remaining media was removed with an aspirator. Pelleted cells in the plate were stored in -80&deg;C.
 
 
-To extract RNA, we adapted a silica column RNA/DNA extraction protocol from Zymo research (Irvine, Clifornia, USA). 
-The pelleted cells were thawed and individually resuspended in 400 $\mu$l RNA binding buffer (Zymo cat #R1013-2), then transerred to 2 ml screw cap tubes containing zirconia beads, lysed using the Precellys Evolution homogeniser then pelleted by centrifugation at 12,000g for 1.5 minutes. 
+To extract RNA, we adapted a silica column RNA/DNA extraction protocol from Zymo research (Irvine, California, USA). 
+The pelleted cells were thawed and individually resuspended in 400 $\mu$l RNA binding buffer (Zymo cat #R1013-2), then transferred to 2 ml screw cap tubes containing zirconia beads, lysed using the Precellys Evolution homogeniser then pelleted by centrifugation at 12,000g for 1.5 minutes. 
 The supernatant was transferred to a Zymo Spin IIICG column (Zymo cat #C1006) then centrifuged at 12,000g for 1 minute. 
 The flow through was mixed with 1 volume of ethanol then transferred to a Zymo Spin IIC column (Zymo cat #C1011) and centrifuged at 12,000g for 1 minute.
 This flow through was discarded and 1 volume of DNA/RNA Prep buffer (Zymo cat #D7010-2) was added then centrifuged at 12,000g for 1 minute. 
@@ -74,7 +74,7 @@ Plate reader data were analysed using omniplate software [@Swain2016]. Omniplate
 
 ## Determining 3'UTR decay motifs
 
-We initially selected 69 3'UTR motifs to investigate from three separate studies of cis-regulatory sequences suspected to regulate mRNA decay [@Shalgi2005;@Hogan2008; @Cheng2017]. To shortlist this list to 4 suitable candidates to test for context dependence, we determined each motif's constribution to a linear model predicting half life. Following Cheng et al (2017), we quantified the effect of motifs on transcript half-life using a linear model predicting half life on the basis of codon usage, 3'UTR length, and 3'UTR motif frequency.
+We initially selected 69 3'UTR motifs to investigate from three separate studies of cis-regulatory sequences suspected to regulate mRNA decay [@Shalgi2005;@Hogan2008; @Cheng2017]. To shortlist this list to 4 suitable candidates to test for context dependence, we determined each motif's constribution to a linear model predicting half life. Following @Cheng2017, we quantified the effect of motifs on transcript half-life using a linear model predicting half life on the basis of codon usage, 3'UTR length, and 3'UTR motif frequency.
 $$log_2(\lambda_g^{1/2}) = \sum_c\beta_cp_{cg} + \sum_m\alpha_mn_{mg} + \gamma \omega_g + \epsilon_g$$
 where $\lambda_g^{1/2}$ is the half life of gene g, $\beta_c$ is the coefficient associated with codon c, $p_{cg}$ is the proportion of gene g's coding sequence that corresponds to codon c, $\gamma$ is the coefficient associated with 3'UTR length, $\omega_g$ is the 3'UTR length of gene $g$, $\alpha_m$ is the coefficient associated with motif $m$, $n_{mg}$ is number of occurences of motif $m$ in gene $g$'s 3'UTR, and $\epsilon_g$ is the noise term.
 We used the median 3'UTR length estimates from the TIF-seq analysis in @Pelechano2013 for the length values and also to assess which sequence to use for motif search. @Pelechano2013 cluster similar TIF-seq reads into major transcript isoforms, mTIFs. The median 3'UTR length for each gene is then calculated over all distinct mTIFs.
@@ -99,11 +99,11 @@ RPS3 was chosen as the first 3'UTR for inserting motifs into as it was the only 
 The tRPS3 3'UTR-terminator was modified to incorporate three 9 nt insertion sites for motifs (M1, M2 and M3).
 The M1 was inserted 24 nt downstream of the stop codon, M2 was inserted 15 nt downstream of M1 and the final insert M3 was inserted 4 nt downstream of M2 (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
 These positions were selected based out key design criteria (SUP FIGURE/NOTE X).
-A control tRPS3 3'UTR mod0 was designed to incorporate scrambled/random bases in each insertion site (Figure 1A).
+A control tRPS3 3'UTR mod0 was designed to incorporate scrambled/random bases in each insertion site.
 Further modified 3'UTR-terminator designs were designed to incorporate individual motifs of interest previously identified, within the insertion sites described (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
 
 We chose an alternative 3'UTR for screening the effects of inserting motifs of interest with by searching for characteristics similar to RPS3.
-To this end, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following critera; 1) does not contain any of the original 69 motifs of interest, 2) < 300 nt in length and 3) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq data set.
+To this end, median 3'UTRs were extracted from the @Pelechano2013 dataset filtered for the following critera; 1) does not contain any of the original 69 motifs of interest, 2) < 300 nt in length and 3) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq data set.
 The resulting candidates are summarised in the supplementary table.
 
 Similar to the modified RPS3 3'UTR-terminator designs, three 9 nt insertion sites (M1, M2 and M3).

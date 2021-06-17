@@ -29,7 +29,7 @@ For example, a motif may act as the regulatory binding site of a TRE only after 
 
 Temporal regulation by successive CREs is common in developmental processes.
 For example, *C. elegans* lin-4 is a non-coding RNA gene crucial for regulating cell fates during the early stages of larval development [@Wightman1993].
-Lin-4 is a small RNA that acts as a TRE by binding to to a repeated motif in the 3'UTR of its target mRNA lin-14, and inhibiting the translation of lin-14 [@Lee1993].
+Lin-4 is a small RNA that acts as a TRE by binding to a repeated motif in the 3'UTR of its target mRNA lin-14, and inhibiting the translation of lin-14 [@Lee1993].
 Since lin-4 is only expressed at the end of the first larval development stage, the 3'UTR motifs in lin-14 only begin to inhibit its translation late into stage 1, initiating the start of stage 2 [@Olsen1999].
 The regulation of lin-4 by lin-14 binding to the 3'UTR thus depends on the temporal expression pattern encoded by lin-4's promoter.
 Similarly, to establish meiotic chromosome segregation in budding yeast, mRNA encoding cyclin CLB3 is transcribed in stage I of meiosis, but is translationally repressed until stage II of meiosis.
@@ -47,7 +47,7 @@ Another example where the effect of CRE on a transcript depends on co-localisati
 Yeast cell wall proteins such as Sun4 and Tos6 are translationally repressed by Ssd1 [@Jansen2009], which binds the 5'UTRs of their transcripts [@Hogan2008; @Bayne2020].
 It is thought that these transcripts are translationally activated at bud sites after the phosphorylation of Ssd1 by a localised kinase, Cbk1 [@Jansen2009].
 There is no direct evidence that Ssd1 is involved in RNA transport, so this localised activation presumably depends on localisation that is conferred by other CREs, that might recruit other RNA-binding proteins known to be associated with those transcripts [@Hogan2008].
-We note that post-transcriptional regulation of SUN4 and TOS6 might explain the repressive effect of their terminators iwhen paired with high-expression promoters (Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
+We note that post-transcriptional regulation of SUN4 and TOS6 might explain the repressive effect of their terminators when paired with high-expression promoters (Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
 
 Secondary structures can be integral to motif function, and secondary structure depends on sequences beyond a motif.
 Again for ASH1, key cis-regulatory elements depend on secondary structure [@Olivier2005].
