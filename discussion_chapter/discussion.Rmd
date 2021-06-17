@@ -47,7 +47,7 @@ Another example where the effect of CRE on a transcript depends on co-localisati
 Yeast cell wall proteins such as Sun4 and Tos6 are translationally repressed by Ssd1 [@Jansen2009], which binds the 5'UTRs of their transcripts [@Hogan2008; @Bayne2020].
 It is thought that these transcripts are translationally activated at bud sites after the phosphorylation of Ssd1 by a localised kinase, Cbk1 [@Jansen2009].
 There is no direct evidence that Ssd1 is involved in RNA transport, so this localised activation presumably depends on localisation that is conferred by other CREs, that might recruit other RNA-binding proteins known to be associated with those transcripts [@Hogan2008].
-We note that post-transcriptional regulation of SUN4 and TOS6 might explain the repressive effect of their terminators when paired with high-expression promoters (Fig \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
+We note that post-transcriptional regulation of SUN4 and TOS6 might explain the repressive effect of their terminators when paired with high-expression promoters (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
 
 Secondary structures can be integral to motif function, and secondary structure depends on sequences beyond a motif.
 Again for ASH1, key cis-regulatory elements depend on secondary structure [@Olivier2005].
