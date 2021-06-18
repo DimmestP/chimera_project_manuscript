@@ -117,13 +117,13 @@ protein_relative_abundance_figure_options <- list(
 )
 
 protein_vs_RNA_figure_options <- list(
-    geom_abline(slope = 1, intercept = 0),
+    geom_diagline(),
     geom_point(aes(y = mean_relative_abundance_protein, x = mean_relative_abundance_mrna, colour = label)),
-    geom_errorbar(aes(ymax = mean_relative_abundance_protein + se_relative_abundance_protein,
+    geom_linerange(aes(ymax = mean_relative_abundance_protein + se_relative_abundance_protein,
                       ymin = mean_relative_abundance_protein - se_relative_abundance_protein,
                       x = mean_relative_abundance_mrna, 
                       colour = label)),
-    geom_errorbarh(aes(xmax = mean_relative_abundance_mrna + se_relative_abundance_mrna,
+    geom_linerange(aes(xmax = mean_relative_abundance_mrna + se_relative_abundance_mrna,
                        xmin = mean_relative_abundance_mrna - se_relative_abundance_mrna,
                        y = mean_relative_abundance_protein, 
                        colour = label)),
