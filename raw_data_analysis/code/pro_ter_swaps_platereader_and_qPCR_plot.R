@@ -111,8 +111,8 @@ ggsave(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png
 # Create Normalised Platereader plot and add qPCR of short-vs-long
 
 shortvslong_platesnorm_all_median <- read_csv(here("raw_data_analysis/data/norm_qpcr/short_vs_long/shortvslong_two_exp_rep_deltadeltacq_platesnorm_summarise.csv")) %>%
-  separate(UTR3, into = c(NA, "UTR3"), sep = "_") %>%
-  mutate(UTR3 = factor(UTR3, levels = rev(c("59bp","86bp","200bp","543bp"))))
+  separate(UTR3, into = c(NA, "mod_label"), sep = "_") %>%
+  mutate(mod_label = factor(mod_label, levels = rev(c("59bp","86bp","200bp","543bp"))))
 
 normalised_plot_SRO9 <- ggplot(data = shortvslong_platesnorm_all_median %>% filter(Promoter == "pSRO9")) +
   RNA_relative_abundance_figure_options +

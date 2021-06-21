@@ -22,7 +22,7 @@ theme_set(
 
 # set default figure widths following cell press guidelines
 fig_width_2column = 165
-fig_dpi = 350
+fig_dpi = 300
 
 # Update geom defaults for consistent sizes
 
