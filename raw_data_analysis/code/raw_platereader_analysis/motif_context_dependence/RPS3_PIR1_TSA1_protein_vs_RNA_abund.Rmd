@@ -198,7 +198,7 @@ RPS3_TSA1_protein_and_RNA_plot <-
             data = r_cor_data_RPS3_TSA1, 
             y = 0.25, 
             x= -0.6, 
-            size = 3, 
+            size = text_cor_size, 
             hjust = 0, 
             vjust = 1) +
  scale_color_manual(values = rev(RPS3_TSA1_colour_scheme))
@@ -211,7 +211,7 @@ PIR1_protein_and_RNA_plot <-
   ggplot(mean_PIR1_protein_and_RNA_data) + 
   protein_vs_RNA_figure_options +
   labs(y="Relative Protein Abundance", 
-       x = "Relative mRNA\n Abundance", 
+       x = "Relative mRNA Abundance", 
        colour = "Construct")  +
   coord_equal(xlim = c(0.4, 4.0), 
               ylim = c(0.4, 4.0), 
@@ -220,10 +220,13 @@ PIR1_protein_and_RNA_plot <-
             data = r_cor_data_PIR1, 
             y = 0.4, 
             x= -0.3, 
-            size = 3, 
+            size = text_cor_size, 
             hjust = 0, 
             vjust = 1) +
- scale_color_manual(values = rev(PIR1_colour_scheme))
+ scale_color_manual(values = rev(PIR1_colour_scheme),
+                    guide = guide_legend(direction = "vertical")) +
+  theme(legend.position = "bottom",
+        legend.justification = "top")
 
 PIR1_protein_and_RNA_plot
 ```
@@ -233,14 +236,17 @@ RPS3_TSA1_PIR1_protein_and_RNA_plot <-
   plot_grid(RPS3_TSA1_protein_and_RNA_plot, 
             PIR1_protein_and_RNA_plot, 
             align = "vh", 
-            axis = "lb")
+            axis = "t",
+            labels = c("A","B"),
+            rel_widths = c(1.45,1))
 
 RPS3_TSA1_PIR1_protein_and_RNA_plot
 
-ggsave(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"),RPS3_TSA1_PIR1_protein_and_RNA_plot,
-       width = 160, 
-       height = 100,
+ggsave(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"),
+       RPS3_TSA1_PIR1_protein_and_RNA_plot,
+       width = fig_width_2column, 
+       height = 120,
        units = "mm",
-       dpi = 300)
+       dpi = fig_dpi)
 
 ```
