@@ -4,6 +4,7 @@ library(tibble)
 library(stringr)
 library(readr)
 library(testthat)
+
 # Function to count the number of each codon in an ORF
 # ORF_name is a string containing the name of the ORFE
 # ORF_string is a charactor vector containing an ORF
@@ -21,6 +22,11 @@ count_codons <- function(ORF_string) {
 #  expect_equal(count_codons("TTTTTCTTT"),tibble(codon=c("TTC","TTT"),counts=as.integer(c(1,2))))
 #})
 
+# list of sense codons
+sense_codons <- c("TTT", "TTC", "TTA", "TTG", "TCT", "TCC", "TCA", "TCG", "TAT", "TAC", "TGT", "TGC", "TGG", "CTT", "CTC", "CTA", "CTG", "CCT", "CCC", "CCA", "CCG", "CAT", "CAC", "CAA", "CAG", "CGT", "CGC", "CGA", "CGG", "ATT", "ATC", "ATA", "ATG", "ACT", "ACC", "ACA", "ACG", "AAT", "AAC", "AAA", "AAG", "AGT", "AGC", "AGA", "AGG", "GTT", "GTC", "GTA", "GTG", "GCT", "GCC", "GCA", "GCG", "GAT", "GAC", "GAA", "GAG", "GGT", "GGC", "GGA", "GGG")
+
+# remove one codon to remove colinearity issue in linear model
+sense_codons_no_TTT <- sense_codons[-1]
 
 # IUPAC to regex function
 iupac_to_regex <- function(iupac_string){
@@ -59,18 +65,25 @@ expand_regex_to_redundent_strings <- function(motif_regex){
 
 # function to count motifs in a vector of sequences
 # regex_motifs is a vector of motifs to search for in regex format
-# transcript_seq is a vector of RNA sequences to seach through
+# sequence is a vector of DNA or RNA sequences to search through
 # min_count_filter is minimal number of times a motif needs to be detected to be included
 # alt_motif_name is an optional argument that can be used to change column names associated with the regex motifs
 # gene_name is an optional argument that adds the gene name associated with a sequence
 # returns a tibble consisting of a column for each given motif containing its counts in the respective sequence
-motif_count_function <- function(regex_motifs, transcript_seq, min_count_filter = 5, gene_name = NA){
-  motif_freq <- tibble(transcriptSequence = transcript_seq)
+motif_count_function <- function(regex_motifs, sequence, min_count_filter = 5, gene_name = NA){
+  motif_freq <- tibble(Sequence = sequence)
   for (i in 1:length(regex_motifs)){
-    motif_count <- str_count(transcript_seq, regex_motifs[i])
-    if(sum(motif_count) > min_count_filter)  motif_freq <- mutate(motif_freq, !!regex_motifs[i] := motif_count)
+    motif_count <- str_count(sequence, regex_motifs[i])
+    if(sum(motif_count) > min_count_filter)  { 
+      motif_freq <- mutate(motif_freq, !!regex_motifs[i] := motif_count)
+    }
   }
-  if(!is.na(gene_name)) motif_freq <- motif_freq %>% mutate(geneName = gene_name) %>% relocate(geneName)
+  if(!is.na(gene_name)) {
+    # what does this do?
+    motif_freq <- motif_freq %>% 
+      mutate(geneName = gene_name) %>% 
+      relocate(geneName)
+  }
   return(motif_freq)
 }
 #test_that("motifs are counted correctly and the tibble output is as expected.", {
@@ -78,17 +91,18 @@ motif_count_function <- function(regex_motifs, transcript_seq, min_count_filter 
 #})
 
 # Function to find motifs associated with decay for all isoforms 
+# Warning: hard-coded formulae in this make the functions non-portable
 greedy_linear_motif_selection <- function(motif_counts_half_life_data,observable){
   motif_counts_half_life_data_glob <<- motif_counts_half_life_data
   
   # predict half life with codon usage only
-  base_codon_model <- lm(paste0("log2(",observable,")~",str_flatten(codon_no_TTT,"+"),"+","UTR3_length"),data = motif_counts_half_life_data_glob)
+  base_codon_model <- lm(paste0("log2(",observable,")~",str_flatten(sense_codons_no_TTT,"+"),"+","UTR3_length"),data = motif_counts_half_life_data_glob)
   
   # select motifs to use on top of codons to predrict half life using a greedy AIC method 
   raw_motifs_list <- colnames(single_count_median_3UTR_motifs_freq)[3:length(single_count_median_3UTR_motifs_freq)]
   
   raw_motifs_list <- raw_motifs_list[raw_motifs_list %in% colnames(motif_counts_half_life_data)]
   
-  step(base_codon_model,paste0("log2(",observable,")~",str_flatten(codon_no_TTT,"+"),"+",str_flatten(raw_motifs_list,"+"),"+","UTR3_length"),trace=FALSE)
+  step(base_codon_model,paste0("log2(",observable,")~",str_flatten(sense_codons_no_TTT,"+"),"+",str_flatten(raw_motifs_list,"+"),"+","UTR3_length"),trace=FALSE)
   
 }

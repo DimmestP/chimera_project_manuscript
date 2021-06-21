@@ -29,7 +29,7 @@ knitr::kable(format = "latex", caption="\\textbf{Selecting the HWNCAUUWY motif, 
 ```{r TTTCATTTC-motif-coef}
 read.csv(here("./supplementary_data_chapter/data/UGUAHMNUA_shortlisted_motif_table.csv")) %>%
   dplyr::transmute(Motif = term,  `Total Count` = total_count, Coef = estimate, `p.value`)  %>%
-knitr::kable(format = "latex", caption = "\\textbf{Selecting the UGUAHMNUA motif, TGTACAAUA}. Summary of the number of occurances and contributions to a linear model predecting half life for each possible version of the UGUAHMNUA motif.")  %>%
+knitr::kable(format = "latex", caption = "\\textbf{Selecting the UGUAHMNUA motif, TGTACAATA}. Summary of the number of occurances and contributions to a linear model predecting half life for each possible version of the UGUAHMNUA motif.")  %>%
   kableExtra::kable_styling(latex_options = "hold_position")
 ```
 

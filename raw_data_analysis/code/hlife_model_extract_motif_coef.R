@@ -5,7 +5,6 @@ library(dplyr)
 library(tibble)
 library(stringr)
 library(readr)
-library(patchwork)
 # requires train_hlife_life_linear_model.R to be ran first
 #
 #
@@ -17,12 +16,12 @@ shortlisted_motifs <- chan_motif_coefficients %>%
   pull(term)
 
 # run linear models using only shortlisted motifs (Chan data set)
-chan_shortlisted_motif_model <- lm(paste0("log2(hlife)~", str_flatten(codon_no_TTT, "+"), "+ UTR3_length +", str_flatten(shortlisted_motifs, "+")), data = single_count_decay_prediction_dataset_chan)
+chan_shortlisted_motif_model <- lm(paste0("log2(hlife)~", str_flatten(sense_codons_no_TTT, "+"), "+ UTR3_length +", str_flatten(shortlisted_motifs, "+")), data = single_count_decay_prediction_dataset_chan)
 
 # calc variance explained for motifs, codon usage and length
 train_chan_model <- function(inc_codon, inc_motif, inc_length){
   predicates = ""
-  if(inc_codon == 1) predicates = str_flatten(codon_no_TTT, "+")
+  if(inc_codon == 1) predicates = str_flatten(sense_codons_no_TTT, "+")
   if(inc_motif == 1) {
     if(inc_codon == 1) predicates = paste0(predicates, "+", str_flatten(shortlisted_motifs, "+"))
     else predicates = str_flatten(shortlisted_motifs, "+")}
@@ -40,12 +39,12 @@ variance_explained <- all_predicate_combinations %>%
   mutate(r_squares = summary(train_chan_model(codon,motif,length))$r.squared)
 
 # run linear models using only shortlisted motifs (Sun data set)
-sun_shortlisted_motif_model <- lm(paste0("log2(hlife)~", str_flatten(codon_no_TTT, "+"), "+ UTR3_length +", str_flatten(shortlisted_motifs, "+")), data = single_count_decay_prediction_dataset_sun)
+sun_shortlisted_motif_model <- lm(paste0("log2(hlife)~", str_flatten(sense_codons_no_TTT, "+"), "+ UTR3_length +", str_flatten(shortlisted_motifs, "+")), data = single_count_decay_prediction_dataset_sun)
 
 combined_motif_coefficients <- broom::tidy(chan_shortlisted_motif_model) %>% 
-  filter(!(term %in% codon_no_TTT), term != "(Intercept)",term != "UTR3_length") %>%
+  filter(!(term %in% sense_codons_no_TTT), term != "(Intercept)",term != "UTR3_length") %>%
   inner_join(broom::tidy(sun_shortlisted_motif_model) %>% 
-              filter(!(term %in% codon_no_TTT), term != "(Intercept)",term != "UTR3_length"),
+              filter(!(term %in% sense_codons_no_TTT), term != "(Intercept)",term != "UTR3_length"),
              by = "term",
              suffix = c("_C", "_S")) %>%
   # the next two lines make the legend labels to match the order in the plot
@@ -56,16 +55,15 @@ combined_motif_coefficients <- broom::tidy(chan_shortlisted_motif_model) %>%
 model_coefficients <-   ggplot(combined_motif_coefficients, 
                                aes(y = estimate_C, 
                                    x = estimate_S, 
-                                   ymin = estimate_C - std.error_C ,
-                                   ymax = estimate_C + std.error_C, 
-                                   xmin = estimate_S - std.error_S, 
-                                   xmax = estimate_S + std.error_S, 
                                    colour = term_descending)) +
-  geom_abline(intercept = 0, slope = 1, size = 0.2, linetype = "dashed") +
+  geom_diagline() + 
   geom_hline(yintercept = 0,size = 0.2) +
   geom_vline(xintercept = 0,size = 0.2) +
-  geom_errorbar() +
-  geom_errorbarh() +
+  geom_point(size = 1.5) + 
+  geom_linerange(aes(ymin = estimate_C - std.error_C ,
+                      ymax = estimate_C + std.error_C)) +
+  geom_linerange(aes(xmin = estimate_S - std.error_S, 
+                     xmax = estimate_S + std.error_S)) +
   theme(axis.text.x = element_text(angle=90,vjust = 0.5),
         panel.grid.minor = element_blank(),
         legend.position = "right",
@@ -82,15 +80,6 @@ model_coefficients <-   ggplot(combined_motif_coefficients,
 
 # Create full hlife model summary figure
 
-ggsave2(filename = here("results_chapter/figures/hlife_model_multi_fig_patchwork.png"), 
-        plot = (dataset_comparison + model_coefficients) / 
-          (chan_pred_vs_obvs_plot + (sun_pred_vs_obvs_plot + plot_layout(tag_level = "new"))) + 
-          plot_annotation(tag_levels = "A"), 
-        width = 163, 
-        height = 140,
-        units = "mm",
-        dpi = 300)
-
 ggsave2(filename = here("results_chapter/figures/hlife_model_multi_fig.png"), 
         plot = plot_grid(dataset_comparison,
                          model_coefficients + theme(legend.position = "none"),
@@ -100,10 +89,10 @@ ggsave2(filename = here("results_chapter/figures/hlife_model_multi_fig.png"),
                          labels = c("A","B","","C",""),
                          nrow = 2,
                          rel_widths = c(1,1,0.5,1,1)),
-        width = 163, 
+        width = fig_width_2column, 
         height = 140,
         units = "mm",
-        dpi = 300)
+        dpi = fig_dpi)
 
 # output list of chan motif coefficients with error
 write_csv( chan_motif_coefficients %>% select(term, estimate, std.error) %>% dplyr::rename( "Motif"= "term", "Coefficient"= "estimate"), here("./raw_data_analysis/data/chan_motif_coefficients_with_error.csv"))
