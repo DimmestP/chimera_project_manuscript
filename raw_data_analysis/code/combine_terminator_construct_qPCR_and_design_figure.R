@@ -78,7 +78,7 @@ grid.draw(insertion_construct_displaytable)
 top_row_insertion_construct_plot <- 
   plot_grid(
     ggdraw() + 
-      draw_image(image_read_svg(here("raw_data_analysis/figures/terminator_construct_designs/RPS3_TSA1_motif_mod0_construct_design.svg"))),
+      draw_image(image_read(here("raw_data_analysis/figures/terminator_construct_designs/RPS3_TSA1_motif_mod0_construct_design.png"))),
     insertion_construct_displaytable,
     ncol = 2)
 
@@ -160,7 +160,7 @@ grid.draw(deletion_construct_displaytable)
 deletion_construct_plot <- 
   plot_grid(NULL, # create top margin above ggdraw; probably there is a better way
             ggdraw() + 
-              draw_image(image_read_svg(here("raw_data_analysis/figures/terminator_construct_designs/PIR1_motif_WT_construct_design.svg")) 
+              draw_image(image_read(here("raw_data_analysis/figures/terminator_construct_designs/PIR1_motif_WT_construct_design.png")) 
               ),
             deletion_construct_displaytable,
             PIR1_deltadeltacq_plot,
