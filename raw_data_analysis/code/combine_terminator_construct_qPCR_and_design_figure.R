@@ -84,13 +84,12 @@ top_row_insertion_construct_plot <-
 
 insertion_construct_plot <- 
   plot_grid(
-    NULL, # create top margin above ggdraw; probably there is a better way
     top_row_insertion_construct_plot,
     RPS3_deltadeltacq_plot,
     TSA1_deltadeltacq_plot,
     ncol = 1,
-    rel_heights = c(0.02,1,1,1),
-    labels = c("A","", "B", "C"))
+    rel_heights = c(1,1,1),
+    labels = c("A", "B", "C"))
 
 ggsave(filename = here("results_chapter/figures/insertion_constructs_design_and_qpcr.png"),
        width = fig_width_2column,
