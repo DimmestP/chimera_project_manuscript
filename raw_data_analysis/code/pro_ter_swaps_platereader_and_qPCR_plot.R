@@ -3,6 +3,7 @@ library(tibble)
 library(readr)
 library(here)
 library(latex2exp)
+library(magick)
 
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 
@@ -93,18 +94,22 @@ bottom_row_swap_figure <-
             labels = c("C","D"),
             ncol = 2)
 
+chimera_swaps_overview_figure <- 
+  image_read(here("raw_data_analysis/figures/terminator_construct_designs/chimera_swaps_overview.png"))
+
 composite_pro_ter_swap_figure <- 
-  plot_grid(high_exp_mCh_mTurq_platereader_raw_figure,
+  plot_grid(ggdraw() + draw_image(chimera_swaps_overview_figure),
+            high_exp_mCh_mTurq_platereader_raw_figure,
             bottom_row_swap_figure,
             ncol = 1,
-            rel_heights = c(1,1.05),
-            labels = c("B",""))
+            rel_heights = c(0.41,1,1.05),
+            labels = c("A","B",""))
 composite_pro_ter_swap_figure
 
 ggsave(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png"),
        composite_pro_ter_swap_figure,
        width = fig_width_2column, 
-       height = 220, units = "mm", 
+       height = 240, units = "mm", 
        dpi = fig_dpi)
 
 #####
