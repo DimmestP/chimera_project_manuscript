@@ -13,7 +13,7 @@ knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual
 ```
 
 
-```{r protein-vs-RNA-plot-motifs, fig.cap="\\textbf{Relateive protein abundance correlates with relatative mRNA abundance for reporter constructs.}. (\\textbf{A}) Fold changes in mRNA abundance vs fold changes in protein fluorescence for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings. Transcript abundance is relative to the mod0 construct of each promoter-terminator pairing. (\\textbf{B}) Fold changes in mRNA abundance vs fold changes in protein fluorescence for all terminator constructs in the pPIR1-tPIR1 pairing. Transcript abundance is relative to WT construct of the promoter-terminator pairing. The mean and standard error calculated over 6 biological replicates is plotted for each construct.", fig.align='center'}
+```{r protein-vs-RNA-plot-motifs, fig.cap="\\textbf{Relative protein abundance correlates with relative mRNA abundance for reporter constructs.}. (\\textbf{A}) Fold changes in mRNA abundance vs fold changes in protein fluorescence for all terminator constructs in the pRPS3-tRPS3 and pTSA1-tTSA1 pairings. Transcript abundance is relative to the mod0 construct of each promoter-terminator pairing. (\\textbf{B}) Fold changes in mRNA abundance vs fold changes in protein fluorescence for all terminator constructs in the pPIR1-tPIR1 pairing. Transcript abundance is relative to WT construct of the promoter-terminator pairing. The mean and standard error calculated over 6 biological replicates is plotted for each construct.", fig.align='center'}
 knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"), dpi = 300) 
 ```
 
