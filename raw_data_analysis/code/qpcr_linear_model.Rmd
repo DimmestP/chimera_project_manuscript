@@ -56,7 +56,8 @@ pPIR1_pPGK1_pSRO9_tPIR1_norm_mean <- read_csv(here("./raw_data_analysis/data/nor
 
 collated_norm_mean_data <- pRPS3_pPGK1_pSRO9_tRPS3_norm_mean %>%
   bind_rows(pTSA1_pPGK1_pSRO9_tTSA1_norm_mean) %>%
-  bind_rows(pPIR1_pPGK1_pSRO9_tPIR1_norm_mean)
+  bind_rows(pPIR1_pPGK1_pSRO9_tPIR1_norm_mean) %>%
+  mutate(terminator = factor(terminator, levels = c("tRPS3","tTSA1","tPIR1")))
 
 ```
 
@@ -142,20 +143,27 @@ construct_dictionary <- model_coefficients %>%
   distinct(ter_pro) %>%
   mutate(promoter_type = c("PGK1", "Native", "PGK1", "Native", "SRO9", "SRO9", "SRO9", "Native", "PGK1"))
 
-individual_linear_model_coefficients_points <- ggplot(model_coefficients %>% 
-         inner_join(motif_term_dictionary) %>%
-         inner_join(construct_dictionary) %>%
-         separate(ter_pro, into=c("promoter","terminator"), sep = "_", remove = FALSE) %>%
-         filter(!term %in% c("(Intercept)", "nativeTRUE", "exp_rep")) %>%
-         arrange(term,promoter),
-       aes(x = factor(promoter_type, levels = c("Native","PGK1","SRO9")), 
+individual_lm_coefficients_data <- 
+  model_coefficients %>% 
+  inner_join(motif_term_dictionary) %>%
+  inner_join(construct_dictionary) %>%
+  separate(ter_pro, into=c("promoter","terminator"), sep = "_", remove = FALSE) %>%
+  mutate(terminator = factor(terminator, levels = c("tRPS3","tTSA1","tPIR1")),
+         promoter_type = factor(promoter_type, levels = c("Native","PGK1","SRO9"))
+         ) %>% 
+  filter(!term %in% c("(Intercept)", "nativeTRUE", "exp_rep")) %>%
+  arrange(term,promoter)
+
+individual_linear_model_coefficients_points <- 
+  ggplot(individual_lm_coefficients_data,
+       aes(x = promoter_type, 
            y = -estimate, 
            colour = terminator),
     ) +
   geom_pointrange(aes(ymax = -estimate + std.error, ymin = -estimate - std.error),
                 position = position_dodge2(width = 0.7),
                 fatten = 1) +
-  labs(y = TeX("Log_2 Fold Change in\n RNA Abundance"), 
+  labs(y = expression(atop(log[2]~fold~effect,"on RNA abundance")), 
        colour = "Terminator") +
   theme(axis.title.x = element_blank(),
         axis.text.x = element_text(angle = 90, hjust = 0, vjust = 0.5),
@@ -164,7 +172,7 @@ individual_linear_model_coefficients_points <- ggplot(model_coefficients %>%
         panel.spacing = unit(0, units = "cm"),
         panel.grid.major.x = element_blank(),
         axis.line.x = element_blank()) +
-  scale_colour_manual(breaks = c("tTSA1", "tRPS3", "tPIR1"), values = c("#56B4E9", "#D55E00", "#000001"),
+  scale_colour_manual(values = c("#56B4E9", "#D55E00", "#000001"),
                       guide = guide_legend(override.aes = list(size=0.5))) +
   facet_grid(~factor(new_term, c("Construct", "Wildtype\n vs Mod0", "ATATTC", "GTATACCTA", "TGTAHMNTA", "HWNCATTWY", "TGTAHMNTA\n+\nHWNCATTWY")), 
              scales = "free_x", 
