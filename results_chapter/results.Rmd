@@ -91,7 +91,7 @@ readr::read_csv(here("results_chapter/data/motif_summary_table.csv")) %>%
   kableExtra::row_spec(0, bold = TRUE)
 ```
 
-```{r hlife-decay-model, fig.cap="\\textbf{A linear model predicting transcript half life verifies candidate RBP motifs regulate gene expression.} (\\textbf{A}) Predicted vs actual log2 transcript half lives calculated by a linear model of codon and motif usage trained on the Chan et al (2017) and Sun et al (2013) data sets. (\\textbf{B}) Correlation between the two log2 transcript half lives reported in the Sun et al (2013) and Chan et al (2017) data sets. (\\textbf{C}) Predicted contributons to log2 half life for chosen motifs in the Sun et al (2013) and Chan et al (2017) datasets.", fig.align='center'}
+```{r hlife-decay-model, fig.cap="\\textbf{A linear model of transcript half life quantifies the effect of candidate terminator motifs on half-life.} (\\textbf{A}) Correlation between the two transcript half lives ($\\lambda$), in minutes, reported in the Sun et al (2013) and Chan et al (2017) data sets. (\\textbf{B}) Predicted contributions to log2 half life for chosen motifs in the Sun et al (2013) and Chan et al (2017) datasets. (\\textbf{C}) Predicted vs actual transcript half lives  calculated by a linear model of codon and motif usage trained on the Chan et al (2017) and Sun et al (2013) data sets.", fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/hlife_model_multi_fig.png"))
 ```
 
@@ -108,7 +108,7 @@ Altogether 7 constructs were designed for these two host terminators; the wildty
 For each terminator, we created constructs paired with each of the native promoter (pRPS3 or pTSA1), the high-expression pPGK1, and the low-expression pSRO9.
 
 Motifs predicted to affect half-life indeed affect mRNA abundance when inserted into tRPS3 in reporter constructs (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)B).
-We measured mRNA abundance by RT-qPCR across 6 biological replicates, each quantified in 3 technical replicates and normalised by the $\Delta Cq$ method against values from 3 reference mRNAs (see methods - CHECK THIS).
+We measured mRNA abundance by RT-qPCR across 6 biological replicates, each quantified in 3 technical replicates and normalised by the $\Delta Cq$ method against values from 3 reference mRNAs (see methods).
 Insertion of two copies of ATATTC into generally lowers the mRNA abundance, as much as 4-fold when paired with the pRPS3 promoter. 
 Insertion of either TGTAHMNTA, or 2 copies of HWNCATTWY, tends to decrease mRNA abundance, and the combination tends to further decrease mRNA abundance.
 However, the putative stability motif GTATACCTA does not consistently or strongly affect mRNA abundance.
@@ -129,12 +129,12 @@ Comparison of mRNA abundance across all constructs (Figure \@ref(fig:tRPS3-tTSA1
 The insertion of almost any decay motif into tTSA1 or tRPS3 results in a decrease in mRNA abundance, and removal of these from from tPIR1 results in an increase in mRNA abundance.
 However, the quantitative effects vary depending both on the immediate motif context in the host terminator and on the more distant context given by the promoter.
 
-```{r tRPS3-tTSA1-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs inserted into RPS3 and TSA1 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Library design and diagram of motif insertion sites in native RPS3 and TSA1 terminators. (\\textbf{B}) Fold changes in transcript abundance for tRPS3 constructs paired with three promoters; pRPS3, pPGK1 and pSRO9. (\\textbf{C}) Fold changes in transcript abundance for tTSA1 constructs paired with three promoters; pTSA1, pPGK1 and pSRO9. Fold changes are relative to the abundance of the mod\\_NNN construct", fig.align='center'}
+```{r tRPS3-tTSA1-design-and-qpcr, fig.cap="\\textbf{Motif combinations inserted into RPS3 and TSA1 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Design of motif insertion sites in native RPS3 and TSA1 terminators, highlighting random insertion used as a negative control. (\\textbf{B}) Fold changes in transcript abundance for tRPS3 constructs paired with three promoters; pRPS3, pPGK1 and pSRO9. (\\textbf{C}) Fold changes in transcript abundance for tTSA1 constructs paired with three promoters; pTSA1, pPGK1 and pSRO9. Each diamond represents a biological replicate, averaged over 3 technical replicates, and the vertical line the mean of all 6 biological replicates. Fold changes are relative to the abundance of the mod\\_NNN construct, i.e. $2^{\\Delta\\Delta Cq}$ (see methods).", fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/insertion_constructs_design_and_qpcr.png"))
 ```
 
 
-```{r tPIR1-design-and-qpcr, fig.cap="\\textbf{Shortlisted motifs removed from PIR1 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Diagram of the final PIR1 constructs with permutations of removed motifs. (\\textbf{B}) Fold changes in transcript abundance for tPIR1 constructs paired with three promoters; pPIR1, pPGK1 and pSRO9. Fold changes are relative to the abundance of the WT construct", fig.align='center'}
+```{r tPIR1-design-and-qpcr, fig.cap="\\textbf{Motif combinations removed from PIR1 host terminators change transcript abundance in RT-qPCR measurements}. (\\textbf{A}) Design of PIR1 constructs with combinations of motifs replaced by random nucleotide sequences. (\\textbf{B}) Fold changes in transcript abundance for tPIR1 constructs paired with three promoters; pPIR1, pPGK1 and pSRO9. Fold changes are relative to the abundance of the WT construct, i.e. $2^{\\Delta\\Delta Cq}$ (see methods).", fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/tPIR1_design_and_qpcr.png"))
 ```
 
@@ -162,7 +162,7 @@ The combination of TGTACAATA and TTTCATTTC in tRPS3 has no additional effect whe
 The combination of TGTACAATA and TTTCATTTC in tTSA1 is significantly more stable than expected, but only when paired with pPGK1.
 
 
-```{r hlife-predict-vs-abundance-and-motif-context-dependence, fig.cap="\\textbf{Promoter and terminator context alter the regulatory behaviour of shortlisted motifs} (\\textbf{A}) Predicted transcript abundance inferred from motif contributions to half life vs RT-qPCR measured transcript abundance. (\\textbf{B}) Motif contributions to fold changes in mRNA abundance for different promoter and terminator contexts. The fold change is relative to the mod0 construct in each promoter-terminator pairing for the tRPS3 and tTSA1 sets. For the tPIR1 sets the fold change is relative to the WT constructs. Confidence intervals are within a standard error.", fig.align='center'}
+```{r hlife-predict-vs-abundance-and-motif-context-dependence, fig.cap="\\textbf{Promoter and terminator context alter the regulatory effect of motifs.} (\\textbf{A}) Predicted change in transcript abundance inferred from transcriptome-wide motif contributions to half life, compared to RT-qPCR measurements of reporter transcript abundance. The y-axis shows statistical summaries (mean and standard error) of 6 replicates for data shown in figures 4 and 5. The fold change is relative to the mod0 construct in each promoter-terminator pairing for the tRPS3 and tTSA1 sets, and relative to the WT constructs for tPIR1 sets. Native promoter panels show the promoter paired with terminator from the same set, pRPS3 with tRPS3, and so on. (\\textbf{B}) Motif contributions to fold changes in mRNA abundance for reporter constructs with different promoter and terminator contexts. This is calculated by a linear model with a coefficient for the effect of each motif in each set, applied to $\\Delta Cq$ against 3 reference genes.", fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"))
 ```
 
