@@ -112,7 +112,6 @@ We measured mRNA abundance by RT-qPCR across 6 biological replicates, each quant
 Insertion of two copies of ATATTC into generally lowers the mRNA abundance, as much as 4-fold when paired with the pRPS3 promoter. 
 Insertion of either TGTAHMNTA, or 2 copies of HWNCATTWY, tends to decrease mRNA abundance, and the combination tends to further decrease mRNA abundance.
 However, the putative stability motif GTATACCTA does not consistently or strongly affect mRNA abundance.
-Protein fluorescence results show a correlation between mRNA expression and protein expression() Supplementary Figure \@ref(fig:protein-vs-RNA-plot-motifs)).
 However, comparison of the WT and control (mod_NNN) terminators does show that the creation of the insertion sites alone has an effect on mRNA levels.
 
 Inserting the same motifs into our second host terminator gives qualitatively similar results (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
@@ -124,6 +123,7 @@ We selected the cell wall protein PIR1 as our host terminator, due to the presen
 We designed 8 terminators in which the motif occurrences in tPIR1 were replaced by scrambled sequences (Figure \@ref(fig:tPIR1-design-and-qpcr)A).
 We find that the removal of almost any decay motif from tPIR1 results in an increase in mRNA levels (Figure \@ref(fig:tPIR1-design-and-qpcr)B)).
 
+We confirmed that motif-dependent changes in mRNA abundance are reflected in protein abundance by measuring the fluorescence from a subset of reporter constructs. As expected, relative mRNA abundance largely predicts relative protein abundance for all three host terminators (Supplementary Figure \@ref(fig:protein-vs-RNA-plot-motifs)A).
 
 Comparison of mRNA abundance across all constructs (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)B, \@ref(fig:tRPS3-tTSA1-design-and-qpcr)C, \@ref(fig:tPIR1-design-and-qpcr)B) shows motif contributions change in magnitude but not direction depending on the context of the rest of the construct. 
 The insertion of almost any decay motif into tTSA1 or tRPS3 results in a decrease in mRNA abundance, and removal of these from from tPIR1 results in an increase in mRNA abundance.
