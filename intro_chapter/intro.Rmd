@@ -2,10 +2,10 @@
 
 Our understanding of gene expression relies on the abstraction of a gene into discrete cis-regulatory elements (CRE), or parts, based on their most prominent function.
 The promoter coordinates the initiation of transcription.
-Transcription then progresses until it reaches the terminator, where cleavage and polyadenylation of the nascent RNA transcript is coordinated.
+Transcription then progresses until it reaches the terminator, where cleavage and (in eukaryotes) polyadenylation of the nascent RNA transcript is coordinated.
 Extending the abstraction to the mature messenger RNA transcript, the coding sequence is flanked by untranslated regions (UTRs) at its 5' and  3' ends.
 The 5'UTR contributes to translation regulation and the 3'UTR contributes to transcript stability and localisation.
-Assigning specific characteristics to individual elements of a gene has facilitated the assumption that parts are modular or interchangeable with other parts.
+Assigning specific characteristics to individual elements of a gene has facilitated the assumption that parts are modular or interchangeable with other similar parts.
 However, it is important to distinguish between two concepts of modularity: modular assembly, how easy it is to construct combinations of parts; and composability, how function and regulation can be decomposed into contributions from individual parts.
 
 Modular assembly is now routine: modern DNA synthesis and cloning techniques allow the construction of complex gene pathways through the combinatorial assembly of chosen parts [@Curran2013; @Lee2015; @Garcia2018; @Andreou2018]. 
