@@ -10,7 +10,10 @@ knitr::opts_chunk$set(fig.pos = "p", dpi = 300)
 
 To investigate the context dependence of regulatory regions, we created a library of 120 constructs containing all combinations of 6 promoters (including 5'UTR), 2 coding sequences, and 10 terminators (including 3'UTR).
 We selected promoters and terminators from native yeast genes spanning a variety of different expression patterns and functions (Table \ref{tab:terminator-summary-table}).
+To choose specific sequence lengths for the terminators of our constructs, we referred to published measurements of median 3'UTR length [@Pelechano2013]. 
+For terminators with measured length under 200nt, we used the standardised parts length of 200nt from the YeastFab library.
 The two coding sequences (CDS) expressed mCherry or mTurquoise2 fluorescent proteins, which are bright fluorophores with only 30% amino acid identity [@Shaner2004; @Goedhart2012].
+
 
 (ref:tab-1-caption) \textbf{Summary of terminator library.} The common gene name from which the terminator is extracted from is included alongside its systematic name. The median 3'UTR reported by [@Pelechano2013] is a median over the lengths of each distinct isoform they detect. The usage of each motif is signified by S, for promoter-terminator swaps, or M, for motif insertion or deletion. A short summary of the protein function is included.
 
