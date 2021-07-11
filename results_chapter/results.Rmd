@@ -39,12 +39,15 @@ Meanwhile, tPGK1 reveals the effect of promoter on terminators expression.
 It is one of the most highly expressing terminators when paired with pPGK1 and pHSP26, but is up to 40% lower in expression when paired with pRPS3 or pRPS13.
 Overall, our results show that the contributions of terminators (including 3'UTRs) to gene expression depend on the sequences in other parts of the gene.
 
-To further validate our assay, we tested the effect of truncated terminators, because disruption of termination signals lowers expression [@Guo1996; @Shalem2015].
-We chose two 200bp terminators from the YeastFab parts library [@Guo2015], tRPS3 and tSRO9.
+We further investigated the effects of terminators on mRNA levels by comparing constructs with extended vs truncated terminators. 
+It is known that disrupting the transcription termination signal lowers expression [@Guo1996; @Shalem2015].
+However, standardised parts libraries often assume a fixed terminator length for all genes. 
+In the case of the YeastFab parts library [@Guo2015] the fixed terminator length is 200bp.
+Using the median 3'UTR length as the minimal possible terminator length, we compared a gene with a minimal terminator length greater than 200bp, SRO9, to a gene with a minimal terminator length less than 200bp, RPS3.
 The median length of the native RPS3 3'UTR is 86nt [@Pelechano2013]; truncating the terminator to 86bp or 59bp reduces protein output by almost 2-fold (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B).
 The median length of the native SRO9 3'UTR is 543nt [@Pelechano2013]; extending the terminator length to 543bp increases protein output by almost 2-fold (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B).
-Note that we used the longer 543bp SRO9 terminator, and a similarly extended 421bp tPMA1, for the constructs (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
 This validates our assay's ability to detect known regulatory signals affecting transcription termination, while highlighting the importance of using well-informed annotations to construct parts libraries for synthetic biology.
+Note that we used the longer 543bp SRO9 terminator, and a similarly extended 421bp tPMA1, for the constructs (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
 
 
 ```{r pro-ter-platereader-mCherry-mTurq-raw, fig.cap="\\textbf{Both terminator and promoter contribute to mCherry and mTurq gene expresion.}  (\\textbf{A}) mCherry and mTurq fluorescence measured at the time of each sample's maximum growth rate for 10 termintators paired with 4 high expressing promoters. Negative fluorescence values arising from instrument noise dominating measurements of constructs with neglegible fluorescence are automatically set to 0. (\\textbf{B}) Same as above but for 2 low expressing promoters. (\\textbf{C}) mCherry fluorescence vs RT-qPCR mRNA abundance for 3 promoters paired with all 10 terminators.", fig.align='center'}
