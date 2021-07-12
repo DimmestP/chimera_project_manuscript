@@ -8,7 +8,7 @@
 
 
 ```{r hlife-variance-table}
-knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual = c("42.0%", "3.2%", "0.6%"), Drop = c("-40.5%", "-1.6%", "0.0%"), Cumulative = c("42.0%", "43.7%", "43.7%")), caption = "\\textbf{Variance explained by each type of CRE in the half life model applied to data from Chan et al.}. Variance explained was estimated in 3 different ways. The variance explained by a linear model containing each single type of CRE.  The loss in variance explained when one type of CRE is removed from the full model. The total variance explained when each CRE is added to the linear model in sequence stating with codon usage, then adding motifs and finally 3'UTR length.", format = "latex")  %>%
+knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual = c("42.0%", "3.2%", "0.6%"), Drop = c("-40.5%", "-1.6%", "0.0%"), Cumulative = c("42.0%", "43.7%", "43.7%")), caption = "\\textbf{Variance explained by each type of CRE in the half life model applied to data from Chan et al.}. Variance explained was estimated in 3 different ways. The individual variance explained by a linear model containing each type of CRE on its own.  The drop in variance explained when one type of CRE is removed from the full model. The cumulative variance explained when each CRE is added to the linear model in sequence; starting with codon usage, then adding motifs and finally 3'UTR length.", format = "latex")  %>%
   kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
