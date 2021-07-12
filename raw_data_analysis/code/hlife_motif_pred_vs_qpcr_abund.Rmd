@@ -137,7 +137,7 @@ pred_vs_abundance_figure_options <- list(
  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = label)),
   facet_grid(terminator~pro),
   labs(x="", y="", colour = "Construct"),
- theme(axis.title.y = element_text(hjust = 1.1))
+ theme(axis.title.y = element_text(hjust = 1.1), strip.text.x = element_text(vjust = 0.95))
 )
 
 
@@ -151,7 +151,7 @@ pred_vs_abundance_RPS3_TSA1 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS
   geom_text(aes(label = r_cor_label), data = r_cor_data_TSA1_RPS3, 
             x = -0.05, y = 1.05, parse = TRUE, 
             size = text_cor_size, hjust = 1, vjust = 0) +
-  labs(y=TeX("Experimental Fold Change in $log_2$ RNA Abundance"))
+  labs(y=TeX("Reporter construct $log_2$ fold change in RNA abundance"))
 
 pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) + 
   pred_vs_abundance_figure_options +
@@ -165,7 +165,7 @@ pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) +
             size = text_cor_size, hjust = 1, vjust = 0) +
   scale_x_continuous(breaks = c(-1,0,1)) +
   scale_y_continuous(breaks = c(-1,0,1)) +
-  labs(x=TeX("Predicted Fold Change in $log_2$ RNA Abundance"))
+  labs(x=TeX("Predicted $log_2$ fold change in RNA half-life"))
 
 
 # load figure panel with coefficients.
