@@ -3,23 +3,26 @@ output:
   pdf_document: default
   html_document: default
 ---
+
 # Discussion
 
 Our measurements of protein output from promoter-terminator combinations highlight the limitations of assuming that CREs are quantitatively composable.
 Unsurprisingly, fluorescent protein expression levels are dominated by promoter choice, up to 100 fold, and then terminator choice, up to 5 fold. 
-However, with up to 1.5 fold change in the relative effect of terminators depending on coding sequence and promoter choice, the quantitative limitations of the assumption of composability are clear. 
+However, our observations of 1.5 fold change in the relative effect of terminators depending on coding sequence and promoter choice highlight the quantitative limitations of the assumption of composability.
+We speculate that screening a larger library of CREs would reveal a subset with stronger quantitiative interactions, as in [@Kosuri2013].
 
-
+Terminators taken from co-regulated genes have similar behaviour in our reporter constructs.
 Terminators that have consistently low expression include tSUN4 and tTOS6, taken from cell wall proteins whose transcripts are bound and regulated by shared RNA-binding proteins [@Hogan2008].
 Terminators have similar effects when paired with either of the two ribosomal protein promoters pRPS3 or pRPS13, which is consistent with the co-regulation of ribosomal proteins in cells.
 
 Furthermore, we find that the effect of short CREs in 3'UTRs depends on the context of their host construct.
-The contribution of our selected motifs to mRNA stability, as inferred from transcriptome-wide analysis, correlated with their effect on the abundance of reporter constructs.
+The contribution of our selected cis-regulatory motifs to mRNA stability, as inferred from transcriptome-wide analysis, correlated with their effect on the abundance of reporter constructs.
 However, their contributions to mRNA abundance were inconsistent and dependent on context: TGTAHMNTA has no measurable effect when inserted into tRPS3 but the expected effect in tTSA1, ATATTC has the expected effect in tRPS3 but little effect in tTSA1, and HWNCATTWY can either decrease or increase mRNA levels when removed from tPIR1, depending on the promoter.
 In addition, our original motif search predicted the behaviour of a TGTAAATA motif to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
 TGTAAATA changed its contribution in the two data sets because, as a known binding motif for Puf3, carbon deficient conditions trigger Puf3 to degrade its targets [@Miller2014].
 Carbon deficient conditions were likely present due to the bespoke CSM-lowURA media used by [@Chan2018], which is similar to the SC-URA media used in our assays.
 These disparities in predicted and experimentally verified regulatory behaviour raises questions about current methods for discovering novel cis-regulatory elements and, more generally, for understanding and manipulating regulatory pathways.
+
 
 ## Mechanisms for motif terminator context dependence
 
@@ -46,7 +49,7 @@ Later, translational activation due to phosphorylation of Khd1 and Puf6 by bud-m
 Another example where the effect of CRE on a transcript depends on co-localisation with a regulatory kinase comes from the fungal RNA-binding protein Ssd1.
 Yeast cell wall proteins such as Sun4 and Tos6 are translationally repressed by Ssd1 [@Jansen2009], which binds the 5'UTRs of their transcripts [@Hogan2008; @Bayne2020].
 It is thought that these transcripts are translationally activated at bud sites after the phosphorylation of Ssd1 by a localised kinase, Cbk1 [@Jansen2009].
-There is no direct evidence that Ssd1 is involved in RNA transport, so this localised activation presumably depends on localisation that is conferred by other CREs, that might recruit other RNA-binding proteins known to be associated with those transcripts [@Hogan2008].
+There is no evidence that Ssd1 directly acts to transport RNA, so this localised activation presumably depends on localisation that is conferred by other CREs, that recruit other RNA-binding proteins to those transcripts [@Hogan2008], that in turn recruit transport machinery.
 We note that post-transcriptional regulation of SUN4 and TOS6 might explain the repressive effect of their terminators when paired with high-expression promoters (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
 
 Secondary structures can be integral to motif function, and secondary structure depends on sequences beyond a motif.
@@ -61,10 +64,11 @@ In other cases, multiple motifs, or multiple copies of the same motif, must occu
 Recruitment of Puf3 to promote mRNA transcript decay requires two Puf3 motifs in the 3'UTR [@Jackson2004].
 Indeed, clusters of short degenerate motifs have been proposed as a general regulatory feature of RNA-binding proteins [@Cereda2014]
 
+
 ## Implications for novel cis-regulatory element searches
 
 Motif detection algorithms need to revisit the assumption that the presence of a motif alone ensures its functional effect.
-The effect of a motif can be significantly influenced by experimental factors, such as; growth conditions and time of measurement.
+The effect of a motif can be influenced by factors such as growth conditions and time of measurement.
 Uncertainty around the active state of a motif could be introduced using latent variables, as used in transcription factor (TF) binding site prediction algorithms to represent the proportion of active TF sites [@Dai2017; @Sanguinetti2006].
 Alternatively, non-linear relationships between factors affecting motif activity can be modeled by partition regression techniques, such as random forests.
 Again looking at TF algorithms, partitioning algorithms could be used to predict functional data sets using short sub-sequences of transcripts [@BehjatiArdakani2019]. 
@@ -73,6 +77,7 @@ Reductionist search algorithms that attempt to discover the shortest possible se
 High resolution maps of protein-RNA interactions are revealing RBPs with gapped, multi-partite motifs [@Bayne2020] or motifs that must be repeated in the same transcript to be effective [@Gu2004;@Jackson2004].
 Common motif searching approaches, such as MEME Suite [@Bailey2015], have extended beyond fixed length, gapless motifs but may still assume motifs occur independently and only once per transcript [@Frith2008].
 Although reducing the search constraints to allow longer, gapped motifs does increase the false discovery rate, the availability of precise interactome data sets suggests a shift in priority towards more flexible search algorithms.
+
 
 ## Implications for engineering biology
 
@@ -83,6 +88,7 @@ Together with high-throughput assays, pools of combinations of suitable CREs can
 
 Future work on CREs will need to respect the fact that characterisation of elements' function in a single context is not enough to make generalisable conclusions.
 Both small- and large-scale studies of CREs should ideally be carried out with multiple combinations of other regulatory elements, in cells in multiple growth conditions, to build a comprehensive understanding of transcriptional and post-transcriptional regulation.
+
 
 # References
 
