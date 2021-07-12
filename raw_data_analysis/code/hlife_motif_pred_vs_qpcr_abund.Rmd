@@ -137,7 +137,7 @@ pred_vs_abundance_figure_options <- list(
  geom_errorbar(aes(predict_motif_effect, ymax = -mean_delta_delta_cq + sd_ddcq, ymin = -mean_delta_delta_cq - sd_ddcq, colour = label)),
   facet_grid(terminator~pro),
   labs(x="", y="", colour = "Construct"),
- theme(axis.title.y = element_text(hjust = 1.1))
+ theme(axis.title.y = element_text(hjust = 1.1), strip.text.x = element_text(vjust = 0.95))
 )
 
 

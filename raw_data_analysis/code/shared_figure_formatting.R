@@ -88,7 +88,8 @@ RNA_relative_abundance_figure_options <- list(
   guides(colour=FALSE),
   theme(axis.text.x=element_text(angle=0,vjust=0.5),
         legend.position="bottom",
-        legend.box.margin=margin(20,10,10,180)),
+        legend.box.margin=margin(20,10,10,180),
+        strip.text.x = element_text(vjust = 0.95)),
   stat_summary(aes(x=rel_abund_delta_deltacq,y=mod_label),
                fun="mean",colour="black",
                geom="crossbar", size=0.3, width=0.9)
@@ -102,7 +103,8 @@ protein_raw_abundance_figure_options <- list(
   stat_summary(aes(y=Terminator,x=fluo_per_OD_at_max_gr),
                fun="mean",colour="black",
                geom="crossbar", size=0.3, width=0.9),
-  theme(legend.position = "none"),
+  theme(legend.position = "none",
+        strip.text.x = element_text(vjust = 0.95)),
   scale_x_continuous(oob=oob_squish, limits = c(0,NA))
 )
 
@@ -112,7 +114,8 @@ protein_relative_abundance_figure_options <- list(
   stat_summary(aes(y=Terminator,x=fluo_per_OD_at_max_gr, colour = Terminator),
                fun.data="mean_se",
                geom="pointrange"),
-  theme(legend.position = "none"),
+  theme(legend.position = "none", 
+        strip.text.x = element_text(vjust = 0.95)),
   scale_x_continuous(oob=oob_squish, limits = c(0,1.9))
 )
 
@@ -128,6 +131,7 @@ protein_vs_RNA_figure_options <- list(
                        y = mean_relative_abundance_protein, 
                        colour = label)),
     facet_wrap(~ promoter, ncol = 1),
+    theme(strip.text.x = element_text(vjust = 0.95)),
     scale_x_log2nice(),
     scale_y_log2nice()
 )

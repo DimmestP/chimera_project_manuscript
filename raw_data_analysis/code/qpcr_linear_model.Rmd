@@ -164,7 +164,7 @@ individual_linear_model_coefficients_points <-
                 position = position_dodge2(width = 0.7),
                 fatten = 1) +
   labs(y = expression(atop(log[2]~fold~effect,"on RNA abundance")), 
-       colour = "Terminator") +
+       colour = "Terminator", tag = "") +
   theme(axis.title.x = element_blank(),
         axis.text.x = element_text(angle = 90, hjust = 0, vjust = 0.5),
         axis.ticks.x = element_blank(),

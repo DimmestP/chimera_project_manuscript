@@ -55,10 +55,11 @@ insertion_construct_displaytable <-
             theme = ttheme_minimal(base_size=8,
                                    padding = unit(c(2, 2), "mm"),
                                    core=list(
-                                     fg_params=list(col = c("black", "#C05558", "#5978BA", "#71519C", "#C288BB", "#7FBF74", "#878787",
-                                                            "black", "black", "black", "#71519C", "#C288BB", "black", "#878787",
-                                                            "black", "#C05558", "#5978BA", "black", "#C288BB", "#7FBF74", "#878787",
-                                                            "black", "#C05558", "black", "#71519C", "#C288BB", "#7FBF74", "#878787")))
+                                     fg_params=list(col = c("black", "#C05558", "#5978BA", "#71519C", "#C288BB", "#7FBF74", "#6C6C6C",
+                                                            "black", "black", "black", "#71519C", "#C288BB", "black", "#6C6C6C",
+                                                            "black", "#C05558", "#5978BA", "black", "#C288BB", "#7FBF74", "#6C6C6C",
+                                                            "black", "#C05558", "black", "#71519C", "#C288BB", "#7FBF74", "#6C6C6C"),
+                                                    fontface = c(rep("bold",7), rep("plain", 21))))
             ))  %>%
   # the following code adds boxes around the table, row 1, and column 1
   gtable_add_grob(
@@ -134,12 +135,13 @@ deletion_construct_displaytable <-
               base_size=8,
               padding = unit(c(2, 2), "mm"),
               core=list(
-                fg_params=list(col = c("#878787", "#C15659", "#5978BA", "#4EB0B5", "#D97F1D", "#71519C", "#968BC2", "#DD76A5",
+                fg_params=list(col = c("#6C6C6C", "#C15659", "#5978BA", "#4EB0B5", "#D97F1D", "#71519C", "#968BC2", "#DD76A5",
                                        "black", "#C15659", "black", "black", "black", "black", "black", "#DD76A5",
                                        "black", "black", "#5978BA", "black", "black", "black", "#968BC2", "black",
                                        "black", "black", "black", "#4EB0B5", "black", "#71519C", "#968BC2", "#DD76A5",
                                        "black", "black", "black", "black", "#D97F1D", "#71519C", "#968BC2", "#DD76A5",
-                                       "black", "black", "black", "black", "black", "#71519C", "#968BC2", "#DD76A5")))
+                                       "black", "black", "black", "black", "black", "#71519C", "#968BC2", "#DD76A5"),
+                               fontface = c(rep("bold",8), rep("plain", 40))))
   )) %>%
   # the following code adds boxes aronud the table, row 1, and column 1
   gtable_add_grob(
