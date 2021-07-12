@@ -2,6 +2,7 @@ library(dplyr)
 library(tibble)
 library(readr)
 library(here)
+library(ggplot2)
 library(latex2exp)
 library(magick)
 
@@ -61,7 +62,7 @@ mCherry_protein_vs_RNA_figure <- ggplot(mCherry_protein_vs_RNA) +
   geom_point(aes(y = log2protein, x = -mRNA, colour = Terminator, shape = Promoter)) +
   scale_colour_hue(h = c(0, 360)+20,l=60,c=60) +
   guides(colour="none") +
-  scale_y_continuous("mCherry Fluorescence per \n OD at max growth rate",
+  scale_y_continuous("mCherry fluorescence per \n OD at max growth rate",
                      breaks = log2(c(12.5, 25, 50, 100, 200, 400, 800, 1600, 3200, 6400)), 
                      labels = c("", "25", "", "100", "", "400", "", "1600", "", "6400")) +
   scale_x_continuous(TeX("mRNA abundance ($\\Delta$Cq)"),
@@ -128,7 +129,7 @@ normalised_plot_SRO9 <- ggplot(data = shortvslong_platesnorm_all_median %>% filt
 
 normalised_plot_RPS3 <- ggplot(data = shortvslong_platesnorm_all_median %>% filter(Promoter == "pRPS3")) +
   RNA_relative_abundance_figure_options + 
-  labs(x="Fold change in RNA abundance \n relative to tRPS3_200bp \n (log2 scale)", title = "RPS3", y="Terminator \n Length") +
+  labs(x="Fold change in RNA abundance \n relative to tRPS3_200bp \n (log2 scale)", title = "RPS3", y="Terminator \n length") +
   scale_colour_manual(values=c("black","#a84a9a","#6f3ba1")) +
   # theme(axis.text.y=element_text(colour=c("black","#a84a9a", "#6f3ba1"))) +
   geom_vline(xintercept=1, linetype="dotted", color = "grey50")
