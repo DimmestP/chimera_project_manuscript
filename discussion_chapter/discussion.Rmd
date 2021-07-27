@@ -92,6 +92,11 @@ Future work on CREs will need to respect the fact that characterisation of eleme
 Both small- and large-scale studies of CREs should ideally be carried out with multiple combinations of other regulatory elements, in cells in multiple growth conditions, to build a comprehensive understanding of transcriptional and post-transcriptional regulation.
 
 
+# Acknowledgments
+
+We thank Naomi Nakayama, Erika Szymanski, Filippo Menolascina, and members of the Wallace lab for discussions on the manuscript.
+
+
 # References
 
 ::: {#refs}
