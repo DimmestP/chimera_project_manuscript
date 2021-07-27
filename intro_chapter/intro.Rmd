@@ -7,7 +7,8 @@ Extending the abstraction to the mature messenger RNA transcript, the coding seq
 The 5'UTR contributes to translation regulation and the 3'UTR contributes to transcript stability and localisation.
 
 Abstracting specific characteristics to individual elements of a gene has facilitated the assumption that parts are modular or interchangeable with other similar parts.
-However, it is important to distinguish between two concepts of modularity: modular assembly, how easy it is to construct combinations of parts; and composability, how function and regulation can be decomposed into contributions from individual parts.
+It is tempting to assume that characterisation of a part in a single context (of other parts) is sufficient to predict its function in a different context.
+This assumption blurs two concepts of modularity: modular assembly, how easy it is to construct combinations of parts; and composability, how function and regulation can be decomposed into contributions from individual parts.
 Assembly of parts that are non-composable would result in assembled genes with unpredictable function or quantitative regulation.
 
 Modular assembly is now routine: modern DNA synthesis and cloning techniques allow the construction of complex gene pathways through the combinatorial assembly of chosen parts [@Curran2013; @Lee2015; @Garcia2018; @Andreou2018]. 
@@ -33,5 +34,5 @@ First, we use modular cloning to construct 120 combinations of promoter (includi
 We then investigate the effect of promoter and terminator context on the regulatory behaviour of short CREs in 3'UTRs.
 In order to select suitable 3'UTR motifs, we adapt a method to computationally predict mRNA log2-half-life as a linear combination of codon usage and motif counts [@Cheng2017].
 We then quantify the effect on mRNA and protein levels of selected 3'UTR motifs when inserted in, or removed from, diverse reporter constructs.
-Our results demonstrate that the incorporation of candidate decay motifs indeed results in a decrease in mRNA abundance, however their quantitative contribution depends on both the local 3'UTR context and the distant promoter context.
+Our results demonstrate that the incorporation of candidate decay motifs indeed results in a decrease in mRNA abundance, however their quantitative contribution depends on both the local 3'UTR context and the more distant promoter context.
 These results highlight limits to the composability of cis-regulatory elements.

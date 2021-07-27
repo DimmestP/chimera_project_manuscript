@@ -9,26 +9,30 @@ output:
 Our measurements of protein output from promoter-terminator combinations highlight the limitations of assuming that CREs are quantitatively composable.
 Unsurprisingly, fluorescent protein expression levels are dominated by promoter choice, up to 100 fold, and then terminator choice, up to 5 fold. 
 However, our observations of 1.5 fold change in the relative effect of terminators depending on coding sequence and promoter choice highlight the quantitative limitations of the assumption of composability.
-We speculate that screening a larger library of CREs would reveal a subset with stronger quantitiative interactions, as in [@Kosuri2013].
+We speculate that screening a larger library of CREs would reveal a subset with stronger quantitative interactions, as in [@Kosuri2013].
 
 Terminators taken from co-regulated genes have similar behaviour in our reporter constructs.
 Terminators that have consistently low expression include tSUN4 and tTOS6, taken from cell wall proteins whose transcripts are bound and regulated by shared RNA-binding proteins [@Hogan2008].
 Terminators have similar effects when paired with either of the two ribosomal protein promoters pRPS3 or pRPS13, which is consistent with the co-regulation of ribosomal proteins in cells.
+It will be interesting to investigate the shared sequence signals and proteins that explain these regulatory patterns and affect the composability of these elements.
 
-Furthermore, we find that the effect of short CREs in 3'UTRs depends on the context of their host construct.
+We find that the effect of short CREs in 3'UTRs depends on the context of their host construct.
 The contribution of our selected cis-regulatory motifs to mRNA stability, as inferred from transcriptome-wide analysis, correlated with their effect on the abundance of reporter constructs.
 However, their contributions to mRNA abundance were inconsistent and dependent on context: TGTAHMNTA has no measurable effect when inserted into tRPS3 but the expected effect in tTSA1, ATATTC has the expected effect in tRPS3 but little effect in tTSA1, and HWNCATTWY can either decrease or increase mRNA levels when removed from tPIR1, depending on the promoter.
 Also, the two tPIR1 constructs with different mutated HWNCATTWY motifs had different expression levels suggesting HWNCATTWY has a position dependent effect. 
 Although, the exact sequences of the two motifs did also differ by 4 nucleotides.
-In addition, our original motif search predicted the behaviour of a TGTAAATA motif to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
-TGTAAATA changed its contribution in the two data sets because, as a known binding motif for Puf3, carbon deficient conditions trigger Puf3 to degrade its targets [@Miller2014].
-Carbon deficient conditions were likely present due to the bespoke CSM-lowURA media used by [@Chan2018], which is similar to the SC-URA media used in our assays.
+In addition, our original motif search predicted a TGTAAATA motif to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
+TGTAAATA is a known binding motif for Puf3 and carbon deficient conditions trigger Puf3 to degrade its targets [@Miller2014].
+Carbon deficient conditions were likely present due to the bespoke CSM-lowURA media used by [@Chan2018], which is similar to the SC-URA media used in our assays, contrasting with carbon-rich YPD media used by [@Sun2013].
+Thus, carbon-dependent regulation by Puf3 could explain the different behaviour of TGTAAATA in the different datasets.
 These disparities in predicted and experimentally verified regulatory behaviour raises questions about current methods for discovering novel cis-regulatory elements and, more generally, for understanding and manipulating regulatory pathways.
 
 
 ## Mechanisms for motif terminator context dependence
 
-Our results support long-standing mechanistic observations that CRE contributions depend on the presence of other CREs in the host gene and, usually, on trans-regulatory elements (TREs) that are  regulated in turn.
+This study documents CRE variability with local context, but CRE behavior is also known to vary temporally and spatially in cells, further supporting that CRE functions are not generally decomposable.
+Our results support long-standing mechanistic observations that CRE contributions depend on the presence of other CREs in the host gene.
+However, CREs are often regulated by cognate trans-regulatory elements (TREs) that are spatiotemporally regulated in turn.
 These effects are not separable, because spatiotemporal regulation of gene expression conferred by one CRE can change the interaction of a second CRE with its relevant TREs.
 For example, a motif may act as the regulatory binding site of a TRE only after the transcript is localised to a time and place where that TRE is present, as we discuss below.
 
@@ -78,7 +82,7 @@ Again looking at TF algorithms, partitioning algorithms could be used to predict
 Reductionist search algorithms that attempt to discover the shortest possible sequence contributing to expression may limit the discovery of novel CREs. 
 High resolution maps of protein-RNA interactions are revealing RBPs with gapped, multi-partite motifs [@Bayne2020] or motifs that must be repeated in the same transcript to be effective [@Gu2004;@Jackson2004].
 Common motif searching approaches, such as MEME Suite [@Bailey2015], have extended beyond fixed length, gapless motifs but may still assume motifs occur independently and only once per transcript [@Frith2008].
-Although reducing the search constraints to allow longer, gapped motifs does increase the false discovery rate, the availability of precise interactome data sets suggests a shift in priority towards more flexible search algorithms.
+Although reducing the search constraints to allow longer, gapped motifs could increase the false positive rate, the availability of precise interactome data sets suggests a need for more flexible search algorithms that effectively discover complex motifs.
 
 
 ## Implications for engineering biology
