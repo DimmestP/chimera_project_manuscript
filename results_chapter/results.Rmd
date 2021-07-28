@@ -152,7 +152,7 @@ A simple model of transcript production and decay argues that changes in mRNA ha
 So, for each promoter and host terminator combination, we trained a linear model to predict the log2 mRNA abundance (i.e. $\Delta Cq$) values from the RT-qPCR using only motif presence, and compared this with the log2 half-life effect of the motif from our transcriptome-wide analysis of @Chan2018.
 The effect of short CREs in reporter constructs is correlated with the predictive model, but the strength of the correlation depends on context (Figure \@ref(fig:hlife-predict-vs-abundance-and-motif-context-dependence)A).
 Constructs inserting motifs into terminators had a lower correlation with predicted effects than the construct where we remove motifs from a native terminator.
-Interestingly, motifs appear to have consistently greater than predicted effects on mRNA abundance when their host terminator is paired with its native promoter. 
+Interestingly, motif effects on mRNA abundance appear to have consistently greater correlation with predicted effects when their host terminator is paired with its native promoter. 
 
 We next compared the inferred coefficients for individual motifs in each promoter-host terminator pair (Figure \@ref(fig:hlife-predict-vs-abundance-and-motif-context-dependence)B).
 The effect of a motif depends on terminator context, for example, ATATTCA reduces mRNA abundance substantially more when inserted in tRPS3 than in tTSA1. 
