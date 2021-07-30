@@ -21,7 +21,7 @@ The contribution of our selected cis-regulatory motifs to mRNA stability, as inf
 However, their contributions to mRNA abundance were inconsistent and dependent on context: TGTAHMNTA has no measurable effect when inserted into tRPS3 but the expected effect in tTSA1, ATATTC has the expected effect in tRPS3 but little effect in tTSA1, and HWNCATTWY can either decrease or increase mRNA levels when removed from tPIR1, depending on the promoter.
 Also, the two tPIR1 constructs with different mutated HWNCATTWY motifs had different expression levels suggesting HWNCATTWY has a position dependent effect. 
 Although, the exact sequences of the two motifs did also differ by 4 nucleotides.
-In addition, our original motif search predicted a TGTAAATA motif to be stabilising in the [@Sun2013] data set but destabilising in the [@Chan2018] data set.
+In addition, our original motif search predicted a TGTAAATA motif to be stabilising in the [@Sun2013] dataset but destabilising in the [@Chan2018] dataset.
 TGTAAATA is a known binding motif for Puf3 and carbon deficient conditions trigger Puf3 to degrade its targets [@Miller2014].
 Carbon deficient conditions were likely present due to the bespoke CSM-lowURA media used by [@Chan2018], which is similar to the SC-URA media used in our assays, contrasting with carbon-rich YPD media used by [@Sun2013].
 Thus, carbon-dependent regulation by Puf3 could explain the different behaviour of TGTAAATA in the different datasets.
@@ -77,12 +77,12 @@ Motif detection algorithms need to revisit the assumption that the presence of a
 The effect of a motif can be influenced by factors such as growth conditions and time of measurement.
 Uncertainty around the active state of a motif could be introduced using latent variables, as used in transcription factor (TF) binding site prediction algorithms to represent the proportion of active TF sites [@Dai2017; @Sanguinetti2006].
 Alternatively, non-linear relationships between factors affecting motif activity can be modeled by partition regression techniques, such as random forests.
-Again looking at TF algorithms, partitioning algorithms could be used to predict functional data sets using short sub-sequences of transcripts [@BehjatiArdakani2019]. 
+Again looking at TF algorithms, partitioning algorithms could be used to predict functional datasets using short sub-sequences of transcripts [@BehjatiArdakani2019]. 
 
 Reductionist search algorithms that attempt to discover the shortest possible sequence contributing to expression may limit the discovery of novel CREs. 
 High resolution maps of protein-RNA interactions are revealing RBPs with gapped, multi-partite motifs [@Bayne2020] or motifs that must be repeated in the same transcript to be effective [@Gu2004;@Jackson2004].
 Common motif searching approaches, such as MEME Suite [@Bailey2015], have extended beyond fixed length, gapless motifs but may still assume motifs occur independently and only once per transcript [@Frith2008].
-Although reducing the search constraints to allow longer, gapped motifs could increase the false positive rate, the availability of precise interactome data sets suggests a need for more flexible search algorithms that effectively discover complex motifs.
+Although reducing the search constraints to allow longer, gapped motifs could increase the false positive rate, the availability of precise interactome datasets suggests a need for more flexible search algorithms that effectively discover complex motifs.
 
 
 ## Implications for engineering biology

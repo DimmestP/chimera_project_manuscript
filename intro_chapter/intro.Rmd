@@ -7,7 +7,7 @@ Extending the abstraction to the mature messenger RNA transcript, the coding seq
 The 5'UTR contributes to translation regulation and the 3'UTR contributes to transcript stability and localisation.
 
 Abstracting specific characteristics to individual elements of a gene has facilitated the assumption that parts are modular or interchangeable with other similar parts.
-It is tempting to assume that characterisation of a part in a single context (of other parts) is sufficient to predict its function in a different context.
+It is tempting to assume that the characterisation of a part in a single context (of other parts) is sufficient to predict its function in a different context.
 This assumption blurs two concepts of modularity: modular assembly, how easy it is to construct combinations of parts; and composability, how function and regulation can be decomposed into contributions from individual parts.
 Assembly of parts that are non-composable would result in assembled genes with unpredictable function or quantitative regulation.
 
@@ -15,7 +15,8 @@ Modular assembly is now routine: modern DNA synthesis and cloning techniques all
 Several groups have constructed standardised libraries comprising promoter (including 5'UTR) and terminator (including 3'UTR) parts, which can be combined to achieve desired expression of synthesized proteins.
 The characterisation of all possible promoter-terminator pairings is impractical, so standardised libraries generally characterise parts independently, for example testing many promoters with the same coding sequence and terminator [@Lee2015].
 Similarly, even massively parallel approaches to characterise smaller CREs usually explore a large library of promoter elements with a single terminator [@Sharon2012], or conversely a library of terminators with a single promoter [@Shalem2015].
-Because these experiments do not measure interactions between different parts, they rely on the untested assumption that those parts function more or less identically across different contextx, that is, that modularly assembled genes are also composable.
+Because these experiments do not measure interactions between different parts, they rely on the untested assumption that those parts function more or less identically across different context.
+That is, that modularly assembled genes are also composable.
 
 Computational methods for the discovery and quantification of short CREs, such as sequence motifs recognised by regulatory proteins, also tend to rely on models of independent effects, that is, composability.
 Prominent methods for mapping CRE sequence-function relationships include predicting functional data with short sequence features, often using linear models [@Shalgi2005; @Cheng2017; @Vijayabaskar2019]; or, directly comparing the sequences of genes with similar characteristics to determine the presence of short consensus sequence motifs [@Hogan2008; @Kretz2013] using motif discovery software [@Elemento2007; @Bailey2015].
@@ -32,7 +33,8 @@ Another study of promoter-terminator swaps in budding yeast revealed 2-fold chan
 Here, we provide further evidence for the importance of interactions between regulatory regions, and show the limitations of assuming that gene expression regulation can be decomposed into independent contributions from short CREs. 
 First, we use modular cloning to construct 120 combinations of promoter (including 5'UTR), coding sequence, and terminator (including 3'UTR) modules, showing that the quantitative effect of terminators on protein production depends on both promoter and coding sequence.
 We then investigate the effect of promoter and terminator context on the regulatory behaviour of short CREs in 3'UTRs.
-In order to select suitable 3'UTR motifs, we adapt a method to computationally predict mRNA log2-half-life as a linear combination of codon usage and motif counts [@Cheng2017].
+In order to select suitable 3'UTR motifs, we adapt a method to computationally predict mRNA log2 half life as a linear combination of codon usage and motif counts [@Cheng2017].
 We then quantify the effect on mRNA and protein levels of selected 3'UTR motifs when inserted in, or removed from, diverse reporter constructs.
-Our results demonstrate that the incorporation of candidate decay motifs indeed results in a decrease in mRNA abundance, however their quantitative contribution depends on both the local 3'UTR context and the more distant promoter context.
+Our results demonstrate that the incorporation of candidate decay motifs indeed results in a decrease in mRNA abundance.
+However, the quantitative contribution from motifs depends on both the local 3'UTR context and the promoter context.
 These results highlight limits to the composability of cis-regulatory elements.
