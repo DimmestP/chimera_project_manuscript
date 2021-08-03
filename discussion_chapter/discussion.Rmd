@@ -17,7 +17,7 @@ Terminators have similar effects when paired with either of the two ribosomal pr
 Further investigations are required into the shared sequence signals and proteins that explain these regulatory patterns and affect the composability of these elements.
 
 We find that the effect of short CREs in 3'UTRs depends on the context of their host construct.
-The contribution of our selected cis-regulatory motifs to mRNA stability, as inferred from the transcriptome-wide analysis, correlates with their effect on the abundance of reporter constructs.
+The contribution of our selected cis-regulatory motifs to mRNA stability, as inferred from transcriptome-wide analysis, correlates with their effect on the abundance of reporter constructs.
 However, their contributions to mRNA abundance were inconsistent and dependent on context: TGTAHMNTA has no measurable effect when inserted into tRPS3 but the expected effect in tTSA1, ATATTC has the expected effect in tRPS3 but little effect in tTSA1, and HWNCATTWY can either decrease or increase mRNA levels when removed from tPIR1, depending on the promoter.
 Also, the two tPIR1 constructs with different mutated HWNCATTWY motifs had different expression levels suggesting HWNCATTWY has a position dependent effect. 
 Although, the exact sequences of the two motifs did also differ by 4 nucleotides.
@@ -47,7 +47,7 @@ During the transition to meiosis II, Rim4 is phosphorylated which inhibits bindi
 Here, 5'UTR-specified translational control of CLB3 by Rim4 depends on the timing of promoter-specified transcriptional control.
 
 Spatial regulation by successive CREs is also important, as one CRE can facilitate transcript localisation whilst other CREs and/or TREs confer localisation-dependent regulation.
-In yeast, the Ash1 protein represses mating-type switching only in daughter cells [@Sil1996], due to localisation of the ASH1 transcript at the bud tip and subsequent localised translation (reviewed in [@Niednery2014]).
+In yeast, the Ash1 protein represses mating-type switching only in daughter cells [@Sil1996], due to localisation of the ASH1 transcript at the bud tip and subsequent localised translation [@Niednery2014].
 It is thought that co-transcriptional recruitment of She2 to the ASH1 transcript in the nucleus enables the later recruitment of cytoplasmic factors Khd1/Hek2 and Puf6, factors known for translational repression.
 Furthermore, successful transport of ASH1 to the bud tip by She2-She3-Myo4 complexes depends on translational repression by Khd1 and Puf6.
 Later, phosphorylation of Khd1 and Puf6 by bud-membrane-localised kinases leads to translational activation and the localisation of the ASH1 mRNP [@Paquin2007; @Deng2008].
@@ -92,9 +92,9 @@ In the creation of biological circuits, for example, time-consuming directed evo
 The availability of extensively characterised parts libraries now enables large scale searches for CREs with suitable expression.
 Together with high-throughput assays, pools of combinations of suitable CREs can be quickly screened for the correct expression levels [@Kosuri2013]. 
 
-Our conceptual model of a gene influences the tools we make and can limit our ability to predict and manipulate gene expression [@Szymanski2019].  
-Future work on CREs should acknowledge that gene expression cannot be completely decomposed into contributions from independently acting parts. 
-The characterisation of a elements' function in a single context is not enough to make generalisable conclusions.
+Our conceptual model of a gene influences the tools we make, and can limit our ability to predict and manipulate gene expression [@Szymanski2019].
+Conceptual models of CREs as independently acting composable parts exemplify these limits.
+The characterisation of an element's function in a single context is not enough to make generalisable conclusions.
 Both small- and large-scale studies of CREs should ideally be carried out with multiple combinations of other regulatory elements, in cells in multiple growth conditions, to build a comprehensive understanding of transcriptional and post-transcriptional regulation.
 
 
