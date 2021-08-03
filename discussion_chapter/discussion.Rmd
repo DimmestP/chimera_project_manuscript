@@ -9,15 +9,15 @@ output:
 Our measurements of protein output from promoter-terminator combinations highlight the limitations of assuming that CREs are quantitatively composable.
 Unsurprisingly, fluorescent protein expression levels are dominated by promoter choice, up to 100 fold, and then terminator choice, up to 5 fold. 
 However, our observations of 1.5 fold change in the relative effect of terminators depending on coding sequence and promoter choice highlight the quantitative limitations of the assumption of composability.
-We speculate that screening a larger library of CREs would reveal a subset with stronger quantitative interactions, as in [@Kosuri2013].
+Previous work by @Kosuri2013 suggests that screening a larger library of CREs would reveal a subset with even stronger quantitative interactions.
 
 Terminators taken from co-regulated genes have similar behaviour in our reporter constructs.
 Terminators that have consistently low expression include tSUN4 and tTOS6, taken from cell wall proteins whose transcripts are bound and regulated by shared RNA-binding proteins [@Hogan2008].
 Terminators have similar effects when paired with either of the two ribosomal protein promoters pRPS3 or pRPS13, which is consistent with the co-regulation of ribosomal proteins in cells.
-It will be interesting to investigate the shared sequence signals and proteins that explain these regulatory patterns and affect the composability of these elements.
+Further investigations are required into the shared sequence signals and proteins that explain these regulatory patterns and affect the composability of these elements.
 
 We find that the effect of short CREs in 3'UTRs depends on the context of their host construct.
-The contribution of our selected cis-regulatory motifs to mRNA stability, as inferred from transcriptome-wide analysis, correlated with their effect on the abundance of reporter constructs.
+The contribution of our selected cis-regulatory motifs to mRNA stability, as inferred from the transcriptome-wide analysis, correlates with their effect on the abundance of reporter constructs.
 However, their contributions to mRNA abundance were inconsistent and dependent on context: TGTAHMNTA has no measurable effect when inserted into tRPS3 but the expected effect in tTSA1, ATATTC has the expected effect in tRPS3 but little effect in tTSA1, and HWNCATTWY can either decrease or increase mRNA levels when removed from tPIR1, depending on the promoter.
 Also, the two tPIR1 constructs with different mutated HWNCATTWY motifs had different expression levels suggesting HWNCATTWY has a position dependent effect. 
 Although, the exact sequences of the two motifs did also differ by 4 nucleotides.
@@ -32,12 +32,12 @@ These disparities in predicted and experimentally verified regulatory behaviour 
 
 This study documents CRE variability with local context, but CRE behavior is also known to vary temporally and spatially in cells, further supporting that CRE functions are not generally decomposable.
 Our results support long-standing mechanistic observations that CRE contributions depend on the presence of other CREs in the host gene.
-However, CREs are often regulated by cognate trans-regulatory elements (TREs) that are spatiotemporally regulated in turn.
+However, CREs are often regulated by cognate trans-regulatory elements (TREs) that are spatiotemporally regulated themselves.
 These effects are not separable, because spatiotemporal regulation of gene expression conferred by one CRE can change the interaction of a second CRE with its relevant TREs.
 For example, a motif may act as the regulatory binding site of a TRE only after the transcript is localised to a time and place where that TRE is present, as we discuss below.
 
 Temporal regulation by successive CREs is common in developmental processes.
-For example, *C. elegans* lin-4 is a non-coding RNA gene crucial for regulating cell fates during the early stages of larval development [@Wightman1993].
+For example, in *C. elegans* lin-4 is a non-coding RNA gene crucial for regulating cell fates during the early stages of larval development [@Wightman1993].
 Lin-4 is a small RNA that acts as a TRE by binding to a repeated motif in the 3'UTR of its target mRNA lin-14, and inhibiting the translation of lin-14 [@Lee1993].
 Since lin-4 is only expressed at the end of the first larval development stage, the 3'UTR motifs in lin-14 only begin to inhibit its translation late into stage 1, initiating the start of stage 2 [@Olsen1999].
 The regulation of lin-4 by lin-14 binding to the 3'UTR thus depends on the temporal expression pattern encoded by lin-4's promoter.
@@ -48,9 +48,9 @@ Here, 5'UTR-specified translational control of CLB3 by Rim4 depends on the timin
 
 Spatial regulation by successive CREs is also important, as one CRE can facilitate transcript localisation whilst other CREs and/or TREs confer localisation-dependent regulation.
 In yeast, the Ash1 protein represses mating-type switching only in daughter cells [@Sil1996], due to localisation of the ASH1 transcript at the bud tip and subsequent localised translation (reviewed in [@Niednery2014]).
-It is thought that co-transcriptional recruitment of She2 is required for later recruitment of cytoplasmic factors Khd1/Hek2 and Puf6.
-Conversely, successful transport by She2-She3-Myo4 complexes depends on translational repression by Khd1 and Puf6.
-Later, translational activation due to phosphorylation of Khd1 and Puf6 by bud-membrane-localised kinases is likely to depend on the successful localisation of the ASH1 mRNP [@Paquin2007; @Deng2008].
+It is thought that co-transcriptional recruitment of She2 to the ASH1 transcript in the nucleus enables the later recruitment of cytoplasmic factors Khd1/Hek2 and Puf6, factors known for translational repression.
+Furthermore, successful transport of ASH1 to the bud tip by She2-She3-Myo4 complexes depends on translational repression by Khd1 and Puf6.
+Later, phosphorylation of Khd1 and Puf6 by bud-membrane-localised kinases leads to translational activation and the localisation of the ASH1 mRNP [@Paquin2007; @Deng2008].
 
 Another example where the effect of CRE on a transcript depends on co-localisation with a regulatory kinase comes from the fungal RNA-binding protein Ssd1.
 Yeast cell wall proteins such as Sun4 and Tos6 are translationally repressed by Ssd1 [@Jansen2009], which binds the 5'UTRs of their transcripts [@Hogan2008; @Bayne2020].
@@ -73,7 +73,7 @@ Indeed, clusters of short degenerate motifs have been proposed as a general regu
 
 ## Implications for novel cis-regulatory element searches
 
-Motif detection algorithms need to revisit the assumption that the presence of a motif alone ensures its functional effect.
+Motif detection algorithms need to progress beyond the assumption that the presence of a motif alone ensures its functional effect.
 The effect of a motif can be influenced by factors such as growth conditions and time of measurement.
 Uncertainty around the active state of a motif could be introduced using latent variables, as used in transcription factor (TF) binding site prediction algorithms to represent the proportion of active TF sites [@Dai2017; @Sanguinetti2006].
 Alternatively, non-linear relationships between factors affecting motif activity can be modeled by partition regression techniques, such as random forests.
@@ -92,7 +92,9 @@ In the creation of biological circuits, for example, time-consuming directed evo
 The availability of extensively characterised parts libraries now enables large scale searches for CREs with suitable expression.
 Together with high-throughput assays, pools of combinations of suitable CREs can be quickly screened for the correct expression levels [@Kosuri2013]. 
 
-Future work on CREs will need to respect the fact that characterisation of elements' function in a single context is not enough to make generalisable conclusions.
+Our conceptual model of a gene influences the tools we make and can limit our ability to predict and manipulate gene expression [@Szymanski2019].  
+Future work on CREs should acknowledge that gene expression cannot be completely decomposed into contributions from independently acting parts. 
+The characterisation of a elements' function in a single context is not enough to make generalisable conclusions.
 Both small- and large-scale studies of CREs should ideally be carried out with multiple combinations of other regulatory elements, in cells in multiple growth conditions, to build a comprehensive understanding of transcriptional and post-transcriptional regulation.
 
 

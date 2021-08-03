@@ -71,7 +71,7 @@ Any motifs that were found in fewer than 6 gene 3'UTRs, as annotated by @Pelecha
 
 We quantified the regulatory effects of the remaining 38 candidate motifs by applying a linear model predicting half life to 2 recent transcriptome-wide analyses of mRNA decay that used metabolic labeling [@Sun2013; @Chan2018].
 These datasets are loosely correlated in their half life measurements across 4188 genes reported in both datasets, $R = 0.63$ (Figure \@ref(fig:hlife-decay-model)A). However, @Chan2018 estimated substantially smaller half lives.
-@Chan2018 also had greater coverage of genes in the yeast genome, 5529 vs 4304,  and used multiple time points to determine half lives, 
+@Chan2018 also had greater coverage of genes in the yeast genome, 5529 vs 4304,  and used multiple time points to determine half lives. 
 Following @Cheng2017, we constructed a linear model to predict a transcript's half life using the counts of motifs in its 3'UTR, the length of the 3'UTR, and the relative codon usage in each transcript's coding sequence (see Material and Methods). 
 The linear model performed similarly on both datasets by explaining 44% and 41% of the variability in half lives for the @Chan2018 and @Sun2013 datasets respectively (Figure \@ref(fig:hlife-decay-model)C).
 This predictive power is comparable to the squared correlation between the datasets ($R^2 = 0.40$).
@@ -162,7 +162,7 @@ We next directly compared the estimated coefficients for each motif's effect on 
 The effect of a motif depends on terminator context.
 For example, ATATTCA reduces mRNA abundance substantially more when inserted in tRPS3 than in tTSA1. 
 Meanwhile, TGTAHMNTA significantly reduces mRNA abundance when inserted in tTSA1, but not tRPS3, whichever promoter is chosen.
-Promoter choice also influences the magnitude of a motifs contribution to mRNA levels.
+Promoter choice also influences the magnitude of a motif's contribution to mRNA levels.
 For the ATATTC, TGTAHMNTA and HWNCAUUWY motifs the greatest reduction in mRNA abundance occurred when native promoter-terminator pairings are measured.
 This is true for all 3 decay motifs across all 3 host terminators, except for HWNCAUUWY in pRPS3-tRPS3 constructs.
 
