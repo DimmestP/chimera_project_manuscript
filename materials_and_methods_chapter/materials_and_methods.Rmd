@@ -23,7 +23,7 @@ Assembled plasmids were transformed into yeast BY4741 using lithium acetate tran
 
 ## Fluorescence measurements: Plate reader analysis of strain growth and fluorescence
 
-Yeast with plasmids were grown in a 96-well deep well plate (VWR) containing 100μl of SC-Ura medium with 2% glucose and grown for ~12 hours at 30°C in a shaking incubator set at 250 rpm. 
+Yeast with plasmids were grown in a 96-well deep well plate (VWR) containing 100$\mu$l of SC-Ura medium with 2% glucose and grown for ~12 hours at 30°C in a shaking incubator set at 250 rpm. 
 The next day, the cultures were diluted to an OD  of 0.2. For each sample, 3 technical replicates of 200$\mu$l were transferred to a 96-well black microtiter plate (Corning) and grown according to the protocol described in @Lichten2014. 
 The Tecan Infinity M200 series plate reader was set at the temperature of 29.9 (range of 29.4-30.4&deg;C) with linear shaking (6 mm amplitude at 200-220 rpm). 
 OD measurements were carried out at an absorbance wavelength of 595 nm with a measurement bandwidth of 9 nm with 15 reads. mCherry fluorescence measurements were carried out with an excitation wavelength at 585 nm and an emission wavelength of 620 nm (excitation bandwidth of 9 nm and emission bandwidth of 20 nm) with the gain set at 100. 
@@ -43,12 +43,12 @@ Diluted cultures were grown at 30°C in a shaking incubator set at 90 rpm to an 
 Pelleted cells in the plate were stored in -80°C.
 
 To extract RNA, we adapted a silica column DNA/RNA extraction protocol from Zymo Research (Irvine, California, USA). 
-The pelleted cells were thawed and individually resuspended in 400 μl of RNA binding buffer (Zymo), then transferred to 2 ml screw cap tubes containing zirconia beads, lysed using the Precellys Evolution homogeniser then pelleted by centrifugation for 1.5 minutes. 
+The pelleted cells were thawed and individually resuspended in 400 $\mu$l of RNA binding buffer (Zymo), then transferred to 2 ml screw cap tubes containing zirconia beads, lysed using the Precellys Evolution homogeniser then pelleted by centrifugation for 1.5 minutes. 
 The supernatant was transferred to a Zymo Spin IIICG column (Zymo) then centrifuged. The flow through was mixed with 1 volume of ethanol then transferred to a Zymo Spin IIC column (Zymo) and centrifuged. 
 This flow through was discarded and 1 volume of DNA/RNA Prep buffer (Zymo) was added then centrifuged. 
-The column was washed with 700 μl of Zymo DNA/RNA Wash buffer (Zymo) then centrifuged. 
-The column was washed a second time, but with 400 μl of Zymo DNA/RNA Wash buffer (Zymo). 
-The column was centrifuged once more to remove residual wash buffer in the column. Lastly, 30 μl of nuclease free water was added to the column then eluted. 
+The column was washed with 700 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo) then centrifuged. 
+The column was washed a second time, but with 400 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo). 
+The column was centrifuged once more to remove residual wash buffer in the column. Lastly, 30 $\mu$l of nuclease free water was added to the column then eluted. 
 All centrifugation steps in the RNA extraction protocol were carried out at 12,000g for 1 minute unless otherwise stated. 
 Further details on the growth of yeast and extraction of the RNA are outlined in the following protocol - https://www.protocols.io/view/column-based-rna-extraction-from-yeast-s-cerevisia-beetjben.
 
