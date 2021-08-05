@@ -1,7 +1,7 @@
 # Supplementary Data
 \makeatletter
-\renewcommand{\fnum@figure}{Figure S\thefigure}
-\renewcommand{\fnum@table}{Table S\thetable}
+\renewcommand{\fnum@figure}{Supplementary Figure \thefigure}
+\renewcommand{\fnum@table}{Supplementary Table \thetable}
 \makeatother
 \setcounter{figure}{0}
 \setcounter{table}{0}
