@@ -17,7 +17,7 @@ knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual
 knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"), dpi = 300) 
 ```
 
-```{r TGTACAATA-motif-coef}
+```{r HWNCAUUWY-motif-coef}
 read.csv(here("./supplementary_data_chapter/data/HWNCAUUWY_shortlisted_motif_table.csv")) %>%
   dplyr::transmute(Motif = term,  `Total Count` = total_count, Coef = estimate, `p.value`) %>%
 knitr::kable(format = "latex", caption="\\textbf{Selecting the HWNCAUUWY motif, TTTCATTTC}. Summary of the number of occurences and contributions to a linear model predecting half life for each possible version of the HWNCAUUWY motif.")  %>%
@@ -26,7 +26,7 @@ knitr::kable(format = "latex", caption="\\textbf{Selecting the HWNCAUUWY motif, 
 
 
 
-```{r TTTCATTTC-motif-coef}
+```{r TGTAHMNTA-motif-coef}
 read.csv(here("./supplementary_data_chapter/data/UGUAHMNUA_shortlisted_motif_table.csv")) %>%
   dplyr::transmute(Motif = term,  `Total Count` = total_count, Coef = estimate, `p.value`)  %>%
 knitr::kable(format = "latex", caption = "\\textbf{Selecting the UGUAHMNUA motif, TGTACAATA}. Summary of the number of occurences and contributions to a linear model predecting half life for each possible version of the UGUAHMNUA motif.")  %>%

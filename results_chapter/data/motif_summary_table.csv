@@ -1,4 +1,4 @@
-Consensus Seq, Insertion Motif, Deletion Motif, Source, Chan Coef, Sun Coef, Notes
+Consensus Seq, Inserted Motif, Deleted Motif, Source, Chan Coef, Sun Coef, Notes
 ATATTC, ATATTC, ATATTC, Cheng, -0.075, -0.169, Decay motif
 TGTAHMNTA, TGTACAATA, TGTACATTA, Hogan, -0.227, -0.056, Puf4p binding motif
 GTATACCTA, GTATACCTA, GTATACCTA, Shalgi, 0.502, 0.283, Unknown

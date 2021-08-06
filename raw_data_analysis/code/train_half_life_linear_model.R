@@ -12,6 +12,7 @@ library(BiocManager)
 library(Biostrings)
 library(DECIPHER)
 library(latex2exp)
+library(tidyr)
 library(here)
 
 source(here("raw_data_analysis/code/linear_model_functions.R"))
