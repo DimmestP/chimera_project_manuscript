@@ -40,6 +40,10 @@ knitr::kable(minimum_free_energy, caption = "\\textbf{Table showing minimum free
   kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
+```{r motif-position-histograms, fig.cap="\\textbf{Relative positions of ATATTC, TGTAHMNUA and HWNCAUUWY motifs in native 3'UTRs.}", fig.align='center'}
+knitr::include_graphics(here("supplementary_data_chapter/figures/motif_position_histograms.png"), dpi = 300) 
+```
+
 ```{r chimera-qpcr-primers-table}
 qpcr_primers <- readr::read_csv(here::here("./supplementary_data_chapter/data/chimera_qpcr_primers.csv"))
 knitr::kable(qpcr_primers, caption = "\\textbf{Primer sequences created for all qPCR experiments.}", format = "latex")  %>%

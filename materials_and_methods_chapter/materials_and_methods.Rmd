@@ -61,7 +61,7 @@ Reverse transcription (RT) master mix was prepared, containing 2 $\mu$l of First
 Target cDNAs were measured by quantitative PCR with Brilliant II Fast SYBR Green QPCR Master Mix (Agilent) using a Lightcycler 480 qPCR machine (Roche).
 We measured all +RT reactions in technical triplicate, and negative control -RT samples using one replicate.
 We used the manufacturer's software to calculate quantification cycle (Cq) for each individual well using the fit points method, and exported both raw fluorescence and Cq data.
-All primer sets were thoroughly validated by serial dilution and by confirming amplicon size, sequences are available in Supplementary data X.
+All primer sets were thoroughly validated by serial dilution and by confirming amplicon size, sequences are available in Supplementary Table \ref{tab:chimera-qpcr-primers-table}.
 
 RT-qPCR data was analysed using our tidyqpcr R package v2.1.0-beta (https://github.com/ewallace/tidyqpcr).
 For each biological replicate, $\Delta$Cq values were calculated by normalising the median mCherry Cq values by the median Cq values of the three reference genes (RPS3, PGK1 and URA3).
@@ -85,39 +85,40 @@ where $k$ is the number of parameters in the model and $\hat L$ is the maximum v
 The AIC is an estimator for the prediction error of a model which also penalises models that have more parameters [@Akaike1998]. 
 Therefore, it can be used to compare models with different combinations of motifs and select ones that have the lowest error. 
 We implement this comparison using the R function step [@Rstats] [@Ripley2002]. 
-Step iteratively adds the motif which reduces the model's AIC the most until the penalty for adding news terms overcomes the benefit of including a new motif.
+Step iteratively adds the motif which reduces the model's AIC the most until the penalty for adding new motifs overcomes the benefit of including a new motif.
 Any motifs not included in the model at this point are removed.
-This procedure was ran on both decay data sets [@Chan2018] [@Sun2013]. 
+This procedure was ran on both @Chan2018 and @Sun2013 decay datasets. 
 
-The variance explained by each predictor in the linear model trained on the @Chan2018 data set is estimated in three ways. First, the variance explained by three individual linear models each containing only one of the predicates is calculated. Then, we determine the reduction in variance explained when just one of the predicates is removed from full model. Finally, the increase in variance explained when each predicate is added to the model sequentially, starting with codon usage and ending with 3'UTR length, is reported.
+The variance explained by each predictor in the linear model trained on the @Chan2018 dataset is estimated in three ways. First, the variance explained by three individual linear models, each containing one of the predicates, is calculated. Then, we determine the reduction in variance explained when one of the predicates is removed from the full model. Finally, the increase in variance explained when each predicate is added to the model sequentially, starting with codon usage and ending with 3'UTR length, is reported.
 
-Finally, we selected the specific versions of the HWNCATTWY and TGTAHMNTA motifs by running separate linear models predicting half life containing only the different versions of each consensus sequence. Coefficients were deduced for the significant motif versions (Supplementary Table \ref{tab:TGTACAATA-motif-coef}, \ref{tab:TTTCATTTC-motif-coef}). We chose instances with similar effect size, statistical significance, and number of occurences in native transcripts. We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA chose TGTACAATA over TGTATATTA specifically to avoid the 5nt stretch also found in ATATTC.
+Finally, we selected the specific versions of the HWNCATTWY and TGTAHMNTA motifs by running two addition linear models predicting half life that inferred separate coefficients for each version of its consensus sequence. Coefficients were reported for the significant motif versions (Supplementary Table
+\ref{tab:TGTACAATA-motif-coef}, \ref{tab:TTTCATTTC-motif-coef}). We chose instances with similar effect size, statistical significance, and number of occurrences in native transcripts. We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA chose TGTACAATA over TGTATATTA specifically to avoid the 5nt stretch also found in ATATTC.
 
 ## Design of modified 3'UTRs for testing the effects of mutated motifs
 
 RPS3 was chosen as the first 3'UTR for inserting motifs into as it was the only terminator in the characterized library that did not contain any of the 69 original motifs of interest.
 The tRPS3 3'UTR-terminator was modified to incorporate three 9 nt insertion sites for motifs (M1, M2 and M3).
 The M1 was inserted 24 nt downstream of the stop codon, M2 was inserted 15 nt downstream of M1 and the final insert M3 was inserted 4 nt downstream of M2 (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
-These positions were selected based on key design criteria **(Supplementary Figure X)**.
+These positions were selected based on key design criteria; effect on secondary structure (MFE), position of motifs in native 3'UTRs and position of other CREs important for transcriptional control (Supplementary Table \ref{tab:minimum-free-energy-table}, Supplementary Figure \ref{fig:motif-position-histograms}).
 A control tRPS3 3'UTR mod_NNN was designed to incorporate random bases in each insertion site.
 Further modified 3'UTR-terminator designs were designed to incorporate individual motifs of interest previously identified, within the insertion sites described (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
 
-We chose an alternative 3'UTR for screening the effects of inserting motifs of interest with by searching for characteristics similar to RPS3.
-To this end, median 3'UTRs were extracted from the @Pelechano2013 dataset filtered for the following criteria; 1) does not contain any of the original 69 motifs of interest, 2) < 300 nt in length and 3) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq data set **(Supplementary Table X)**.
+We chose an alternative 3'UTR for screening the effects of inserting motifs of interest by searching for characteristics similar to RPS3.
+To this end, median 3'UTRs were extracted from the @Pelechano2013 dataset filtered for the following criteria; 1) does not contain any of the original 69 motifs of interest, 2) < 300 nt in length and 3) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq dataset **(Supplementary Table X)**.
 
-Similar to the modified RPS3 3'UTR-terminator designs, three 9 nt insertion sites (M1, M2 and M3).
+Similar to the modified RPS3 3'UTR-terminator designs, we chose three 9 nt insertion sites (M1, M2 and M3).
 The M1 was designed 21 nt downstream of the stop codon, M2 was designed 20 nt downstream of M1, and M3 was designed 24 bp downstream of M2. 
 The tTSA1 mod_NNN construct contained random bases in the M1, M2 and M3 sites (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
 Similar to the modified tRPS3 3'UTR-terminator designs, individual motifs of interest previously described were introduced into the insertion sites (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A), whereby mod_NGG was designed to characterise a candidate stability motif, whilst mod_NTN, mod_NAA, mod_HNH and mod_HTH were designed to characterise candidate decay motifs.
 
 Alternatively, we wanted to find a native 3'UTR that contained the 4 shortlisted motifs of interest. 
-Again, median 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following criteria; 1) contains at least 2 shortlisted motifs of interest, 2) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq data set.
+Again, median 3'UTRs were extracted from the @Pelechano2013 dataset filtered for the following criteria; 1) contains at least 2 shortlisted motifs of interest, 2) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq dataset.
 The PIR1 terminator chosen for motif deletion had to have all of the motifs present except the stability motif GTATACCTA, as this only occurs in limited number of native terminators.
 PIR1 does contain one copy each of the ATATTC and UGUAHMNU the motifs, and 3 copies of the HWNCAUUWY motifs (Figure \@ref(fig:tPIR1-design-and-qpcr)A).
 
 The mutation of motifs for their removal from the PIR1 3'UTR was carried out according to the following criteria: 1) at least 50% of the motif sequence (specifically the motif consensus sequence) was mutated to a base that does not correspond to the consensus sequence.
 2) GC content was minimally altered.
-3) Mutations that resulted in a limited change in the predicted secondary structure and minimum free energy (MFE), see Supplementary Figure \@ref(fig:secondary-structure-PIR1)) (according to the RNAfold [@Lorenz2011] - http://rna.tbi.univie.ac.at//cgi-bin/RNAWebSuite/RNAfold.cgi). 
+3) Mutations that resulted in a limited change in the predicted secondary structure and minimum free energy (MFE), see Supplementary Table \@ref(tab:minimum-free-energy-table)) (according to the RNAfold [@Lorenz2011] - http://rna.tbi.univie.ac.at//cgi-bin/RNAWebSuite/RNAfold.cgi). 
 
 The native and modified candidate 3'UTRs were screened for the presence of Esp3I and BsaI sites within the sequence.
 100 nt downstream of the native 3'UTR was added to the candidate and verified for whether they can be synthesised by IDT using the gBlock entry form (https://eu.idtdna.com/site/order/gblockentry).
@@ -143,4 +144,4 @@ This gives a linear effect on the log-scale abundance
 $$\log\langle m_a \rangle =\Delta \log\lambda^{1/2} + \log\langle m_0 \rangle$$
 and because PCR quantification cycle Cq is proportional to $\log2(m)$, this directly leads to a linear effect on Cq.
 
-All analysis made extensive use of the tidyverse [@Wickham2019] and plotting was completed with ggplot2 [@Wickham2016]
+All analyses made extensive use of the tidyverse [@Wickham2019] and plotting was completed with ggplot2 [@Wickham2016]
