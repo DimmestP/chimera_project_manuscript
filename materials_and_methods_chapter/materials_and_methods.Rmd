@@ -21,6 +21,9 @@ Plasmid inserts were confirmed by Sanger sequencing (MRC PPU DNA Sequencing and 
 DNA sequences used in this study are summarised in **Supplementary table X**. 
 Assembled plasmids were transformed into yeast BY4741 using lithium acetate transformation [@Gietz2002a], and selected in SC-URA agar plates to isolate successful transformants.
 
+The mCherry coding sequence is as used in @Garcia2018, which in turn was amplified from the mCherry sequence in @Sharon2012.
+The mTurquoise2 coding sequence is as used in @Lee2015. 
+
 ## Fluorescence measurements: Plate reader analysis of strain growth and fluorescence
 
 Yeast with plasmids were grown in a 96-well deep well plate (VWR) containing 100$\mu$l of SC-Ura medium with 2% glucose and grown for ~12 hours at 30°C in a shaking incubator set at 250 rpm. 
