@@ -86,7 +86,9 @@ low_exp_mCh_mTurq_platereader_raw_figure <- ggplot(low_exp_pro_mCh_mTurq) +
   facet_grid(Protein~Promoter) +
   scale_x_continuous("Fluorescence per OD \n at max growth rate",
                     breaks = c(0, 500, 1000),
-                    expand = expansion(mult = 0.025))
+                    expand = expansion(mult = 0.025),
+                    oob=oob_squish, 
+                    limits = c(0,NA))
 
 bottom_row_swap_figure <- 
     plot_grid(low_exp_mCh_mTurq_platereader_raw_figure,

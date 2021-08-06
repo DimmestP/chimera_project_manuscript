@@ -126,25 +126,31 @@ model_coefficients <- tidy(pPGK1_tRPS3_norm_mean_lm) %>%
   mutate(ter_pro = "pPIR1_tPIR1", norm_by = "mean")) %>%
   bind_rows(tidy(pPGK1_tPIR1_norm_mean_lm) %>%
   mutate(ter_pro = "pPGK1_tPIR1", norm_by = "mean"))
-  
 
-ggplot(model_coefficients) +
+# swap sign of PIR1 HWNCAUUWY:UGUAHMNUA to align with direction of change
+model_coefficients_PIR1_align <- model_coefficients %>%
+  filter(!(term == "UGUAHMNUA:HWNCAUUWY" & str_detect(ter_pro,"tPIR1"))) %>%
+  bind_rows( model_coefficients %>%
+               filter(term == "UGUAHMNUA:HWNCAUUWY", str_detect(ter_pro,"tPIR1")) %>%
+               mutate(estimate = -estimate))
+
+ggplot(model_coefficients_PIR1_align) +
   geom_point(aes(x=term, y=estimate, shape = factor(ter_pro, levels =c("pRPS3_tRPS3", "pTSA1_tTSA1", "pPGK1_tRPS3", "pPGK1_tTSA1")), colour = (p.value < 0.05)), position = position_jitter(width = 0.1)) +
   theme_cowplot() +
   theme(axis.text.x = element_text(angle = 90), panel.grid.major.y = element_line(size = 0.1)) +
   labs(x = "", y = "Coefficient", shape = "Promoter/Terminator", colour = "Significant")
 
 
-motif_term_dictionary <- model_coefficients %>% 
+motif_term_dictionary <- model_coefficients_PIR1_align %>% 
   distinct(term) %>%
   mutate(new_term = c("Construct", "exp_repExpRep2", "ATATTC", "GTATACCTA", "TGTAHMNTA", "HWNCATTWY", "Wildtype\n vs Mod0", "TGTAHMNTA\n+\nHWNCATTWY"))
 
-construct_dictionary <- model_coefficients %>% 
+construct_dictionary <- model_coefficients_PIR1_align %>% 
   distinct(ter_pro) %>%
   mutate(promoter_type = c("PGK1", "Native", "PGK1", "Native", "SRO9", "SRO9", "SRO9", "Native", "PGK1"))
 
 individual_lm_coefficients_data <- 
-  model_coefficients %>% 
+  model_coefficients_PIR1_align %>% 
   inner_join(motif_term_dictionary) %>%
   inner_join(construct_dictionary) %>%
   separate(ter_pro, into=c("promoter","terminator"), sep = "_", remove = FALSE) %>%

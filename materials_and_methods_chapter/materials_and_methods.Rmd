@@ -86,12 +86,13 @@ We implement this motif comparison using the R function step [@Rstats; @Ripley20
 to iteratively add the motif which reduces the model's AIC the most until the penalty for adding news terms overcomes the benefit of including a new motif.
 This procedure was run on each decay data set independently. 
 
-The variance explained by each predictor in the linear model trained on the @Chan2018 data set is estimated in three ways. First, the variance explained by three individual linear models each containing only one of the predicates is calculated. Then, we determine the reduction in variance explained when just one of the predicates is removed from full model. Finally, the increase in variance explained when each predicate is added to the model sequentially, starting with codon usage and ending with 3'UTR length, is reported.
+The variance explained by each predictor in the linear model trained on the @Chan2018 dataset is estimated in three ways. First, the variance explained by three individual linear models each containing only one of the predicates is calculated. Then, we determine the reduction in variance explained when just one of the predicates is removed from full model. Finally, the increase in variance explained when each predicate is added to the model sequentially, starting with codon usage and ending with 3'UTR length, is reported.
 
 We selected the specific versions of the consensus HWNCATTWY and TGTAHMNTA motifs by running separate linear models predicting half-life containing only the different versions of each consensus sequence. 
 Coefficients were deduced for the significant motif versions (Supplementary Table \ref{tab:TGTACAATA-motif-coef}, \ref{tab:TTTCATTTC-motif-coef}). 
 We chose instances with similar effect size, statistical significance, and number of occurences in native transcripts. 
 We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA chose TGTACAATA over TGTATATTA specifically to avoid the 5nt stretch also found in ATATTC.
+
 
 ## Design of modified 3'UTRs for testing the effects of mutated motifs
 
