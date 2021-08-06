@@ -23,7 +23,7 @@ Assembled plasmids were transformed into yeast BY4741 using lithium acetate tran
 
 ## Fluorescence measurements: Plate reader analysis of strain growth and fluorescence
 
-Yeast with plasmids were grown in a 96-well deep well plate (VWR) containing 100μl of SC-Ura medium with 2% glucose and grown for ~12 hours at 30°C in a shaking incubator set at 250 rpm. 
+Yeast with plasmids were grown in a 96-well deep well plate (VWR) containing 100$\mu$l of SC-Ura medium with 2% glucose and grown for ~12 hours at 30°C in a shaking incubator set at 250 rpm. 
 The next day, the cultures were diluted to an OD  of 0.2. For each sample, 3 technical replicates of 200$\mu$l were transferred to a 96-well black microtiter plate (Corning) and grown according to the protocol described in @Lichten2014. 
 The Tecan Infinity M200 series plate reader was set at the temperature of 29.9 (range of 29.4-30.4&deg;C) with linear shaking (6 mm amplitude at 200-220 rpm). 
 OD measurements were carried out at an absorbance wavelength of 595 nm with a measurement bandwidth of 9 nm with 15 reads. mCherry fluorescence measurements were carried out with an excitation wavelength at 585 nm and an emission wavelength of 620 nm (excitation bandwidth of 9 nm and emission bandwidth of 20 nm) with the gain set at 100. 
@@ -43,12 +43,12 @@ Diluted cultures were grown at 30°C in a shaking incubator set at 90 rpm to an 
 Pelleted cells in the plate were stored in -80°C.
 
 To extract RNA, we adapted a silica column DNA/RNA extraction protocol from Zymo Research (Irvine, California, USA). 
-The pelleted cells were thawed and individually resuspended in 400 μl of RNA binding buffer (Zymo), then transferred to 2 ml screw cap tubes containing zirconia beads, lysed using the Precellys Evolution homogeniser then pelleted by centrifugation for 1.5 minutes. 
+The pelleted cells were thawed and individually resuspended in 400 $\mu$l of RNA binding buffer (Zymo), then transferred to 2 ml screw cap tubes containing zirconia beads, lysed using the Precellys Evolution homogeniser then pelleted by centrifugation for 1.5 minutes. 
 The supernatant was transferred to a Zymo Spin IIICG column (Zymo) then centrifuged. The flow through was mixed with 1 volume of ethanol then transferred to a Zymo Spin IIC column (Zymo) and centrifuged. 
 This flow through was discarded and 1 volume of DNA/RNA Prep buffer (Zymo) was added then centrifuged. 
-The column was washed with 700 μl of Zymo DNA/RNA Wash buffer (Zymo) then centrifuged. 
-The column was washed a second time, but with 400 μl of Zymo DNA/RNA Wash buffer (Zymo). 
-The column was centrifuged once more to remove residual wash buffer in the column. Lastly, 30 μl of nuclease free water was added to the column then eluted. 
+The column was washed with 700 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo) then centrifuged. 
+The column was washed a second time, but with 400 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo). 
+The column was centrifuged once more to remove residual wash buffer in the column. Lastly, 30 $\mu$l of nuclease free water was added to the column then eluted. 
 All centrifugation steps in the RNA extraction protocol were carried out at 12,000g for 1 minute unless otherwise stated. 
 Further details on the growth of yeast and extraction of the RNA are outlined in the following protocol - https://www.protocols.io/view/column-based-rna-extraction-from-yeast-s-cerevisia-beetjben.
 
@@ -72,26 +72,26 @@ Complete scripts for qPCR analysis, quality control, and figure generation are a
 
 ## Determining 3'UTR decay motifs
 
-We initially selected 69 3'UTR motifs to investigate from three separate studies of cis-regulatory sequences suspected to regulate mRNA decay [@Shalgi2005;@Hogan2008; @Cheng2017]. 
-To shortlist this list to 4 suitable candidates to test for context dependence, we determined each motif's contribution to a linear model predicting half life.
-Following @Cheng2017, we quantified the effect of motifs on transcript half-life using a linear model predicting half life on the basis of codon usage, 3'UTR length, and 3'UTR motif frequency.
+We initially selected 69 3'UTR motifs to investigate from three separate studies of cis-regulatory elements suspected to regulate mRNA decay [@Shalgi2005;@Hogan2008; @Cheng2017]. 
+To shortlist this list to 4 suitable candidates to test for context dependence, we determined each motif's contribution to a linear model predicting half-life.
+Following @Cheng2017, we quantified the effect of motifs on transcript half-life using a linear model predicting half-life on the basis of codon usage, 3'UTR length, and 3'UTR motif frequency.
 $$log_2(\lambda_g^{1/2}) = \sum_c\beta_cp_{cg} + \sum_m\alpha_mn_{mg} + \gamma \omega_g + \epsilon_g$$
-where $\lambda_g^{1/2}$ is the half life of gene g, $\beta_c$ is the coefficient associated with codon c, $p_{cg}$ is the proportion of gene g's coding sequence that corresponds to codon c, $\gamma$ is the coefficient associated with 3'UTR length, $\omega_g$ is the 3'UTR length of gene $g$, $\alpha_m$ is the coefficient associated with motif $m$, $n_{mg}$ is number of occurrences of motif $m$ in gene $g$'s 3'UTR, and $\epsilon_g$ is the noise term.
-We used the median 3'UTR length estimates from the TIF-seq analysis in @Pelechano2013 for the length values and also to assess which sequence to use for motif search. @Pelechano2013 cluster similar TIF-seq reads into major transcript isoforms, mTIFs. The median 3'UTR length for each gene is then calculated over all distinct mTIFs.
+where $\lambda_g^{1/2}$ is the half-life of gene g, $\beta_c$ is the coefficient associated with codon c, $p_{cg}$ is the proportion of gene g's coding sequence that corresponds to codon c, $\gamma$ is the coefficient associated with 3'UTR length, $\omega_g$ is the 3'UTR length of gene $g$, $\alpha_m$ is the coefficient associated with motif $m$, $n_{mg}$ is number of occurrences of motif $m$ in gene $g$'s 3'UTR, and $\epsilon_g$ is the noise term.
+To choose 3'UTR lengths and to assess which sequence to use for 3'UTR motif search, we used the median 3'UTR length estimates (precisely, the median length of clustered major transcript isoforms) reported from the TIF-seq analysis in @Pelechano2013.
 
-We removed motifs that did not contribute to half life by using a greedy model selection algorithm that minimises the Akaike information criterion (AIC). 
+We removed motifs that did not significantly contribute to half-life by using a greedy model selection algorithm that minimises the Akaike information criterion (AIC). 
 $$AIC = 2k - 2ln(\hat{L})$$
-where $k$ is the number of parameters in the model and $\hat L$ is the maximum value of the likelihood function.
-The AIC is an estimator for the prediction error of a model which also penalises models that have more parameters [@Akaike1998]. 
-Therefore, it can be used to compare models with different combinations of motifs and select ones that have the lowest error. 
-We implement this comparison using the R function step [@Rstats] [@Ripley2002]. 
-Step iteratively adds the motif which reduces the model's AIC the most until the penalty for adding news terms overcomes the benefit of including a new motif.
-Any motifs not included in the model at this point are removed.
-This procedure was ran on both decay data sets [@Chan2018] [@Sun2013]. 
+where $k$ is the number of parameters in the model and $\hat L$ is the maximum value of the likelihood function [@Akaike1998].
+We implement this motif comparison using the R function step [@Rstats; @Ripley2002],
+to iteratively add the motif which reduces the model's AIC the most until the penalty for adding news terms overcomes the benefit of including a new motif.
+This procedure was run on each decay data set independently. 
 
 The variance explained by each predictor in the linear model trained on the @Chan2018 data set is estimated in three ways. First, the variance explained by three individual linear models each containing only one of the predicates is calculated. Then, we determine the reduction in variance explained when just one of the predicates is removed from full model. Finally, the increase in variance explained when each predicate is added to the model sequentially, starting with codon usage and ending with 3'UTR length, is reported.
 
-Finally, we selected the specific versions of the HWNCATTWY and TGTAHMNTA motifs by running separate linear models predicting half life containing only the different versions of each consensus sequence. Coefficients were deduced for the significant motif versions (Supplementary Table \ref{tab:TGTACAATA-motif-coef}, \ref{tab:TTTCATTTC-motif-coef}). We chose instances with similar effect size, statistical significance, and number of occurences in native transcripts. We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA chose TGTACAATA over TGTATATTA specifically to avoid the 5nt stretch also found in ATATTC.
+We selected the specific versions of the consensus HWNCATTWY and TGTAHMNTA motifs by running separate linear models predicting half-life containing only the different versions of each consensus sequence. 
+Coefficients were deduced for the significant motif versions (Supplementary Table \ref{tab:TGTACAATA-motif-coef}, \ref{tab:TTTCATTTC-motif-coef}). 
+We chose instances with similar effect size, statistical significance, and number of occurences in native transcripts. 
+We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA chose TGTACAATA over TGTATATTA specifically to avoid the 5nt stretch also found in ATATTC.
 
 ## Design of modified 3'UTRs for testing the effects of mutated motifs
 
@@ -129,7 +129,7 @@ A linear model predicting construct $\Delta$Cq's using the presence or absence o
 $$\Delta Cq = \sum_{m=1}^4\alpha_mn_{m} + \beta \space e_{rep} + \gamma \space n_{int}+ \epsilon$$
 where $n_m$ is the number of motif m in the construct, $e_{rep}$ is which experimental replicate the construct was part of and $n_{int}$ is interaction term for the UGUAMNUA and HWNCAUUWY motifs.
 
-## Predicting changes in transcript abundance from changes in half life
+## Predicting changes in transcript abundance from changes in half-life
 A simple kinetic model of the production and decay of transcripts was used:
 $$\varnothing \xrightarrow{k} m$$ 
 $$m \xrightarrow{\delta}  \varnothing$$ 
