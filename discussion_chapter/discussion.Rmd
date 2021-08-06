@@ -9,7 +9,7 @@ output:
 Our measurements of protein output from promoter-terminator combinations highlight the limitations of assuming that CREs are quantitatively composable.
 Unsurprisingly, fluorescent protein expression levels are dominated by promoter choice, up to 100 fold, and then terminator choice, up to 5 fold. 
 However, our observations of 1.5 fold change in the relative effect of terminators depending on coding sequence and promoter choice highlight the quantitative limitations of the assumption of composability.
-Previous work by @Kosuri2013 suggests that screening a larger library of CREs would reveal a subset with even stronger quantitative interactions.
+Previous work by @Kosuri2013 suggests that screening a larger library of CREs would reveal a subset with stronger quantitative interactions.
 
 Terminators taken from co-regulated genes have similar behaviour in our reporter constructs.
 Terminators that have consistently low expression include tSUN4 and tTOS6, taken from cell wall proteins whose transcripts are bound and regulated by shared RNA-binding proteins [@Hogan2008].
@@ -50,12 +50,12 @@ Spatial regulation by successive CREs is also important, as one CRE can facilita
 In yeast, the Ash1 protein represses mating-type switching only in daughter cells [@Sil1996], due to localisation of the ASH1 transcript at the bud tip and subsequent localised translation [@Niednery2014].
 It is thought that co-transcriptional recruitment of She2 to the ASH1 transcript in the nucleus enables the later recruitment of cytoplasmic factors Khd1/Hek2 and Puf6, factors known for translational repression.
 Furthermore, successful transport of ASH1 to the bud tip by She2-She3-Myo4 complexes depends on translational repression by Khd1 and Puf6.
-Later, phosphorylation of Khd1 and Puf6 by bud-membrane-localised kinases leads to translational activation and the localisation of the ASH1 mRNP [@Paquin2007; @Deng2008].
+Later, phosphorylation of Khd1 and Puf6 by bud-membrane-localised kinases leads to localised translational activation of the ASH1 mRNP [@Paquin2007; @Deng2008].
 
-Another example where the effect of CRE on a transcript depends on co-localisation with a regulatory kinase comes from the fungal RNA-binding protein Ssd1.
+Another example where the effect of a CRE on a transcript depends on co-localisation with a regulatory kinase comes from the fungal RNA-binding protein Ssd1.
 Yeast cell wall proteins such as Sun4 and Tos6 are translationally repressed by Ssd1 [@Jansen2009], which binds the 5'UTRs of their transcripts [@Hogan2008; @Bayne2020].
 It is thought that these transcripts are translationally activated at bud sites after the phosphorylation of Ssd1 by a localised kinase, Cbk1 [@Jansen2009].
-There is no evidence that Ssd1 directly acts to transport RNA, so this localised activation presumably depends on localisation that is conferred by other CREs, that recruit other RNA-binding proteins to those transcripts [@Hogan2008], that in turn recruit transport machinery.
+There is no evidence that Ssd1 directly acts to transport RNA, so this localised activation presumably depends on localisation that is conferred by other CREs, that recruit other RNA-binding proteins to those transcripts [@Hogan2008], that then in turn recruit transport machinery.
 We note that post-transcriptional regulation of SUN4 and TOS6 might explain the repressive effect of their terminators when paired with high-expression promoters (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
 
 Secondary structures can be integral to motif function, and secondary structure depends on sequences beyond a motif.
