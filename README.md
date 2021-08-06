@@ -1,9 +1,12 @@
-# Modular effects of yeast 3'UTRs and cis-regulartory elements inside yeast 3'UTRs on mRNA abundance
+# Probing 3'UTRs as Modular Regulators of Gene Expression
+
+Modular effects of yeast 3'UTRs and cis-regulatory elements on mRNA abundance.
 This repository contains the data and analysis files for the manuscript:
 
-> Probing 3'UTRs as Modular Regulators of Gene Expression,  Jamie Auxillos, Samuel Haynes, Abhishek Jain, Weronika Danecka, Edward Wallace
+> Probing 3'UTRs as Modular Regulators of Gene Expression.
+> Jamie Auxillos, Samuel Haynes, Abhishek Jain, Clemence Alibert, Weronika Danecka, Edward W.J. Wallace
 
-The data and code (including ALL analysis referred to in the paper) required to create the manuscript is included in this GitHub page. The R package Bookdown, created by Yihui Xie, can be used to recreate the manuscript and a makefile is provide to re-calculate most of the analysis. 
+The data and code (including ALL analysis referred to in the paper) required to create the manuscript is included in this GitHub page. The R package [Bookdown](https://bookdown.org/) can be used to recreate the manuscript and a makefile is provide to re-calculate most of the analysis. 
 
 ## Overview 
 
