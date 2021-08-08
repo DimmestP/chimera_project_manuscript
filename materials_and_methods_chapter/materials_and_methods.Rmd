@@ -18,7 +18,7 @@ Promoters, coding sequences and terminators were either amplified from the yeast
 Further detail on the Golden Gate assembly is described in https://www.protocols.io/view/golden-gate-assembly-esp31-or-bsa1-v2-hf-bkqrkvv6.
 Using these parts libraries, the promoters, coding sequences and terminators were assembled together into the transcription unit acceptor plasmid (POT1-ccdB) by Golden Gate assembly using Esp3I (NEB); these are low-copy centromeric plasmids with URA3 selection marker, as described in @Garcia2018.
 Plasmid inserts were confirmed by Sanger sequencing (MRC PPU DNA Sequencing and Services, Dundee). 
-DNA sequences used in this study are summarised in **Supplementary table X**. 
+DNA sequences used in this study are summarised in Supplementary Tables \ref{tab:mCherry-seq} and \ref{tab:mTurq-seq}. 
 Assembled plasmids were transformed into yeast BY4741 using lithium acetate transformation [@Gietz2002a], and selected in SC-URA agar plates to isolate successful transformants.
 
 The mCherry coding sequence is as used in @Garcia2018, which in turn was amplified from the mCherry sequence in @Sharon2012.
