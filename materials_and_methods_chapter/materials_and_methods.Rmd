@@ -21,6 +21,9 @@ Plasmid inserts were confirmed by Sanger sequencing (MRC PPU DNA Sequencing and 
 DNA sequences used in this study are summarised in **Supplementary table X**. 
 Assembled plasmids were transformed into yeast BY4741 using lithium acetate transformation [@Gietz2002a], and selected in SC-URA agar plates to isolate successful transformants.
 
+The mCherry coding sequence is as used in @Garcia2018, which in turn was amplified from the mCherry sequence in @Sharon2012.
+The mTurquoise2 coding sequence is as used in @Lee2015. 
+
 ## Fluorescence measurements: Plate reader analysis of strain growth and fluorescence
 
 Yeast with plasmids were grown in a 96-well deep well plate (VWR) containing 100$\mu$l of SC-Ura medium with 2% glucose and grown for ~12 hours at 30°C in a shaking incubator set at 250 rpm. 
@@ -33,7 +36,7 @@ Plate reader data were analysed using omniplate software [@Swain2016].
 Omniplate accounts for autofluorescence and fits a model to the time series data using Gaussian processes to infer the time of maximum growth rate for each well. 
 We minimised growth-dependent effects by using the fluorescence at maximum growth rate for all of our protein fluorescence experiments. 
 Each fluorescence measurement was also normalised by OD to remove dependency on cell number, so every protein fluorescence measurement is recorded as fluorescence per OD at max growth rate. 
-Further details regarding the growth and preparation of the plate reader assay is outlined in the following protocol - https://www.protocols.io/view/96-well-plate-reader-experiment-set-up-from-a-96-d-bbicikaw.
+Further details regarding the growth and preparation of the plate reader assay is outlined in https://www.protocols.io/view/96-well-plate-reader-experiment-set-up-from-a-96-d-bbicikaw.
 
 ## RNA measurements: Strain growth, RNA extraction, RT-qPCR, and analysis
 
@@ -50,7 +53,7 @@ The column was washed with 700 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo) then ce
 The column was washed a second time, but with 400 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo). 
 The column was centrifuged once more to remove residual wash buffer in the column. Lastly, 30 $\mu$l of nuclease free water was added to the column then eluted. 
 All centrifugation steps in the RNA extraction protocol were carried out at 12,000g for 1 minute unless otherwise stated. 
-Further details on the growth of yeast and extraction of the RNA are outlined in the following protocol - https://www.protocols.io/view/column-based-rna-extraction-from-yeast-s-cerevisia-beetjben.
+Further details on the growth of yeast and extraction of the RNA are outlined in https://www.protocols.io/view/column-based-rna-extraction-from-yeast-s-cerevisia-beetjben.
 
 The quantity and quality of the RNA was measured using both a spectrophotometer (DS-11, DeNovix, Wilmington, Delaware, USA) and Fragment Analyser (Agilent).
 4 $\mu$g of RNA was treated with DNAse1 (Thermo) then inactivated using the RapidOut DNA removal kit (Thermo) according to the manufacturer's protocol. 
@@ -72,69 +75,71 @@ Complete scripts for qPCR analysis, quality control, and figure generation are a
 
 ## Determining 3'UTR decay motifs
 
-We initially selected 69 3'UTR motifs to investigate from three separate studies of cis-regulatory sequences suspected to regulate mRNA decay [@Shalgi2005;@Hogan2008; @Cheng2017]. 
-To shortlist this list to 4 suitable candidates to test for context dependence, we determined each motif's contribution to a linear model predicting half life.
-Following @Cheng2017, we quantified the effect of motifs on transcript half-life using a linear model predicting half life on the basis of codon usage, 3'UTR length, and 3'UTR motif frequency.
-$$log_2(\lambda_g^{1/2}) = \sum_c\beta_cp_{cg} + \sum_m\alpha_mn_{mg} + \gamma \omega_g + \epsilon_g$$
-where $\lambda_g^{1/2}$ is the half life of gene g, $\beta_c$ is the coefficient associated with codon c, $p_{cg}$ is the proportion of gene g's coding sequence that corresponds to codon c, $\gamma$ is the coefficient associated with 3'UTR length, $\omega_g$ is the 3'UTR length of gene $g$, $\alpha_m$ is the coefficient associated with motif $m$, $n_{mg}$ is number of occurrences of motif $m$ in gene $g$'s 3'UTR, and $\epsilon_g$ is the noise term.
-We used the median 3'UTR length estimates from the TIF-seq analysis in @Pelechano2013 for the length values and also to assess which sequence to use for motif search. @Pelechano2013 cluster similar TIF-seq reads into major transcript isoforms, mTIFs. The median 3'UTR length for each gene is then calculated over all distinct mTIFs.
+We initially selected 69 3'UTR motifs to investigate from three separate studies of cis-regulatory elements suspected to regulate mRNA decay [@Shalgi2005;@Hogan2008; @Cheng2017]. 
+To select a short list of motifs to test for context dependence, we determined each motif's contribution to a linear model predicting half-life.
+Following @Cheng2017, we quantified the effect of motifs on transcript half-life using a linear model predicting half-life on the basis of codon usage, 3'UTR length, and 3'UTR motif frequency.
+$$log_2(\lambda_g^{1/2}) = \sum_c\beta_cp_{cg} + \sum_m\alpha_mn_{mg} + \gamma \omega_g + \epsilon$$
+where $\lambda_g^{1/2}$ is the half-life of gene g, $\beta_c$ is the coefficient associated with codon c, $p_{cg}$ is the proportion of gene g's coding sequence that corresponds to codon c, $\gamma$ is the coefficient associated with 3'UTR length, $\omega_g$ is the 3'UTR length of gene $g$, $\alpha_m$ is the coefficient associated with motif $m$, $n_{mg}$ is number of occurrences of motif $m$ in gene $g$'s 3'UTR, and $\epsilon$ is the noise term.
+To choose 3'UTR lengths and to assess which sequence to use for 3'UTR motif search, we used the median 3'UTR length estimates (precisely, the median length of clustered major transcript isoforms) reported from the TIF-seq analysis in @Pelechano2013.
 
-We removed motifs that did not contribute to half life by using a greedy model selection algorithm that minimises the Akaike information criterion (AIC). 
+We removed motifs that did not significantly contribute to half-life by using a greedy model selection algorithm that minimises the Akaike information criterion (AIC). 
 $$AIC = 2k - 2ln(\hat{L})$$
-where $k$ is the number of parameters in the model and $\hat L$ is the maximum value of the likelihood function.
-The AIC is an estimator for the prediction error of a model which also penalises models that have more parameters [@Akaike1998]. 
-Therefore, it can be used to compare models with different combinations of motifs and select ones that have the lowest error. 
-We implement this comparison using the R function step [@Rstats] [@Ripley2002]. 
-Step iteratively adds the motif which reduces the model's AIC the most until the penalty for adding new motifs overcomes the benefit of including a new motif.
-Any motifs not included in the model at this point are removed.
-This procedure was ran on both @Chan2018 and @Sun2013 decay datasets. 
+where $k$ is the number of parameters in the model and $\hat L$ is the maximum value of the likelihood function [@Akaike1998].
+We implement this motif comparison using the R function step [@Rstats; @Ripley2002],
+to iteratively add the motif which reduces the model's AIC the most until the penalty for adding news terms overcomes the benefit of including a new motif.
+This procedure was run on each decay data set independently. 
 
-The variance explained by each predictor in the linear model trained on the @Chan2018 dataset is estimated in three ways. First, the variance explained by three individual linear models, each containing one of the predicates, is calculated. Then, we determine the reduction in variance explained when one of the predicates is removed from the full model. Finally, the increase in variance explained when each predicate is added to the model sequentially, starting with codon usage and ending with 3'UTR length, is reported.
+The variance explained by each predictor in the linear model trained on the @Chan2018 dataset is estimated in three ways. First, the variance explained by three individual linear models each containing one of the predicates is calculated. Then, we determine the reduction in variance explained when one of the predicates is removed from the full model. Finally, the increase in variance explained when each predicate is added to the model sequentially, starting with codon usage and ending with 3'UTR length, is reported.
 
-Finally, we selected the specific versions of the HWNCATTWY and TGTAHMNTA motifs by running two addition linear models predicting half life that inferred separate coefficients for each version of its consensus sequence. Coefficients were reported for the significant motif versions (Supplementary Table
-\ref{tab:TGTACAATA-motif-coef}, \ref{tab:TTTCATTTC-motif-coef}). We chose instances with similar effect size, statistical significance, and number of occurrences in native transcripts. We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA chose TGTACAATA over TGTATATTA specifically to avoid the 5nt stretch also found in ATATTC.
+We selected the specific versions of the HWNCATTWY and TGTAHMNTA motifs by running two addition linear models predicting half-life that inferred separate coefficients for each version of its consensus sequence. 
+Coefficients were reported for the significant motif versions (Supplementary Table
+\ref{tab:HWNCAUUWY-motif-coef}, \ref{tab:TGTAHMNTA-motif-coef}). 
+We chose instances with similar effect size, statistical significance, and number of occurrences in native transcripts. 
+We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA chose TGTACAATA over TGTATATTA specifically to avoid the 5nt stretch also found in ATATTC.
 
 ## Design of modified 3'UTRs for testing the effects of mutated motifs
 
 RPS3 was chosen as the first 3'UTR for inserting motifs into as it was the only terminator in the characterized library that did not contain any of the 69 original motifs of interest.
 The tRPS3 3'UTR-terminator was modified to incorporate three 9 nt insertion sites for motifs (M1, M2 and M3).
 The M1 was inserted 24 nt downstream of the stop codon, M2 was inserted 15 nt downstream of M1 and the final insert M3 was inserted 4 nt downstream of M2 (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
-These positions were selected based on key design criteria; effect on secondary structure (MFE), position of motifs in native 3'UTRs and position of other CREs important for transcriptional control (Supplementary Table \ref{tab:minimum-free-energy-table}, Supplementary Figure \ref{fig:motif-position-histograms}).
+These positions were selected based on key design criteria, including; minimal perturbations of RNA secondary structure as predicted by RNAfold [@Lorenz2011], position of motifs in native 3'UTRs and position of other CREs important for transcriptional control (Supplementary Table \ref{tab:minimum-free-energy-table}, Supplementary Figure \ref{fig:motif-position-histograms}).
 A control tRPS3 3'UTR mod_NNN was designed to incorporate random bases in each insertion site.
 Further modified 3'UTR-terminator designs were designed to incorporate individual motifs of interest previously identified, within the insertion sites described (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
 
 We chose an alternative 3'UTR for screening the effects of inserting motifs of interest by searching for characteristics similar to RPS3.
-To this end, median 3'UTRs were extracted from the @Pelechano2013 dataset filtered for the following criteria; 1) does not contain any of the original 69 motifs of interest, 2) < 300 nt in length and 3) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq dataset **(Supplementary Table X)**.
+To this end, median-length 3'UTRs were extracted from the @Pelechano2013 dataset filtered for the following criteria; 1) does not contain any of the original 69 motifs of interest, 2) < 300 nt in length, 3) from a highly expressed gene, 4) synthesisable as a gBlock by our manufacturer (IDT). The 3'UTR from TSA1 met these criteria.
 
-Similar to the modified RPS3 3'UTR-terminator designs, we chose three 9 nt insertion sites (M1, M2 and M3).
-The M1 was designed 21 nt downstream of the stop codon, M2 was designed 20 nt downstream of M1, and M3 was designed 24 bp downstream of M2. 
-The tTSA1 mod_NNN construct contained random bases in the M1, M2 and M3 sites (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
-Similar to the modified tRPS3 3'UTR-terminator designs, individual motifs of interest previously described were introduced into the insertion sites (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A), whereby mod_NGG was designed to characterise a candidate stability motif, whilst mod_NTN, mod_NAA, mod_HNH and mod_HTH were designed to characterise candidate decay motifs.
+Similar to the modified tRPS3 designs, in tTSA1 we designed three 9 nt motif insertion sites: M1 21 nt downstream of the stop codon, M2 20 nt downstream of M1, and M3 24 bp downstream of M2 (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
+The tTSA1 mod_NNN construct contained random bases in the M1, M2 and M3 sites, with the motif insertions in other modified constructs as for tRPS3.
 
-Alternatively, we wanted to find a native 3'UTR that contained the 4 shortlisted motifs of interest. 
-Again, median 3'UTRs were extracted from the @Pelechano2013 dataset filtered for the following criteria; 1) contains at least 2 shortlisted motifs of interest, 2) in the top 5% most abundant genes according to @Nadal2019 single cell RNAseq dataset.
-The PIR1 terminator chosen for motif deletion had to have all of the motifs present except the stability motif GTATACCTA, as this only occurs in limited number of native terminators.
-PIR1 does contain one copy each of the ATATTC and UGUAHMNU the motifs, and 3 copies of the HWNCAUUWY motifs (Figure \@ref(fig:tPIR1-design-and-qpcr)A).
+To design deletion constructs we selected a native 3'UTR that contained the motifs of interest. 
+Again, median-length 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following criteria; 1) contains at least 3 shortlisted motifs of interest, 2) a highly expressed gene, 3) synthesisable.
+The PIR1 terminator chosen for motif deletion contains one copy each of the ATATTC and UGUAHMNU motifs, and 3 copies of the HWNCAUUWY motifs (Figure \@ref(fig:tPIR1-design-and-qpcr)A), although did not contain the putative stability motif GTATACCTA.
 
-The mutation of motifs for their removal from the PIR1 3'UTR was carried out according to the following criteria: 1) at least 50% of the motif sequence (specifically the motif consensus sequence) was mutated to a base that does not correspond to the consensus sequence.
-2) GC content was minimally altered.
-3) Mutations that resulted in a limited change in the predicted secondary structure and minimum free energy (MFE), see Supplementary Table \@ref(tab:minimum-free-energy-table)) (according to the RNAfold [@Lorenz2011] - http://rna.tbi.univie.ac.at//cgi-bin/RNAWebSuite/RNAfold.cgi). 
+The mutation of motifs for their removal from the PIR1 3'UTR was carried out so that: 1) at least 50% of the motif sequence (specifically the motif consensus sequence) was mutated to a base that does not correspond to the consensus sequence,
+2) GC content was minimally altered,
+3) Mutations that resulted in a limited change in the predicted secondary structure and minimum free energy (MFE) according to RNAfold [@Lorenz2011], see Supplementary Table \@ref(tab:minimum-free-energy-table)).
 
 The native and modified candidate 3'UTRs were screened for the presence of Esp3I and BsaI sites within the sequence.
-100 nt downstream of the native 3'UTR was added to the candidate and verified for whether they can be synthesised by IDT using the gBlock entry form (https://eu.idtdna.com/site/order/gblockentry).
+For incorporation into the YeastFab system, the sequence 'agcgtgCGTCTCgTAGC' was added to the 5'-end of the 3'UTR and the sequence 'CCTCcGAGACGcagcac' was added to the 3'-end of the 3'UTR.
+To check if sequences were synthesisable, 100 nt downstream of the native 3'UTR was added to the candidate and the sequence checked at the IDT gBlock entry form (https://eu.idtdna.com/site/order/gblockentry).
 
-The sequence 'agcgtgCGTCTCgTAGC' was added to the 5'-end of the 3'UTR and the sequence 'CCTCcGAGACGcagcac' was added to the 3'-end of the 3'UTR.
 
 ## Determining motif effect on abundance
-A linear model predicting construct $\Delta$Cq's using the presence or absence of the four selected motifs was trained on each promoter-terminator pairing separately. The linear model also included a term for batch effects, between the two experimental replicates for each set of constructs, and a term to account for interactions between the UGUAMNUA and HWNCAUUWY motifs.
-$$\Delta Cq = \sum_{m=1}^4\alpha_mn_{m} + \beta \space e_{rep} + \gamma \space n_{int}+ \epsilon$$
-where $n_m$ is the number of motif m in the construct, $e_{rep}$ is which experimental replicate the construct was part of and $n_{int}$ is interaction term for the UGUAMNUA and HWNCAUUWY motifs.
 
-## Predicting changes in transcript abundance from changes in half life
+A linear model predicting construct $\Delta$Cq's using the presence or absence of the four selected motifs was trained on each promoter-terminator pairing separately.
+The model included a term to account for interactions between the UGUAMNUA and HWNCAUUWY motifs
+The linear model also included a term for batch effects, between the 2 experimental batches of 3 biological replicates for each set of constructs, because this improved the quality of model fit.
+The model was:
+$$\Delta Cq = \sum_{m=1}^4\alpha_mn_{m} + \beta \space e_{rep} + \gamma \space n_{int}+ \epsilon$$
+where $n_m$ is the copy number of motif m in the construct, $e_{rep}$ is which experimental batch the construct was part of and $n_{int}$ is the interaction term with value 1 if both UGUAMNUA and HWNCAUUWY motifs are present.
+
+## Predicting changes in transcript abundance from changes in half-life
+
 A simple kinetic model of the production and decay of transcripts was used:
 $$\varnothing \xrightarrow{k} m$$ 
 $$m \xrightarrow{\delta}  \varnothing$$ 
-The steady state solution for the average number of transcripts, $\langle m \rangle$, using this model is 
+The steady state solution for the average number of transcripts, $\langle m \rangle$, is 
 $$\langle m \rangle = \frac{k}{\delta}$$ 
 where k is the rate of transcription, which can include multiple active states, and $\delta$ is the rate of decay for the transcript [@Sanchez2008]. 
 
