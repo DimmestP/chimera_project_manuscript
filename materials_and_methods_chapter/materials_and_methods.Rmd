@@ -15,7 +15,7 @@ To prepare BY4741 for transformation, we grew it in YPDA medium, containing 2% p
 
 All fluorescence reporter plasmids were constructed by Golden Gate assembly using the YeastFab system as described in @Garcia2018. 
 Promoters, coding sequences and terminators were either amplified from the yeast genome or synthesised by a commercial vendor (IDT) then cloned into a parts accepting plasmid (HcKan_P for promoters, HcKan_O for coding sequences and HcKan_T for terminators) by Golden Gate assembly using Bsa1-HFv2 (NEB). 
-Further detail on the Golden Gate assembly is described in https://www.protocols.io/view/golden-gate-assembly-esp31-or-bsa1-v2-hf-bkqrkvv6.
+Further detail on the Golden Gate assembly is described in the following protocol - http://dx.doi.org/10.17504/protocols.io.bkqrkvv6.
 Using these parts libraries, the promoters, coding sequences and terminators were assembled together into the transcription unit acceptor plasmid (POT1-ccdB) by Golden Gate assembly using Esp3I (NEB); these are low-copy centromeric plasmids with URA3 selection marker, as described in @Garcia2018.
 Plasmid inserts were confirmed by Sanger sequencing (MRC PPU DNA Sequencing and Services, Dundee). 
 DNA sequences used in this study are summarised in **Supplementary table X**. 
@@ -36,7 +36,7 @@ Plate reader data were analysed using omniplate software [@Swain2016].
 Omniplate accounts for autofluorescence and fits a model to the time series data using Gaussian processes to infer the time of maximum growth rate for each well. 
 We minimised growth-dependent effects by using the fluorescence at maximum growth rate for all of our protein fluorescence experiments. 
 Each fluorescence measurement was also normalised by OD to remove dependency on cell number, so every protein fluorescence measurement is recorded as fluorescence per OD at max growth rate. 
-Further details regarding the growth and preparation of the plate reader assay is outlined in https://www.protocols.io/view/96-well-plate-reader-experiment-set-up-from-a-96-d-bbicikaw.
+Further details regarding the growth and preparation of the plate reader assay is outlined in the following protocol - https://dx.doi.org/10.17504/protocols.io.bbicikaw.
 
 ## RNA measurements: Strain growth, RNA extraction, RT-qPCR, and analysis
 
