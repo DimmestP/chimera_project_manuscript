@@ -1,0 +1,89 @@
+---
+title: "Motif position histograms"
+output: html_document
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+library(tidyr)
+library(here)
+library(readr)
+library(dplyr)
+library(purrr)
+library(latex2exp)
+library(ggplot2)
+
+source(here("raw_data_analysis/code/linear_model_functions.R"))
+
+# Gather all yeast 3'UTRs
+yeast_3UTRs <- read_csv(here("./raw_data_analysis/data/half_life_data/whole_genome_3UTR.csv"))
+
+# import list of collated 3'UTR motifs
+motifs_raw <- scan(here("./raw_data_analysis/data/half_life_data/collated_suspected_decay_motifs.txt"), character())
+
+# Dictionary for converted IUPAC codes into machine readable regular expressions and converting U -> T
+motifs_dictionary <- tibble(motifIUPAC = motifs_raw,
+                            motifsRegex = iupac_to_regex(motifs_raw)) %>% 
+  group_by(motifIUPAC) %>%
+  mutate(motifsStrings = map(motifsRegex,expand_regex_to_redundent_strings)) %>%
+  unnest(motifsStrings) 
+
+```
+
+```{r calculate_position}
+# extract motif regex
+HWNCAUUWY <- motifs_dictionary %>% filter(motifIUPAC == "HWNCAUUWY") %>% pull(motifsRegex) %>% unique()
+
+TGTAHMNUA <- motifs_dictionary %>% filter(motifIUPAC == "UGUAHMNUA") %>% pull(motifsRegex) %>% unique()
+
+# function to return only start position
+only_motif_start_pos <- function(string,pattern){str_locate(string, pattern)[,1]}
+
+motif_positions <- yeast_3UTRs %>% 
+  mutate(length = str_length(threePrimeUTR), 
+         ATATTC_pos = only_motif_start_pos(threePrimeUTR, "ATATTC") / length, 
+         TGTAHMNUA_pos = only_motif_start_pos(threePrimeUTR,TGTAHMNUA) / length, 
+         HWNCAUUWY_pos = only_motif_start_pos(threePrimeUTR,HWNCAUUWY) / length)
+```
+
+```{r plot_position}
+plot_data_HWNCAUUWY <- motif_positions %>% select(geneName, HWNCAUUWY_pos) %>% filter(!is.na(HWNCAUUWY_pos))  %>% arrange(HWNCAUUWY_pos) %>% mutate(count = 1, cumulative= cumsum(count))
+
+plot_data_TGTAHMNUA <- motif_positions %>% select(geneName, TGTAHMNUA_pos) %>% filter(!is.na(TGTAHMNUA_pos))  %>% arrange(TGTAHMNUA_pos) %>% mutate(count = 1, cumulative= cumsum(count))
+
+plot_data_ATATTC <- motif_positions %>% select(geneName, ATATTC_pos) %>% filter(!is.na(ATATTC_pos))  %>% arrange(ATATTC_pos) %>% mutate(count = 1, cumulative= cumsum(count))
+
+HWNCAUUWY_position_plot <- ggplot(plot_data_HWNCAUUWY) + geom_histogram(aes(x=HWNCAUUWY_pos)) +
+  labs(title = "HWNCAUUWY Position in Native 3'UTRs",
+       x = "Relative Position",
+       y = ""
+  ) +
+  theme(plot.title = element_text(hjust=0.5), axis.title.x = element_text(size = 15))
+
+HWNCAUUWY_position_plot
+
+TGTAHMNUA_position_plot <- ggplot(plot_data_TGTAHMNUA) + geom_histogram(aes(x=TGTAHMNUA_pos)) +
+  labs(title = "TGTAHMNUA Position in Native 3'UTRs",
+       x = "",
+       y = TeX("$N^o$ of Genes")
+  ) +
+  theme(plot.title = element_text(hjust=0.5), axis.title.y = element_text(size = 15))
+
+TGTAHMNUA_position_plot
+
+ATATTC_position_plot <- ggplot(plot_data_ATATTC) + geom_histogram(aes(x=ATATTC_pos)) +
+  labs(title = "ATATTC Position in Native 3'UTRs",
+       x = "",
+       y = ""
+  ) +
+  theme(plot.title = element_text(hjust=0.5))
+
+ATATTC_position_plot
+
+cowplot::plot_grid(ATATTC_position_plot, TGTAHMNUA_position_plot, HWNCAUUWY_position_plot, ncol = 1)
+
+ggsave(here("./supplementary_data_chapter/figures/motif_position_histograms.png"), cowplot::plot_grid(ATATTC_position_plot, TGTAHMNUA_position_plot, HWNCAUUWY_position_plot, ncol = 1))
+```

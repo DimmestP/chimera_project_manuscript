@@ -8,7 +8,7 @@
 
 
 ```{r hlife-variance-table}
-knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual = c("42.0%", "3.2%", "0.6%"), Drop = c("-40.5%", "-1.6%", "0.0%"), Cumulative = c("42.0%", "43.7%", "43.7%")), caption = "\\textbf{Variance explained by each type of CRE in the half life model applied to data from Chan et al.} Variance explained was estimated in 3 different ways. The individual variance explained by a linear model containing each type of CRE on its own.  The drop in variance explained when one type of CRE is removed from the full model. The cumulative variance explained when each CRE is added to the linear model in sequence; starting with codon usage, then adding motifs and finally 3'UTR length.", format = "latex")  %>%
+knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual = c("42.0%", "3.2%", "0.6%"), Drop = c("-40.5%", "-1.6%", "0.0%"), Cumulative = c("42.0%", "43.7%", "43.7%")), caption = "\\textbf{Variance explained by each type of CRE in the half-life model applied to data from Chan et al.} Variance explained was estimated in 3 different ways. The individual variance explained by a linear model containing each type of CRE on its own.  The drop in variance explained when one type of CRE is removed from the full model. The cumulative variance explained when each CRE is added to the linear model in sequence; starting with codon usage, then adding motifs and finally 3'UTR length.", format = "latex")  %>%
   kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
@@ -17,10 +17,34 @@ knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual
 knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"), dpi = 300) 
 ```
 
+```{r motif-position-histograms, fig.cap="\\textbf{Relative positions of ATATTC, TGTAHMNUA and HWNCAUUWY motifs in native 3'UTRs.}", fig.align='center'}
+knitr::include_graphics(here("supplementary_data_chapter/figures/motif_position_histograms.png"), dpi = 300) 
+```
+\arrayrulecolor{white}
+```{r mCherry-seq}
+knitr::kable(tibble("mCherry construct sequences are available on the manuscript github repo." = "https://github.com/DimmestP/chimera_project_manuscript/supplementary_data_chapter/data/ mCherry_fluorescence_reporter_dna_sequences.csv"), caption = "\\textbf{Table showing the DNA sequences for all mCherry reporter constructs.}", format = "latex", align = "c")  %>%
+  kableExtra::kable_styling(latex_options = "hold_position") %>%
+  kableExtra::column_spec(1, width="40em")
+
+```
+
+
+```{r mTurq-seq}
+knitr::kable(tibble("mTurq construct sequences are available on the manuscript github repo" = "https://github.com/DimmestP/chimera_project_manuscript/supplementary_data_chapter/data/ mTurq_fluorescence_reporter_dna_sequences.csv"), caption = "\\textbf{Table showing the DNA sequences for all mCherry reporter constructs.}", format = "latex", align = "c")  %>%
+  kableExtra::kable_styling(latex_options = "hold_position") %>%
+  kableExtra::column_spec(1, width="40em")
+```
+\arrayrulecolor{black}
+```{r chimera-qpcr-primers-table}
+qpcr_primers <- readr::read_csv(here::here("./supplementary_data_chapter/data/chimera_qpcr_primers.csv"))
+knitr::kable(qpcr_primers, caption = "\\textbf{Primer sequences created for all qPCR experiments.}", format = "latex")  %>%
+  kableExtra::kable_styling(latex_options = "hold_position")
+```
+
 ```{r HWNCAUUWY-motif-coef}
 read.csv(here("./supplementary_data_chapter/data/HWNCAUUWY_shortlisted_motif_table.csv")) %>%
   dplyr::transmute(Motif = term,  `Total Count` = total_count, Coef = estimate, `p.value`) %>%
-knitr::kable(format = "latex", caption="\\textbf{Selecting the HWNCAUUWY motif, TTTCATTTC}. Summary of the number of occurences and contributions to a linear model predecting half life for each possible version of the HWNCAUUWY motif.")  %>%
+knitr::kable(format = "latex", caption="\\textbf{Selecting the HWNCAUUWY motif, TTTCATTTC}. Summary of the number of occurences and contributions to a linear model predecting half-life for each possible version of the HWNCAUUWY motif.")  %>%
   kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
@@ -29,19 +53,12 @@ knitr::kable(format = "latex", caption="\\textbf{Selecting the HWNCAUUWY motif, 
 ```{r TGTAHMNTA-motif-coef}
 read.csv(here("./supplementary_data_chapter/data/UGUAHMNUA_shortlisted_motif_table.csv")) %>%
   dplyr::transmute(Motif = term,  `Total Count` = total_count, Coef = estimate, `p.value`)  %>%
-knitr::kable(format = "latex", caption = "\\textbf{Selecting the UGUAHMNUA motif, TGTACAATA}. Summary of the number of occurences and contributions to a linear model predecting half life for each possible version of the UGUAHMNUA motif.")  %>%
-  kableExtra::kable_styling(latex_options = "hold_position")
+knitr::kable(format = "latex", caption = "\\textbf{Selecting the UGUAHMNUA motif, TGTACAATA}. Summary of the number of occurences and contributions to a linear model predecting half-life for each possible version of the UGUAHMNUA motif.")  %>%
+  kableExtra::kable_styling(latex_options = "hold_position") 
 ```
-
 
 ```{r minimum-free-energy-table}
 minimum_free_energy <- readr::read_csv(here::here("./supplementary_data_chapter/data/terminator_mfe.csv"))
 knitr::kable(minimum_free_energy, caption = "\\textbf{Table showing minimum free energies of 3'UTR constructs with inserted/deleted motifs.}", format = "latex")  %>%
-  kableExtra::kable_styling(latex_options = "hold_position")
-```
-
-```{r chimera-qpcr-primers-table}
-qpcr_primers <- readr::read_csv(here::here("./supplementary_data_chapter/data/chimera_qpcr_primers.csv"))
-knitr::kable(qpcr_primers, caption = "\\textbf{Primer sequences created for all qPCR experiments.}", format = "latex")  %>%
   kableExtra::kable_styling(latex_options = "hold_position")
 ```
