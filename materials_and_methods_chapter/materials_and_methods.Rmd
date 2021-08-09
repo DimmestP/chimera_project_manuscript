@@ -53,7 +53,7 @@ The column was washed with 700 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo) then ce
 The column was washed a second time, but with 400 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo). 
 The column was centrifuged once more to remove residual wash buffer in the column. Lastly, 30 $\mu$l of nuclease free water was added to the column then eluted. 
 All centrifugation steps in the RNA extraction protocol were carried out at 12,000g for 1 minute unless otherwise stated. 
-Further details on the growth of yeast and extraction of the RNA are outlined in https://www.protocols.io/view/column-based-rna-extraction-from-yeast-s-cerevisia-beetjben.
+Further details on the growth of yeast and extraction of the RNA are outlined in the following protocol -  http://dx.doi.org/10.17504/protocols.io.beetjben.
 
 The quantity and quality of the RNA was measured using both a spectrophotometer (DS-11, DeNovix, Wilmington, Delaware, USA) and Fragment Analyser (Agilent).
 4 $\mu$g of RNA was treated with DNAse1 (Thermo) then inactivated using the RapidOut DNA removal kit (Thermo) according to the manufacturer's protocol. 
