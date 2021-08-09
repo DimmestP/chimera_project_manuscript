@@ -15,7 +15,7 @@ To prepare BY4741 for transformation, we grew it in YPDA medium, containing 2% p
 
 All fluorescence reporter plasmids were constructed by Golden Gate assembly using the YeastFab system as described in @Garcia2018. 
 Promoters, coding sequences and terminators were either amplified from the yeast genome or synthesised by a commercial vendor (IDT) then cloned into a parts accepting plasmid (HcKan_P for promoters, HcKan_O for coding sequences and HcKan_T for terminators) by Golden Gate assembly using Bsa1-HFv2 (NEB). 
-Further detail on the Golden Gate assembly is described in https://www.protocols.io/view/golden-gate-assembly-esp31-or-bsa1-v2-hf-bkqrkvv6.
+A detailed protocol for Golden Gate assembly is available at protocols.io, [doi:10.17504/protocols.io.bkqrkvv6](http://dx.doi.org/10.17504/protocols.io.bkqrkvv6).
 Using these parts libraries, the promoters, coding sequences and terminators were assembled together into the transcription unit acceptor plasmid (POT1-ccdB) by Golden Gate assembly using Esp3I (NEB); these are low-copy centromeric plasmids with URA3 selection marker, as described in @Garcia2018.
 Plasmid inserts were confirmed by Sanger sequencing (MRC PPU DNA Sequencing and Services, Dundee). 
 DNA sequences used in this study are summarised in Supplementary Tables \ref{tab:mCherry-seq} and \ref{tab:mTurq-seq}. 
@@ -36,7 +36,7 @@ Plate reader data were analysed using omniplate software [@Swain2016].
 Omniplate accounts for autofluorescence and fits a model to the time series data using Gaussian processes to infer the time of maximum growth rate for each well. 
 We minimised growth-dependent effects by using the fluorescence at maximum growth rate for all of our protein fluorescence experiments. 
 Each fluorescence measurement was also normalised by OD to remove dependency on cell number, so every protein fluorescence measurement is recorded as fluorescence per OD at max growth rate. 
-Further details regarding the growth and preparation of the plate reader assay is outlined in https://www.protocols.io/view/96-well-plate-reader-experiment-set-up-from-a-96-d-bbicikaw.
+A detailed protocol for setting up and conducting the plate reader assay is available at protocols.io, [doi:10.17504/protocols.io.bbicikaw](https://dx.doi.org/10.17504/protocols.io.bbicikaw).
 
 ## RNA measurements: Strain growth, RNA extraction, RT-qPCR, and analysis
 
@@ -53,7 +53,7 @@ The column was washed with 700 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo) then ce
 The column was washed a second time, but with 400 $\mu$l of Zymo DNA/RNA Wash buffer (Zymo). 
 The column was centrifuged once more to remove residual wash buffer in the column. Lastly, 30 $\mu$l of nuclease free water was added to the column then eluted. 
 All centrifugation steps in the RNA extraction protocol were carried out at 12,000g for 1 minute unless otherwise stated. 
-Further details on the growth of yeast and extraction of the RNA are outlined in https://www.protocols.io/view/column-based-rna-extraction-from-yeast-s-cerevisia-beetjben.
+A detailed protocol for yeast growth and RNA extraction is available at protocols.io, [doi:10.17504/protocols.io.beetjben](https://dx.doi.org/10.17504/protocols.io.beetjben).
 
 The quantity and quality of the RNA was measured using both a spectrophotometer (DS-11, DeNovix, Wilmington, Delaware, USA) and Fragment Analyser (Agilent).
 4 $\mu$g of RNA was treated with DNAse1 (Thermo) then inactivated using the RapidOut DNA removal kit (Thermo) according to the manufacturer's protocol. 
@@ -149,4 +149,4 @@ This gives a linear effect on the log-scale abundance
 $$\log\langle m_a \rangle =\Delta \log\lambda^{1/2} + \log\langle m_0 \rangle$$
 and because PCR quantification cycle Cq is proportional to $\log2(m)$, this directly leads to a linear effect on Cq.
 
-All analyses made extensive use of the tidyverse [@Wickham2019] and plotting was completed with ggplot2 [@Wickham2016]
+All analysis made extensive use of the tidyverse and ggplot2 [@Wickham2019; @Wickham2016].
