@@ -69,15 +69,15 @@ First, 69 suitable CREs to test for context dependence were found through a lite
 All were suspected sequence motifs for mRNA binding proteins, several directly associated with proteins involved in mRNA degradation [@Hogan2008; @Shalgi2005; @Cheng2017].
 Any motifs that were found in fewer than 6 gene 3'UTRs, as annotated by @Pelechano2013, were removed.
 
-We quantified the regulatory effects of the remaining 38 candidate motifs by applying a linear model predicting half-life to 2 recent transcriptome-wide analyses of mRNA decay that used metabolic labeling [@Sun2013; @Chan2018].
-These datasets are loosely correlated in their half-life measurements across 4188 genes reported in both datasets, $R = 0.63$ (Figure \@ref(fig:hlife-decay-model)A). However, @Chan2018 estimated substantially smaller half-lives.
-@Chan2018 also had greater coverage of genes in the yeast genome, 5529 vs 4304,  and used multiple time points to determine half-lives. 
-Following @Cheng2017, we constructed a linear model to predict a transcript's half-life using the counts of motifs in its 3'UTR, the length of the 3'UTR, and the relative codon usage in each transcript's coding sequence (see Material and Methods). 
-The linear model performed similarly on both datasets by explaining 44% and 41% of the variability in half-lives for the @Chan2018 and @Sun2013 datasets respectively (Figure \@ref(fig:hlife-decay-model)C).
+We quantified the regulatory effects of the remaining 38 candidate motifs by applying a linear model predicting half-life to 2 recent transcriptome-wide analyses of mRNA decay that used metabolic labeling, from Sun et al., [@Sun2013] and Chan et al., [@Chan2018].
+These datasets are loosely correlated in their half-life measurements across 4188 genes reported in both datasets, $R = 0.63$ (Figure \@ref(fig:hlife-decay-model)A). However, Chan et al., used multiple time points to determine half-lives and estimated substantially smaller half-lives.
+Chan et al., also had greater coverage of genes in the yeast genome, 5529 vs 4304. 
+Following Cheng et al., @Cheng2017, we constructed a linear model to predict a transcript's half-life using the counts of motifs in its 3'UTR, the length of the 3'UTR, and the relative codon usage in each transcript's coding sequence (see Material and Methods). 
+The linear model performed similarly on both datasets by explaining 44% and 41% of the variability in half-lives for the Chan et al., and Sun et al., datasets respectively (Figure \@ref(fig:hlife-decay-model)C).
 This predictive power is comparable to the squared correlation between the datasets ($R^2 = 0.40$).
 Motifs that did not significantly contribute to the model were automatically filtered out using a greedy algorithm maximising the Akaike information criterion (AIC) during both training stages.
 Approximately 1.7% of the variance is explained by 7 significant motifs, with 42.0% explained by codon usage (Supplementary Table \@ref(tab:hlife-variance-table)), consistent with previous analyses [@Presnyak2015;@Cheng2017].
-The top 7 most significant motifs from the @Chan2018 data showed similar regulatory behaviour when tested on their own in the @Sun2013 data, except for TGTAAATA which was stabilising in one dataset and destabilising in another, as we later discuss (Figure \@ref(fig:hlife-decay-model)B).
+The top 7 most significant motifs from the Chan et al., data showed similar regulatory behaviour when tested on their own in the Sun et al., data, except for TGTAAATA which was stabilising in one dataset and destabilising in another, as we later discuss (Figure \@ref(fig:hlife-decay-model)B).
 
 We selected 4 motifs for exploring context dependence: TGTAHMNTA, GTATACCTA, HWNCATTWY, and ATATTC (Table \@ref(tab:motif-summary-table)).
 TGTAHMNTA and GTATACCTA were chosen as they had the largest coefficients amongst significant decay and stability motifs, respectively.
@@ -87,7 +87,7 @@ Functionally, TGTAHMNTA is the binding motif for Puf4p, and HWNCATTWY is associa
 However, it is not known how ATATTC and GTATACCTA affect mRNA decay.
 
 
-(ref:tab-2-caption) \textbf{Summary of shortlisted motif characteristics.} The first 3 columns hold the consensus sequence for each motif and the exact versions deleted from or inserted into  the host terminators. Then, we report the paper from which the motif was selected from; @Hogan2008, @Shalgi2005 or @Cheng2017. Next, each motif's coefficient given by the linear model predicting either the @Chan2018 or the @Sun2013 half-life datasets are included. Finally, the table includes notes on motif functions.
+(ref:tab-2-caption) \textbf{Summary of shortlisted motif characteristics.} The first 3 columns hold the consensus sequence for each motif and the exact versions deleted from or inserted into  the host terminators. Then, we report the paper from which the motif was selected from; Shalgi et al., @Shalgi2005, Hogan et al., [@Hogan2008],  or Cheng et al., [@Cheng2017]. Next, we report each motif's maximum likelihood estimate by the linear model fit to two half-life datasets Chan et al., or Sun et al., [@Chan2018; @Sun2013]. Finally, the table includes notes on motif functions.
 
 
 ```{r motif-summary-table}
@@ -99,7 +99,7 @@ readr::read_csv(here("results_chapter/data/motif_summary_table.csv")) %>%
 ```
 
 
-(ref:hlife-decay-model-caption) \textbf{A linear model of transcript half-life quantifies the effect of candidate terminator motifs on half-life.} (\textbf{A}) Correlation between the 2 transcript half-lives ($\lambda$), in minutes, reported in the @Chan2018 and @Sun2013 datasets. (\textbf{B}) Predicted contributions to log2 half-life for chosen motifs in the @Chan2018 and @Sun2013 datasets. (\textbf{C}) Predicted vs actual transcript half-lives  calculated by a linear model of codon and motif usage trained on the @Chan2018 and @Sun2013 datasets.
+(ref:hlife-decay-model-caption) \textbf{A linear model of transcript half-life quantifies the effect of candidate terminator motifs on half-life.} (\textbf{A}) Correlation between the 2 transcript half-lives ($\lambda$), in minutes, reported in the two half-life datasets [@Chan2018; @Sun2013]. (\textbf{B}) Predicted contributions to log2 half-life for chosen motifs in the half-life datasets. (\textbf{C}) Predicted vs actual transcript half-lives  calculated by a linear model of codon and motif usage trained on half-life datasets.
 
 ```{r hlife-decay-model, fig.cap="(ref:hlife-decay-model-caption)", fig.align='center'}
 knitr::include_graphics(here("results_chapter/figures/hlife_model_multi_fig.png"))
