@@ -7,9 +7,10 @@ output:
     template: "./formatting/template.tex"
     toc: false
     keep_tex : false
+    pandoc_args: [ "--csl", "./references/nucleic-acids-research.csl" ]
 bibliography: "./references/chimeraProject.bib"
-biblio-style: "apalike"
-link-citations: true
+    
+link-citations: false
   
 ---
 
