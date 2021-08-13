@@ -1,10 +1,19 @@
-# Supplementary Data
+---
+title : "Supplementary Data"
+output: pdf_document
+---
 \makeatletter
 \renewcommand{\fnum@figure}{Supplementary Figure \thefigure}
 \renewcommand{\fnum@table}{Supplementary Table \thetable}
 \makeatother
 \setcounter{figure}{0}
 \setcounter{table}{0}
+
+```{r setup, echo=FALSE, include=FALSE}
+library(tidyr)
+library(here)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
 
 
 ```{r hlife-variance-table}
@@ -22,7 +31,7 @@ knitr::include_graphics(here("supplementary_data_chapter/figures/motif_position_
 ```
 \arrayrulecolor{white}
 ```{r mCherry-seq}
-knitr::kable(tibble("mCherry construct sequences are available on the manuscript github repo." = "https://github.com/DimmestP/chimera_project_manuscript/supplementary_data_chapter/data/ mCherry_fluorescence_reporter_dna_sequences.csv"), caption = "\\textbf{Table showing the DNA sequences for all mCherry reporter constructs.}", format = "latex", align = "c")  %>%
+knitr::kable(tibble(" " = " "), caption = "\\textbf{Table showing the DNA sequences for all mCherry reporter constructs.}", format = "latex", align = "c")  %>%
   kableExtra::kable_styling(latex_options = "hold_position") %>%
   kableExtra::column_spec(1, width="40em")
 
@@ -30,7 +39,7 @@ knitr::kable(tibble("mCherry construct sequences are available on the manuscript
 
 
 ```{r mTurq-seq}
-knitr::kable(tibble("mTurq construct sequences are available on the manuscript github repo" = "https://github.com/DimmestP/chimera_project_manuscript/supplementary_data_chapter/data/ mTurq_fluorescence_reporter_dna_sequences.csv"), caption = "\\textbf{Table showing the DNA sequences for all mCherry reporter constructs.}", format = "latex", align = "c")  %>%
+knitr::kable(tibble(" " = " "), caption = "\\textbf{Table showing the DNA sequences for all mCherry reporter constructs.}", format = "latex", align = "c")  %>%
   kableExtra::kable_styling(latex_options = "hold_position") %>%
   kableExtra::column_spec(1, width="40em")
 ```
