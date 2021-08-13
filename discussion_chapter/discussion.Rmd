@@ -97,13 +97,17 @@ Conceptual models of CREs as independently acting composable parts exemplify the
 The characterisation of an element's function in a single context is not enough to make generalisable conclusions.
 Both small- and large-scale studies of CREs should ideally be carried out with multiple combinations of other regulatory elements, in cells in multiple growth conditions, to build a comprehensive understanding of transcriptional and post-transcriptional regulation.
 
-# Funding
+# Supplementary Data
 
-This work was supported by the Wellcome Trust [grant number 208779/Z/17/Z to E.W.J.W.], the UKRI Biotechnology and Biological Sciences Research Council [grant number BB/M010996/1], and the Medical Research Council [grant number MR/N013166/1].
+Supplementary Data are available at NAR online.
 
 # Acknowledgments
 
 We thank Naomi Nakayama, Erika Szymanski, Filippo Menolascina, and members of the Wallace lab for discussions on the manuscript.
+
+# Funding
+
+This work was supported by the Wellcome Trust [grant number 208779/Z/17/Z to E.W.J.W.], the UKRI Biotechnology and Biological Sciences Research Council [grant number BB/M010996/1], and the Medical Research Council [grant number MR/N013166/1].
 
 
 # References
