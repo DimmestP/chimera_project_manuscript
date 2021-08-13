@@ -45,7 +45,7 @@ Following Cheng et al., @Cheng2017, we constructed a linear model to predict a t
 The linear model performed similarly on both datasets by explaining 44% and 41% of the variability in half-lives for the Chan et al., and Sun et al., datasets respectively (Figure \@ref(fig:hlife-decay-model)C).
 This predictive power is comparable to the squared correlation between the datasets ($R^2 = 0.40$).
 Motifs that did not significantly contribute to the model were automatically filtered out using a greedy algorithm maximising the Akaike information criterion (AIC) during both training stages.
-Approximately 1.7% of the variance is explained by 7 significant motifs, with 42.0% explained by codon usage (Supplementary Table \@ref(tab:hlife-variance-table)), consistent with previous analyses [@Presnyak2015;@Cheng2017].
+Approximately 1.7% of the variance is explained by 7 significant motifs, with 42.0% explained by codon usage (Supplementary Table 7, consistent with previous analyses [@Presnyak2015;@Cheng2017].
 The top 7 most significant motifs from the Chan et al., data showed similar regulatory behaviour when tested on their own in the Sun et al., data, except for TGTAAATA which was stabilising in one dataset and destabilising in another, as we later discuss (Figure \@ref(fig:hlife-decay-model)B).
 
 We selected 4 motifs for exploring context dependence: TGTAHMNTA, GTATACCTA, HWNCATTWY, and ATATTC (Table \@ref(tab:motif-summary-table)).
@@ -63,7 +63,7 @@ We first chose the ribosomal protein terminator tRPS3, as it was the only termin
 We selected thioredoxin peroxidase tTSA1 as the second host terminator because it also lacks selected motifs and has similar length to tRPS3.
 In each host terminator we chose 3 motif insertion sites, selecting for: minimum impact on transcript secondary structure, avoiding known transcription termination elements, and matching the positions of motifs in native genes.
 Having 3 insertion sites enabled us to quantify combinations of motifs, including duplicates of weaker motifs to increase the likelihood of detecting a clear effect on gene expression. 
-We chose TGTACAATA and TTTCATTTC sequences as explicit versions of the TGTAHMNTA and HWNCATTWY consensus motifs respectively, and checked that these explicit versions have similar predicted effects on half-life transcriptome-wide (Supplementary Tables \@ref(tab:HWNCAUUWY-motif-coef), \@ref(tab:TGTAHMNTA-motif-coef)).
+We chose TGTACAATA and TTTCATTTC sequences as explicit versions of the TGTAHMNTA and HWNCATTWY consensus motifs respectively, and checked that these explicit versions have similar predicted effects on half-life transcriptome-wide (Supplementary Tables 4 and 5).
 Altogether, 7 variant terminators were designed for these 2 host terminators: the wildtype terminator, a control to test the insertion sites with randomly generated sequences, 4 testing the effects of inserting each motif individually and a final variant to test interactions between the TGTAHMNTA and HWNCATTWY motifs.
 We created a construct library by pairing each terminator with three different promoters; its native promoter pairing (pRPS3 or pTSA1), the high-expression promoter pPGK1, and the low-expression promoter pSRO9.
 
@@ -83,7 +83,7 @@ We selected the cell wall protein PIR1 as our host terminator as it is a short a
 We designed 8 terminators in which the motif occurrences in tPIR1 were replaced by scrambled sequences (Figure \@ref(fig:tPIR1-design-and-qpcr)A).
 We found that the removal of almost any decay motif from tPIR1 results in an increase in mRNA levels (Figure \@ref(fig:tPIR1-design-and-qpcr)B).
 
-We confirmed that motif-dependent changes in mRNA abundance are reflected in protein abundance by measuring the fluorescence from a subset of reporter constructs with native promoter-terminator pairings (Supplementary Figure \@ref(fig:protein-vs-RNA-plot-motifs)). 
+We confirmed that motif-dependent changes in mRNA abundance are reflected in protein abundance by measuring the fluorescence from a subset of reporter constructs with native promoter-terminator pairings (Supplementary Figure 2). 
 The high correlation ($R = 0.96, 0.68, 0.96$ for tRPS3, tTSA1, tPIR1 constructs respectively) demonstrates that these combinations of decay motifs that change mRNA abundance also change the protein output, as expected.
 
 Comparison of mRNA abundance across all constructs (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)B, \@ref(fig:tRPS3-tTSA1-design-and-qpcr)C, \@ref(fig:tPIR1-design-and-qpcr)B) shows motif contributions change in magnitude but not direction depending on the context of the rest of the construct. 

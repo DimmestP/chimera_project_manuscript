@@ -18,7 +18,7 @@ Promoters, coding sequences and terminators were either amplified from the yeast
 A detailed protocol for Golden Gate assembly is available at protocols.io, [doi:10.17504/protocols.io.bkqrkvv6](http://dx.doi.org/10.17504/protocols.io.bkqrkvv6).
 Using these parts libraries, the promoters, coding sequences and terminators were assembled together into the transcription unit acceptor plasmid (POT1-ccdB) by Golden Gate assembly using Esp3I (NEB); these are low-copy centromeric plasmids with URA3 selection marker, as described in @Garcia2018.
 Plasmid inserts were confirmed by Sanger sequencing (MRC PPU DNA Sequencing and Services, Dundee). 
-DNA sequences used in this study are summarised in Supplementary Tables \ref{tab:mCherry-seq} and \ref{tab:mTurq-seq}. 
+DNA sequences used in this study are summarised in Supplementary Tables 1 and 2. 
 Assembled plasmids were transformed into yeast BY4741 using lithium acetate transformation [@Gietz2002a], and selected in SC-URA agar plates to isolate successful transformants.
 
 The mCherry coding sequence is as used in @Garcia2018, which in turn was amplified from the mCherry sequence in @Sharon2012.
@@ -64,7 +64,7 @@ Reverse transcription (RT) master mix was prepared, containing 2 $\mu$l of First
 Target cDNAs were measured by quantitative PCR with Brilliant II Fast SYBR Green QPCR Master Mix (Agilent) using a Lightcycler 480 qPCR machine (Roche).
 We measured all +RT reactions in technical triplicate, and negative control -RT samples using one replicate.
 We used the manufacturer's software to calculate quantification cycle (Cq) for each individual well using the fit points method, and exported both raw fluorescence and Cq data.
-All primer sets were thoroughly validated by serial dilution and by confirming amplicon size, sequences are available in Supplementary Table \ref{tab:chimera-qpcr-primers-table}.
+All primer sets were thoroughly validated by serial dilution and by confirming amplicon size, sequences are available in Supplementary Table 3.
 
 RT-qPCR data was analysed using our tidyqpcr R package v2.1.0-beta (https://github.com/ewallace/tidyqpcr).
 For each biological replicate, $\Delta$Cq values were calculated by normalising the median mCherry Cq values by the median Cq values of the three reference genes (RPS3, PGK1 and URA3).
@@ -93,7 +93,7 @@ The variance explained by each predictor in the linear model trained on the @Cha
 
 We selected the specific versions of the HWNCATTWY and TGTAHMNTA motifs by running two addition linear models predicting half-life that inferred separate coefficients for each version of its consensus sequence. 
 Coefficients were reported for the significant motif versions (Supplementary Table
-\ref{tab:HWNCAUUWY-motif-coef}, \ref{tab:TGTAHMNTA-motif-coef}). 
+4 and 5). 
 We chose instances with similar effect size, statistical significance, and number of occurrences in native transcripts. 
 We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA chose TGTACAATA over TGTATATTA specifically to avoid the 5nt stretch also found in ATATTC.
 
@@ -102,7 +102,7 @@ We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA chose TGTACAATA over TGTATATT
 RPS3 was chosen as the first 3'UTR for inserting motifs into as it was the only terminator in the characterized library that did not contain any of the 69 original motifs of interest.
 The tRPS3 3'UTR-terminator was modified to incorporate three 9 nt insertion sites for motifs (M1, M2 and M3).
 The M1 was inserted 24 nt downstream of the stop codon, M2 was inserted 15 nt downstream of M1 and the final insert M3 was inserted 4 nt downstream of M2 (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
-These positions were selected based on key design criteria, including; minimal perturbations of RNA secondary structure as predicted by RNAfold [@Lorenz2011], position of motifs in native 3'UTRs and position of other CREs important for transcriptional control (Supplementary Table \ref{tab:minimum-free-energy-table}, Supplementary Figure \ref{fig:motif-position-histograms}).
+These positions were selected based on key design criteria, including; minimal perturbations of RNA secondary structure as predicted by RNAfold [@Lorenz2011], position of motifs in native 3'UTRs and position of other CREs important for transcriptional control (Supplementary Table 6, Supplementary Figure 1).
 A control tRPS3 3'UTR mod_NNN was designed to incorporate random bases in each insertion site.
 Further modified 3'UTR-terminator designs were designed to incorporate individual motifs of interest previously identified, within the insertion sites described (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
 
@@ -118,7 +118,7 @@ The PIR1 terminator chosen for motif deletion contains one copy each of the ATAT
 
 The mutation of motifs for their removal from the PIR1 3'UTR was carried out so that: 1) at least 50% of the motif sequence (specifically the motif consensus sequence) was mutated to a base that does not correspond to the consensus sequence,
 2) GC content was minimally altered,
-3) Mutations that resulted in a limited change in the predicted secondary structure and minimum free energy (MFE) according to RNAfold [@Lorenz2011], see Supplementary Table \@ref(tab:minimum-free-energy-table)).
+3) Mutations that resulted in a limited change in the predicted secondary structure and minimum free energy (MFE) according to RNAfold [@Lorenz2011], see Supplementary Table 6).
 
 The native and modified candidate 3'UTRs were screened for the presence of Esp3I and BsaI sites within the sequence.
 For incorporation into the YeastFab system, the sequence 'agcgtgCGTCTCgTAGC' was added to the 5'-end of the 3'UTR and the sequence 'CCTCcGAGACGcagcac' was added to the 3'-end of the 3'UTR.
