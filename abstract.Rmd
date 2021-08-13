@@ -29,3 +29,5 @@ We construct a library of diverse reporter genes, consisting of different combin
 Our results show that the effect of a motif on RNA abundance depends both on its host terminator, and also on the associated promoter sequence.
 Consequently, this emphasises the need for improved motif inference algorithms that include both local and global context effects, which in turn could aid researchers in the accurate use of diverse CREs for the engineering of synthetic genetic constructs. 
 \end{abstract}
+
+\footnotetext[2]{These authors contributed equally to this work.}
