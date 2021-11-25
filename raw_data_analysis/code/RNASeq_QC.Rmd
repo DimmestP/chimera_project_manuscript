@@ -1,0 +1,337 @@
+---
+title: "RNAseq vs qPCR comparison"
+author: "Sam Haynes"
+date: "20/08/2021"
+output: pdf_document
+---
+
+Now we have QuantSeq and 5PSeq datasets we can compare the abundance of transcripts in these datasets to that determined by qPCR.
+
+Constructs in QuantSeq (Standard RNA-Seq but PolyA Anchored)
+
+Sample Name | Construct Name
+------------|---------------
+A1 B1       |pRPS3-mCherry-tRPS3_WT
+A2 B2 E1 E2 |pRPS3-mCherry-tRPS3_mod0
+A3 B3       |pRPS3-mCherry-tRPS3_modB
+A4 B4       |pRPS3-mCherry-tRPS3_modE
+A5 B5       |pTSA1-mCherry-tTSA1_WT
+A6 B6       |pTSA1-mCherry-tTSA1_mod0
+A7 B7       |pTSA1-mCherry-tTSA1_modB
+A8 B8       |pTSA1-mCherry-tTSA1_modE
+A9 B9       |POT1-ccdB
+A10 B10     |pRPS3-mCherry-tRPS3_modA
+A11 B11     |pTSA1-mCherry-tTSA1_modA
+A12 B12     |pPGK1-mCherry-tRPS3_WT
+A13 B13     |pPGK1-mCherry-tRPS3_mod0
+A14 B14     |pPGK1-mCherry-tRPS3_modA
+A15 B15     |pPGK1-mCherry-tRPS3_modB
+A16 B16     |pPGK1-mCherry-tRPS3_modE
+
+Constructs in 5PSeq (RNA-Seq of transcripts with 5'Cap removed)
+
+Sample Name | Construct Name
+------------|---------------
+1dt 2dt     |POT1-ccdB
+3dt 4dt     |pRPS3-mCherry-tRPS3_WT
+5dt 6dt     |pRPS3-mCherry-tRPS3_mod0
+7dt 8dt     |pRPS3-mCherry-tRPS3_modA
+9dt 10dt    |pRPS3-mCherry-tRPS3_modB
+11dt 12dt   |pRPS3-mCherry-tRPS3_modC
+13dt 14dt   |pRPS3-mCherry-tRPS3_modD
+15dt 16dt   |pRPS3-mCherry-tRPS3_modE
+
+```{r setup, include=FALSE}
+library(tibble)
+library(dplyr)
+library(tidyr)
+library(readr)
+library(here)
+library(stringr)
+library(DESeq2)
+source("/home/dimmest-p/Documents/PhD/3UTR_motifs/motifPrediction/chimera_project_manuscript/raw_data_analysis/code/shared_figure_formatting.R")
+```
+
+```{r functions}
+
+read_in_RNAseq <- function(filepath){
+  # read in only name and counts
+  RNAseq_tibble <- read_tsv(filepath, comment = "#") %>%
+    select(1,7)
+  
+  colnames(RNAseq_tibble) <- c("Geneid", "count")
+  
+  # replace specific construct Geneid with generic Geneid to allow comparison
+  
+  construct_URA3_counts <- RNAseq_tibble %>% 
+    filter(str_detect(Geneid, "URA3"))
+  
+  new_name_construct_URA3_counts <- tibble(Geneid = "plasmid_URA3_construct", "count" = construct_URA3_counts %>% pull(2))
+  
+  construct_RNAseq_tibble <- RNAseq_tibble  %>%
+    rows_delete(construct_URA3_counts) %>%
+    rows_insert(new_name_construct_URA3_counts)
+  
+  if(sum(str_detect(RNAseq_tibble$Geneid, "mCh")) > 0){
+    construct_counts <- RNAseq_tibble %>% 
+    filter(str_detect(Geneid, "mCh"), !str_detect(Geneid, "URA3"))
+    
+    new_name_construct_counts <- tibble(Geneid = "plasmid_construct", 
+                                        "count" = construct_counts %>% pull(2))
+    construct_RNAseq_tibble <- construct_RNAseq_tibble %>%
+    rows_delete(construct_counts) %>%
+    rows_insert(new_name_construct_counts)
+  }
+  
+  # find sample name and add as colname
+  colnames(construct_RNAseq_tibble) <- c("Geneid", str_extract(filepath, "(?<=/)[ABEdt0-9]{2,4}(?=/)"))
+  
+  construct_RNAseq_tibble
+}
+
+sample_to_construct_dictionary <- function(filename){
+  read_csv(here(filename)) %>%
+    mutate(promoter = str_extract(construct_name, "^p[A-Z0-3]+")) %>%
+    mutate(terminator = str_extract(construct_name, "t[A-Z0-3]+(?=_)")) %>%
+    mutate(mod_label = str_extract(construct_name, "(?<=_)[a-zA-Z0-3]+(?=_)")) %>%
+    select(-construct_name) 
+}
+
+```
+
+```{r read-RNAseq-counts, message=FALSE, warning=FALSE, results='hide', include=FALSE}
+all_QuantSeq_count_files <- list.files(path = here("raw_data_analysis/data/rna_seq/counts/QuantSeq"), pattern = ".txt$", recursive = TRUE, full.names = TRUE)
+
+all_5PSeq_count_files <- list.files(path = here("raw_data_analysis/data/rna_seq/counts/5PSeq"), pattern = ".txt$", recursive = TRUE, full.names = TRUE)
+
+full_QuantSeq_count <- all_QuantSeq_count_files %>%
+  lapply(read_in_RNAseq) %>%
+  purrr::reduce(full_join, by = "Geneid")
+
+full_5PSeq_count <- all_5PSeq_count_files %>%
+  lapply(read_in_RNAseq) %>%
+  purrr::reduce(full_join, by = "Geneid")
+
+full_QuantSeq_count_matrix <- full_QuantSeq_count %>% 
+  select(-Geneid) %>%
+  as.matrix()
+
+
+full_5PSeq_count_matrix <- full_5PSeq_count %>% 
+  select(-Geneid) %>%
+  as.matrix()
+
+# replace NAs with 0 
+full_QuantSeq_count_matrix[is.na(full_QuantSeq_count_matrix)] <- 0
+
+rownames(full_QuantSeq_count_matrix) <- full_QuantSeq_count %>% 
+  pull(Geneid)
+
+full_5PSeq_count_matrix[is.na(full_5PSeq_count_matrix)] <- 0
+
+rownames(full_5PSeq_count_matrix) <- full_5PSeq_count %>% 
+  pull(Geneid)
+
+```
+
+```{r sample-name-to-contruct}
+sample_to_construct_dictionary_QuantSeq <- sample_to_construct_dictionary("raw_data_analysis/data/rna_seq/sample_to_construct_table_QuantSeq.csv")
+
+sample_to_construct_dictionary_5PSeq <- sample_to_construct_dictionary("raw_data_analysis/data/rna_seq/sample_to_construct_table_5PSeq.csv")
+
+#  swap POT1 empty vector values from NA to "POT"
+sample_to_construct_dictionary_QuantSeq <- sample_to_construct_dictionary_QuantSeq %>%
+    rows_update(tibble(sample_name = c("A9", "B9"), promoter = "POT1", terminator = "POT1", mod_label = "POT1")) %>%
+  mutate(mod_label = factor(mod_label,
+                       levels = c(construct_to_label_dictionary_TSA1_RPS3$construct, "POT1"),
+                       labels = c(construct_to_label_dictionary_TSA1_RPS3$label, "POT1")))
+
+sample_to_construct_dictionary_5PSeq <- sample_to_construct_dictionary_5PSeq %>%
+    rows_update(tibble(sample_name = c("1dt", "2dt"), promoter = "POT1", terminator = "POT1", mod_label = "POT1")) %>%
+  mutate(mod_label = factor(mod_label,
+                       levels = c(construct_to_label_dictionary_TSA1_RPS3$construct, "POT1"),
+                       labels = c(construct_to_label_dictionary_TSA1_RPS3$label, "POT1")))
+```
+
+# Could normalising to URA3 cause strange pPGK1 behaviours? Check norm to DESeq2.
+
+```{r create-DESeq2-input}
+# tibble holding what condition each column in the count matrix correlates to
+coldata_QuantSeq <- tibble(sample_name = colnames(full_QuantSeq_count_matrix)) %>%
+  inner_join(sample_to_construct_dictionary_QuantSeq) %>% 
+  mutate(col = 1:34) %>%
+  mutate(promoter = as.factor(promoter), 
+         terminator = as.factor(terminator), 
+         mod_label = as.factor(mod_label)) %>%
+  column_to_rownames("sample_name") %>%
+  filter(promoter != "POT1")
+
+coldata_5PSeq <- tibble(sample_name = colnames(full_5PSeq_count_matrix)) %>%
+  inner_join(sample_to_construct_dictionary_5PSeq) %>% 
+  mutate(col = 1:16) %>%
+  mutate(promoter = as.factor(promoter), 
+         terminator = as.factor(terminator), 
+         mod_label = as.factor(mod_label)) %>%
+  column_to_rownames("sample_name") %>%
+  filter(promoter != "POT1")
+
+deseq_count_set_QuantSeq <-  DESeqDataSetFromMatrix(countData = full_QuantSeq_count_matrix[,coldata_QuantSeq %>% pull(col)],
+                                           colData = coldata_QuantSeq,
+                                           design = ~ promoter * mod_label)
+
+deseq_count_set_5PSeq <-  DESeqDataSetFromMatrix(countData = full_5PSeq_count_matrix[,coldata_5PSeq %>% pull(col)],
+                                           colData = coldata_5PSeq,
+                                           design = ~ mod_label)
+```
+
+```{r run-DESeq}
+DESeq_dataset_QuantSeq <- DESeq(deseq_count_set_QuantSeq)
+
+DESeq_dataset_5PSeq <- DESeq(deseq_count_set_5PSeq)
+```
+
+```{r view_results}
+DESeq_summary_QuantSeq <- results(DESeq_dataset_QuantSeq)
+
+DESeq_summary_5PSeq <- results(DESeq_dataset_5PSeq)
+
+DESeq_summary_QuantSeq[rownames(DESeq_summary_QuantSeq) == "plasmid_construct",]
+
+DESeq_summary_5PSeq[rownames(DESeq_summary_5PSeq) == "plasmid_construct",]
+
+rownames(DESeq_summary_QuantSeq[DESeq_summary_QuantSeq[!is.na(DESeq_summary_QuantSeq$padj),]$padj < 0.05,])
+
+rownames(DESeq_summary_5PSeq[DESeq_summary_5PSeq[!is.na(DESeq_summary_5PSeq$padj),]$padj < 0.05,])
+
+plotMA(DESeq_summary_QuantSeq, ylim=c(-2,2))
+
+plotMA(DESeq_summary_5PSeq, ylim=c(-2,2))
+```
+
+```{r compare_whole_genome_expression}
+# correlation grouped norm counts
+library("pheatmap")
+
+heatmap_metadata_QuantSeq <- as.data.frame(colData(DESeq_dataset_QuantSeq)[,c("promoter","mod_label")])
+
+heatmap_metadata_5PSeq <- as.data.frame(colData(DESeq_dataset_5PSeq)[,c("promoter","mod_label")])
+
+log_2_plus_one_QuantSeq <- normTransform(DESeq_dataset_QuantSeq)
+
+log_2_plus_one_5PSeq <- normTransform(DESeq_dataset_5PSeq)
+
+pheatmap(assay(log_2_plus_one_QuantSeq),
+         cluster_rows=FALSE,
+         show_rownames = FALSE,
+         clustering_distance_cols="correlation",
+         annotation_col=heatmap_metadata_QuantSeq)
+
+pheatmap(assay(log_2_plus_one_5PSeq),
+         cluster_rows=FALSE,
+         show_rownames = FALSE,
+         clustering_distance_cols="correlation",
+         annotation_col=heatmap_metadata_5PSeq)
+
+factor_levels_QuantSeq = c("A1", "B1", "E1", "E2", "A2", "B2", "A10", "B10", "A3", "B3", "A4", "B4", "A12", "B12", "A13", "B13", "A14", "B14", "A15", "B15", "A16", "B16", "A5", "B5", "A6", "B6", "A11", "B11", "A7", "B7", "A8", "B8", "A9", "B9")
+
+factor_levels_5PSeq <- c("1dt", "2dt", "3dt", "4dt", "5dt", "6dt",
+                         "7dt", "8dt", "9dt", "10dt", "11dt", "12dt",
+                         "13dt", "14dt", "15dt", "16dt")
+
+ggplot(as_tibble(cor(assay(log_2_plus_one_QuantSeq)), 
+                 rownames = "sample_x") %>% 
+         pivot_longer(-sample_x, 
+                      names_to = "sample_y", 
+                      values_to = "cor") %>% 
+         mutate(sample_x = factor(sample_x, factor_levels_QuantSeq), 
+                sample_y = factor(sample_y, factor_levels_QuantSeq))) + 
+    geom_tile(aes(x= sample_x, y = sample_y, fill = cor))
+
+ggplot(as_tibble(cor(assay(log_2_plus_one_5PSeq)), 
+                 rownames = "sample_x") %>% 
+         pivot_longer(-sample_x, 
+                      names_to = "sample_y", 
+                      values_to = "cor") %>% 
+         mutate(sample_x = factor(sample_x, factor_levels_5PSeq), 
+                sample_y = factor(sample_y, factor_levels_5PSeq))) + 
+    geom_tile(aes(x= sample_x, y = sample_y, fill = cor))
+
+```
+
+```{r CoI_URA_values}
+gene_dictionary <- tibble(genename = c("plasmid_construct",
+                               "plasmid_URA3_construct",
+                               "YNL178W_id001",
+                               "YML028W_id003",
+                               "YCR012W_id001"),
+                          transcript_name =factor(c("Construct",
+                                             "URA3",
+                                             "RPS3",
+                                             "TSA1",
+                                             "PGK1"),
+                                             c("Construct",
+                                             "URA3",
+                                             "RPS3",
+                                             "TSA1",
+                                             "PGK1")))
+
+normalised_genes_of_interest_counts_QuantSeq <- counts(DESeq_dataset_QuantSeq, normalized=TRUE)[c("plasmid_construct",
+                               "plasmid_URA3_construct",
+                               "YNL178W_id001",
+                               "YML028W_id003",
+                               "YCR012W_id001"),]
+
+normalised_genes_of_interest_counts_5PSeq <- counts(DESeq_dataset_5PSeq, normalized=TRUE)[c("plasmid_construct",
+                               "plasmid_URA3_construct",
+                               "YNL178W_id001",
+                               "YML028W_id003",
+                               "YCR012W_id001"),]
+
+all_norm_genes_plot_data_QuantSeq <- as_tibble(normalised_genes_of_interest_counts_QuantSeq, rownames = "genename") %>%
+  pivot_longer(-genename, names_to = "sample", values_to = "counts") %>%
+  inner_join(as_tibble(coldata_QuantSeq, rownames = "sample")) %>%
+  inner_join(gene_dictionary)
+
+all_norm_genes_plot_data_5PSeq <- as_tibble(normalised_genes_of_interest_counts_5PSeq, rownames = "genename") %>%
+  pivot_longer(-genename, names_to = "sample", values_to = "counts") %>%
+  inner_join(as_tibble(coldata_5PSeq, rownames = "sample")) %>%
+  inner_join(gene_dictionary)
+
+ggplot(all_norm_genes_plot_data_QuantSeq) +
+  geom_point(aes(y = transcript_name,
+                 x = counts,
+                 colour = transcript_name),
+             show.legend = FALSE) +
+  facet_grid(mod_label~promoter)
+
+ggplot(all_norm_genes_plot_data_5PSeq) +
+  geom_point(aes(y = transcript_name,
+                 x = counts,
+                 colour = transcript_name),
+             show.legend = FALSE) +
+  facet_grid(mod_label~promoter)
+
+URA_vs_CoI_plot_data_QuantSeq <- all_norm_genes_plot_data_QuantSeq %>%
+  filter(transcript_name %in% c("URA3", "Construct")) %>%
+  select(-genename) %>%
+  pivot_wider(names_from = transcript_name, values_from = counts)
+
+URA_vs_CoI_plot_data_5PSeq <- all_norm_genes_plot_data_5PSeq %>%
+  filter(transcript_name %in% c("URA3", "Construct")) %>%
+  select(-genename) %>%
+  pivot_wider(names_from = transcript_name, values_from = counts)
+
+URA_vs_CoI_plot_data_QuantSeq %>%
+  group_by(promoter) %>%
+  summarise(correlation = cor(Construct, URA3))
+
+URA_vs_CoI_plot_data_5PSeq %>%
+  group_by(promoter) %>%
+  summarise(correlation = cor(Construct, URA3))
+
+ggplot(URA_vs_CoI_plot_data_QuantSeq) +
+  geom_point(aes(y = Construct, x = URA3, colour = promoter, shape = mod_label))
+
+ggplot(URA_vs_CoI_plot_data_5PSeq) +
+  geom_point(aes(y = Construct, x = URA3, colour = promoter))
+```

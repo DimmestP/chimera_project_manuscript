@@ -177,8 +177,17 @@ Finally, the combination of TGTAHMNTA and HWNCAUUWY in tPIR1 always has an addit
 The combination has a greater effect than expected when paired with pPIR1 but a lesser effect when paired with pPGK1 or pTSA1.
 
 ```{r hlife-predict-vs-abundance-and-motif-context-dependence, fig.cap="\\textbf{Promoter and terminator context alter the regulatory effect of motifs.} (\\textbf{A}) Predicted change in transcript abundance inferred from transcriptome-wide motif contributions to half-life, compared to RT-qPCR measurements of reporter transcript abundance. The y-axis shows statistical summaries (mean and standard error) of 6 replicates for data shown in figures 4 and 5. The fold change is relative to the mod0 construct in each promoter-terminator pairing for the tRPS3 and tTSA1 sets, and relative to the WT constructs for tPIR1 sets. Native promoter panels show the promoter paired with the terminator from the same set, e.g. pRPS3 with tRPS3. (\\textbf{B}) Motif contributions to fold changes in mRNA abundance for reporter constructs with different promoter and terminator contexts. This is calculated by a linear model with a coefficient for the effect of each motif in each set, applied to $\\Delta Cq$ against 3 reference genes. The last column shows the interaction term between TGTAHMNTA and HWNCATTWY.", fig.align='center',out.width="85%"}
-# NOTE: Currently this figure is included at 85% size so we can see the caption
-# Later we will probably want to display the caption on a separate page
 knitr::include_graphics(here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"))
 ```
 
+
+## Inserting motifs into terminators shifts polyA site usage downstream
+
+We selected a subset of constructs to determine if motifs insertion causes alternative transcript polyA site usage using polyA anchored RNA-Seq.
+We chose three constructs with large effect sizes in the qPCR results; mod_NAA, mod_HTH and mod_NTN, together with WT and mod_NNN within three promoter-terminator contexts; pRPS3-tRPS3, pPGK1-tRPS3 and pTSA1-tTSA1.
+Transcript abundance, relative to mod_NNN, for each construct correlates strongly with qPCR results (Figure \@ref(fig:quantseq_polyA_aite_usage)A). 
+Focusing on reads mapped downstream of contruct stop codons we can see a shift in polyA site in response to motif insertion compared to WT (Figure \@ref(fig:quantseq_polyA_aite_usage)B).
+
+```{r quantseq_polyA_aite_usage, fig.cap="", fig.align='center',out.width="85%"}
+knitr::include_graphics(here("results_chapter/figures/polya_usage_plot_QuantSeq.png"))
+```
