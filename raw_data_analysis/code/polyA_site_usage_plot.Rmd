@@ -836,7 +836,7 @@ polya_site_usage_plot_5PSeq <- plot_grid(qPCR_vs_RNASeq_plot_5PSeq,
 
 ```{r print-out-5pseq-results}
 
-ggsave2(here("draft_polya_plot_5PSeq.png"), 
+ggsave2(here("supplementary_data_chapter/figures/polya_usage_plot_5PSeq.png"), 
         polya_site_usage_plot_5PSeq, 
         width = fig_width_2column,
         height = 210,
