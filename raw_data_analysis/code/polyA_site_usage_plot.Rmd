@@ -8,6 +8,7 @@ library(here)
 library(readr)
 library(tidyr)
 library(dplyr)
+library(extrafont)
 library(purrr)
 library(cowplot)
 library(stringr)
@@ -360,22 +361,22 @@ mean_qpcr_vs_5PSeq_dataset_mod_NNN <- construct_fold_change_5PSeq_mod_NNN %>%
 qPCR_vs_RNASeq_plot_QuantSeq <- ggplot(mean_qpcr_vs_QuantSeq_dataset_mod_NNN ) +
   geom_point(aes(x = `RNA-Seq`, y = qPCR, shape = terminator, colour = promoter)) +
   geom_abline(slope = 1, intercept = 0) +
-  coord_equal()
+  coord_equal() +
+  theme(legend.box = "horizontal")
 
 qPCR_vs_RNASeq_plot_5PSeq <- ggplot(mean_qpcr_vs_5PSeq_dataset_mod_NNN ) +
   geom_point(aes(x = `RNA-Seq`, y = qPCR, colour = promoter, shape = terminator)) +
   geom_abline(slope = 1, intercept = 0) +
-  facet_wrap(~type)
+  facet_wrap(~type) +
+  guides(colour = "none", shape = "none") +
+  theme(legend.box = "horizontal")
 
-qPCR_vs_RNASeq_plot_QuantSeq_mod_NNN <- ggplot(mean_qpcr_vs_QuantSeq_dataset_mod_NNN) +
-  geom_point(aes(x = `RNA-Seq`, y = qPCR, colour = promoter, shape = terminator)) +
-  geom_abline(slope = 1, intercept = 0) +
-  lims(x = c(0.25, 1.75))
+mean_qpcr_vs_QuantSeq_dataset_mod_NNN_R_squared <- mean_qpcr_vs_QuantSeq_dataset_mod_NNN %>%
+  group_by(promoter) %>%
+  summarise(R_squared = cor(qPCR, `RNA-Seq`)^2)
 
-qPCR_vs_RNASeq_plot_5PSeq_mod_NNN <- ggplot(mean_qpcr_vs_5PSeq_dataset_mod_NNN) +
-  geom_point(aes(x = `RNA-Seq`, y = qPCR, colour = promoter, shape = terminator)) +
-  geom_abline(slope = 1, intercept = 0) +
-  lims(x = c(0.25, 1.75))
+mean_qpcr_vs_5PSeq_dataset_mod_NNN_R_squared <- mean_qpcr_vs_5PSeq_dataset_mod_NNN %>%
+  summarise(R_squared = cor(qPCR, `RNA-Seq`)^2)
 
 ```
 
@@ -383,6 +384,7 @@ qPCR_vs_RNASeq_plot_5PSeq_mod_NNN <- ggplot(mean_qpcr_vs_5PSeq_dataset_mod_NNN) 
 ```{r plot-functions}
 cumulative_reads_plot <- list(geom_line(aes(x = read_end_gap,
                                             y = rel_cumulative_counts,
+                                            linetype = source,
                                             colour = label,
                                             group = sample)),
                               labs(x="",
@@ -394,9 +396,9 @@ cumulative_reads_plot <- list(geom_line(aes(x = read_end_gap,
                                      shape = "none",
                                      colour = "none"),
                               theme(legend.position = "bottom",
-                                    plot.margin = margin(r = 10),
                                     panel.border = element_blank()),
-                              scale_y_continuous(expand = expansion(add = c(0.001,0.05))),
+                              scale_y_continuous(expand = expansion(add = c(0.001,0.05)),
+                                                 labels = c("0", "", "0.5", "", "1")),
                               scale_colour_manual(values = RPS3_TSA1_colour_scheme),
                               scale_shape_discrete(drop = FALSE))
 
@@ -584,6 +586,7 @@ TSA1_terminator_sequence = tibble(position = 1:246,
 
 pPGK1_pRPS3_cumulative_plot <- ggplot(tRPS3_WT_insertion_alpha %>%
                                         bind_rows(tRPS3_missing_values) %>%
+                                        mutate(source = "QuantSeq") %>%
          filter(promoter %in% c("pRPS3", "pPGK1"), 
                 mod %in% c("WT", "mod0"), 
                 !URA3)) +
@@ -612,7 +615,9 @@ pPGK1_pRPS3_construct_sequence <- ggplot() +
                 ymin = 0.75, ymax = 1.25)) + 
   geom_text(data = RPS3_terminator_sequence,
             aes(label = nucleotide, x = position, y = construct),
-            colour = RPS3_terminator_sequence$colour, size = 2) +
+            colour = RPS3_terminator_sequence$colour,
+            size = 2,
+            family = "Mono") +
   scale_x_continuous(limits = c(47, 91),
                      expand = expansion(add = c(1,1))) +
   construct_sequence_plots +
@@ -626,7 +631,8 @@ pPGK1_pRPS3_cumulative_plot_with_seq <- plot_grid(pPGK1_pRPS3_cumulative_plot,
           rel_heights = c(2,1))
 
 pPGK1_pRPS3_cumulative_plot_all_constructs <- ggplot(tRPS3_WT_insertion_alpha %>%
-                                        bind_rows(tRPS3_missing_values) %>%
+                                        bind_rows(tRPS3_missing_values)  %>% 
+                                        mutate(source = "QuantSeq") %>%
          filter(promoter %in% c("pRPS3", "pPGK1"), 
                 mod != "WT", 
                 !URA3)) +
@@ -655,7 +661,8 @@ pPGK1_pRPS3_cumulative_plot_all_constructs <- ggplot(tRPS3_WT_insertion_alpha %>
   facet_grid(promoter~label)
 
 pTSA1_cumulative_plot <- ggplot(tTSA1_WT_insertion_alpha %>%
-                                        bind_rows(tTSA1_missing_values) %>%
+                                        bind_rows(tTSA1_missing_values) %>% 
+                                        mutate(source = "QuantSeq") %>%
          filter(promoter == "pTSA1", 
                 mod %in% c("WT", "mod0"), 
                 !URA3)) +
@@ -689,7 +696,9 @@ pTSA1_construct_sequence <- ggplot() +
                 ymin = 0.75, ymax = 1.25)) + 
   geom_text(data = TSA1_terminator_sequence,
             aes(label = nucleotide, x = position, y = construct),
-            colour = TSA1_terminator_sequence$colour, size = 2) +
+            colour = TSA1_terminator_sequence$colour,
+            size = 2,
+            family = "Mono") +
   scale_x_continuous(limits = c(110, 150),
                      expand = expansion(add = c(1,1))) +
   construct_sequence_plots +
@@ -705,6 +714,7 @@ pTSA1_cumulative_plot_with_seq <- plot_grid(pTSA1_cumulative_plot,
 
 pTSA1_cumulative_plot_all_constructs <- ggplot(tTSA1_WT_insertion_alpha %>%
                                         bind_rows(tTSA1_missing_values) %>%
+                                        mutate(source = "QuantSeq") %>%
          filter(promoter == "pTSA1",
                       mod != "WT", 
                 !URA3)) +
@@ -744,10 +754,10 @@ quantseq_polya_site_usage_plot <- plot_grid(qPCR_vs_RNASeq_plot_QuantSeq,
                                 theme(legend.justification = "centre",
                                       legend.box.margin = margin())),
                              ncol = 1,
-                             rel_heights = c(2,1.4,1)),
+                             rel_heights = c(2,1.5,0.8)),
           ncol = 1,
           labels = "AUTO",
-          rel_heights = c(1,1,2.5))
+          rel_heights = c(1,1.1,2.5))
 ```
 
 ```{r print-out-quantseq-results}
@@ -761,12 +771,19 @@ ggsave2(here("./results_chapter/figures/polya_usage_plot_QuantSeq.png"),
 ```
 
 ```{r create-figure-5PSeq}
-tRPS3_cumulative_plot_5PSeq <- ggplot(tRPS3_WT_insertion_alpha_5PSeq %>%
-                                        bind_rows(tRPS3_missing_values_5PSeq) %>%
+tRPS3_WT_insertion_alpha_5PSeq_and_QuantSeq <- tRPS3_WT_insertion_alpha_5PSeq %>%
+  bind_rows(tRPS3_missing_values_5PSeq) %>%
+  mutate(source = "5PSeq") %>%
+  bind_rows(tRPS3_WT_insertion_alpha %>% 
+              bind_rows(tRPS3_missing_values) %>%
+              filter(promoter == "pRPS3") %>%
+              mutate(source = "QuantSeq"))
+
+tRPS3_cumulative_plot_5PSeq <- ggplot(tRPS3_WT_insertion_alpha_5PSeq_and_QuantSeq %>%
          filter(promoter %in% c("pRPS3", "pPGK1"), 
                 mod %in% c("WT", "mod0"), 
                 !URA3)) +
-  geom_line(data = tRPS3_WT_insertion_gaps_5Pseq,
+  geom_line(data = tRPS3_WT_insertion_gaps_5PSeq,
              aes(x = read_end,
                  y = rel_cumulative_counts_gap,
                  group = sample),
@@ -790,8 +807,7 @@ tRPS3_cumulative_plot_with_seq_5PSeq <- plot_grid(tRPS3_cumulative_plot_5PSeq,
           axis = "l",
           rel_heights = c(2,1))
 
-tRPS3_cumulative_plot_all_constructs_5PSeq <- ggplot(tRPS3_WT_insertion_alpha_5PSeq %>%
-                                        bind_rows(tRPS3_missing_values_5PSeq) %>%
+tRPS3_cumulative_plot_all_constructs_5PSeq <- ggplot(tRPS3_WT_insertion_alpha_5PSeq_and_QuantSeq %>%
          filter(promoter %in% c("pRPS3", "pPGK1"), 
                 mod != "WT", 
                 !URA3)) +
@@ -814,24 +830,27 @@ tRPS3_cumulative_plot_all_constructs_5PSeq <- ggplot(tRPS3_WT_insertion_alpha_5P
                  colour = label))  +
   cumulative_reads_plot +
   labs(title = "tRPS3 PolyA Sites",
-       x="Position relative to stop codon") +
+       x="Position relative to stop codon",
+       linetype = "RNA-Seq") +
   scale_x_continuous(limits = c(47, 91),
                      expand = expansion(add = c(1,1))) +
-  facet_grid(promoter~label)
+  facet_wrap(~label, nrow = 2)
 
 
 polya_site_usage_plot_5PSeq <- plot_grid(qPCR_vs_RNASeq_plot_5PSeq,
           tRPS3_cumulative_plot_with_seq_5PSeq,
           plot_grid(tRPS3_cumulative_plot_all_constructs_5PSeq,
                     get_legend(tRPS3_cumulative_plot_all_constructs_5PSeq +
-                                guides(colour = guide_legend(ncol=3)) +
+                                guides(colour = guide_legend(ncol=3),
+                                       linetype = guide_legend(ncol=2)) +
                                 theme(legend.justification = "centre",
-                                      legend.box.margin = margin())),
+                                      legend.box.margin = margin(),
+                                      legend.box = "vertical")),
                              ncol = 1,
-                             rel_heights = c(2,1.4,1)),
+                             rel_heights = c(2,1)),
           ncol = 1,
           labels = "AUTO",
-          rel_heights = c(1,1,1))
+          rel_heights = c(1,1,2))
 ```
 
 ```{r print-out-5pseq-results}

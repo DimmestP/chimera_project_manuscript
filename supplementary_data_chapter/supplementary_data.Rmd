@@ -7,6 +7,13 @@
 \setcounter{table}{0}
 
 
+```{r}
+library(here)
+library(tidyr)
+knitr::opts_chunk$set(fig.pos = "p", dpi = 300)
+```
+
+
 ```{r hlife-variance-table}
 knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual = c("42.0%", "3.2%", "0.6%"), Drop = c("-40.5%", "-1.6%", "0.0%"), Cumulative = c("42.0%", "43.7%", "43.7%")), caption = "\\textbf{Variance explained by each type of CRE in the half-life model applied to data from Chan et al (2018).} Variance explained was estimated in 3 different ways. The individual variance explained by a linear model containing each type of CRE on its own.  The drop in variance explained when one type of CRE is removed from the full model. The cumulative variance explained when each CRE is added to the linear model in sequence; starting with codon usage, then adding motifs and finally 3'UTR length.", format = "latex")  %>%
   kableExtra::kable_styling(latex_options = "hold_position")
@@ -61,4 +68,8 @@ knitr::kable(format = "latex", caption = "\\textbf{Selecting the UGUAHMNUA motif
 minimum_free_energy <- readr::read_csv(here::here("./supplementary_data_chapter/data/terminator_mfe.csv"))
 knitr::kable(minimum_free_energy, caption = "\\textbf{Table showing minimum free energies of 3'UTR constructs with inserted/deleted motifs.}", format = "latex")  %>%
   kableExtra::kable_styling(latex_options = "hold_position")
+```
+
+```{r polyA-site-usage-5Pseq, fig.cap="\\textbf{5' decapped RPS3 constructs match QuantSeq results.} pRPS3-tRPS3 constructs were chosen to investigate changes in polyA site usage across 5' decapped transcripts flagged for decay. (\\textbf{A}) Comparison of construct transcript abundance as independently measured by qPCR and RNA-Seq assays. Transcript abundance was normalised to the median abundance of  plasmid URA3 and genomic PGK1, RPS3 and/or TSA1 transcripts for each construct. Fold change is relative to the mod\\_NNN construct in each promoter-terminator context. (\\textbf{B}) Cumulative count of reads mapped downstream of WT and mod\\_NNN construct stop codons as fraction of total reads mapped to the constructs terminator. WT reads have been shifted downstream to align with the mod\\_NNN sequence by accounting for motif insertion sites. Suspected polyA sites have been highlighted by a black vertical line. Constructs also used in the QuantSeq analysis have their QuantSeq cumulative graphs plotted in dotted lines. (\\textbf{C}) Similar to Figure \\textbf{B} but with each motif insertion construct plotted separately. Columns designate cumulative plots from different terminator constructs.", fig.align='center',out.width="85%"}
+knitr::include_graphics(here("supplementary_data_chapter/figures/polya_usage_plot_5PSeq.png"))
 ```

@@ -38,7 +38,7 @@ We minimised growth-dependent effects by using the fluorescence at maximum growt
 Each fluorescence measurement was also normalised by OD to remove dependency on cell number, so every protein fluorescence measurement is recorded as fluorescence per OD at max growth rate. 
 A detailed protocol for setting up and conducting the plate reader assay is available at protocols.io, [doi:10.17504/protocols.io.bbicikaw](https://dx.doi.org/10.17504/protocols.io.bbicikaw).
 
-## RNA measurements: Strain growth, RNA extraction, RT-qPCR, and analysis
+## RNA measurements: Strain growth, RNA extraction, RT-qPCR, RNA-Seq and analysis
 
 Yeast with plasmids were grown in a 24-well deep well plate plate (4titude) containing 1.5 ml of SC-Ura for ~20 hours at 30°C in a shaking incubator set at 250 rpm. 
 The next day, the OD was diluted to a starting OD between 0.15-0.2 in a 12-column deep well reservoir plate (4titude) to a total volume of 7 ml. 
@@ -71,6 +71,12 @@ For each biological replicate, $\Delta$Cq values were calculated by normalising 
 For the constructs with motif insertions in terminators, $\Delta\Delta$Cq values were calculated by normalising mCherry $\Delta$Cq by that of control construct mod_NNN strains (with the corresponding promoter) for tRPS3 and tTSA1 consructs.
 For the constructs with motif deletions in terminators, $\Delta\Delta$Cq values were calculated by normalising mCherry $\Delta$Cq by that of the WT terminator (with the corresponding promoter) for tPIR1 constructs.
 Complete scripts for qPCR analysis, quality control, and figure generation are available online at https://github.com/DimmestP/chimera_project_manuscript/.
+
+RNA-Seq alignment and quality control was conducted using a reproducible NextFlow pipeline available online at https://github.com/DimmestP/nextflow_paired_reads_pipeline. 
+Quality control was conducted with FASTQC and MultiQC reports [@Ewels2016] and adapters were removed with Cutadapt [@Martin2011].
+Alignment was conducted with HISAT2 [@Kim2019], SAMtools [@Li2009] and BEDTools [@Quinlan2010].
+Only 5PSeq reads contains UMIs which were used to deduplicate reads using UMI-tools [@Smith2017].
+Finally counts to genomic regions of interest were calculated using FeatureCounts [@Liao2014].
 
 
 ## Determining 3'UTR decay motifs
