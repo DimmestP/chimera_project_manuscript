@@ -114,6 +114,8 @@ Both small- and large-scale studies of CREs should ideally be carried out with m
 # Acknowledgments
 
 We thank Naomi Nakayama, Erika Szymanski, Filippo Menolascina, and members of the Wallace lab for discussions on the manuscript.
+We thank Vicent Pelechano and Yujie Zhang for their generous help teaching us the 5PSeq protocol, obtaining 5PSeq data, and discussing the results.
+
 
 
 # References

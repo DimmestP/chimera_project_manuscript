@@ -181,23 +181,42 @@ The combination has a greater effect than expected when paired with pPIR1 but a 
 knitr::include_graphics(here("results_chapter/figures/qPCR_model_coef_and_pred_vs_exp_abund.png"))
 ```
 
+## Inserting motifs into terminators shifts poly(A) site usage downstream
 
-## Inserting motifs into terminators shifts polyA site usage downstream
+We next mapped poly(A) site usage in a subset of reporter constructs, for 2 reasons.
+First, changes in poly(A) site usage might mean that motifs placed in our reporters were unintentionally absent from the mature mRNA.
+Second, we wanted to know if motif effects on mRNA abundance might be due to changes in the poly(A) site.
+We chose three constructs with large effect sizes in the qPCR results: mod_NAA, mod_HTH and mod_NTN, together with WT and mod_NNN controls, within three promoter-terminator contexts: pRPS3-tRPS3, pPGK1-tRPS3 and pTSA1-tTSA1.
+For these constructs we performed poly(A)-proximal RNA-seq using the QuantSeq Rev protocol with paired-end reads (REF and see methods).
+Read 1 allows precise inference of poly(A) site position while read 2 generally overlaps the CDS, so distinguishing terminators in native loci from reporter constructs.
+We mapped the reads to genome sequences extended by the relevant reporter plasmid sequence.
 
-We selected a subset of constructs to determine if motif insertion causes changes in alternative transcript polyA site usage.
-We chose three constructs with large effect sizes in the qPCR results: mod_NAA, mod_HTH and mod_NTN, together with WT and mod_NNN within three promoter-terminator contexts: pRPS3-tRPS3, pPGK1-tRPS3 and pTSA1-tTSA1.
-Transcript abundance, relative to mod_NNN, for each construct correlates strongly with qPCR results (Figure \@ref(fig:quantseq_polyA_aite_usage)A). 
-We compared 3'end positions of reads between modified and wild-type reporter constructs to determine the poly(A) site usage.
+We detected 1000s (check) of reads on each reporter construct, which is enough to quantify expression confidently as well as to assign poly(A) sites.
+We checked that counts of all other RNAs are highly correlated between samples, giving us confidence that changes in construct detection are meaningful (NEEDS SUPPLEMENTARY FIGURE PAIRS PLOT OR CORRELATION PLOT).
+Transcript abundance, relative to mod_NNN, for most constructs correlate strongly with qPCR results (Figure \@ref(fig:quantseq-polyA-site-usage)A).
+However, some constructs were detected as more abundant by RNA-seq for reasons that are unclear.
+
+We display the poly(A) sites as the cumulative fraction of poly(A)-site reads mapped at each location downstream of construct stop codons, out of all reads mapped to the terminator. (Figure \@ref(fig:quantseq-polyA-site-usage)B).
+We checked that in other genes the poly(A) site locations were highly reproducible across samples, giving us confidence that changes in construct poly(A) sites are meaningful (SUPP FIGURE for some of URA3, RPS3, TSA1, PGK1).
+Poly(A) sites are / are not (delete as appropriate) in the same relative positions in native loci and the construct with wild-type terminator (SUPP FIGURE).
+Then, we compared 3'end positions of reads between modified and wild-type reporter constructs to determine the poly(A) site usage.
 In both wild-type and mod-NNN tTsa1 constructs, the same poly(A) sites are used.
-However, tRPS3 mod_NNN constructs appear to be using a novel polya site upstream of those seen in the wildtype. 
-This upstream polya site appears in $50%$ percent of reads and is located upstream of the 3rd motif insertion site (Figure \@ref(fig:quantseq_polyA_aite_usage)B).
+Surprisingly, tRPS3 mod_NNN constructs appear to be using a novel upstream poly(A) site, that appears in about $50%$ percent of reads and is located upstream of the 3rd motif insertion site (Figure \@ref(fig:quantseq-polyA-site-usage)B).
+For tTSA1 constructs the same poly(A) sites are being used in mod_NNN constructs as wildtype (Figure \@ref(fig:quantseq-polyA-site-usage)B).
 
-Next, we compare changes in polya site usage between constructs with different inserted motifs.
-We chose two distinct polya sites for the tRPS3 constructs and two for the tTSA1 constructs (highlighted by black vertical lines on the mod_NNN constructs in Figure \@ref(fig:quantseq-polyA-site-usage)B). 
-We determined the amount of reads mapped upstream of this site as a fraction of the total number of reads mapped to the terminator.
-For tTSA1 constructs there is little change in polya site usage across all constructs.
-However, for tRPS3 constructs there is a distinct shift to downstream polyA sites in constructs with verified, rather than random, motifs inserted. These results are confirmed in a separate analysis of RNAseq data collected on 5' decapped transcripts (Sup Fig \@ref(fig:polyA-site-usage-5Pseq))
+Next, we compare changes in poly(A) site usage between constructs with different inserted motifs.
+We highlight the 2 major poly(A) sites for the tRPS3 constructs and 2 for the tTSA1 constructs (black vertical lines on the mod_NNN constructs in Figure \@ref(fig:quantseq-polyA-site-usage)B) and track the cumulative fraction of reads upstream of each major site.
+However, for tRPS3 constructs there is a distinct shift to downstream poly(A) sites in constructs with verified, rather than random, motifs inserted. 
+For tTSA1 constructs there is little change in poly(A) site usage across all constructs.
 
-```{r quantseq-polyA-site-usage, fig.cap="\\textbf{Inserting motifs into RPS3 and TSA3 terminators changes 3'UTR length.} A subset of constructs were chosen to investigate changes in polyA site usage; mod\\_NAA, mod\\_HTH, mod\\_NTN, WT and mod\\_NNN within three promoter-terminator contexts; pRPS3-tRPS3, pPGK1-tRPS3 and pTSA1-tTSA1. (\\textbf{A}) Comparison of construct transcript abundance as independently measured by qPCR and RNA-Seq assays. Transcript abundance was normalised to the median abundance of  plasmid URA3 and genomic PGK1, RPS3 and/or TSA1 transcripts for each construct. Fold change is relative to the mod\\_NNN construct in each promoter-terminator context. (\\textbf{B}) Cumulative count of reads mapped downstream of WT and mod\\_NNN construct stop codons as fraction of total reads mapped to the constructs terminator. (\\textbf{Left}) shows the polyA sites for the pRPS3-tRPS3 and pPGK1-tRPS3 promoter-terminator constructs. (\\textbf{Right}) shows the same for the pTSA1-tTSA1 constructs. WT reads have been shifted downstream to align with the mod\\_NNN sequence by accounting for motif insertion sites. Suspected polyA sites have been highlighted by a black vertical line. (\\textbf{C}) Similar to Figure \\textbf{B} but with each motif insertion construct plotted separately. Columns designate cumulative plots from different terminator constructs and rows designate cumulative plots from different promoter-terminator contexts.", fig.align='center',out.width="85%"}
+
+```{r quantseq-polyA-site-usage, fig.cap="\\textbf{Inserting motifs into RPS3 and TSA3 terminators changes 3'UTR length.} A subset of constructs were chosen to investigate changes in polyA site usage; mod\\_NAA, mod\\_HTH, mod\\_NTN, WT and mod\\_NNN within three promoter-terminator contexts; pRPS3-tRPS3, pPGK1-tRPS3 and pTSA1-tTSA1. (\\textbf{A}) Comparison of construct transcript abundance as independently measured by qPCR and RNA-Seq assays. Transcript abundance was normalised to the median abundance of  plasmid URA3 and genomic PGK1, RPS3 and/or TSA1 transcripts for each construct. Fold change is relative to the mod\\_NNN construct in each promoter-terminator context. (\\textbf{B}) Cumulative count of reads mapped downstream of WT (grey) and mod\\_NNN (black) construct stop codons as fraction of total reads mapped to the constructs terminator. (\\textbf{Left}) shows the polyA sites for the pRPS3-tRPS3 and pPGK1-tRPS3 promoter-terminator constructs. (\\textbf{Right}) shows the same for the pTSA1-tTSA1 constructs. WT reads have been shifted downstream to align with the mod\\_NNN sequence by accounting for motif insertion sites. Suspected polyA sites have been highlighted by a black vertical line. (\\textbf{C}) Similar to Figure \\textbf{B} but with each motif insertion construct plotted separately. Columns designate cumulative plots from different terminator constructs and rows designate cumulative plots from different promoter-terminator contexts.", fig.align='center',out.width="85%"}
 knitr::include_graphics(here("results_chapter/figures/polya_usage_plot_QuantSeq.png"))
 ```
+
+We next asked if the alternate poly(A) sites might have different decay rates, using 5Pseq to measure decapped transcripts, which are decay intermediates (ref to 5Pseq paper).
+Our 5Pseq data confirms the QuantSeq results and provides no evidence for differential decay of isoforms (Sup Fig \@ref(fig:polyA-site-usage-5Pseq)).
+For control genes and for the constructs with wildtype tRPS3, 5Pseq identifies indistinguishable poly(A) sites from QuantSeq (CHECK WITH NEW SUPP FIGURE, and Sup Fig \@ref(fig:polyA-site-usage-5Pseq)B).
+For a subset of tRPS3 constructs with additional poly(A) sites, that we were able to detect confidently, 5Pseq shows poly(A)-site profiles that are indistinguishable from QuantSeq (Sup Fig \@ref(fig:polyA-site-usage-5Pseq)B).
+The lack of detectable differential decay, and the fact that even the upstream poly(A) site lacks only one inserted motif in the constructs, argues that the major effects of motif insertions on mRNA decay are unlikely to occur due to alternative poly(A) site formation.
+Although further work would be needed to verify this hypothesis in detail, our results are consistent with the motifs acting by recruiting RNA-binding proteins to polyadenylated transcripts.
