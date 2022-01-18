@@ -37,6 +37,8 @@ For tRPS3 constructs, polyA sites were again appropriately shifted downstream by
 However, a novel polyA site is introduced between the second and third motifs.
 It is known that efficiency elements in the terminators of yeast genes play an important role in efficient RNA transcription and that cleavage and polyadenylation sites occur a specific distance downstream of the efficiency elements [@Graber1999].
 Although efforts were made to avoid altering efficiency elements in native terminators, the creation of novel polyA site is likely due to the inserted motifs extending the distance between the efficiency elements and the native polyA sites. 
+Motifs 2 and 3 were inserted into a highly conserved region of Rps3 terminator.
+The corresponding 3'UTR has been shown to contain a potential binding site for an unknown RBP.
 Despite this the QuantSeq results do confirm that at least one copy of the motifs of interest are present in every major isoform for all constructs.
 
 ## Mechanisms for motif terminator context dependence
