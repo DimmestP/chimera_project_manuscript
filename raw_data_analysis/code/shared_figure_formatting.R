@@ -66,7 +66,7 @@ RPS3_TSA1_colour_scheme <- c( "WT"      = "#6c6c6c",
                               "mod_HNH" = "#71519C",
                               "mod_NTN" = "#5978BA",
                               "mod_NAA" = "#C05558",
-                              "mod_NNN" = "black")
+                              "mod_NNN" = "goldenrod")
 
 PIR1_colour_scheme <- c("mod_NTNNN" = "#DD76A5",
                         "mod_ANNNN" = "#968BC2",

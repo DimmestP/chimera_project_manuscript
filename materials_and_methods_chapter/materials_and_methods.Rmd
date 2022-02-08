@@ -61,10 +61,10 @@ The quantity and quality of the RNA was measured using both a spectrophotometer 
 Reverse transcription (RT) master mix was prepared, containing 2 $\mu$l of First Strand synthesis buffer, 0.75 $\mu$l of 10mM dNTP mix, 1.5 $\mu$l of nuclease free water, 0.25 $\mu$l of RNase inhibitor and 0.5 $\mu$l of SuperScript IV Reverse Transcriptase (Invitrogen) per reaction. 
 5 $\mu$l of the RT master mix was added to the denatured RNA then incubated at 25&deg;C for 5 minutes then 55&deg;C for 1 hour. The cDNA was diluted with 200 $\mu$l of nuclease free water.
 
-Target cDNAs were measured by quantitative PCR with Brilliant II Fast SYBR Green QPCR Master Mix (Agilent) using a Lightcycler 480 qPCR machine (Roche).
+Target cDNAs were measured by quantitative PCR with Brilliant III Ultra-Fast SYBR Green qPCR master mix (Agilent) using a Lightcycler 480 qPCR machine (Roche).
 We measured all +RT reactions in technical triplicate, and negative control -RT samples using one replicate.
 We used the manufacturer's software to calculate quantification cycle (Cq) for each individual well using the fit points method, and exported both raw fluorescence and Cq data.
-All primer sets were thoroughly validated by serial dilution and by confirming amplicon size, sequences are available in Supplementary Table \ref{tab:chimera-qpcr-primers-table}.
+All primer sets were thoroughly validated by serial dilution and by confirming amplicon size. Sequences are available in Supplementary Table \ref{tab:chimera-qpcr-primers-table}.
 
 RT-qPCR data was analysed using our tidyqpcr R package v2.1.0-beta (https://github.com/ewallace/tidyqpcr).
 For each biological replicate, $\Delta$Cq values were calculated by normalising the median mCherry Cq values by the median Cq values of the three reference genes (RPS3, PGK1 and URA3).
