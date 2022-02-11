@@ -30,15 +30,15 @@ These disparities in predicted and experimentally verified regulatory behaviour 
 RNA-Seq results confirmed our conclusions on the effect of motif insertions on gene expression. 
 pRPS3-tRPS3 and pTSA1-tTSA1 constructs show similar relative abundances in the qPCR results as the RNA-Seq results. 
 However, pPGK1-tRPS3 results are skewed due to the unexpected low abundance of mod_NNN constructs in the RNA-Seq results, which all other constructs are normalised to.
-As the QuantSeq protocol we used for our RNA-Seq assay anchors reads to the polyA tail of transcripts we were able to determine the effect of inserting motifs on polyA site usage. 
-For tTSA1 constructs, inserting the motifs shifted the polyA sites 27 nucleotides downstream of their absolute positions in WT, or the exact size of the three insertion site combined.
-The sequences and relative usages of the polyA sites are not affected by inserting motifs.
-For tRPS3 constructs, polyA sites were again appropriately shifted downstream by the length of the insertions sites.
+As the QuantSeq protocol we used for our RNA-Seq assay anchors reads to the poly(A) tail of transcripts we were able to determine the effect of inserting motifs on polyA site usage. 
+For tTSA1 constructs, inserting the motifs shifted the poly(A) sites 27 nucleotides downstream of their absolute positions in WT, or the exact size of the three insertion site combined.
+The sequences and relative usages of the poly(A) sites are not affected by inserting motifs.
+For tRPS3 constructs, poly(A) sites were again appropriately shifted downstream by the length of the insertions sites.
 However, a novel polyA site is introduced between the second and third motifs.
 It is known that efficiency elements in the terminators of yeast genes play an important role in efficient RNA transcription and that cleavage and polyadenylation sites occur a specific distance downstream of the efficiency elements [@Graber1999].
 Although efforts were made to avoid altering efficiency elements in native terminators, the creation of novel polyA site is likely due to the inserted motifs extending the distance between the efficiency elements and the native polyA sites. 
-Motifs 2 and 3 were inserted into a highly conserved region of Rps3 terminator.
-The corresponding 3'UTR has been shown to contain a potential binding site for an unknown RBP.
+Another possible explanation for the novel poly(A) site is that motifs 2 and 3 were inserted into a highly conserved region of Rps3 terminator **(Siepel 2005)**.
+This might have disrupted an RBP target site or secondary structure in this region, leading to changes in polyadenylation site choice.
 Despite this the QuantSeq results do confirm that at least one copy of the motifs of interest are present in every major isoform for all constructs.
 
 ## Mechanisms for motif terminator context dependence

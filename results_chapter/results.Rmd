@@ -214,9 +214,7 @@ For tTSA1 constructs there is little change in poly(A) site usage across all con
 knitr::include_graphics(here("results_chapter/figures/polya_usage_plot_QuantSeq.png"))
 ```
 
-We next asked if the alternate poly(A) sites might have different decay rates, using 5Pseq to measure decapped transcripts, which are decay intermediates (ref to 5Pseq paper).
-Our 5Pseq data confirms the QuantSeq results and provides no evidence for differential decay of isoforms (Sup Fig \@ref(fig:polyA-site-usage-5Pseq)).
-For control genes and for the constructs with wildtype tRPS3, 5Pseq identifies indistinguishable poly(A) sites from QuantSeq (CHECK WITH NEW SUPP FIGURE, and Sup Fig \@ref(fig:polyA-site-usage-5Pseq)B).
-For a subset of tRPS3 constructs with additional poly(A) sites, that we were able to detect confidently, 5Pseq shows poly(A)-site profiles that are indistinguishable from QuantSeq (Sup Fig \@ref(fig:polyA-site-usage-5Pseq)B).
-The lack of detectable differential decay, and the fact that even the upstream poly(A) site lacks only one inserted motif in the constructs, argues that the major effects of motif insertions on mRNA decay are unlikely to occur due to alternative poly(A) site formation.
-Although further work would be needed to verify this hypothesis in detail, our results are consistent with the motifs acting by recruiting RNA-binding proteins to polyadenylated transcripts.
+We then asked whether modifications in the 3'-UTR region can impact translation through changing ribosome dynamics and 5'-3' co-translational degradation pathway.
+Our 5PSeq data shows that there are no significant changes in ribosome stalling between wild-type and modified reporter constructs **5P plot needed**, suggesting that mechanisms by which inserted motifs regulate the expression of reporter protein do not impact ribosome dynamics.
+Moreover, the poly(A) site distribution for each construct matches that obtained from QuantSeq data, suggesting that 3'-UTR isoforms are not differentially degraded using this pathway regardless of the motifs inserted.
+Finally, the abundances of different reporter mRNAs from different constructs correlate well between 5PSeq and QuantSeq data **correlation plot needed**, suggesting that there are no differences in co-translational degradation between different constructs.

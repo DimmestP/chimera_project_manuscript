@@ -72,11 +72,21 @@ For the constructs with motif insertions in terminators, $\Delta\Delta$Cq values
 For the constructs with motif deletions in terminators, $\Delta\Delta$Cq values were calculated by normalising mCherry $\Delta$Cq by that of the WT terminator (with the corresponding promoter) for tPIR1 constructs.
 Complete scripts for qPCR analysis, quality control, and figure generation are available online at https://github.com/DimmestP/chimera_project_manuscript/.
 
+RNA-seq library was prepared using QuantSeq 3' mRNA-Seq Library Prep Kit REV for Illumina (Lexogen).
+500 ng of RNA (not treated with DNaseI) was used as input and manufacturer's protocol was followed without modifications.
+The number of amplification cycles was determined using PCR Add-on Kit for Illumina (Lexogen).
+The quality of the library was measured using Fragment Analyzer NGS Fragment Kit (1-6000bp) (Agilent).
+Pooled libraries were then sequenced using NextSeq 500/550 (Illumina) with paired-end reads using Custom Sequencing Primer to obtain 3'-end reads.
+
+5PSeq library was prepared as described in **Zhang & Pelechano 2021** with following modifications: anchored-oligodT was used instead of oligo-dT to allow for sequencing of 3'-ends; random primers were not used.
+Library was sequenced using NextSeq system (Illumina) with paired-end reads.
+
 RNA-Seq alignment and quality control was conducted using a reproducible NextFlow pipeline available online at https://github.com/DimmestP/nextflow_paired_reads_pipeline. 
 Quality control was conducted with FASTQC and MultiQC reports [@Ewels2016] and adapters were removed with Cutadapt [@Martin2011].
 Alignment was conducted with HISAT2 [@Kim2019], SAMtools [@Li2009] and BEDTools [@Quinlan2010].
-Only 5PSeq reads contains UMIs which were used to deduplicate reads using UMI-tools [@Smith2017].
+Only 5PSeq reads contain UMIs, which were used to deduplicate reads using UMI-tools [@Smith2017].
 Finally counts to genomic regions of interest were calculated using FeatureCounts [@Liao2014].
+5'P ends were analysed using fivepseq pipeline **(Nersisyan 2020)**.
 
 
 ## Determining 3'UTR decay motifs
