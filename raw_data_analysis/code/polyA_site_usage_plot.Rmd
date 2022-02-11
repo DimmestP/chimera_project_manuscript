@@ -182,15 +182,186 @@ full_length_QuantSeq_genomic_cumulative_polyA_reads <- full_QuantSeq_cumulative_
   filter(mod == "genomic")
 
 full_length_5PSeq_genomic_cumulative_polyA_reads <- full_5PSeq_cumulative_polyA_reads %>%
-  select(-read_count, - total_counts) %>%
+  select(- read_count, - total_counts) %>%
   group_by(construct_name, sample) %>%
   do(fill_missing_nucleotide_data(., empty_full_length_5PSeq_plasmids)) %>%
   filter(mod == "genomic")
 
 ```
 
+```{r plot_QC_cumulative_graph}
+## Create 5PSeq QC cumulative plots by comparing genomic RPS3, PGK1 and TSA1 terminators across samples
 
-```{r plot_cumulative_graph}
+full_length_QuantSeq_plasmids_cumulative_QC <- full_QuantSeq_cumulative_polyA_reads %>%
+  filter(mod == "genomic") %>%
+  select(-read_count, - total_counts) %>%
+  group_by(construct_name, sample, URA3) %>%
+  do(fill_missing_nucleotide_data(., empty_full_length_QuantSeq_plasmids))
+
+genomic_QuantSeq_PGK1_cumulative_QC <- ggplot(full_length_QuantSeq_plasmids_cumulative_QC %>%
+         filter(promoter == "pPGK1")) +
+  geom_line(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
+  labs(x="", y="Fraction of Reads", title = "Genomic PGK1 Poly(A) sites (QuantSeq)") +
+  lims(x = c(120,170)) +
+  guides(colour = FALSE)
+
+genomic_QuantSeq_TSA1_cumulative_QC <- ggplot(full_length_QuantSeq_plasmids_cumulative_QC %>%
+         filter(promoter == "pTSA1")) +
+  geom_line(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
+  labs(x="", y="Fraction of Reads", title = "Genomic TSA1 Poly(A) sites (QuantSeq)") +
+  lims(x = c(80,120)) +
+  guides(colour = FALSE)
+
+genomic_QuantSeq_RPS3_cumulative_QC <- ggplot(full_length_QuantSeq_plasmids_cumulative_QC %>%
+         filter(promoter == "pRPS3")) +
+  geom_line(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
+  labs(x="", y="Fraction of Reads", title = "Genomic RPS3 Poly(A) sites (QuantSeq)") +
+  lims(x = c(30,80)) +
+  guides(colour = FALSE)
+
+genomic_QuantSeq_combined_cumulative_QC <- plot_grid(genomic_QuantSeq_PGK1_cumulative_QC,
+          genomic_QuantSeq_TSA1_cumulative_QC,
+          genomic_QuantSeq_RPS3_cumulative_QC,
+          get_legend(genomic_QuantSeq_PGK1_cumulative_QC +
+                       guides(colour = guide_legend(nrow=3)) +
+                                theme(legend.justification = "centre",
+                                      legend.box.margin = margin(),
+                                      legend.box = "vertical")),
+          ncol = 1,
+          rel_heights = c(1,1,1,0.7))
+
+## Create 5PSeq QC cumulative plots
+
+full_length_5PSeq_plasmids_cumulative_QC <- full_5PSeq_cumulative_polyA_reads %>%
+  filter(mod == "genomic") %>%
+  select(-read_count, - total_counts) %>%
+  group_by(construct_name, sample, URA3) %>%
+  do(fill_missing_nucleotide_data(., empty_full_length_5PSeq_plasmids))
+
+genomic_5PSeq_PGK1_cumulative_QC <- ggplot(full_length_5PSeq_plasmids_cumulative_QC %>%
+         filter(promoter == "pPGK1")) +
+  geom_line(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
+  labs(x="", y="Fraction of Reads", title = "Genomic PGK1 Poly(A) sites (5PSeq)") +
+  lims(x = c(120,170)) +
+  guides(colour = FALSE)
+
+genomic_5PSeq_PGK1_cumulative_QC <- ggplot(full_length_5PSeq_plasmids_cumulative_QC %>%
+         filter(promoter == "pPGK1")) +
+  geom_line(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
+  labs(x="", y="Fraction of Reads", title = "Genomic PGK1 Poly(A) sites (5PSeq)") +
+  lims(x = c(120,170)) +
+  guides(colour = "none")
+
+genomic_5PSeq_RPS3_cumulative_QC <- ggplot(full_length_5PSeq_plasmids_cumulative_QC %>%
+         filter(promoter == "pRPS3")) +
+  geom_line(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
+  labs(x="", y="Fraction of Reads", title = "Genomic RPS3 Poly(A) sites (5PSeq)") +
+  lims(x = c(30,80)) +
+  guides(colour = "none")
+
+genomic_5PSeq_TSA1_cumulative_QC <- ggplot(full_length_5PSeq_plasmids_cumulative_QC %>%
+         filter(promoter == "pTSA1")) +
+  geom_line(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
+  labs(x="", y="Fraction of Reads", title = "Genomic TSA1 Poly(A) sites (5PSeq)") +
+  lims(x = c(80,120)) +
+  guides(colour = "none")
+
+genomic_5PSeq_combined_cumulative_QC <- plot_grid(genomic_5PSeq_PGK1_cumulative_QC,
+          genomic_5PSeq_RPS3_cumulative_QC,
+          genomic_5PSeq_TSA1_cumulative_QC,
+          get_legend(genomic_5PSeq_PGK1_cumulative_QC +
+                       guides(colour = guide_legend(nrow=2)) +
+                                theme(legend.justification = "centre",
+                                      legend.box.margin = margin(),
+                                      legend.box = "vertical")),
+          ncol = 1,
+          rel_heights = c(1,1,1,0.7))
+```
+
+```{r output-polyA-QC-plot, eval = FALSE}
+
+ggsave2(here("supplementary_data_chapter/figures/polya_QC_plot_QuantSeq.png"), 
+        genomic_QuantSeq_combined_cumulative_QC, 
+        width = fig_width_2column,
+        height = 210,
+        units = "mm",
+        dpi = fig_dpi,
+        bg = "white")
+
+ggsave2(here("supplementary_data_chapter/figures/polya_QC_plot_5PSeq.png"), 
+        genomic_5PSeq_combined_cumulative_QC, 
+        width = fig_width_2column,
+        height = 210,
+        units = "mm",
+        dpi = fig_dpi,
+        bg = "white")
+```
+
+```{r plot-QC-cumulative-graph-plasmid-WT-vs-genome}
+
+plasmid_vs_genome_polyA_QuantSeq <- full_length_QuantSeq_plasmids_cumulative_polyA_reads %>%
+  filter(mod == "WT", !URA3) %>%
+  bind_rows(full_length_QuantSeq_plasmids_cumulative_QC %>%
+              filter(terminator %in% c("tRPS3", "tTSA1"),
+                     sample %in% c("A12", "B12", "B1", "A5", "B5")))
+
+plasmid_vs_genome_polyA_QuantSeq_TSA1_plot <- ggplot(plasmid_vs_genome_polyA_QuantSeq %>%
+         filter(terminator == "tTSA1")) +
+  geom_line(aes(x = read_end,
+                y = rel_cumulative_counts,
+                colour = sample,
+                linetype = mod)) +
+  labs(x="", y="Fraction of Reads", title = "Genomic vs Plasmid TSA1 Poly(A) sites (QuantSeq)") +
+  lims(x = c(80,120)) +
+  guides(colour = "none", linetype = "none")
+
+plasmid_vs_genome_polyA_QuantSeq_RPS3_plot <- ggplot(plasmid_vs_genome_polyA_QuantSeq %>%
+         filter(terminator == "tRPS3")) +
+  geom_line(aes(x = read_end,
+                y = rel_cumulative_counts,
+                colour = sample,
+                linetype = mod)) +
+  labs(x="", y="Fraction of Reads", title = "Genomic vs Plasmid RPS3 Poly(A) sites (QuantSeq)") +
+  lims(x = c(30,80)) +
+  guides(colour = "none", linetype = "none")
+
+plasmid_vs_genome_polyA_5PSeq <- full_length_5PSeq_plasmids_cumulative_polyA_reads %>%
+  filter(mod == "WT", !URA3) %>%
+  bind_rows(full_length_5PSeq_plasmids_cumulative_QC %>%
+              filter(terminator %in% c("tRPS3", "tTSA1"),
+                     sample %in% c("3dt", "4dt")))
+
+plasmid_vs_genome_polyA_5PSeq_RPS3_plot <- ggplot(plasmid_vs_genome_polyA_5PSeq %>%
+         filter(terminator == "tRPS3")) +
+  geom_line(aes(x = read_end,
+                y = rel_cumulative_counts,
+                colour = sample,
+                linetype = mod)) +
+  labs(x="", y="Fraction of Reads", title = "Genomic vs Plasmid RPS3 Poly(A) sites (5PSeq)") +
+  lims(x = c(30,80)) +
+  guides(colour = "none", linetype = "none")
+
+
+plasmid_vs_genome_polyA_combined_plot <- plot_grid(plasmid_vs_genome_polyA_QuantSeq_TSA1_plot, plasmid_vs_genome_polyA_QuantSeq_RPS3_plot, plasmid_vs_genome_polyA_5PSeq_RPS3_plot, get_legend(plasmid_vs_genome_polyA_5PSeq_RPS3_plot +
+                       guides(linetype = guide_legend(nrow = 1)) +
+                                theme(legend.justification = "centre",
+                                      legend.box.margin = margin(),
+                                      legend.box = "vertical")), ncol = 1, rel_heights = c(1, 1, 1, 0.5))
+
+```
+
+```{r output-polyA-QC-plot, eval = FALSE}
+
+ggsave2(here("supplementary_data_chapter/figures/plasmid_vs_genome_polyA_combined_plot.png"), 
+        plasmid_vs_genome_polyA_combined_plot, 
+        width = fig_width_2column,
+        height = 210,
+        units = "mm",
+        dpi = fig_dpi,
+        bg = "white")
+```
+
+```{r plot-cumulative-graph}
 cumulative_graph_QuantSeq_pRPS3 <- ggplot(full_length_QuantSeq_plasmids_cumulative_polyA_reads %>%
   filter(promoter == "pRPS3", mod != "genomic", !URA3)) +
   geom_line(aes(x = read_end, y = rel_cumulative_counts, linetype = str_detect(sample, "A"), group = sample, colour = label)) +

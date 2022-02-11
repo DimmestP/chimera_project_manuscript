@@ -212,25 +212,29 @@ plotMA(DESeq_summary_5PSeq, ylim=c(-2,2))
 # correlation grouped norm counts
 library("pheatmap")
 
-heatmap_metadata_QuantSeq <- as.data.frame(colData(DESeq_dataset_QuantSeq)[,c("promoter","mod_label")])
+heatmap_label_QuantSeq_pRPS3 <- as.data.frame(colData(DESeq_dataset_QuantSeq)[,c("promoter","mod_label")]) %>%
+  filter(promoter == "pRPS3") %>%
+  select(-promoter)
 
-heatmap_metadata_5PSeq <- as.data.frame(colData(DESeq_dataset_5PSeq)[,c("promoter","mod_label")])
+heatmap_label_5PSeq_match_QuantSeq <- as.data.frame(colData(DESeq_dataset_5PSeq)[,c("promoter","mod_label")]) %>%
+  filter(mod_label %in% heatmap_label_QuantSeq_pRPS3$mod_label) %>%
+  select(-promoter)
 
 log_2_plus_one_QuantSeq <- normTransform(DESeq_dataset_QuantSeq)
 
 log_2_plus_one_5PSeq <- normTransform(DESeq_dataset_5PSeq)
 
-pheatmap(assay(log_2_plus_one_QuantSeq),
+pRPS3_QuantSeq_5PSeq_correlation_comparison <- pheatmap(cbind(subset(assay(log_2_plus_one_5PSeq), 
+                      select = rownames(heatmap_label_5PSeq_match_QuantSeq)),
+               subset(assay(log_2_plus_one_QuantSeq), 
+                      select = rownames(heatmap_label_QuantSeq_pRPS3))),
          cluster_rows=FALSE,
          show_rownames = FALSE,
          clustering_distance_cols="correlation",
-         annotation_col=heatmap_metadata_QuantSeq)
-
-pheatmap(assay(log_2_plus_one_5PSeq),
-         cluster_rows=FALSE,
-         show_rownames = FALSE,
-         clustering_distance_cols="correlation",
-         annotation_col=heatmap_metadata_5PSeq)
+         annotation_col=rbind(cbind(heatmap_label_QuantSeq_pRPS3,
+                                    "assay" = "5PSeq"),
+                              cbind(heatmap_label_5PSeq_match_QuantSeq,
+                                    "assay" = "QuantSeq")))
 
 factor_levels_QuantSeq = c("A1", "B1", "E1", "E2", "A2", "B2", "A10", "B10", "A3", "B3", "A4", "B4", "A12", "B12", "A13", "B13", "A14", "B14", "A15", "B15", "A16", "B16", "A5", "B5", "A6", "B6", "A11", "B11", "A7", "B7", "A8", "B8", "A9", "B9")
 
@@ -238,24 +242,55 @@ factor_levels_5PSeq <- c("1dt", "2dt", "3dt", "4dt", "5dt", "6dt",
                          "7dt", "8dt", "9dt", "10dt", "11dt", "12dt",
                          "13dt", "14dt", "15dt", "16dt")
 
-ggplot(as_tibble(cor(assay(log_2_plus_one_QuantSeq)), 
+sample_correlation_quantseq<- ggplot(as_tibble(cor(assay(log_2_plus_one_QuantSeq)), 
                  rownames = "sample_x") %>% 
          pivot_longer(-sample_x, 
                       names_to = "sample_y", 
                       values_to = "cor") %>% 
          mutate(sample_x = factor(sample_x, factor_levels_QuantSeq), 
                 sample_y = factor(sample_y, factor_levels_QuantSeq))) + 
-    geom_tile(aes(x= sample_x, y = sample_y, fill = cor))
+    geom_tile(aes(x= sample_x, y = sample_y, fill = cor)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_fill_gradient(high = "green") +
+  coord_equal() +
+  labs(x= "", y = "")
 
-ggplot(as_tibble(cor(assay(log_2_plus_one_5PSeq)), 
+sample_correlation_5Pseq <- ggplot(as_tibble(cor(assay(log_2_plus_one_5PSeq)), 
                  rownames = "sample_x") %>% 
          pivot_longer(-sample_x, 
                       names_to = "sample_y", 
                       values_to = "cor") %>% 
          mutate(sample_x = factor(sample_x, factor_levels_5PSeq), 
                 sample_y = factor(sample_y, factor_levels_5PSeq))) + 
-    geom_tile(aes(x= sample_x, y = sample_y, fill = cor))
+    geom_tile(aes(x= sample_x, y = sample_y, fill = cor)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  coord_equal() +
+  labs(x= "", y = "")
 
+sample_correlation_combined <- plot_grid(sample_correlation_quantseq,
+                                         sample_correlation_5Pseq, 
+                                         ncol = 1,
+                                         scale = c(1.085,0.8),
+                                         labels = "AUTO")
+
+```
+
+```{r output-cor-graphs, eval = FALSE}
+ggsave2(here("supplementary_data_chapter/figures/sequencing_sample_correlation.png"),
+        sample_correlation_combined,
+        width = fig_width_2column,
+        height = 210,
+        units = "mm",
+        dpi = fig_dpi,
+        bg = "white")
+
+ggsave2(here("supplementary_data_chapter/figures/pRPS3_QuantSeq_5PSeq_correlation_comparison.png"),
+        pRPS3_QuantSeq_5PSeq_correlation_comparison,
+        width = fig_width_2column,
+        height = 210,
+        units = "mm",
+        dpi = fig_dpi,
+        bg = "white")
 ```
 
 ```{r CoI_URA_values}

@@ -192,13 +192,13 @@ Read 1 allows precise inference of poly(A) site position while read 2 generally 
 We mapped the reads to genome sequences extended by the relevant reporter plasmid sequence.
 
 We detected 1000s (check) of reads on each reporter construct, which is enough to quantify expression confidently as well as to assign poly(A) sites.
-We checked that counts of all other RNAs are highly correlated between samples, giving us confidence that changes in construct detection are meaningful (NEEDS SUPPLEMENTARY FIGURE PAIRS PLOT OR CORRELATION PLOT).
+We checked that counts of all other RNAs are highly correlated between samples, giving us confidence that changes in construct detection are meaningful (Figure \@ref(fig:rnaseq-QC-correlation)).
 Transcript abundance, relative to mod_NNN, for most constructs correlate strongly with qPCR results (Figure \@ref(fig:quantseq-polyA-site-usage)A).
 However, some constructs were detected as more abundant by RNA-seq for reasons that are unclear.
 
 We display the poly(A) sites as the cumulative fraction of poly(A)-site reads mapped at each location downstream of construct stop codons, out of all reads mapped to the terminator. (Figure \@ref(fig:quantseq-polyA-site-usage)B).
-We checked that in other genes the poly(A) site locations were highly reproducible across samples, giving us confidence that changes in construct poly(A) sites are meaningful (SUPP FIGURE for some of URA3, RPS3, TSA1, PGK1).
-Poly(A) sites are / are not (delete as appropriate) in the same relative positions in native loci and the construct with wild-type terminator (SUPP FIGURE).
+We checked that in other genes the poly(A) site locations were highly reproducible across samples, giving us confidence that changes in construct poly(A) sites are meaningful (Figures \@ref(fig:rnaseq-QC-QuantSeq-genomic-polyA) and \@ref(fig:rnaseq-QC-5PSeq-genomic-polyA)).
+Poly(A) sites are in the same relative positions in native loci and the construct with wild-type terminator (Figure \@ref(fig:rnaseq-QC-genomic-vs-plasmid-polyA)).
 Then, we compared 3'end positions of reads between modified and wild-type reporter constructs to determine the poly(A) site usage.
 In both wild-type and mod-NNN tTsa1 constructs, the same poly(A) sites are used.
 Surprisingly, tRPS3 mod_NNN constructs appear to be using a novel upstream poly(A) site, that appears in about $50%$ percent of reads and is located upstream of the 3rd motif insertion site (Figure \@ref(fig:quantseq-polyA-site-usage)B).
