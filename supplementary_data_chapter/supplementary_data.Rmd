@@ -76,37 +76,23 @@ knitr::kable(minimum_free_energy, caption = "\\textbf{Table showing minimum free
 knitr::include_graphics(here("supplementary_data_chapter/figures/polya_usage_plot_5PSeq.png"))
 ```
 
-```{r QuantSeq-sample-to-construct}
-read.csv(here("./supplementary_data_chapter/data/QuantSeq_samplesheet.csv")) %>%
-  dplyr::transmute(`Sample Name` = Sample_Name,  `Construct Name` = Construct_Name)  %>%
-knitr::kable(format = "latex", caption = "\\textbf{QuantSeq sample name to construct table}.")  %>%
-  kableExtra::kable_styling(latex_options = "hold_position") 
-```
-
-```{r 5PSeq-sample-to-construct}
-read.csv(here("./supplementary_data_chapter/data/5PSeq_samplesheet.csv")) %>%
-  dplyr::transmute(`Sample Name` = Sample_Name,  `Construct Name` = Construct_Name)  %>%
-knitr::kable(format = "latex", caption = "\\textbf{5PSeq sample name to construct table}")  %>%
-  kableExtra::kable_styling(latex_options = "hold_position") 
-```
-
-```{r rnaseq-QC-correlation, fig.cap="\\textbf{Sample correlation across both RNASeq experiments.} (\\textbf{A}) Correlation across samples for the QuantSeq assay. (\\textbf{B}) Correlation across samples for the 5PSeq assay.", fig.align='center',out.width="85%"}
+```{r rnaseq-QC-correlation, fig.cap="\\textbf{High correlation in transcript counts between samples from the same RNA-Seq assay.} Correlaton between DESeq2 normalised log2 pseudocounts for all genes in each sample for QuantSeq and 5PSeq. (\\textbf{A}) From top to bottom on the y axis (left to right on the x-axis) the terminator contexts are pRPS3-tRPS3, pPGK1-tRPS3 and pTSA1-tTSA1.", fig.align='center',out.width="85%"}
 knitr::include_graphics(here("supplementary_data_chapter/figures/sequencing_sample_correlation.png"))
 ```
 
-```{r rnaseq-QC-QuantSeq-genomic-polyA, fig.cap="\\textbf{Poly(A) site usage for genomic PGK1, TSA1 and RPS3 teminators across QuantSeq samples.}", fig.align='center',out.width="85%"}
-knitr::include_graphics(here("supplementary_data_chapter/figures/polya_QC_plot_QuantSeq.png"))
+```{r rnaseq-QC-QuantSeq-and-5PSeq-genomic-polyA, fig.cap="\\textbf{Poly(A) site usage for genomic PGK1, TSA1 and RPS3 teminators remains the same across samples for each RNA-Seq assay.}", fig.align='center',out.width="85%"}
+knitr::include_graphics(here("supplementary_data_chapter/figures/polya_QC_plot_QuantSeq_and_5PSeq.png"))
 ```
 
-```{r rnaseq-QC-5PSeq-genomic-polyA, fig.cap="\\textbf{Poly(A) site usage for genomic PGK1, TSA1 and RPS3 teminators across 5PSeq samples.}", fig.align='center',out.width="85%"}
-knitr::include_graphics(here("supplementary_data_chapter/figures/polya_QC_plot_5PSeq.png"))
-```
-
-```{r rnaseq-QC-genomic-vs-plasmid-polyA, fig.cap="\\textbf{Poly(A) site usage for genomic TSA1 and RPS3 teminators against plasmid constructs in QuantSeq and 5PSeq.}", fig.align='center',out.width="85%"}
+```{r rnaseq-QC-genomic-vs-plasmid-polyA, fig.cap="\\textbf{Poly(A) site usage remains the same for genomic TSA1 and RPS3 teminators as for plasmid expressed WT constructs in QuantSeq and 5PSeq.}", fig.align='center',out.width="85%"}
 knitr::include_graphics(here("supplementary_data_chapter/figures/plasmid_vs_genome_polyA_combined_plot.png"))
 ```
 
-```{r rnaseq-QC-QuantSeq-vs-5PSeq, fig.cap="\\textbf{QuantSeq and 5PSeq log2 pseudocounts across all genes for samples with the same constructs. Samples are clustered by correlation.}", fig.align='center',out.width="85%"}
-knitr::include_graphics(here("supplementary_data_chapter/figures/pRPS3_QuantSeq_5PSeq_correlation_comparison.png"))
+```{r rnaseq-QC-QuantSeq-vs-5PSeq, fig.cap="\\textbf{QuantSeq and 5PSeq genome wide transcript abundances are not correlated. }DESeq2 normalised log2 pseudocounts for QuantSeq and 5PSeq are plotted against one another.", fig.align='center',out.width="85%"}
+knitr::include_graphics(here("supplementary_data_chapter/figures/pRPS3_QuantSeq_5PSeq_comparison.png"))
+```
+
+```{r relative-polya-counts, fig.cap="\\textbf{Construct poly(A) site usage across 5PSeq and QuantSeq.} Alternative to cumulative relative counts plots to compare changes in Poly(A) site usage across the constructs in both RNA-Seq assays.", fig.align='center',out.width="85%"}
+knitr::include_graphics(here("./supplementary_data_chapter/figures/relative_polya_counts_QuantSeq_and_5PSeq.png"))
 ```
 

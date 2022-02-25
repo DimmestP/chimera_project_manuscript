@@ -46,7 +46,10 @@ library(tibble)
 library(dplyr)
 library(tidyr)
 library(readr)
+library(grid)
+library(gridExtra)
 library(here)
+library(GGally)
 library(stringr)
 library(DESeq2)
 source("/home/dimmest-p/Documents/PhD/3UTR_motifs/motifPrediction/chimera_project_manuscript/raw_data_analysis/code/shared_figure_formatting.R")
@@ -141,13 +144,13 @@ sample_to_construct_dictionary_5PSeq <- sample_to_construct_dictionary("raw_data
 
 #  swap POT1 empty vector values from NA to "POT"
 sample_to_construct_dictionary_QuantSeq <- sample_to_construct_dictionary_QuantSeq %>%
-    rows_update(tibble(sample_name = c("A9", "B9"), promoter = "POT1", terminator = "POT1", mod_label = "POT1")) %>%
+    rows_update(tibble(sample_name = c("A9", "B9"), promoter = "POT1", terminator = "POT1", mod_label = "POT1", rep = c(1,2))) %>%
   mutate(mod_label = factor(mod_label,
                        levels = c(construct_to_label_dictionary_TSA1_RPS3$construct, "POT1"),
                        labels = c(construct_to_label_dictionary_TSA1_RPS3$label, "POT1")))
 
 sample_to_construct_dictionary_5PSeq <- sample_to_construct_dictionary_5PSeq %>%
-    rows_update(tibble(sample_name = c("1dt", "2dt"), promoter = "POT1", terminator = "POT1", mod_label = "POT1")) %>%
+    rows_update(tibble(sample_name = c("1dt", "2dt"), promoter = "POT1", terminator = "POT1", mod_label = "POT1", rep = c(1,2))) %>%
   mutate(mod_label = factor(mod_label,
                        levels = c(construct_to_label_dictionary_TSA1_RPS3$construct, "POT1"),
                        labels = c(construct_to_label_dictionary_TSA1_RPS3$label, "POT1")))
@@ -212,6 +215,12 @@ plotMA(DESeq_summary_5PSeq, ylim=c(-2,2))
 # correlation grouped norm counts
 library("pheatmap")
 
+samplesheet_5PSeq<- read_csv(here("raw_data_analysis/data/rna_seq/sample_to_construct_table_5PSeq.csv")) %>%
+  mutate(promoter = str_extract(construct_name, "(?<=p)[A-Z0-9]+"))
+
+samplesheet_QuantSeq <- read_csv(here("raw_data_analysis/data/rna_seq/sample_to_construct_table_QuantSeq.csv")) %>%
+  mutate(promoter = str_extract(construct_name, "(?<=p)[A-Z0-9]+"))
+
 heatmap_label_QuantSeq_pRPS3 <- as.data.frame(colData(DESeq_dataset_QuantSeq)[,c("promoter","mod_label")]) %>%
   filter(promoter == "pRPS3") %>%
   select(-promoter)
@@ -224,54 +233,103 @@ log_2_plus_one_QuantSeq <- normTransform(DESeq_dataset_QuantSeq)
 
 log_2_plus_one_5PSeq <- normTransform(DESeq_dataset_5PSeq)
 
-pRPS3_QuantSeq_5PSeq_correlation_comparison <- pheatmap(cbind(subset(assay(log_2_plus_one_5PSeq), 
-                      select = rownames(heatmap_label_5PSeq_match_QuantSeq)),
-               subset(assay(log_2_plus_one_QuantSeq), 
-                      select = rownames(heatmap_label_QuantSeq_pRPS3))),
-         cluster_rows=FALSE,
-         show_rownames = FALSE,
-         clustering_distance_cols="correlation",
-         annotation_col=rbind(cbind(heatmap_label_QuantSeq_pRPS3,
-                                    "assay" = "5PSeq"),
-                              cbind(heatmap_label_5PSeq_match_QuantSeq,
-                                    "assay" = "QuantSeq")))
-
 factor_levels_QuantSeq = c("A1", "B1", "E1", "E2", "A2", "B2", "A10", "B10", "A3", "B3", "A4", "B4", "A12", "B12", "A13", "B13", "A14", "B14", "A15", "B15", "A16", "B16", "A5", "B5", "A6", "B6", "A11", "B11", "A7", "B7", "A8", "B8", "A9", "B9")
 
-factor_levels_5PSeq <- c("1dt", "2dt", "3dt", "4dt", "5dt", "6dt",
-                         "7dt", "8dt", "9dt", "10dt", "11dt", "12dt",
-                         "13dt", "14dt", "15dt", "16dt")
+factor_levels_QuantSeq_single_rep = c("A1", "A2", "A10", "A3", "A4", "A12", "A13", "A14", "A15", "A16", "A5", "A6", "A11", "A7", "A8")
 
-sample_correlation_quantseq<- ggplot(as_tibble(cor(assay(log_2_plus_one_QuantSeq)), 
+factor_levels_5PSeq_no_poor_sample <- c("3dt", "4dt", "5dt", "6dt", "7dt", "8dt", "9dt", "10dt",                                              "11dt", "13dt", "15dt")
+
+factor_levels_5PSeq_no_poor_sample_single_rep <- c("3dt", "5dt", "7dt", "9dt", "11dt", "13dt", "15dt")
+
+log_2_plus_one_QuantSeq_tibble <- as_tibble(assay(log_2_plus_one_QuantSeq))
+
+sample_correlation_quantseq <- ggplot(as_tibble(cor(log_2_plus_one_QuantSeq_tibble), 
                  rownames = "sample_x") %>% 
          pivot_longer(-sample_x, 
                       names_to = "sample_y", 
                       values_to = "cor") %>% 
          mutate(sample_x = factor(sample_x, factor_levels_QuantSeq), 
-                sample_y = factor(sample_y, factor_levels_QuantSeq))) + 
+                sample_y = factor(sample_y, rev(factor_levels_QuantSeq)))) + 
     geom_tile(aes(x= sample_x, y = sample_y, fill = cor)) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
-  scale_fill_gradient(high = "green") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
+  theme(axis.text.y = element_text(size = 8)) +
+  scale_fill_gradient(high = "grey") +
   coord_equal() +
-  labs(x= "", y = "")
+  labs(x= "", y = "", title = "QuantSeq Sample Correlation") +
+  scale_x_discrete(breaks = samplesheet_QuantSeq$sample_name,
+                   labels = samplesheet_QuantSeq$type) +
+  scale_y_discrete(breaks = samplesheet_QuantSeq$sample_name,
+                   labels = samplesheet_QuantSeq$type)
 
-sample_correlation_5Pseq <- ggplot(as_tibble(cor(assay(log_2_plus_one_5PSeq)), 
-                 rownames = "sample_x") %>% 
+log_2_plus_one_5PSeq_tibble <- as_tibble(assay(log_2_plus_one_5PSeq)) %>%
+                                     select(factor_levels_5PSeq_no_poor_sample)
+
+sample_correlation_5Pseq <- ggplot(log_2_plus_one_5PSeq_tibble %>%
+                                     cor() %>% 
+                                     as_tibble(rownames = "sample_x") %>%
          pivot_longer(-sample_x, 
                       names_to = "sample_y", 
                       values_to = "cor") %>% 
-         mutate(sample_x = factor(sample_x, factor_levels_5PSeq), 
-                sample_y = factor(sample_y, factor_levels_5PSeq))) + 
+         mutate(sample_x = factor(sample_x, factor_levels_5PSeq_no_poor_sample), 
+                sample_y = factor(sample_y, rev(factor_levels_5PSeq_no_poor_sample)))) + 
     geom_tile(aes(x= sample_x, y = sample_y, fill = cor)) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   coord_equal() +
-  labs(x= "", y = "")
+  labs(x= "", y = "", title = "5PSeq Sample Correlation") +
+  scale_x_discrete(breaks = samplesheet_5PSeq$sample_name,
+                   labels = samplesheet_5PSeq$type) +
+  scale_y_discrete(breaks = samplesheet_5PSeq$sample_name,
+                   labels = samplesheet_5PSeq$type)
 
 sample_correlation_combined <- plot_grid(sample_correlation_quantseq,
                                          sample_correlation_5Pseq, 
                                          ncol = 1,
-                                         scale = c(1.085,0.8),
+                                         scale = c(1.1,0.8),
                                          labels = "AUTO")
+
+whole_genome_5PSeq_vs_Quant_Seq<- log_2_plus_one_5PSeq_tibble %>%
+  mutate(transcript_name = rownames(log_2_plus_one_5PSeq)) %>%
+  pivot_longer(-transcript_name, names_to = "sample_name", values_to = "pseudo_counts") %>%
+  inner_join(sample_to_construct_dictionary_5PSeq) %>%
+  filter(mod_label %in% sample_to_construct_dictionary_QuantSeq$mod_label) %>%
+  mutate(assay = "5PSeq") %>%
+  bind_rows(log_2_plus_one_QuantSeq_tibble %>%
+              mutate(transcript_name = rownames(log_2_plus_one_QuantSeq)) %>%
+              pivot_longer(-transcript_name, names_to = "sample_name", values_to = "pseudo_counts") %>%
+              inner_join(sample_to_construct_dictionary_QuantSeq) %>%
+              filter(promoter == "pRPS3") %>%
+              mutate(assay = "QuantSeq"))
+
+pRPS3_QuantSeq_5PSeq_comparison <- ggplot(whole_genome_5PSeq_vs_Quant_Seq %>%
+         select(-sample_name) %>%
+         filter(rep<3) %>%
+         pivot_wider(names_from = assay, values_from = pseudo_counts)) +
+  geom_point(aes(y= `5PSeq`, x = QuantSeq, colour = as.factor(rep))) +
+  facet_wrap(~mod_label) +
+  coord_equal()
+
+ggplot(whole_genome_5PSeq_vs_Quant_Seq %>%
+         filter(transcript_name == "plasmid_construct") %>%
+         select(-sample_name) %>%
+         group_by(mod_label, assay) %>%
+         summarise(pseudo_counts = mean(pseudo_counts)) %>%
+         pivot_wider(names_from = assay, values_from = pseudo_counts)) +
+  geom_point(aes(y= `5PSeq`, x = QuantSeq, colour = mod_label)) +
+  coord_equal() +
+  scale_colour_manual(values = RPS3_TSA1_colour_scheme)
+
+
+ggpairs_QuantSeq_vs_5PSeq <- whole_genome_5PSeq_vs_Quant_Seq %>% 
+  filter(rep == 1) %>% 
+  arrange(mod_label) %>% 
+  mutate(mod_label = str_remove(mod_label, "mod_"),
+         assay = str_replace(assay, "5PSeq", "5PS"),
+         assay = str_replace(assay, "QuantSeq", "QS")) %>%
+  unite(source, assay, mod_label) %>% 
+  select(-sample_name, -rep, -promoter, -terminator) %>% 
+  pivot_wider(names_from = source, values_from = pseudo_counts) %>% 
+  select(-transcript_name) %>% 
+  ggpairs(upper = list(continuous = wrap("cor", size = 3)))
 
 ```
 
@@ -284,10 +342,13 @@ ggsave2(here("supplementary_data_chapter/figures/sequencing_sample_correlation.p
         dpi = fig_dpi,
         bg = "white")
 
-ggsave2(here("supplementary_data_chapter/figures/pRPS3_QuantSeq_5PSeq_correlation_comparison.png"),
-        pRPS3_QuantSeq_5PSeq_correlation_comparison,
+ggsave2(here("supplementary_data_chapter/figures/pRPS3_QuantSeq_5PSeq_comparison.png"),
+        ggpairs_QuantSeq_vs_5PSeq + 
+          theme(axis.text = element_text(size = 8),
+                strip.text.x = element_text(size = 8),
+                strip.text.y = element_text(size = 8)),
         width = fig_width_2column,
-        height = 210,
+        height = fig_width_2column,
         units = "mm",
         dpi = fig_dpi,
         bg = "white")
