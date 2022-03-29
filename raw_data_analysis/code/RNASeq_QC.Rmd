@@ -243,23 +243,53 @@ factor_levels_5PSeq_no_poor_sample_single_rep <- c("3dt", "5dt", "7dt", "9dt", "
 
 log_2_plus_one_QuantSeq_tibble <- as_tibble(assay(log_2_plus_one_QuantSeq))
 
-sample_correlation_quantseq <- ggplot(as_tibble(cor(log_2_plus_one_QuantSeq_tibble), 
+sample_correlation_quantseq <- ggplot() + 
+    geom_tile(data = as_tibble(cor(log_2_plus_one_QuantSeq_tibble), 
                  rownames = "sample_x") %>% 
          pivot_longer(-sample_x, 
                       names_to = "sample_y", 
                       values_to = "cor") %>% 
          mutate(sample_x = factor(sample_x, factor_levels_QuantSeq), 
-                sample_y = factor(sample_y, rev(factor_levels_QuantSeq)))) + 
-    geom_tile(aes(x= sample_x, y = sample_y, fill = cor)) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
-  theme(axis.text.y = element_text(size = 8)) +
+                sample_y = factor(sample_y, rev(factor_levels_QuantSeq))),
+              aes(x= sample_x, y = sample_y, fill = cor)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8),
+        axis.text.y = element_text(size = 8),
+        plot.margin = margin()) +
   scale_fill_gradient(high = "grey") +
   coord_equal() +
   labs(x= "", y = "", title = "QuantSeq Sample Correlation") +
   scale_x_discrete(breaks = samplesheet_QuantSeq$sample_name,
                    labels = samplesheet_QuantSeq$type) +
   scale_y_discrete(breaks = samplesheet_QuantSeq$sample_name,
-                   labels = samplesheet_QuantSeq$type)
+                   labels = samplesheet_QuantSeq$type) +
+  geom_label(aes(x=-1,
+                y = c("A8","A14","A3"),
+                label = c("pTSA1_tTSA1", "pPGK1_tRPS3", "pRPS3_tRPS3")),
+            angle = 90,
+            colour = "white") +
+  
+  
+
+
+construct_context_colours_tibble <- tibble(context = factor(c(rep("pRPS3_tRPS3",12),
+                                                              rep("pPGK1_tRPS3", 10),
+                                                              rep("pTSA1_tTSA1", 10)),
+                                                            levels = c("pTSA1_tTSA1",
+                                                                       "pPGK1_tRPS3",
+                                                                       "pRPS3_tRPS3")))
+
+construct_context_colours_plot <- ggplot() +
+  geom_tile(data = construct_context_colours_tibble, aes(x = 1, y = context, fill = context),
+            show.legend = FALSE) +
+  scale_fill_manual(values = c("pRPS3_tRPS3" = "blue",
+                               "pPGK1_tRPS3" = "black",
+                               "pTSA1_tTSA1" = "purple")) +
+  geom_text(aes(x=1,
+                y = c("pTSA1_tTSA1","pPGK1_tRPS3","pRPS3_tRPS3"),
+                label = c("pTSA1_tTSA1", "pPGK1_tRPS3", "pRPS3_tRPS3")),
+            angle = 90,
+            colour = "white") +
+  theme_nothing()
 
 log_2_plus_one_5PSeq_tibble <- as_tibble(assay(log_2_plus_one_5PSeq)) %>%
                                      select(factor_levels_5PSeq_no_poor_sample)
@@ -280,12 +310,6 @@ sample_correlation_5Pseq <- ggplot(log_2_plus_one_5PSeq_tibble %>%
                    labels = samplesheet_5PSeq$type) +
   scale_y_discrete(breaks = samplesheet_5PSeq$sample_name,
                    labels = samplesheet_5PSeq$type)
-
-sample_correlation_combined <- plot_grid(sample_correlation_quantseq,
-                                         sample_correlation_5Pseq, 
-                                         ncol = 1,
-                                         scale = c(1.1,0.8),
-                                         labels = "AUTO")
 
 whole_genome_5PSeq_vs_Quant_Seq<- log_2_plus_one_5PSeq_tibble %>%
   mutate(transcript_name = rownames(log_2_plus_one_5PSeq)) %>%
@@ -326,16 +350,88 @@ ggpairs_QuantSeq_vs_5PSeq <- whole_genome_5PSeq_vs_Quant_Seq %>%
          assay = str_replace(assay, "5PSeq", "5PS"),
          assay = str_replace(assay, "QuantSeq", "QS")) %>%
   unite(source, assay, mod_label) %>% 
-  select(-sample_name, -rep, -promoter, -terminator) %>% 
+  select(-sample_name, -rep, -promoter, -terminator, -type) %>% 
   pivot_wider(names_from = source, values_from = pseudo_counts) %>% 
   select(-transcript_name) %>% 
   ggpairs(upper = list(continuous = wrap("cor", size = 3)))
 
 ```
 
+
+```{r direct_compare_Quant_and_5PSeq_construct_abund}
+median_normalising_gene_QuantSeq <- full_QuantSeq_count %>%
+  filter(str_detect(Geneid, c("plasmid_U|YML028W|YNL178W|YCR012W"))) %>%
+  pivot_longer(-Geneid, names_to = "sample_name", values_to = "counts") %>%
+  group_by(sample_name) %>%
+  summarise(norm_value = median(counts))
+  
+qPCR_like_normalised_QuantSeq <- full_QuantSeq_count %>%
+  filter(str_detect(Geneid, "plasmid_c"))  %>%
+  pivot_longer(-Geneid, names_to = "sample_name", values_to = "counts") %>%
+  inner_join(median_normalising_gene_QuantSeq) %>%
+  mutate(norm_count = counts / norm_value) %>%
+  inner_join(sample_to_construct_dictionary_QuantSeq) %>%
+  group_by(promoter, mod_label) %>%
+  summarise(norm_count = mean(norm_count)) %>%
+  ungroup() %>%
+  filter(!is.na(norm_count))  %>%
+  mutate(`RNA-Seq` = "QuantSeq")
+
+median_normalising_gene_5PSeq <- full_5PSeq_count %>%
+  filter(str_detect(Geneid, c("plasmid_U|YML028W|YNL178W|YCR012W"))) %>%
+  pivot_longer(-Geneid, names_to = "sample_name", values_to = "counts") %>%
+  group_by(sample_name) %>%
+  summarise(norm_value = median(counts)) %>%
+  filter(norm_value > 0)
+  
+qPCR_like_normalised_5PSeq <- full_5PSeq_count %>%
+  filter(str_detect(Geneid, "plasmid_c"))  %>%
+  pivot_longer(-Geneid, names_to = "sample_name", values_to = "counts") %>%
+  inner_join(median_normalising_gene_5PSeq) %>%
+  mutate(norm_count = counts / norm_value) %>%
+  inner_join(sample_to_construct_dictionary_5PSeq) %>%
+  group_by(promoter, mod_label) %>%
+  summarise(norm_count = mean(norm_count)) %>%
+  ungroup() %>%
+  filter(!is.na(norm_count)) %>%
+  mutate(`RNA-Seq` = "5PSeq")
+
+RNASeq_construct_comparison <- qPCR_like_normalised_QuantSeq %>%
+  bind_rows(qPCR_like_normalised_5PSeq) %>%
+  filter(promoter == "pRPS3") %>%
+  select(-promoter) %>%
+  pivot_wider(names_from = `RNA-Seq`, values_from = norm_count) %>%
+  filter(!is.na(QuantSeq))
+
+QuantSeq_5PSeq_construct_abund <- ggplot(RNASeq_construct_comparison) +
+  geom_point(aes(x = QuantSeq, y = `5PSeq`, colour = mod_label)) +
+  scale_colour_manual(values = RPS3_TSA1_colour_scheme[c("WT", "mod_HTH", "mod_NAA", "mod_NNN", "mod_NTN")]) +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_y_continuous(breaks = c(1,2)) +
+  theme(legend.position = "bottom",
+        legend.margin=margin(t = 0, unit='cm'),
+        legend.justification = c(0.5,0)) +
+  guides(colour = guide_legend(ncol = 2,
+                               title = "Construct",
+                               title.position = "top",
+                               title.hjust = 0.5))
+```
+
+
 ```{r output-cor-graphs, eval = FALSE}
 ggsave2(here("supplementary_data_chapter/figures/sequencing_sample_correlation.png"),
-        sample_correlation_combined,
+        plot_grid(plot_grid(construct_context_colours_plot, sample_correlation_quantseq, rel_widths = c(0.1,1), axis = "r", align = "h"),
+                                         plot_grid(sample_correlation_5Pseq,
+                                                   QuantSeq_5PSeq_construct_abund,
+                                                   labels = c("B", "C"),
+                                                   scale = c(1.35,0.8),
+                                                   axis = "bottom",
+                                                   hjust = c(1, -3),
+                                                   align = "hv"), 
+                                         ncol = 1,
+                                         scale = c(1.1,0.8),
+                                         labels = c("A", ""),
+                                         hjust = c(-3.7, 0)),
         width = fig_width_2column,
         height = 210,
         units = "mm",
@@ -352,82 +448,4 @@ ggsave2(here("supplementary_data_chapter/figures/pRPS3_QuantSeq_5PSeq_comparison
         units = "mm",
         dpi = fig_dpi,
         bg = "white")
-```
-
-```{r CoI_URA_values}
-gene_dictionary <- tibble(genename = c("plasmid_construct",
-                               "plasmid_URA3_construct",
-                               "YNL178W_id001",
-                               "YML028W_id003",
-                               "YCR012W_id001"),
-                          transcript_name =factor(c("Construct",
-                                             "URA3",
-                                             "RPS3",
-                                             "TSA1",
-                                             "PGK1"),
-                                             c("Construct",
-                                             "URA3",
-                                             "RPS3",
-                                             "TSA1",
-                                             "PGK1")))
-
-normalised_genes_of_interest_counts_QuantSeq <- counts(DESeq_dataset_QuantSeq, normalized=TRUE)[c("plasmid_construct",
-                               "plasmid_URA3_construct",
-                               "YNL178W_id001",
-                               "YML028W_id003",
-                               "YCR012W_id001"),]
-
-normalised_genes_of_interest_counts_5PSeq <- counts(DESeq_dataset_5PSeq, normalized=TRUE)[c("plasmid_construct",
-                               "plasmid_URA3_construct",
-                               "YNL178W_id001",
-                               "YML028W_id003",
-                               "YCR012W_id001"),]
-
-all_norm_genes_plot_data_QuantSeq <- as_tibble(normalised_genes_of_interest_counts_QuantSeq, rownames = "genename") %>%
-  pivot_longer(-genename, names_to = "sample", values_to = "counts") %>%
-  inner_join(as_tibble(coldata_QuantSeq, rownames = "sample")) %>%
-  inner_join(gene_dictionary)
-
-all_norm_genes_plot_data_5PSeq <- as_tibble(normalised_genes_of_interest_counts_5PSeq, rownames = "genename") %>%
-  pivot_longer(-genename, names_to = "sample", values_to = "counts") %>%
-  inner_join(as_tibble(coldata_5PSeq, rownames = "sample")) %>%
-  inner_join(gene_dictionary)
-
-ggplot(all_norm_genes_plot_data_QuantSeq) +
-  geom_point(aes(y = transcript_name,
-                 x = counts,
-                 colour = transcript_name),
-             show.legend = FALSE) +
-  facet_grid(mod_label~promoter)
-
-ggplot(all_norm_genes_plot_data_5PSeq) +
-  geom_point(aes(y = transcript_name,
-                 x = counts,
-                 colour = transcript_name),
-             show.legend = FALSE) +
-  facet_grid(mod_label~promoter)
-
-URA_vs_CoI_plot_data_QuantSeq <- all_norm_genes_plot_data_QuantSeq %>%
-  filter(transcript_name %in% c("URA3", "Construct")) %>%
-  select(-genename) %>%
-  pivot_wider(names_from = transcript_name, values_from = counts)
-
-URA_vs_CoI_plot_data_5PSeq <- all_norm_genes_plot_data_5PSeq %>%
-  filter(transcript_name %in% c("URA3", "Construct")) %>%
-  select(-genename) %>%
-  pivot_wider(names_from = transcript_name, values_from = counts)
-
-URA_vs_CoI_plot_data_QuantSeq %>%
-  group_by(promoter) %>%
-  summarise(correlation = cor(Construct, URA3))
-
-URA_vs_CoI_plot_data_5PSeq %>%
-  group_by(promoter) %>%
-  summarise(correlation = cor(Construct, URA3))
-
-ggplot(URA_vs_CoI_plot_data_QuantSeq) +
-  geom_point(aes(y = Construct, x = URA3, colour = promoter, shape = mod_label))
-
-ggplot(URA_vs_CoI_plot_data_5PSeq) +
-  geom_point(aes(y = Construct, x = URA3, colour = promoter))
 ```

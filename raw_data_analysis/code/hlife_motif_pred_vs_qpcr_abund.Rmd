@@ -149,7 +149,7 @@ pred_vs_abundance_RPS3_TSA1 <- ggplot(combined_pred_vs_actual_plot_data_TSA1_RPS
                       values = RPS3_TSA1_colour_scheme,
                       guide = guide_legend(reverse=TRUE)) + 
   geom_text(aes(label = r_cor_label), data = r_cor_data_TSA1_RPS3, 
-            x = -0.05, y = 1.05, parse = TRUE, 
+            x = -0.05, y = 1.05, 
             size = text_cor_size, hjust = 1, vjust = 0) +
   labs(y=TeX("Reporter construct $log_2$ fold change in RNA abundance"))
 
@@ -161,7 +161,7 @@ pred_vs_abundance_PIR1 <- ggplot(pred_vs_actual_plot_data_PIR1) +
                       guide = guide_legend(reverse=TRUE)) + 
   geom_text(aes(label = r_cor_label), 
             data = r_cor_data_PIR1, 
-            x = 0.95, y = -0.95, parse = TRUE, 
+            x = 0.95, y = -0.95, 
             size = text_cor_size, hjust = 1, vjust = 0) +
   scale_x_continuous(breaks = c(-1,0,1)) +
   scale_y_continuous(breaks = c(-1,0,1)) +

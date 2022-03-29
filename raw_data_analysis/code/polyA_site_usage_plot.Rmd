@@ -107,9 +107,9 @@ calc_polyA_site_usage <- function(polyA_count_data, polyA_site_position){
 ```
 
 ```{r load_polyA_reads, warnings = FALSE, message = FALSE, include=FALSE}
-all_QuantSeq_PolyA_read_files <- list.files(path = here("raw_data_analysis/data/rna_seq/QuantSeq/"), pattern = ".bed$", recursive = TRUE, full.names = TRUE)
+all_QuantSeq_PolyA_read_files <- list.files(path = here("raw_data_analysis/data/rna_seq/construct_polyA_bam/QuantSeq/"), pattern = ".bed$", recursive = TRUE, full.names = TRUE)
 
-all_5PSeq_PolyA_read_files <- list.files(path = here("raw_data_analysis/data/rna_seq/5PSeq/"), pattern = ".bed$", recursive = TRUE, full.names = TRUE)
+all_5PSeq_PolyA_read_files <- list.files(path = here("raw_data_analysis/data/rna_seq/construct_polyA_bam/5PSeq/"), pattern = ".bed$", recursive = TRUE, full.names = TRUE)
 
 full_5PSeq_PolyA_reads <- all_5PSeq_PolyA_read_files %>%
   lapply(load_polyA_reads) %>%
@@ -529,7 +529,7 @@ RPS3_deltadeltacq_plot
 
 ```
 
-```{r compare_qPCR_and_quantseq}
+```{r compare_qPCR_and_RNAseq}
 mean_qpcr_vs_QuantSeq_dataset_mod_NNN <- construct_fold_change_QuantSeq_mod_NNN %>%
               mutate(source = "RNA-Seq", type = "QuantSeq") %>%
   bind_rows(bind_rows(TSA1_deltadeltacq %>% filter(promoter == "pTSA1"),
