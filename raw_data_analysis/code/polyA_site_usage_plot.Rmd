@@ -583,7 +583,7 @@ mean_qpcr_vs_5PSeq_dataset_mod_NNN_R_squared <- mean_qpcr_vs_5PSeq_dataset_mod_N
 
 
 ```{r plot-functions}
-cumulative_reads_plot <- list(geom_line(aes(x = read_end_gap,
+cumulative_reads_plot <- list(geom_step(aes(x = read_end_gap,
                                             y = rel_cumulative_counts,
                                             linetype = promoter,
                                             colour = label,
@@ -1050,7 +1050,7 @@ tRPS3_cumulative_plot_5PSeq <- ggplot(tRPS3_WT_insertion_alpha_5PSeq_and_QuantSe
                 source == "5PSeq",
                 mod %in% c("WT", "mod0"), 
                 !URA3)) +
-  geom_line(data = tRPS3_WT_insertion_gaps_5PSeq,
+  geom_step(data = tRPS3_WT_insertion_gaps_5PSeq,
              aes(x = read_end,
                  y = rel_cumulative_counts_gap,
                  group = sample),

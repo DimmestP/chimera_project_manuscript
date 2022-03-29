@@ -108,7 +108,6 @@ knitr::include_graphics(here("results_chapter/figures/hlife_model_multi_fig.png"
 ## Quantification of differential expression due to motif insertion or mutagenesis in multiple 3'UTRs
 
 To quantify the effects and composability of selected motifs in different contexts, we designed a further set of reporter constructs (Figure \@ref(fig:tRPS3-tTSA1-design-and-qpcr)A).
-Insertion reporter constructs contain combinations of motifs inserted in each of 2 host terminators, expressing mCherry from each of 3 different promoters.
 We first chose the ribosomal protein terminator tRPS3, as it was the only terminator in our initial library that did not contain any of the selected motifs.
 We selected thioredoxin peroxidase tTSA1 as the second host terminator because it also lacks selected motifs and has similar length to tRPS3.
 In each host terminator we chose 3 motif insertion sites, selecting for: minimum impact on transcript secondary structure, avoiding known transcription termination elements, and matching the positions of motifs in native genes.
