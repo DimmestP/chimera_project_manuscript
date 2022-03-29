@@ -261,12 +261,7 @@ sample_correlation_quantseq <- ggplot() +
   scale_x_discrete(breaks = samplesheet_QuantSeq$sample_name,
                    labels = samplesheet_QuantSeq$type) +
   scale_y_discrete(breaks = samplesheet_QuantSeq$sample_name,
-                   labels = samplesheet_QuantSeq$type) +
-  geom_label(aes(x=-1,
-                y = c("A8","A14","A3"),
-                label = c("pTSA1_tTSA1", "pPGK1_tRPS3", "pRPS3_tRPS3")),
-            angle = 90,
-            colour = "white") +
+                   labels = samplesheet_QuantSeq$type)
   
   
 
@@ -420,7 +415,7 @@ QuantSeq_5PSeq_construct_abund <- ggplot(RNASeq_construct_comparison) +
 
 ```{r output-cor-graphs, eval = FALSE}
 ggsave2(here("supplementary_data_chapter/figures/sequencing_sample_correlation.png"),
-        plot_grid(plot_grid(construct_context_colours_plot, sample_correlation_quantseq, rel_widths = c(0.1,1), axis = "r", align = "h"),
+        plot_grid(sample_correlation_quantseq,
                                          plot_grid(sample_correlation_5Pseq,
                                                    QuantSeq_5PSeq_construct_abund,
                                                    labels = c("B", "C"),
@@ -429,7 +424,7 @@ ggsave2(here("supplementary_data_chapter/figures/sequencing_sample_correlation.p
                                                    hjust = c(1, -3),
                                                    align = "hv"), 
                                          ncol = 1,
-                                         scale = c(1.1,0.8),
+                                         scale = c(1,0.8),
                                          labels = c("A", ""),
                                          hjust = c(-3.7, 0)),
         width = fig_width_2column,
