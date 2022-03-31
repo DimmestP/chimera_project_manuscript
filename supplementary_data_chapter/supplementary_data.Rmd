@@ -4,6 +4,8 @@
 \let\ftype@table\ftype@figure
 \renewcommand{\fnum@figure}{Supplementary Figure \thefigure}
 \renewcommand{\fnum@table}{Supplementary Table \thetable}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
 \makeatother
 \setcounter{figure}{0}
 \setcounter{table}{0}
