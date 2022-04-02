@@ -219,3 +219,6 @@ We then asked whether modifications in the 3'-UTR region impact 5'-3' degradatio
 Our 5PSeq data finds no detectable changes in 5'-phosphorylated intermediates between wild-type and modified reporter constructs, and thus does not indicate detectable changes in ribosome dynamics near the 3' end of transcripts (Figure \@ref(fig:rnaseq-QC-genomic-vs-plasmid-polyA)).
 Moreover, the poly(A) site distribution for each construct matches that obtained from QuantSeq data, suggesting that 3'-UTR isoforms are not differentially degraded using this pathway regardless of the motifs inserted.
 Finally, the abundances of different reporter mRNAs from different constructs correlate well between 5PSeq and QuantSeq data (Figure \@ref(fig:rnaseq-QC-QuantSeq-vs-5PSeq}C).
+
+Overall, poly(A) site mapping showed that most reporter mRNAs retained the expected poly(A) site and motifs, except for a new alternative poly(A) site in tRPS3 mod_NNN constructs.
+This highlights the potential for unexpected consequences from composing cis-regulatory elements, even when introducint "random" insertions of no known function.
