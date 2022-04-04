@@ -90,10 +90,6 @@ knitr::include_graphics(here("supplementary_data_chapter/figures/polya_QC_plot_Q
 knitr::include_graphics(here("supplementary_data_chapter/figures/plasmid_vs_genome_polyA_combined_plot.png"))
 ```
 
-```{r rnaseq-QC-QuantSeq-vs-5PSeq, fig.cap="\\textbf{QuantSeq and 5PSeq genome wide transcript abundances are well correlated.} Correlation plots of DESeq2 normalised log2 pseudocounts for QuantSeq and 5PSeq are plotted against one another. The upper triangle contains the correlation coefficient of transcript abundance across all genes for each pair of samples. The lower triangle contains the scatter plot of transcripts abundance across all genes for each pair of samples. The diagonal contains a density of plot of transcript abundance across all genes in a sample.", fig.align='center',out.width="85%"}
-knitr::include_graphics(here("supplementary_data_chapter/figures/pRPS3_QuantSeq_5PSeq_comparison.png"))
-```
-
 ```{r relative-polya-counts, fig.cap="\\textbf{Construct poly(A) site usage across 5PSeq and QuantSeq.} Relative counts of reads mapped downstream of construct stop codons as fraction of total reads mapped to the constructs terminator. Peaks represent the position of major poly(A) sites. Replicates are plotted on top of each other where available.", fig.align='center',out.width="85%"}
 knitr::include_graphics(here("./supplementary_data_chapter/figures/relative_polya_counts_QuantSeq_and_5PSeq.png"))
 ```
