@@ -53,7 +53,7 @@ It is known that disrupting the transcription termination signal lowers expressi
 However, standardised parts libraries often assume a fixed terminator length for all genes, which is likely to omit the termination signal for genes with longer terminators.
 In the case of the YeastFab parts library [@Guo2015] the fixed terminator length is 200bp.
 We compared a gene with a median 3'UTR length less than 200bp, RPS3 to a gene with a median 3'UTR length greater than 200bp, SRO9.
-The median length of the native RPS3 3'UTR is 86nt [@Pelechano2013]; truncating the terminator to 86bp or 59bp reduces protein output by almost 2-fold (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B).
+The median length of the native RPS3 3'UTR is 59nt [@Pelechano2013]; truncating the terminator to 86bp or 59bp reduces protein output by almost 2-fold (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B).
 The median length of the native SRO9 3'UTR is 543nt [@Pelechano2013]; extending the terminator length to 543bp increases protein output by almost 2-fold (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B).
 This validates our assay's ability to detect known regulatory signals affecting transcription termination, while highlighting the importance of using well-informed annotations to construct parts libraries for synthetic biology.
 Note that we used the longer 543bp SRO9 terminator, and a similarly extended 421bp PMA1 terminator, for the main set of constructs (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
