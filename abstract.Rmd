@@ -18,13 +18,13 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 library(bookdown)
 ```
 \begin{abstract}
-Genes are commonly abstracted into a coding sequence and cis-regulatory elements (CREs), such as promoter and terminator regions, and short sequence motifs within these regions.
+Genes are commonly abstracted into a coding sequence and cis-regulatory elements (CREs), such as promoters and terminators, and short sequence motifs within these regions.
 Modern cloning techniques allow easy assembly of synthetic genetic constructs from discrete cis-regulatory modules.
 However, it is unclear how much the contributions of CREs to gene expression depend on other CREs in the host gene.
 Using budding yeast, we probe the extent of composability, or independent effects, of distinct CREs.
 We confirm that the quantitative effect of a terminator on gene expression depends on both promoter and coding sequence.
-We then explore whether individual cis-regulatory motifs within terminator regions display similar context dependence, focusing on putative regulatory motifs inferred using transcriptome-wide datasets of mRNA decay.
-We construct a library of diverse reporter genes, consisting of different combinations of motifs within various terminator contexts, paired with different promoters, to test the extent of composability. 
+We then explore whether individual cis-regulatory motifs within terminator regions display similar context dependence, using transcriptome-wide datasets of mRNA decay.
+To test the extent of composability, we construct reporter genes consisting of combinations of motifs within various terminator contexts, paired with different promoters. 
 Our results show that the effect of a motif on RNA abundance depends both on its host terminator, and also on the associated promoter sequence.
-Consequently, this emphasises the need for improved motif inference algorithms that include both local and global context effects, which in turn could aid researchers in the accurate use of diverse CREs for the engineering of synthetic genetic constructs. 
+This emphasises the need for improved motif inference that includes both local and global context effects, which in turn could aid in the accurate use of CREs for the engineering of synthetic genetic constructs. 
 \end{abstract}
