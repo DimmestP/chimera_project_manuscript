@@ -1,0 +1,88 @@
+---
+title: "fps_summary"
+author: "Weronika D."
+date: "5 04 2022"
+output: html_document
+---
+
+Plotting 5P ends from 5PSeq experiment of reporter and control genes
+
+```{r load_data}
+library(here)
+
+genes = c("reporter", "YCR012W", "YML028W", "YNL178W")
+samples = c("3dt", "4dt", "5dt", "6dt", "7dt", "8dt", "9dt", "10dt", "11dt", "13dt", "15dt")
+
+read_csv_sample <- function(sample, gene){
+    ret <- read.csv(here(paste("raw_data_analysis/data/rna_seq/FPS_5end_reads/", sample, "_", gene, "_counts_term.txt", sep="")), header=FALSE, sep = "\t", col.names = c("Position", "Counts"))
+    ret$Sample <- sample
+    ret
+}
+
+# Each gene/sample is in a separate file with counts of 5P ends for each position located from -700nt to +700nt from STOP codon
+
+reporter_df = do.call(rbind, lapply(samples, read_csv_sample, "reporter"))
+head(reporter_df)
+
+pgk1_df = do.call(rbind, lapply(samples, read_csv_sample, "YCR012W"))
+head(pgk1_df)
+
+tsa1_df = do.call(rbind, lapply(samples, read_csv_sample, "YML028W"))
+head(tsa1_df)
+
+rps3_df = do.call(rbind, lapply(samples, read_csv_sample, "YNL178W"))
+head(rps3_df)
+
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
+
+```
+
+```{r plot}
+library(dplyr)
+
+# limit the distance around the STOP codon and calculate cumulative sum for chosen region
+filter_counts = function(df, lower_limit, higher_limit) {
+  df %>%
+  filter((Position > lower_limit) & (Position < higher_limit)) %>%
+  group_by(Sample) %>%
+  mutate(Cumulative = cumsum(Counts)/sum(Counts))}
+
+ll = -100
+hl = 50
+
+reporter_filtered = filter_counts(reporter_df, ll, hl)
+pgk1_filtered = filter_counts(pgk1_df, ll, hl)
+tsa1_filtered = filter_counts(tsa1_df, ll, hl)
+rps3_filtered = filter_counts(rps3_df, ll, hl)
+
+library(ggplot2)
+library(cowplot)
+
+# Cumulative plots
+reporter_p1 = ggplot(data = reporter_filtered, aes(x = Position, y = Cumulative, color = Sample)) +
+  geom_step(show.legend = FALSE) +
+  labs(title = "Plasmid construct 5P end reads", x = "Position relative to stop codon", y= "Cumulative \n fraction of reads")
+
+pgk1_p1 = ggplot(data = pgk1_filtered, aes(x = Position, y = Cumulative, color = Sample)) +
+  geom_step(show.legend = FALSE) +
+  labs(title = "Genomic PGK1 5P end reads", x = "Position relative to stop codon", y= "Cumulative \n fraction of reads")
+
+tsa1_p1 = ggplot(data = tsa1_filtered, aes(x = Position, y = Cumulative, color = Sample)) +
+  geom_step(show.legend = FALSE) +
+  labs(title = "Genomic TSA1 5P end reads", x = "Position relative to stop codon", y= "Cumulative \n fraction of reads")
+
+rps3_p1 = ggplot(data = rps3_filtered, aes(x = Position, y = Cumulative, color = Sample)) +
+  geom_step(show.legend = FALSE) +
+  labs(title = "Genomic RPS3 5P end reads", x = "Position relative to stop codon", y= "Cumulative \n fraction of reads")
+
+combined_5p_end_read_plot <- cowplot::plot_grid(reporter_p1, pgk1_p1, tsa1_p1, rps3_p1)
+
+ggsave(here("supplementary_data_chapter/figures/combined_5p_end_read_plot.png"),
+       combined_5p_end_read_plot, 
+        width = fig_width_2column,
+        height = 150,
+        units = "mm",
+        dpi = fig_dpi,
+        bg = "white")
+
+```
