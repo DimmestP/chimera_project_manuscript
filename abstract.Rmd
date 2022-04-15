@@ -6,7 +6,7 @@ output:
       in_header: authors.tex
     template: "./formatting/NAR-sample.tex"
     toc: false
-    keep_tex : false
+    keep_tex : true
     pandoc_args: [ "--csl", "./references/nucleic-acids-research.csl" ]
 bibliography: "./references/chimeraProject_no_url.bib"
 ---
