@@ -102,3 +102,7 @@ knitr::include_graphics(here("supplementary_data_chapter/figures/plasmid_vs_geno
 knitr::include_graphics(here("./supplementary_data_chapter/figures/relative_polya_counts_QuantSeq_and_5PSeq.png"))
 ```
 
+```{r combined-5p-end-read-plot, fig.cap="\\textbf{5PSeq data finds no detectable changes in 5'-phosphorylated intermediates between reporter constructs.} Relative counts of 5' end reads of 5'-phosphorylated intermediates as fraction of total 5' end reads mapped to the terminator. Results for plasmid constructs are plotted alongside selected genomic genes for comparison.", fig.align='center',out.width="85%"}
+knitr::include_graphics(here("supplementary_data_chapter/figures/combined_5p_end_read_plot.png"))
+```
+

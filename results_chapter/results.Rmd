@@ -224,8 +224,10 @@ knitr::include_graphics(here("results_chapter/figures/polya_usage_plot_QuantSeq.
 We then asked whether modifications in the 3'-UTR region impact 5'-3' degradation following mRNA decapping, using the 5PSeq method targeted to the 3'-end regions of mRNA [@Pelechano2016].
 5PSeq can detect changing ribosome dynamics through 5'-3' co-translational degradation, however, the novel modification to 5Pseq here uses an anchored oligo(dT) reverse primer so detects only the poly(A)-site proximal region of the mRNA instead of the entire coding sequence.
 The 5Pseq counts per gene are highly reproducible between samples (Supplementary Figure \@ref(fig:rnaseq-QC-correlation)B), and the abundances of reporter mRNAs from different constructs correlate well between 5PSeq and QuantSeq data (Supplementary Figure \@ref(fig:rnaseq-QC-correlation)C).
-Our 5PSeq data finds no detectable changes in 5'-phosphorylated intermediates between wild-type and modified reporter constructs, and thus does not indicate detectable changes in ribosome dynamics near the 3' end of transcripts (Supplementary Figure \@ref(fig:rnaseq-QC-genomic-vs-plasmid-polyA)).
-Moreover, the poly(A) site distribution for each construct matches that obtained from QuantSeq data, suggesting that 3'-UTR isoforms are not differentially degraded using this pathway regardless of the motifs inserted (Supplementary Figures \@ref(fig:rnaseq-QC-genomic-vs-plasmid-polyA), \@ref{fig:relative-polya-counts}).
+Our 5PSeq data finds no detectable changes in 5'-phosphorylated intermediates between wild-type and modified reporter constructs, and thus does not indicate detectable changes in ribosome dynamics near the 3' end of transcripts (Supplementary Figure \@ref(fig:rnaseq-QC-genomic-vs-plasmid-polyA), \@ref(fig:combined-5p-end-read-plot)).
+Moreover, the poly(A) site distribution for each construct matches that obtained from QuantSeq data, suggesting that 3'-UTR isoforms are not differentially degraded using this pathway regardless of the motifs inserted. Finally, the abundances of different reporter
+mRNAs from different constructs correlate well between
+5PSeq and QuantSeq data (Supplementary Figures \@ref(fig:rnaseq-QC-correlation)C).
 
 Overall, poly(A) site mapping showed that most reporter mRNAs retained the expected poly(A) site and motifs, except for a new alternative poly(A) site in tRPS3 mod_NNN constructs.
 This highlights the potential for unexpected consequences from composing cis-regulatory elements, even when introducing "random" insertions of no known function.
