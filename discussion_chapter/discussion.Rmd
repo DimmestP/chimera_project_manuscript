@@ -9,7 +9,8 @@ output:
 Our measurements of protein output from promoter-terminator combinations highlight the limitations of assuming that CREs are quantitatively composable.
 Unsurprisingly, fluorescent protein expression levels are dominated by promoter choice, up to 100 fold, and then terminator choice, up to 5 fold. 
 However, our observations of 1.5 fold change in the relative effect of terminators depending on coding sequence and promoter choice highlight the quantitative limitations of the assumption of composability.
-Previous work by @Kosuri2013 suggests that screening a larger library of CREs would reveal a subset with stronger quantitative interactions.
+Our results echo previous findings of idiosyncratic and context-dependent interactions between CREs @Dhillon2020.
+Previous work by Kosuri et al. @Kosuri2013 suggests that screening a larger library of CREs would reveal a subset with stronger quantitative interactions.
 
 Terminators taken from co-regulated genes have similar behaviour in our reporter constructs.
 Terminators that have consistently low expression include tSUN4 and tTOS6, taken from cell wall proteins whose transcripts are bound and regulated by shared RNA-binding proteins [@Hogan2008].
@@ -19,25 +20,27 @@ Further investigations are required into the shared sequence signals and protein
 We find that the effect of short CREs in 3'UTRs depends on the context of their host construct.
 The contribution of our selected cis-regulatory motifs to mRNA stability, as inferred from transcriptome-wide analysis, correlates with their effect on the abundance of reporter constructs.
 However, their contributions to mRNA abundance were inconsistent and dependent on context: TGTAHMNTA has no measurable effect when inserted into tRPS3 but the expected effect in tTSA1, ATATTC has the expected effect in tRPS3 but little effect in tTSA1, and HWNCATTWY can either decrease or increase mRNA levels when removed from tPIR1, depending on the promoter.
-Also, the two tPIR1 constructs with different mutated HWNCATTWY motifs had different expression levels suggesting HWNCATTWY has a position dependent effect. 
-Although, the exact sequences of the two motifs did also differ by 4 nucleotides.
-In addition, our original motif search predicted a TGTAAATA motif to be stabilising in the [@Sun2013] dataset but destabilising in the [@Chan2018] dataset.
+Also, the two tPIR1 constructs with different mutated HWNCATTWY motifs had different expression levels suggesting HWNCATTWY has a position-dependent effect. 
+The exact sequences of the two HWNCATTWY motif instances did also differ by 4 nucleotides.
+These disparities in predicted and experimentally verified regulatory behaviour raises questions about current methods for discovering novel cis-regulatory elements and, more generally, for understanding and manipulating regulatory pathways.
+
+The effect of CREs can also depend on environmental context.
+Our motif search predicted a TGTAAATA motif to be stabilising in the [@Sun2013] dataset but destabilising in the [@Chan2018] dataset.
 TGTAAATA is a known binding motif for Puf3 and carbon deficient conditions trigger Puf3 to degrade its targets [@Miller2014].
 Carbon deficient conditions were likely present due to the bespoke CSM-lowURA media used by [@Chan2018], which is similar to the SC-URA media used in our assays, contrasting with carbon-rich YPD media used by [@Sun2013].
 Thus, carbon-dependent regulation by Puf3 could explain the different behaviour of TGTAAATA in the different datasets.
-These disparities in predicted and experimentally verified regulatory behaviour raises questions about current methods for discovering novel cis-regulatory elements and, more generally, for understanding and manipulating regulatory pathways.
 
 RNA-Seq results confirmed our conclusions on the effect of motif insertions on gene expression. 
 pRPS3-tRPS3 and pTSA1-tTSA1 constructs show similar relative abundances in the qPCR results as the RNA-Seq results. 
 However, pPGK1-tRPS3 results are skewed due to the unexpected low abundance of mod_NNN constructs in the RNA-Seq results, which all other constructs are normalised to.
 As the QuantSeq protocol we used for our RNA-Seq assay anchors reads to the poly(A) tail of transcripts we were able to determine the effect of inserting motifs on poly(A) site usage. 
-For tTSA1 constructs, inserting the motifs shifted the poly(A) sites 27 nucleotides downstream of their absolute positions in WT, or the exact size of the three insertion site combined.
+For tTSA1 constructs, inserting the motifs shifted the poly(A) sites 27 nucleotides downstream of their absolute positions in WT, or the total size of the three insertions combined.
 The sequences and relative usages of the poly(A) sites are not affected by inserting motifs.
-For tRPS3 constructs, poly(A) sites were again appropriately shifted downstream by the length of the insertions sites.
-However, a novel poly(A) site is introduced between the second and third motifs.
+For tRPS3 constructs, poly(A) sites were again appropriately shifted downstream by the length of the insertions.
+However, a novel poly(A) site is introduced between the second and third inserted motifs.
 It is known that efficiency elements in the terminators of yeast genes play an important role in efficient RNA transcription and that cleavage and polyadenylation sites occur a specific distance downstream of the efficiency elements [@Graber1999].
-Although efforts were made to avoid altering efficiency elements in native terminators, the creation of novel poly(A) site is likely due to the inserted motifs extending the distance between the efficiency elements and the native poly(A) sites. 
-Another possible explanation for the novel poly(A) site is that motifs 2 and 3 were inserted into a highly conserved region of Rps3 terminator [@Siepel2005].
+Although we tried to avoid altering efficiency elements in native terminators, the creation of novel poly(A) site is likely due to the inserted motifs extending the distance between the efficiency elements and the native poly(A) sites. 
+Another possible explanation for the novel poly(A) site is that motifs 2 and 3 were inserted into a evolutionarily conserved element of tRps3, as detected by pHastCons [@Siepel2005].
 This might have disrupted an RBP target site or secondary structure in this region, leading to changes in polyadenylation site choice.
 Despite this the QuantSeq results do confirm that at least one copy of the motifs of interest are present in every major isoform for all constructs.
 
@@ -81,7 +84,7 @@ Motif behaviour also depends on CREs across the entire host transcript.
 Regulation of the ASH1 transcript depends on the concerted action of multiple CREs [@Chartrand1999; @Gonzalez1999].
 In other cases, multiple motifs, or multiple copies of the same motif, must occur together to enable recruitment of the effector protein.
 Recruitment of Puf3 to promote mRNA transcript decay requires two Puf3 motifs in the 3'UTR [@Jackson2004].
-Indeed, clusters of short degenerate motifs have been proposed as a general regulatory feature of RNA-binding proteins [@Cereda2014]
+Indeed, clusters of short degenerate motifs have been proposed as a general regulatory feature of RNA-binding proteins [@Cereda2014].
 
 
 ## Implications for novel cis-regulatory element searches
@@ -89,8 +92,7 @@ Indeed, clusters of short degenerate motifs have been proposed as a general regu
 Motif detection algorithms need to progress beyond the assumption that the presence of a motif alone ensures its functional effect.
 The effect of a motif can be influenced by factors such as growth conditions and time of measurement.
 Uncertainty around the active state of a motif could be introduced using latent variables, as used in transcription factor (TF) binding site prediction algorithms to represent the proportion of active TF sites [@Dai2017; @Sanguinetti2006].
-Alternatively, non-linear relationships between factors affecting motif activity can be modeled by partition regression techniques, such as random forests.
-Again looking at TF algorithms, partitioning algorithms could be used to predict functional datasets using short sub-sequences of transcripts [@BehjatiArdakani2019]. 
+Alternatively, non-linear relationships between CREs can be modeled by partition regression techniques [@BehjatiArdakani2019]. 
 
 Reductionist search algorithms that attempt to discover the shortest possible sequence contributing to expression may limit the discovery of novel CREs. 
 High resolution maps of protein-RNA interactions are revealing RBPs with gapped, multi-partite motifs [@Bayne2021] or motifs that must be repeated in the same transcript to be effective [@Gu2004;@Jackson2004].
@@ -107,7 +109,7 @@ Together with high-throughput assays, pools of combinations of suitable CREs can
 
 Our conceptual model of a gene influences the tools we make, and can limit our ability to predict and manipulate gene expression [@Szymanski2019].
 Conceptual models of CREs as independently acting composable parts exemplify these limits.
-The characterisation of an element's function in a single context is not enough to make generalisable conclusions.
+The characterisation of an element's function in a single context may or may not lead to make generalisable conclusions.
 Both small- and large-scale studies of CREs should ideally be carried out with multiple combinations of other regulatory elements, in cells in multiple growth conditions, to build a comprehensive understanding of transcriptional and post-transcriptional regulation.
 
 # Funding
