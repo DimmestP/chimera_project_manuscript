@@ -11,9 +11,9 @@ Furthermore, it is tempting to assume that a part with a function validated in a
 However, this assumption blurs two concepts of modularity: modular assembly, how easy it is to construct combinations of parts; and composability, how function and regulation can be decomposed into contributions from individual parts.
 The assembly of parts whose functions are not composable will result in constructs with unpredictable functions or regulatory behaviours. 
 
-Modular assembly is now routine: modern DNA synthesis and cloning techniques allow the construction of complex gene pathways through the combinatorial assembly of chosen parts [@Curran2013; @Lee2015; @Garcia2018; @Andreou2018]. 
+Modular assembly is now routine: modern DNA synthesis and cloning techniques allow the construction of complex gene pathways through the combinatorial assembly of chosen parts [@Curran2013; @Guo2015; @Lee2015; @Garcia2018; @Andreou2018]. 
 Several groups have constructed standardised libraries comprising promoter (including 5'UTR) and terminator (including 3'UTR) parts, which can be combined to achieve desired expression of synthesized proteins.
-The characterisation of all possible promoter-terminator pairings is impractical, so standardised libraries generally characterise parts independently, for example testing many promoters with the same coding sequence and terminator.
+Testing of standardised libraries tends to focus on one kind of part at a time, for example testing many promoters with the same coding sequence and terminator [@Guo2015].
 Similarly, even massively parallel approaches to characterise smaller CREs usually explore a large library of promoter elements with a single terminator [@Sharon2012], or conversely a library of terminators with a single promoter [@Shalem2015].
 Because these experiments do not measure interactions between different parts, they rely on the untested assumption that those parts have more or less identical effects across different contexts.
 \enlargethispage{-65.1pt}
@@ -28,7 +28,8 @@ The importance of interactions among CREs has been clear since the discovery of 
 For example, whether post-transcriptional regulatory CREs are functional or not depends on the RNA sequence context [@Taliaferro2016].
 One large-scale study of synthetic combinations of bacterial promoters and ribosomal binding sites showed that expression was largely composed of independent contributions; 64% of constructs had protein expression levels with less than a 2-fold deviation from the predictions of a linear model without interactions [@Kosuri2013]. 
 However, 5% of the constructs had, on average, a 13-fold deviation.
-Another study of promoter-terminator swaps in budding yeast revealed 2-fold changes due to promoter-terminator interactions [@Ito2013], even though these CREs are separated by 700nt of coding sequence. 
+A recent study in budding yeast also found strong pairwise interactions between different promoter regions [@Dhillon2020].
+Experiments with promoter-terminator swaps in budding yeast revealed 2-fold changes due to promoter-terminator interactions [@Ito2013, @Lee2015], even though these CREs are separated by hundreds of nucleotides of coding sequence. 
 
 Here, we provide further evidence for the importance of interactions between regulatory regions, and show the limitations of assuming that gene expression regulation can be decomposed into independent contributions from short CREs. 
 First, we use modular cloning to construct 120 combinations of promoter (including 5'UTR), coding sequence, and terminator (including 3'UTR) modules, showing that the quantitative effect of terminators on protein production depends on both promoter and coding sequence.
