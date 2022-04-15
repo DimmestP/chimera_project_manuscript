@@ -492,7 +492,7 @@ doi:10.1093/nar/\@shortjname\@artid
       \global\@topnum\z@   % Prevents figures from going at top of page.
       \@maketitle
     \fi
-    \thispagestyle{plain}\@thanks
+    \thispagestyle{fancy}\@thanks
   \endgroup
   \@afterindentfalse
   \setcounter{footnote}{0}%
@@ -1931,7 +1931,13 @@ bookmarks,bookmarksopen=true,bookmarksnumbered=true,pdfpagelayout={OneColumn},pd
 
 
 \twocolumn
-\pagestyle{myheadings}
+\usepackage{fancyhdr}
+\fancyhf{}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancyheadoffset{0pt}
+\rhead{\scshape A preprint - \today}
+\cfoot{\thepage}
 \pagenumbering{arabic}
 \sloppy
 \flushbottom
