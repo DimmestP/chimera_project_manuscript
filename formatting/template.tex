@@ -1,4 +1,15 @@
-\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+\documentclass[a4,center,fleqn]{formatting/NAR}
+
+
+% Enter dates of publication
+\copyrightyear{YYYY}
+\pubdate{DD MM YYYY}
+\pubyear{YYYY}
+\jvolume{xx}
+\jissue{xx}
+
+%\articlesubtype{This is the article type (optional)}
+
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows}
 
@@ -48,9 +59,7 @@ $endif$
 
 \tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, text width=3cm, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
 
-\tikzstyle{arrow} = [thick,->,>=stealth]
-\usepackage{./formatting/arxiv}
-\usepackage[utf8]{inputenc} % allow utf-8 input
+\tikzstyle{arrow} = [thick,->,>=stealth]% allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{url}            % simple URL typesetting
 \usepackage{booktabs}       % professional-quality tables
@@ -78,7 +87,6 @@ $endif$
 \usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
-  \usepackage[utf8]{inputenc}
 $if(euro)$
   \usepackage{eurosym}
 $endif$

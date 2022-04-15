@@ -1,17 +1,14 @@
 ---
-title : "Probing 3'UTRs as modular regulators of gene expression"
+title : "Limitations of composability of cis-regulatory elements in budding yeast messenger RNA"
 output: 
   bookdown::pdf_book:
     includes:
       in_header: authors.tex
-    template: "./formatting/template.tex"
+    template: "./formatting/NAR-sample.tex"
     toc: false
     keep_tex : false
     pandoc_args: [ "--csl", "./references/nucleic-acids-research.csl" ]
-bibliography: "./references/chimeraProject.bib"
-    
-link-citations: false
-  
+bibliography: "./references/chimeraProject_no_url.bib"
 ---
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
@@ -29,5 +26,3 @@ We construct a library of diverse reporter genes, consisting of different combin
 Our results show that the effect of a motif on RNA abundance depends both on its host terminator, and also on the associated promoter sequence.
 Consequently, this emphasises the need for improved motif inference algorithms that include both local and global context effects, which in turn could aid researchers in the accurate use of diverse CREs for the engineering of synthetic genetic constructs. 
 \end{abstract}
-
-\footnotetext[2]{These authors contributed equally to this work.}

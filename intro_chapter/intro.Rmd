@@ -16,6 +16,7 @@ Several groups have constructed standardised libraries comprising promoter (incl
 The characterisation of all possible promoter-terminator pairings is impractical, so standardised libraries generally characterise parts independently, for example testing many promoters with the same coding sequence and terminator [@Lee2015].
 Similarly, even massively parallel approaches to characterise smaller CREs usually explore a large library of promoter elements with a single terminator [@Sharon2012], or conversely a library of terminators with a single promoter [@Shalem2015].
 Because these experiments do not measure interactions between different parts, they rely on the untested assumption that those parts have more or less identical effects across different contexts.
+\enlargethispage{-65.1pt}
 
 Computational methods for the discovery and quantification of short CREs, such as sequence motifs recognised by regulatory proteins, also tend to rely on models of independent effects, that is, composability.
 Prominent methods for mapping CRE sequence-function relationships include predicting functional data with short sequence features, often using linear models [@Shalgi2005; @Cheng2017; @Vijayabaskar2019]; or, directly comparing the sequences of genes with similar characteristics to determine the presence of short consensus sequence motifs [@Hogan2008; @Kretz2013] using motif discovery software [@Elemento2007; @Bailey2015].
