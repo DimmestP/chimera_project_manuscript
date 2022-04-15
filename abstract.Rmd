@@ -1,5 +1,5 @@
 ---
-title : "Limitations of composability of cis-regulatory elements in budding yeast messenger RNA"
+title : "Limitations of composability of cis-regulatory elements in messenger RNA"
 output: 
   bookdown::pdf_book:
     includes:
