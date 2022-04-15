@@ -9,6 +9,7 @@ output:
 Our measurements of protein output from promoter-terminator combinations highlight the limitations of assuming that CREs are quantitatively composable.
 Unsurprisingly, fluorescent protein expression levels are dominated by promoter choice, up to 100 fold, and then terminator choice, up to 5 fold. 
 However, our observations of 1.5 fold change in the relative effect of terminators depending on coding sequence and promoter choice highlight the quantitative limitations of the assumption of composability.
+Our results echo previous findings of idiosyncratic and context-dependent interactions between CREs @Dhillon2020.
 Previous work by Kosuri et al. @Kosuri2013 suggests that screening a larger library of CREs would reveal a subset with stronger quantitative interactions.
 
 Terminators taken from co-regulated genes have similar behaviour in our reporter constructs.
