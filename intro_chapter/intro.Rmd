@@ -13,7 +13,7 @@ The assembly of parts whose functions are not composable will result in construc
 
 Modular assembly is now routine: modern DNA synthesis and cloning techniques allow the construction of complex gene pathways through the combinatorial assembly of chosen parts [@Curran2013; @Lee2015; @Garcia2018; @Andreou2018]. 
 Several groups have constructed standardised libraries comprising promoter (including 5'UTR) and terminator (including 3'UTR) parts, which can be combined to achieve desired expression of synthesized proteins.
-The characterisation of all possible promoter-terminator pairings is impractical, so standardised libraries generally characterise parts independently, for example testing many promoters with the same coding sequence and terminator [@Lee2015].
+The characterisation of all possible promoter-terminator pairings is impractical, so standardised libraries generally characterise parts independently, for example testing many promoters with the same coding sequence and terminator.
 Similarly, even massively parallel approaches to characterise smaller CREs usually explore a large library of promoter elements with a single terminator [@Sharon2012], or conversely a library of terminators with a single promoter [@Shalem2015].
 Because these experiments do not measure interactions between different parts, they rely on the untested assumption that those parts have more or less identical effects across different contexts.
 \enlargethispage{-65.1pt}
