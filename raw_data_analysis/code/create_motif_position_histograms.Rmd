@@ -63,7 +63,8 @@ HWNCAUUWY_position_plot <- ggplot(plot_data_HWNCAUUWY) + geom_histogram(aes(x=HW
        x = "Relative Position",
        y = ""
   ) +
-  theme(plot.title = element_text(hjust=0.5), axis.title.x = element_text(size = 15))
+  theme(plot.title = element_text(hjust=0.5), axis.title.x = element_text(size = 15)) +
+  scale_x_continuous(expand = c(0,0))
 
 HWNCAUUWY_position_plot
 
@@ -72,7 +73,8 @@ TGTAHMNUA_position_plot <- ggplot(plot_data_TGTAHMNUA) + geom_histogram(aes(x=TG
        x = "",
        y = TeX("$N^o$ of Genes")
   ) +
-  theme(plot.title = element_text(hjust=0.5), axis.title.y = element_text(size = 15))
+  theme(plot.title = element_text(hjust=0.5), axis.title.y = element_text(size = 15)) +
+  scale_x_continuous(expand = c(0,0))
 
 TGTAHMNUA_position_plot
 
@@ -81,7 +83,8 @@ ATATTC_position_plot <- ggplot(plot_data_ATATTC) + geom_histogram(aes(x=ATATTC_p
        x = "",
        y = ""
   ) +
-  theme(plot.title = element_text(hjust=0.5))
+  theme(plot.title = element_text(hjust=0.5)) +
+  scale_x_continuous(expand = c(0,0))
 
 ATATTC_position_plot
 

@@ -29,7 +29,7 @@ knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual
 knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"), dpi = 300) 
 ```
 
-```{r motif-position-histograms, fig.cap="\\textbf{Relative positions of ATATTC, TGTAHMNUA and HWNCAUUWY motifs in native 3'UTRs.}", fig.align='center', out.width="98%"}
+```{r motif-position-histograms, fig.cap="\\textbf{Relative positions of ATATTC, TGTAHMNUA and HWNCAUUWY motifs in native 3'UTRs.} Histogram shows the counts of the motif occurrences in 3'UTRs relative to the total length of 3'UTR, where 0 would be starting exactly at the stop codon and 1 would be at the reported poly(A)-site. See (methods or ref to data repository) for details.", fig.align='center', out.width="98%"}
 knitr::include_graphics(here("supplementary_data_chapter/figures/motif_position_histograms.png"), dpi = 300) 
 ```
 \arrayrulecolor{white}
