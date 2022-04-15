@@ -116,13 +116,18 @@ Both small- and large-scale studies of CREs should ideally be carried out with m
 
 This work was supported by the Wellcome Trust [grant number 208779/Z/17/Z to E.W.J.W.], the UKRI Biotechnology and Biological Sciences Research Council [grant number BB/M010996/1], and the Medical Research Council [grant number MR/N013166/1].
 
+# Data Availability
+
+Plate reader data, RT-qPCR data, and complete analysis code is available at https://github.com/DimmestP/chimera_project_manuscript.
+RNA-seq data is available on Gene Expression Omnibus [GSE200211](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE200211).
+Complete code for RNA-seq data analysis is at https://github.com/DimmestP/nextflow_paired_reads_pipeline.
+
 # Acknowledgments
 
 We thank Naomi Nakayama, Erika Szymanski, Filippo Menolascina, and members of the Wallace lab for discussions on the manuscript.
 We thank Ivan Clark, Iseabail Farquhar, Luis Montano and Peter Swain for help with the plate reader experiments and analysis.
 We thank Vicent Pelechano and Yujie Zhang for their generous help teaching us the 5PSeq protocol, obtaining 5PSeq data, and discussing the results.
 We thank the Genetics Core, Edinburgh Clinical Research Facility, University of Edinburgh for their expertise and assistance obtaining RNA-seq data.
-
 
 # References
 
