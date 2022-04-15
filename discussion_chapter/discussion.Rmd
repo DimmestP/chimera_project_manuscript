@@ -117,8 +117,9 @@ This work was supported by the Wellcome Trust [grant number 208779/Z/17/Z to E.W
 # Acknowledgments
 
 We thank Naomi Nakayama, Erika Szymanski, Filippo Menolascina, and members of the Wallace lab for discussions on the manuscript.
+We thank Ivan Clark, Iseabail Farquhar, Luis Montano and Peter Swain for help with the plate reader experiments and analysis.
 We thank Vicent Pelechano and Yujie Zhang for their generous help teaching us the 5PSeq protocol, obtaining 5PSeq data, and discussing the results.
-
+We thank the Genetics Core, Edinburgh Clinical Research Facility, University of Edinburgh for their expertise and assistance obtaining RNA-seq data.
 
 
 # References
