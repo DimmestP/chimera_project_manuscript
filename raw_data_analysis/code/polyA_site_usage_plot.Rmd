@@ -223,21 +223,21 @@ full_length_QuantSeq_plasmids_cumulative_QC <- full_QuantSeq_cumulative_polyA_re
 genomic_QuantSeq_PGK1_cumulative_QC <- ggplot(full_length_QuantSeq_plasmids_cumulative_QC %>%
          filter(promoter == "pPGK1")) +
   geom_step(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
-  labs(x="", y="Fraction of Reads", title = "QuantSeq \n Genomic PGK1 Poly(A) sites") +
+  labs(x="", y="Cumulative\n fraction of reads", title = "QuantSeq \n Genomic PGK1 Poly(A) sites") +
   lims(x = c(70,170)) +
   guides(colour = FALSE)
 
 genomic_QuantSeq_TSA1_cumulative_QC <- ggplot(full_length_QuantSeq_plasmids_cumulative_QC %>%
          filter(promoter == "pTSA1")) +
   geom_step(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
-  labs(x="", y="Fraction of Reads", title = "Genomic TSA1 Poly(A) sites") +
+  labs(x="Position relative to stop codon", y="Cumulative\n fraction of reads", title = "Genomic TSA1 Poly(A) sites") +
   lims(x = c(80,120)) +
   guides(colour = FALSE)
 
 genomic_QuantSeq_RPS3_cumulative_QC <- ggplot(full_length_QuantSeq_plasmids_cumulative_QC %>%
          filter(promoter == "pRPS3")) +
   geom_step(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
-  labs(x="", y="Fraction of Reads", title = "Genomic RPS3 Poly(A) sites") +
+  labs(x="", y="Cumulative\n fraction of reads", title = "Genomic RPS3 Poly(A) sites") +
   lims(x = c(30,80)) +
   guides(colour = FALSE)
 
@@ -263,21 +263,21 @@ full_length_5PSeq_plasmids_cumulative_polyA_reads_genomic <- full_5PSeq_cumulati
 genomic_5PSeq_PGK1_cumulative_QC <- ggplot(full_length_5PSeq_plasmids_cumulative_polyA_reads_genomic %>%
          filter(promoter == "pPGK1")) +
   geom_step(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
-  labs(x="", y="Fraction of Reads", title = "5PSeq \n Genomic PGK1 Poly(A) sites") +
+  labs(x="", y="Cumulative\n fraction of reads", title = "5PSeq \n Genomic PGK1 Poly(A) sites") +
   lims(x = c(70,170)) +
   guides(colour = FALSE)
 
 genomic_5PSeq_RPS3_cumulative_QC <- ggplot(full_length_5PSeq_plasmids_cumulative_polyA_reads_genomic %>%
          filter(promoter == "pRPS3")) +
   geom_step(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
-  labs(x="", y="Fraction of Reads", title = "Genomic RPS3 Poly(A) sites") +
+  labs(x="", y="Cumulative\n fraction of reads", title = "Genomic RPS3 Poly(A) sites") +
   lims(x = c(30,80)) +
   guides(colour = "none")
 
 genomic_5PSeq_TSA1_cumulative_QC <- ggplot(full_length_5PSeq_plasmids_cumulative_polyA_reads_genomic %>%
          filter(promoter == "pTSA1")) +
   geom_step(aes(x = read_end, y = rel_cumulative_counts, colour = sample)) +
-  labs(x="", y="Fraction of Reads", title = "Genomic TSA1 Poly(A) sites") +
+  labs(x="Position relative to stop codon", y="Cumulative\n fraction of reads", title = "Genomic TSA1 Poly(A) sites") +
   lims(x = c(80,120)) +
   guides(colour = "none")
 
@@ -326,7 +326,7 @@ plasmid_vs_genome_polyA_QuantSeq_TSA1_plot <- ggplot(plasmid_vs_genome_polyA_Qua
                 y = rel_cumulative_counts,
                 colour = sample,
                 linetype = mod)) +
-  labs(x="", y="Fraction of Reads", title = "Genomic vs Plasmid TSA1 Poly(A) sites (QuantSeq)") +
+  labs(x="", y="Cumulative\n fraction of reads", title = "Genomic vs Plasmid TSA1 Poly(A) sites (QuantSeq)") +
   lims(x = c(80,120)) +
   guides(colour = "none", linetype = "none")
 
@@ -337,7 +337,7 @@ plasmid_vs_genome_polyA_QuantSeq_RPS3_plot <- ggplot(plasmid_vs_genome_polyA_Qua
                 y = rel_cumulative_counts,
                 colour = sample,
                 linetype = mod)) +
-  labs(x="", y="Fraction of Reads", title = "Genomic vs Plasmid RPS3 Poly(A) sites (QuantSeq)") +
+  labs(x="", y="Cumulative\n fraction of reads", title = "Genomic vs Plasmid RPS3 Poly(A) sites (QuantSeq)") +
   lims(x = c(30,80)) +
   guides(colour = "none", linetype = "none")
 
@@ -353,7 +353,7 @@ plasmid_vs_genome_polyA_5PSeq_RPS3_plot <- ggplot(plasmid_vs_genome_polyA_5PSeq 
                 y = rel_cumulative_counts,
                 colour = sample,
                 linetype = mod)) +
-  labs(x="", y="Fraction of Reads", title = "Genomic vs Plasmid RPS3 Poly(A) sites (5PSeq)") +
+  labs(x="Position relative to stop codon", y="Cumulative\n fraction of reads", title = "Genomic vs Plasmid RPS3 Poly(A) sites (5PSeq)") +
   lims(x = c(30,80)) +
   guides(colour = "none", linetype = "none")
 
