@@ -18,6 +18,8 @@ library(ggplot2)
 
 source(here("raw_data_analysis/code/linear_model_functions.R"))
 
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
+
 # Gather all yeast 3'UTRs
 yeast_3UTRs <- read_csv(here("./raw_data_analysis/data/half_life_data/whole_genome_3UTR.csv"))
 
@@ -85,5 +87,10 @@ ATATTC_position_plot
 
 cowplot::plot_grid(ATATTC_position_plot, TGTAHMNUA_position_plot, HWNCAUUWY_position_plot, ncol = 1)
 
-ggsave(here("./supplementary_data_chapter/figures/motif_position_histograms.png"), cowplot::plot_grid(ATATTC_position_plot, TGTAHMNUA_position_plot, HWNCAUUWY_position_plot, ncol = 1))
+ggsave(here("./supplementary_data_chapter/figures/motif_position_histograms.png"),
+       cowplot::plot_grid(ATATTC_position_plot, TGTAHMNUA_position_plot, HWNCAUUWY_position_plot, ncol = 1),
+       width = fig_width_2column, 
+       height = 210,
+       units = "mm",
+       dpi = fig_dpi)
 ```
