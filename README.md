@@ -1,11 +1,20 @@
-# Probing 3'UTRs as Modular Regulators of Gene Expression
+# Limitations of composability of cis-regulatory elements in messenger RNA
 
-Modular effects of yeast 3'UTRs and cis-regulatory elements on mRNA abundance.
-This repository contains the data and analysis files for the manuscript:
+This repository contains the manuscript, data, and analysis files for the preprint:
 
-> Probing 3'UTRs as Modular Regulators of Gene Expression.
+> Limitations of composability of cis-regulatory elements in messenger RNA.
 > Jamie Auxillos, Samuel Haynes, Abhishek Jain, Clemence Alibert, Weronika Danecka, Edward W.J. Wallace.
-> bioRxiv, 2021 [doi:10.1101/2021.08.12.455418](http://dx.doi.org/10.1101/2021.08.12.455418)
+> bioRxiv, 2022 [doi:10.1101/2021.08.12.455418](http://dx.doi.org/10.1101/2021.08.12.455418)
+
+This study, of the modular effects of yeast 3'UTRs and cis-regulatory elements on mRNA abundance, shows that:
+
+- Terminator effects on gene expression depend on other cis-regulatory elements, in budding yeast
+- Transcriptome-wide inferences of motif effects partially predict effects in synthetic genes
+- Cis-regulatory motif effects on gene expression depend both on terminator context and promoter pairing
+
+Click through to the preprint to read the whole story.
+
+# How this repository is organised
 
 The data and code (including ALL analysis referred to in the paper) required to create the manuscript is included in this GitHub page. The R package [Bookdown](https://bookdown.org/) can be used to recreate the manuscript and a makefile is provide to re-calculate most of the analysis. 
 
