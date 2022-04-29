@@ -1,7 +1,8 @@
+\onecolumn
+
 # Supplementary Data
+
 \makeatletter
-\let\c@table\c@figure
-\let\ftype@table\ftype@figure
 \renewcommand{\fnum@figure}{Supplementary Figure \thefigure}
 \renewcommand{\fnum@table}{Supplementary Table \thetable}
 \renewcommand{\thefigure}{S\arabic{figure}}
@@ -17,6 +18,7 @@ library(tidyr)
 knitr::opts_chunk$set(fig.pos = "p", dpi = 300)
 ```
 
+## Supplementary Tables
 
 ```{r hlife-variance-table}
 knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual = c("42.0%", "3.2%", "0.6%"), Drop = c("-40.5%", "-1.6%", "0.0%"), Cumulative = c("42.0%", "43.7%", "43.7%")), caption = "\\textbf{Variance explained by each type of CRE in the half-life model applied to data from Chan et al (2018).} Variance explained was estimated in 3 different ways. The individual variance explained by a linear model containing each type of CRE on its own.  The drop in variance explained when one type of CRE is removed from the full model. The cumulative variance explained when each CRE is added to the linear model in sequence; starting with codon usage, then adding motifs and finally 3'UTR length.", format = "latex")  %>%
@@ -25,14 +27,8 @@ knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual
 ```
 
 
-```{r protein-vs-RNA-plot-motifs, fig.cap="\\textbf{Relative protein abundance correlates with relative mRNA abundance for reporter constructs with modified 3'UTRs.} (\\textbf{A}) Fold changes in RT-qPCR vs fold changes in mCherry fluorescence for all terminator constructs in the pRPS3-mCherry-tRPS3 and pTSA1-mCherry-tTSA1 pairings. Transcript abundance is relative to the mod0 construct of each promoter-terminator pairing. (\\textbf{B}) Fold changes in RT-qPCR vs fold changes in mCherry fluorescence for all terminator constructs in the pPIR1-mCherry-tPIR1 pairing. Transcript abundance is relative to WT construct of the promoter-terminator pairing. The mean and standard error calculated over 6 biological replicates is plotted for each construct.", fig.align='center' , out.width="98%"}
-knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"), dpi = 300) 
-```
-
-```{r motif-position-histograms, fig.cap="\\textbf{Relative positions of ATATTC, TGTAHMNUA and HWNCAUUWY motifs in native 3'UTRs.} Histogram shows the counts of the motif occurrences in 3'UTRs relative to the total length of 3'UTR, where 0 would be starting exactly at the stop codon and 1 would be at the reported poly(A)-site. See (methods or ref to data repository) for details.", fig.align='center', out.width="98%"}
-knitr::include_graphics(here("supplementary_data_chapter/figures/motif_position_histograms.png"), dpi = 300) 
-```
 \arrayrulecolor{white}
+
 ```{r mCherry-seq}
 knitr::kable(tibble("mCherry construct sequences are available on the manuscript github repo." = "https://github.com/DimmestP/chimera_project_manuscript/ supplementary_data_chapter/data/ mCherry_fluorescence_reporter_dna_sequences.csv"), caption = "\\textbf{Table showing the DNA sequences for all mCherry reporter constructs.}", format = "latex", align = "c")  %>%
   kableExtra::kable_styling(latex_options = "hold_position", font_size = 7) %>%
@@ -46,7 +42,9 @@ knitr::kable(tibble("mTurq construct sequences are available on the manuscript g
   kableExtra::kable_styling(latex_options = "hold_position", font_size = 7) %>%
   kableExtra::column_spec(1, width="30em")
 ```
+
 \arrayrulecolor{black}
+
 ```{r chimera-qpcr-primers-table}
 qpcr_primers <- readr::read_csv(here::here("./supplementary_data_chapter/data/chimera_qpcr_primers.csv"))
 knitr::kable(qpcr_primers, caption = "\\textbf{Primer sequences created for all qPCR experiments.}", format = "latex")  %>%
@@ -64,8 +62,6 @@ knitr::kable(format = "latex", caption="\\textbf{Selecting the HWNCAUUWY motif, 
   kableExtra::row_spec(0, bold = TRUE, font_size = 7)
 ```
 
-
-
 ```{r TGTAHMNTA-motif-coef}
 read.csv(here("./supplementary_data_chapter/data/UGUAHMNUA_shortlisted_motif_table.csv")) %>%
   dplyr::transmute(Motif = term,  `Total Count` = total_count, Coef = estimate, `p.value`)  %>%
@@ -81,6 +77,19 @@ knitr::kable(minimum_free_energy, caption = "\\textbf{Table showing minimum free
   kableExtra::row_spec(0, bold = TRUE, font_size = 7) %>%
   kableExtra::column_spec(3, width = "8em")
 ```
+
+\pagebreak
+
+## Supplementary Figures
+
+```{r protein-vs-RNA-plot-motifs, fig.cap="\\textbf{Relative protein abundance correlates with relative mRNA abundance for reporter constructs with modified 3'UTRs.} (\\textbf{A}) Fold changes in RT-qPCR vs fold changes in mCherry fluorescence for all terminator constructs in the pRPS3-mCherry-tRPS3 and pTSA1-mCherry-tTSA1 pairings. Transcript abundance is relative to the mod0 construct of each promoter-terminator pairing. (\\textbf{B}) Fold changes in RT-qPCR vs fold changes in mCherry fluorescence for all terminator constructs in the pPIR1-mCherry-tPIR1 pairing. Transcript abundance is relative to WT construct of the promoter-terminator pairing. The mean and standard error calculated over 6 biological replicates is plotted for each construct.", fig.align='center' , out.width="98%"}
+knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"), dpi = 300) 
+```
+
+```{r motif-position-histograms, fig.cap="\\textbf{Relative positions of ATATTC, TGTAHMNUA and HWNCAUUWY motifs in native 3'UTRs.} Histogram shows the counts of the motif occurrences in 3'UTRs relative to the total length of 3'UTR, where 0 would be starting exactly at the stop codon and 1 would be at the reported poly(A)-site. See (methods or ref to data repository) for details.", fig.align='center', out.width="98%"}
+knitr::include_graphics(here("supplementary_data_chapter/figures/motif_position_histograms.png"), dpi = 300) 
+```
+
 
 ```{r polyA-site-usage-5Pseq, fig.cap="\\textbf{Decapped constructs measured by 5Pseq match mature constructs measured by QuantSeq.} pRPS3-tRPS3 constructs were chosen to investigate changes in poly(A) site usage across 5' decapped transcripts flagged for decay. (\\textbf{A}) Comparison of construct transcript abundance as independently measured by qPCR and RNA-Seq assays. Transcript abundance was normalised to the median abundance of  plasmid URA3, genomic PGK1 and RPS3 transcripts for each construct. Fold change is relative to the mod\\_NNN construct in each promoter-terminator context. The black diagonal line represents the expected values if RNAseq and qPCR results correlated perfectly. (\\textbf{B}) Cumulative counts of reads mapped downstream of WT (grey) and mod\\_NNN (golden) construct stop codons as fraction of total reads mapped to the constructs terminator. WT reads have been shifted downstream to align with the mod\\_NNN sequence by accounting for motif insertion sites. Major poly(A) sites have been highlighted by a black vertical line. Constructs also used in the QuantSeq analysis have their QuantSeq cumulative graphs plotted in dotted lines. (\\textbf{C}) Similar to Figure \\textbf{B} but with each motif insertion construct plotted separately. Columns designate cumulative plots from different terminator constructs.", fig.align='center',out.width="85%"}
 knitr::include_graphics(here("supplementary_data_chapter/figures/polya_usage_plot_5PSeq.png"))
