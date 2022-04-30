@@ -1929,14 +1929,13 @@ bookmarks,bookmarksopen=true,bookmarksnumbered=true,pdfpagelayout={OneColumn},pd
 %%%%%%%%%%%%%%%%%%%% ** USER COMMANDS ** %%%%%%%%%%%%%%%%%%%
 %
 
-
-\twocolumn
+% Edward commented out \twocolumn for initial submission to NAR.
+% \twocolumn
 \usepackage{fancyhdr}
 \fancyhf{}
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{0pt}
 \fancyheadoffset{0pt}
-\rhead{\scshape A preprint - \today}
 \cfoot{\thepage}
 \pagenumbering{arabic}
 \sloppy
