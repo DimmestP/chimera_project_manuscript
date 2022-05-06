@@ -1,5 +1,5 @@
 \onecolumn
-
+\processdelayedfloats
 # Supplementary Data
 
 \makeatletter
