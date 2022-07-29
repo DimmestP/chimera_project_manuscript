@@ -7,7 +7,10 @@ library(stringr)
 library(readr)
 # requires train_hlife_life_linear_model.R to be ran first
 #
-#
+# Extracts the motifs of interest from the model selection code and reruns prediction
+# with just these motifs to determine the variance explained with these motifs on the
+# full datasets
+
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 load(file = here("raw_data_analysis/data/hlife_model_summary"))
 

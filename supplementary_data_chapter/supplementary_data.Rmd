@@ -41,7 +41,7 @@ knitr::kable(tibble("mCherry construct sequences are available on the manuscript
 
 
 ```{r mTurq-seq}
-knitr::kable(tibble("mTurq construct sequences are available on the manuscript github repo" = "https://github.com/DimmestP/chimera_project_manuscript/ supplementary_data_chapter/data/ mTurq_fluorescence_reporter_dna_sequences.csv"), caption = "\\textbf{Table showing the DNA sequences for all mTurq reporter constructs.}", format = "latex", align = "c")  %>%
+knitr::kable(tibble("mTurq construct sequences are available on the manuscript github repo" = "https://github.com/DimmestP/chimera_project_manuscript/supplementary_data_chapter/data/ mTurq_fluorescence_reporter_dna_sequences.csv"), caption = "\\textbf{Table showing the DNA sequences for all mTurq reporter constructs.}", format = "latex", align = "c")  %>%
   kableExtra::kable_styling(latex_options = "hold_position", font_size = 7) %>%
   kableExtra::column_spec(1, width="30em")
 ```

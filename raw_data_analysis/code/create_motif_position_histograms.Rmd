@@ -3,11 +3,9 @@ title: "Motif position histograms"
 output: html_document
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+Calculates the positions of the motifs of interest in genes where they appear natively. Then creates a histogram of motif position (relative to gene length) in order to determine if a particular motif appears closer to the polyA site or the stop codon. This is used to inform the creation of the synthetic 3'UTR constructs. This plot appear in the paper's supplementary data.
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
-```{r}
+```{r setup}
 library(tidyr)
 library(here)
 library(readr)
@@ -37,9 +35,14 @@ motifs_dictionary <- tibble(motifIUPAC = motifs_raw,
 
 ```{r calculate_position}
 # extract motif regex
-HWNCAUUWY <- motifs_dictionary %>% filter(motifIUPAC == "HWNCAUUWY") %>% pull(motifsRegex) %>% unique()
+HWNCAUUWY <- motifs_dictionary %>% 
+  filter(motifIUPAC == "HWNCAUUWY") %>% 
+  pull(motifsRegex) %>% 
+  unique()
 
-TGTAHMNUA <- motifs_dictionary %>% filter(motifIUPAC == "UGUAHMNUA") %>% pull(motifsRegex) %>% unique()
+TGTAHMNUA <- motifs_dictionary %>% 
+  filter(motifIUPAC == "UGUAHMNUA") %>% 
+  pull(motifsRegex) %>% unique()
 
 # function to return only start position
 only_motif_start_pos <- function(string,pattern){str_locate(string, pattern)[,1]}
@@ -51,22 +54,37 @@ motif_positions <- yeast_3UTRs %>%
          HWNCAUUWY_pos = only_motif_start_pos(threePrimeUTR,HWNCAUUWY) / length)
 ```
 
-```{r plot_position}
-plot_data_HWNCAUUWY <- motif_positions %>% select(geneName, HWNCAUUWY_pos) %>% filter(!is.na(HWNCAUUWY_pos))  %>% arrange(HWNCAUUWY_pos) %>% mutate(count = 1, cumulative= cumsum(count))
+```{r plot_position_histograms}
+# separate positions by motif
 
-plot_data_TGTAHMNUA <- motif_positions %>% select(geneName, TGTAHMNUA_pos) %>% filter(!is.na(TGTAHMNUA_pos))  %>% arrange(TGTAHMNUA_pos) %>% mutate(count = 1, cumulative= cumsum(count))
+plot_data_HWNCAUUWY <- motif_positions %>% 
+  select(geneName, HWNCAUUWY_pos) %>% 
+  filter(!is.na(HWNCAUUWY_pos)) %>% 
+  arrange(HWNCAUUWY_pos) %>% 
+  mutate(count = 1, cumulative= cumsum(count))
 
-plot_data_ATATTC <- motif_positions %>% select(geneName, ATATTC_pos) %>% filter(!is.na(ATATTC_pos))  %>% arrange(ATATTC_pos) %>% mutate(count = 1, cumulative= cumsum(count))
+plot_data_TGTAHMNUA <- motif_positions %>% 
+  select(geneName, TGTAHMNUA_pos) %>% 
+  filter(!is.na(TGTAHMNUA_pos))  %>% 
+  arrange(TGTAHMNUA_pos) %>% 
+  mutate(count = 1, cumulative= cumsum(count))
 
-HWNCAUUWY_position_plot <- ggplot(plot_data_HWNCAUUWY) + geom_histogram(aes(x=HWNCAUUWY_pos)) +
+plot_data_ATATTC <- motif_positions %>% 
+  select(geneName, ATATTC_pos) %>% 
+  filter(!is.na(ATATTC_pos))  %>% 
+  arrange(ATATTC_pos) %>% 
+  mutate(count = 1, cumulative= cumsum(count))
+
+# create histograms
+
+HWNCAUUWY_position_plot <- ggplot(plot_data_HWNCAUUWY) + 
+  geom_histogram(aes(x=HWNCAUUWY_pos)) +
   labs(title = "HWNCAUUWY Position in Native 3'UTRs",
        x = "Relative Position",
-       y = ""
-  ) +
-  theme(plot.title = element_text(hjust=0.5), axis.title.x = element_text(size = 15)) +
+       y = "") +
+  theme(plot.title = element_text(hjust=0.5), 
+        axis.title.x = element_text(size = 15)) +
   scale_x_continuous(expand = c(0,0))
-
-HWNCAUUWY_position_plot
 
 TGTAHMNUA_position_plot <- ggplot(plot_data_TGTAHMNUA) + geom_histogram(aes(x=TGTAHMNUA_pos)) +
   labs(title = "TGTAHMNUA Position in Native 3'UTRs",
@@ -76,8 +94,6 @@ TGTAHMNUA_position_plot <- ggplot(plot_data_TGTAHMNUA) + geom_histogram(aes(x=TG
   theme(plot.title = element_text(hjust=0.5), axis.title.y = element_text(size = 15)) +
   scale_x_continuous(expand = c(0,0))
 
-TGTAHMNUA_position_plot
-
 ATATTC_position_plot <- ggplot(plot_data_ATATTC) + geom_histogram(aes(x=ATATTC_pos)) +
   labs(title = "ATATTC Position in Native 3'UTRs",
        x = "",
@@ -86,10 +102,12 @@ ATATTC_position_plot <- ggplot(plot_data_ATATTC) + geom_histogram(aes(x=ATATTC_p
   theme(plot.title = element_text(hjust=0.5)) +
   scale_x_continuous(expand = c(0,0))
 
-ATATTC_position_plot
+# visualise plots
+cowplot::plot_grid(ATATTC_position_plot, 
+                   TGTAHMNUA_position_plot, 
+                   HWNCAUUWY_position_plot, ncol = 1)
 
-cowplot::plot_grid(ATATTC_position_plot, TGTAHMNUA_position_plot, HWNCAUUWY_position_plot, ncol = 1)
-
+# save plot
 ggsave(here("./supplementary_data_chapter/figures/motif_position_histograms.png"),
        cowplot::plot_grid(ATATTC_position_plot, TGTAHMNUA_position_plot, HWNCAUUWY_position_plot, ncol = 1),
        width = fig_width_2column, 

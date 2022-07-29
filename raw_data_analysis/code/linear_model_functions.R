@@ -5,23 +5,6 @@ library(stringr)
 library(readr)
 library(testthat)
 
-# Function to count the number of each codon in an ORF
-# ORF_name is a string containing the name of the ORFE
-# ORF_string is a charactor vector containing an ORF
-# Returns a tibble containing the codon counts associated with that ORF
-count_codons <- function(ORF_string) { 
-  if((str_length(ORF_string) %% 3) != 0) stop("ORF does not have the right number of nucleotides to split into codon triplets.")
-  codon_count <- tibble(codon = gsub("([ATCG]{3})([ATCG]{3})",'\\1,\\2,',as.character(ORF_string))) %>%
-    separate_rows(codon,sep = ",") %>% 
-    filter(codon != "") %>%
-    group_by(codon) %>%
-    summarise(counts=n(), .groups = "keep")
-  return(codon_count)
-}
-#test_that("correct codon counts are calculated for a given ORF.", {
-#  expect_equal(count_codons("TTTTTCTTT"),tibble(codon=c("TTC","TTT"),counts=as.integer(c(1,2))))
-#})
-
 # list of sense codons
 sense_codons <- c("TTT", "TTC", "TTA", "TTG", "TCT", "TCC", "TCA", "TCG", "TAT", "TAC", "TGT", "TGC", "TGG", "CTT", "CTC", "CTA", "CTG", "CCT", "CCC", "CCA", "CCG", "CAT", "CAC", "CAA", "CAG", "CGT", "CGC", "CGA", "CGG", "ATT", "ATC", "ATA", "ATG", "ACT", "ACC", "ACA", "ACG", "AAT", "AAC", "AAA", "AAG", "AGT", "AGC", "AGA", "AGG", "GTT", "GTC", "GTA", "GTG", "GCT", "GCC", "GCA", "GCG", "GAT", "GAC", "GAA", "GAG", "GGT", "GGC", "GGA", "GGG")
 

@@ -2,7 +2,10 @@
 title: "Comparison of hlife predicted abundance changes and qPCR results"
 output: html_document
 ---
-# Requires train_half_life_model.R to be ran first
+Compares the predicted motif effect from the half life model to new qPCR data measure construct abundance. Creates the summary figure qPCR_model_coef_and_pred_vs_exp_abund.png used in the results section in the paper.
+
+Requires train_half_life_model.R to be ran first
+
 ```{r load_data}
 library(here)
 library(dplyr)
@@ -50,6 +53,10 @@ hlife_coefficients_PIR1 <- read_csv(here("./raw_data_analysis/data/chan_motif_co
   summarise(predict_motif_effect = sum(count * Coefficient), .groups = "drop") %>%
   mutate(predict_motif_effect = predict_motif_effect - predict_motif_effect[construct == "WT"])
 
+```
+
+```{r normalise-qPCR-counts-to-control-construct}
+
 # function to calculate mean cq value for control construct 
 mean_control <- function(cq_value, construct, control = "mod0"){
   cq_value[construct == {{control}}] %>% mean()
@@ -96,6 +103,8 @@ combined_pred_vs_actual_abund_TSA1_RPS3 %>%
 promoter_dictionary_TSA1_RPS3 <- tibble( pro = c("pPGK1", "Native", "pSRO9", "pPGK1", "Native", "pSRO9"), promoter = c("pPGK1", "pTSA1", "pSRO9", "pPGK1", "pRPS3", "pSRO9"))
 
 promoter_dictionary_PIR1 <- tibble( pro = c("pPGK1", "Native", "pSRO9"), promoter = c("pPGK1", "pPIR1", "pSRO9"))
+
+# calculate correlation
 
 r_cor_data_TSA1_RPS3 <- combined_pred_vs_actual_abund_TSA1_RPS3 %>% 
   group_by(construct, terminator, promoter) %>% 

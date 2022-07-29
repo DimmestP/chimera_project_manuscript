@@ -298,7 +298,7 @@ class platereader:
         ###
         try:
             print('loading', dname)
-            dfd= pd.read_excel(self.wdir + dname, sheet_number= dsheetnumber)
+            dfd= pd.read_excel(self.wdir + dname, sheet_name= dsheetnumber)
             experiment= dname.split('.')[0]
             self.allexperiments.append(experiment)
         except FileNotFoundError:
