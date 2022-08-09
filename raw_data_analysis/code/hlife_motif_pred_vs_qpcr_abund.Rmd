@@ -190,7 +190,9 @@ pred_vs_abundance_combined <- plot_grid(pred_vs_abundance_RPS3_TSA1,
            align = "v", axis= "lr",
            labels = c("A","","B"))
 
+```
 
+```{r save-results, eval = FALSE}
 # combine with motif_multi_context_coefficient figure to make two panel image
 
 ggsave(pred_vs_abundance_combined, 

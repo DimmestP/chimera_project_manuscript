@@ -9,6 +9,7 @@ library(dplyr)
 library(tibble)
 library(stringr)
 library(readr)
+library(tidyr)
 library(here)
 library(cowplot)
 library(latex2exp)
@@ -187,8 +188,14 @@ individual_linear_model_coefficients_points <-
   geom_vline(xintercept = c(1.5,2.5), colour = "grey50", size = 0.1)
 
 individual_linear_model_coefficients_points
+```
 
+```{r save-results, eval = FALSE}
 # replace by saving a separate figure panel???
 save(individual_linear_model_coefficients_points, file = here("raw_data_analysis/data/motif_multi_context_coefficient.Rdata"))
+
+write_csv(individual_lm_coefficients_data %>%
+            transmute(motif = term, Promoter = promoter, Terminator = terminator, `log2 fold change` = -estimate, p.adj = p.adjust(p.value, method = "fdr")),
+          here("supplementary_data_chapter/data/motif_coefficients_and_pvalue.csv"))
 
 ```

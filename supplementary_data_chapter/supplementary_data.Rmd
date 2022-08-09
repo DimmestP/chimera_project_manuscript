@@ -17,7 +17,11 @@
 
 ```{r}
 library(here)
+library(knitr)
 library(tidyr)
+library(readr)
+library(dplyr)
+library(kableExtra)
 knitr::opts_chunk$set(fig.pos = "p", dpi = 300)
 ```
 
@@ -33,7 +37,7 @@ knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual
 \arrayrulecolor{white}
 
 ```{r mCherry-seq}
-knitr::kable(tibble("mCherry construct sequences are available on the manuscript github repo." = "https://github.com/DimmestP/chimera_project_manuscript/ supplementary_data_chapter/data/ mCherry_fluorescence_reporter_dna_sequences.csv"), caption = "\\textbf{Table showing the DNA sequences for all mCherry reporter constructs.}", format = "latex", align = "c")  %>%
+knitr::kable(tibble("mCherry construct sequences are available on the manuscript github repo." = "https://github.com/DimmestP/chimera_project_manuscript/ tree/main/supplementary_data_chapter/data/ mCherry_fluorescence_reporter_dna_sequences.csv"), caption = "\\textbf{Table showing the DNA sequences for all mCherry reporter constructs.}", format = "latex", align = "c")  %>%
   kableExtra::kable_styling(latex_options = "hold_position", font_size = 7) %>%
   kableExtra::column_spec(1, width="30em")
 
@@ -41,7 +45,7 @@ knitr::kable(tibble("mCherry construct sequences are available on the manuscript
 
 
 ```{r mTurq-seq}
-knitr::kable(tibble("mTurq construct sequences are available on the manuscript github repo" = "https://github.com/DimmestP/chimera_project_manuscript/supplementary_data_chapter/data/ mTurq_fluorescence_reporter_dna_sequences.csv"), caption = "\\textbf{Table showing the DNA sequences for all mTurq reporter constructs.}", format = "latex", align = "c")  %>%
+knitr::kable(tibble("mTurq construct sequences are available on the manuscript github repo" = "https://github.com/DimmestP/chimera_project_manuscript/ tree/main/supplementary_data_chapter/data/ mTurq_fluorescence_reporter_dna_sequences.csv"), caption = "\\textbf{Table showing the DNA sequences for all mTurq reporter constructs.}", format = "latex", align = "c")  %>%
   kableExtra::kable_styling(latex_options = "hold_position", font_size = 7) %>%
   kableExtra::column_spec(1, width="30em")
 ```
@@ -79,6 +83,279 @@ knitr::kable(minimum_free_energy, caption = "\\textbf{Table showing minimum free
   kableExtra::kable_styling(latex_options = "hold_position", font_size = 7)  %>%
   kableExtra::row_spec(0, bold = TRUE, font_size = 7) %>%
   kableExtra::column_spec(3, width = "8em")
+```
+
+```{r insertion-construct-ttest, results='asis'}
+motif_construct_ttests <- read_csv(here("supplementary_data_chapter/data/motif_construct_ttests.csv")) 
+# Setting `results = 'asis'` allows for using Latex within the code chunk
+    cat('\\begin{table}')
+    cat('\\centering \\begingroup\\fontsize{7}{9}\\selectfont')
+    # `{c c}` Creates a two column table
+    # Use `{c | c}` if you'd like a line between the tables
+    cat('{\\renewcommand{\\arraystretch}{1}')
+    cat('\\begin{tabular}{ c c }')
+    cat('\\textbf{mod\\_NAA} & \\textbf{mod\\_NTN} \\\\')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator != "tPIR1", mod_label == "mod_NAA") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator != "tPIR1", mod_label == "mod_NTN") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex" ) %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\\\')
+    cat('\\textbf{mod\\_HNH} & \\textbf{mod\\_HTH} \\\\')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator != "tPIR1", mod_label == "mod_HNH") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator != "tPIR1", mod_label == "mod_HTH") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\\\')
+    cat('\\textbf{mod\\_NGG} & \\textbf{WT} \\\\')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator != "tPIR1", mod_label == "mod_NGG") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator != "tPIR1", mod_label == "WT") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\end{tabular}}\\endgroup{}')
+    cat("\\caption{\\textbf{Tables showing fold changes in transcript abundance of promoter-terminator constructs with different inserted motifs. Tables are sorted by fold change which is calculated with respect to that promoter-terminator construct's mod\\_NNN.}}")
+    cat('\\end{table}')
+
+```
+
+```{r deletion-construct-ttest, results='asis'}
+# Setting `results = 'asis'` allows for using Latex within the code chunk
+    cat('\\begin{table}')
+    cat('\\centering \\begingroup\\fontsize{7}{9}\\selectfont')
+    # `{c c}` Creates a two column table
+    # Use `{c | c}` if you'd like a line between the tables
+    cat('{\\renewcommand{\\arraystretch}{1}')
+    cat('\\begin{tabular}{ c c }')
+    cat('\\textbf{mod\\_NTHHH} & \\textbf{mod\\_ANHHH} \\\\')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator == "tPIR1", mod_label == "mod_NTHHH") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator == "tPIR1", mod_label == "mod_ANHHH") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex" ) %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\\\')
+    cat('\\textbf{mod\\_ATNHH} & \\textbf{mod\\_ATHNH} \\\\')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator == "tPIR1", mod_label == "mod_ATNHH") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator == "tPIR1", mod_label == "mod_ATHNH") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\\\')
+    cat('\\textbf{mod\\_ATNNN} & \\textbf{mod\\_ANNNN} \\\\')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator == "tPIR1", mod_label == "mod_ATNNN") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator == "tPIR1", mod_label == "mod_ANNNN") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\\\')
+    cat('\\textbf{mod\\_NTNNN} &  \\\\')
+    print(kable(motif_construct_ttests %>%
+              arrange(fold_change) %>%
+              filter(terminator == "tPIR1", mod_label == "mod_NTNNN") %>%
+              transmute(Promoter = promoter,
+                        Terminator = terminator,
+                        `Fold change` = fold_change,
+                        p.adj = signif(p.adj, 2)),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('& \\\\')
+    cat('\\end{tabular}}\\endgroup{}')
+    cat("\\caption{\\textbf{Tables showing fold changes in transcript abundance of promoter-terminator constructs with different deleted motifs. Tables are sorted by fold change which is calculated with respect to that promoter-terminator construct's WT.}}")
+    cat('\\end{table}')
+
+```
+
+```{r motif-abundance-effect-table, results='asis'}
+motif_abundance_effects <- read_csv(here("supplementary_data_chapter/data/motif_coefficients_and_pvalue.csv")) 
+
+# Setting `results = 'asis'` allows for using Latex within the code chunk
+    cat('\\begin{table}')
+    cat('\\centering \\begingroup\\fontsize{7}{9}\\selectfont')
+    # `{c c}` Creates a two column table
+    # Use `{c | c}` if you'd like a line between the tables
+    cat('{\\renewcommand{\\arraystretch}{1}')
+    cat('\\begin{tabular}{ c c }')
+    cat('\\textbf{ATATTC} & \\textbf{TGTAHMNTA and HWNCATTWY} \\\\')
+    print(kable(motif_abundance_effects %>%
+              arrange(`log2 fold change`) %>%
+              filter(motif == "ATATTC") %>%
+              mutate(p.adj = signif(p.adj, 2)) %>%
+                       select(-motif),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(motif_abundance_effects %>%
+              arrange(`log2 fold change`) %>%
+              filter(motif == "UGUAHMNUA:HWNCAUUWY") %>%
+              mutate(p.adj = signif(p.adj, 2)) %>%
+                       select(-motif),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\\\')
+    cat('\\textbf{TGTAHMNTA} & \\textbf{HWNCATTWY} \\\\')
+    print(kable(motif_abundance_effects %>%
+              arrange(`log2 fold change`) %>%
+              filter(motif == "UGUAHMNUA") %>%
+              mutate(p.adj = signif(p.adj, 2)) %>%
+                       select(-motif),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(motif_abundance_effects %>%
+              arrange(`log2 fold change`) %>%
+              filter(motif == "HWNCAUUWY") %>%
+              mutate(p.adj = signif(p.adj, 2)) %>%
+                       select(-motif),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\\\')
+    cat('\\textbf{GTATACCTA} &  \\\\')
+    print(kable(motif_abundance_effects %>%
+              arrange(`log2 fold change`) %>%
+              filter(motif == "GTATACCTA") %>%
+              mutate(p.adj = signif(p.adj, 2)) %>%
+                       select(-motif),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('& \\\\')
+    cat('\\end{tabular}}\\endgroup{}')
+    cat("\\caption{\\textbf{Tables showing fold changes in transcript abundance of motifs in different contexts. Tables are sorted by fold change.}}")
+    cat('\\end{table}')
+
+```
+
+```{r polya-usage-effect-table, results='asis'}
+polya_usage_pvalue <- read_csv(here("supplementary_data_chapter/data/polyA_site_p.value.csv")) 
+
+# Setting `results = 'asis'` allows for using Latex within the code chunk
+    cat('\\begin{table}')
+    cat('\\centering \\begingroup\\fontsize{7}{9}\\selectfont')
+    # `{c c}` Creates a two column table
+    # Use `{c | c}` if you'd like a line between the tables
+    cat('{\\renewcommand{\\arraystretch}{1}')
+    cat('\\begin{tabular}{ c c }')
+    cat('\\textbf{tRPS3 Site 1} & \\textbf{tRPS3 Site 2} \\\\')
+    print(kable(polya_usage_pvalue %>%
+              arrange(`p.adj`) %>%
+              filter(site == "1", terminator == "tRPS3") %>%
+              mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                       select(-site, -terminator),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(polya_usage_pvalue %>%
+              arrange(`p.adj`) %>%
+              filter(site == "2", terminator == "tRPS3") %>%
+              mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                       select(-site, -terminator),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\\\')
+    cat('\\textbf{tTSA1 Site 1} & \\textbf{tTSA1 Site 2} \\\\')
+    print(kable(polya_usage_pvalue %>%
+              arrange(`p.adj`) %>%
+              filter(site == "1", terminator == "tTSA1") %>%
+              mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                       select(-site, -terminator),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(polya_usage_pvalue %>%
+              arrange(`p.adj`) %>%
+              filter(site == "2", terminator == "tTSA1") %>%
+              mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                       select(-site, -terminator),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\end{tabular}}\\endgroup{}')
+    cat("\\caption{\\textbf{Tables showing relative usage of the two major Poly(A) sites in tRPS3 and tTSA1 terminators across constructs. p values are calculated using a two sided Wilcoxon signed rank exact test with respect to the mod\\_NNN construct.}}")
+    cat('\\end{table}')
+
 ```
 
 \pagebreak

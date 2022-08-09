@@ -14,6 +14,7 @@ library(cowplot)
 library(stringr)
 library(ggtext)
 library(glue)
+library(broom)
 
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 source(here("raw_data_analysis/code/shared_figure_formatting.R"))
@@ -656,6 +657,7 @@ tRPS3_missing_values <- tRPS3_WT_insertion_alpha %>%
          (read_end <= tRPS3_motif_insertion_sites$end[3] &
            read_end >= tRPS3_motif_insertion_sites$start[3])) %>%
   mutate(rel_cumulative_counts = NA,
+         rel_counts = NA,
          read_end_gap = read_end)
 
 tRPS3_missing_values_5PSeq <- tRPS3_WT_insertion_alpha_5PSeq %>%
@@ -669,6 +671,7 @@ tRPS3_missing_values_5PSeq <- tRPS3_WT_insertion_alpha_5PSeq %>%
          (read_end <= tRPS3_motif_insertion_sites$end[3] &
            read_end >= tRPS3_motif_insertion_sites$start[3])) %>%
   mutate(rel_cumulative_counts = NA,
+         rel_counts = NA,
          read_end_gap = read_end)
 
 
@@ -734,6 +737,7 @@ tTSA1_missing_values <- tTSA1_WT_insertion_alpha %>%
          (read_end <= tTSA1_motif_insertion_sites$end[3] &
            read_end >= tTSA1_motif_insertion_sites$start[3])) %>%
   mutate(rel_cumulative_counts = NA,
+         rel_counts = NA,
          read_end_gap = read_end)
 
 tTSA1_WT_insertion_gaps <- full_length_QuantSeq_plasmids_cumulative_polyA_reads %>%
@@ -1018,7 +1022,7 @@ relative_polya_counts_QuantSeq_and_5PSeq <- plot_grid(QuantSeq_relative_polya_co
           rel_heights = c(1, 0.5, 0.7))
 ```
 
-```{r print-out-quantseq-results}
+```{r print-out-quantseq-results, eval=FALSE}
 ggsave2(here("./results_chapter/figures/polya_usage_plot_QuantSeq.png"), 
         quantseq_polya_site_usage_plot, 
         width = fig_width_2column,
@@ -1117,7 +1121,138 @@ polya_site_usage_plot_5PSeq <- plot_grid(plot_grid(qPCR_vs_RNASeq_plot_5PSeq,
           rel_heights = c(1,2))
 ```
 
-```{r print-out-5pseq-results}
+```{r calc-Wilcoxon-test}
+calc_Wilcoxon_test <- function(polyA_site_reads_construct, polyA_site_reads_mod_NNN){
+  polyA_site_reads <- tibble(rel_counts = polyA_site_reads_construct,
+                             mod_NNN = polyA_site_reads_mod_NNN)
+  
+  wilcox.test(polyA_site_reads %>%
+                filter(!is.na(rel_counts), !is.na(mod_NNN)) %>%
+                pull(rel_counts),
+              polyA_site_reads %>% 
+                filter(!is.na(rel_counts), !is.na(mod_NNN)) %>% 
+                pull(mod_NNN),
+              paired = TRUE) %>%
+    tidy()
+}
+tRPS3_WT_polyA_site_counts <- tRPS3_WT_insertion_alpha %>%
+  bind_rows(tRPS3_missing_values) %>%
+  filter(promoter != "pTSA1",
+         !URA3,
+        read_end_gap < 170) %>% 
+  replace_na(list(rel_counts = 0)) %>%
+  group_by(terminator,
+           promoter,
+           label,
+           read_end_gap) %>% 
+  summarise(rel_counts = mean(rel_counts)) %>%
+  group_by(terminator,
+           promoter,
+           read_end_gap) %>%
+  mutate(mod_NNN = rel_counts[label == "mod_NNN"])
+
+tTSA1_WT_polyA_site_counts <- tTSA1_WT_insertion_alpha %>%
+  bind_rows(tTSA1_missing_values) %>%
+  filter(promoter == "pTSA1",
+         !URA3,
+        read_end_gap < 170) %>% 
+  replace_na(list(rel_counts = 0)) %>%
+  group_by(terminator,
+           promoter,
+           label,
+           read_end_gap) %>% 
+  summarise(rel_counts = mean(rel_counts)) %>%
+  group_by(terminator,
+           promoter,
+           read_end_gap) %>%
+  mutate(mod_NNN = rel_counts[label == "mod_NNN"])
+
+tTSA1_polyA_site_1_max <- tTSA1_WT_polyA_site_counts %>%
+  filter(read_end_gap < 130, 
+         read_end_gap >= 120) %>% 
+  group_by(promoter, 
+           terminator,  
+           label) %>% 
+  summarise(max_rel_counts = max(rel_counts, na.rm = TRUE)) %>%
+  mutate(site = 1)
+
+tTSA1_polyA_site_1 <- tTSA1_WT_polyA_site_counts %>%
+  filter(read_end_gap < 130, 
+         read_end_gap >= 120) %>%
+  group_by(promoter,
+           terminator,
+           label) %>%
+  summarise(calc_Wilcoxon_test(rel_counts, mod_NNN)) %>%
+  mutate(site = 1)
+
+tRPS3_polyA_site_1_max <- tRPS3_WT_polyA_site_counts %>%
+  filter(read_end_gap < 65, 
+         read_end_gap >= 55) %>% 
+  group_by(promoter, 
+           terminator,  
+           label) %>% 
+  summarise(max_rel_counts = max(rel_counts, na.rm = TRUE)) %>%
+  mutate(site = 1)
+
+tRPS3_polyA_site_1 <- tRPS3_WT_polyA_site_counts %>%
+  filter(read_end_gap < 65, 
+         read_end_gap >= 55) %>%
+  group_by(promoter,
+           terminator,
+           label) %>%
+  summarise(calc_Wilcoxon_test(rel_counts, mod_NNN)) %>%
+  mutate(site = 1)
+
+tTSA1_polyA_site_2_max <- tTSA1_WT_polyA_site_counts %>%
+  filter(read_end_gap < 140, 
+         read_end_gap >= 130) %>% 
+  group_by(promoter, 
+           terminator,  
+           label) %>% 
+  summarise(max_rel_counts = max(rel_counts, na.rm = TRUE)) %>%
+  mutate(site = 2)
+
+tTSA1_polyA_site_2 <- tTSA1_WT_polyA_site_counts %>%
+  filter(read_end_gap < 140, 
+         read_end_gap >= 130) %>%
+  group_by(promoter,
+           terminator,
+           label) %>%
+  summarise(calc_Wilcoxon_test(rel_counts, mod_NNN)) %>%
+  mutate(site = 2)
+
+tRPS3_polyA_site_2_max <- tRPS3_WT_polyA_site_counts %>%
+    filter(read_end_gap < 80, 
+           read_end_gap >= 70) %>%
+  group_by(promoter, 
+           terminator,  
+           label) %>% 
+  summarise(max_rel_counts = max(rel_counts, na.rm = TRUE)) %>%
+  mutate(site = 2)
+
+tRPS3_polyA_site_2 <- tRPS3_WT_polyA_site_counts %>%
+  filter(read_end_gap < 80, 
+         read_end_gap >= 70) %>%
+  group_by(promoter,
+           terminator,
+           label) %>%
+  summarise(calc_Wilcoxon_test(rel_counts, mod_NNN)) %>%
+  mutate(site = 2)
+
+polyA_site_p.value <- tRPS3_polyA_site_1 %>%
+  inner_join(tRPS3_polyA_site_1_max) %>%
+  bind_rows(tTSA1_polyA_site_1 %>%
+              inner_join(tTSA1_polyA_site_1_max)) %>%
+  bind_rows(tRPS3_polyA_site_2 %>%
+              inner_join(tRPS3_polyA_site_2_max)) %>%
+  bind_rows(tTSA1_polyA_site_2 %>%
+              inner_join(tTSA1_polyA_site_2_max))  %>%
+  filter(label != "mod_NNN") %>%
+  transmute(promoter, terminator, label, site, max_rel_counts, p.adj = p.adjust(p.value))
+```
+
+```{r print-out-5pseq-results, eval=FALSE}
+write_csv(polyA_site_p.value, here("supplementary_data_chapter/data/polyA_site_p.value.csv"))
 
 ggsave2(here("supplementary_data_chapter/figures/polya_usage_plot_5PSeq.png"), 
         polya_site_usage_plot_5PSeq, 
