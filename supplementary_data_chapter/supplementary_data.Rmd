@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 \onecolumn
 
 # Supplementary Data
@@ -358,6 +363,184 @@ polya_usage_pvalue <- read_csv(here("supplementary_data_chapter/data/polyA_site_
 
 ```
 
+```{r polya-usage-effect-5PSeq-table, results='asis'}
+polya_usage_pvalue_5PSeq <- read_csv(here("supplementary_data_chapter/data/polyA_site_p.value_5PSeq.csv")) 
+
+# Setting `results = 'asis'` allows for using Latex within the code chunk
+    cat('\\begin{table}')
+    cat('\\centering \\begingroup\\fontsize{7}{9}\\selectfont')
+    # `{c c}` Creates a two column table
+    # Use `{c | c}` if you'd like a line between the tables
+    cat('{\\renewcommand{\\arraystretch}{1}')
+    cat('\\begin{tabular}{ c c }')
+    cat('\\textbf{tRPS3 Site 1} & \\textbf{tRPS3 Site 2} \\\\')
+    print(kable(polya_usage_pvalue_5PSeq %>%
+              arrange(`p.value`) %>%
+              filter(site == "1", terminator == "tRPS3") %>%
+              mutate(`p.value` = signif(`p.value`, 2)) %>%
+                       select(-site, -terminator, -method, -statistic, -alternative),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(polya_usage_pvalue_5PSeq %>%
+              arrange(`p.value`) %>%
+              filter(site == "2", terminator == "tRPS3") %>%
+              mutate(`p.value` = signif(`p.value`, 2)) %>%
+                       select(-site, -terminator, -method, -statistic, -alternative),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\end{tabular}}\\endgroup{}')
+    cat("\\caption{\\textbf{Tables showing relative usage of the two major Poly(A) sites in tRPS3 across constructs as detected by 5PSeq and QuantSeq. p.values are calculated by comparing the rel\\_counts of the same construct across the two RNA-seq methods using a two sided Wilcoxon signed rank exact test.}}")
+    cat('\\end{table}')
+```
+
+```{r norm-terminator-sig-effect, results='asis'}
+norm_terminator_pvalue <- read_csv(here("supplementary_data_chapter/data/norm_terminator_pvalue.csv")) 
+
+# Setting `results = 'asis'` allows for using Latex within the code chunk
+    cat('\\begin{table}')
+    cat('\\centering \\begingroup\\fontsize{7}{9}\\selectfont')
+    # `{c c}` Creates a two column table
+    # Use `{c | c}` if you'd like a line between the tables
+    cat('{\\renewcommand{\\arraystretch}{1}')
+    cat('\\begin{tabular}{ c c }')
+    cat('\\textbf{mCherry} & \\textbf{mTurq} \\\\')
+    cat(' pRPS3 &  \\\\')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pRPS3",
+                         protein == "mCherry") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pRPS3",
+                         protein == "mTurq") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE)) 
+    cat('\\\\')
+    cat(' pHSP26 &  \\\\')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pHSP26",
+                         protein == "mCherry") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pHSP26",
+                         protein == "mTurq") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE)) 
+    cat('\\\\')
+    cat('pRPS13 &  \\\\')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pRPS13",
+                         protein == "mCherry") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pRPS13",
+                         protein == "mTurq") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\\\')
+    cat(' pPGK1 &  \\\\')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pPGK1",
+                         protein == "mCherry") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pPGK1",
+                         protein == "mTurq") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\end{tabular}}\\endgroup{}')
+    cat("\\caption{\\textbf{Tables showing relative usage of the two major Poly(A) sites in tRPS3 across constructs as detected by 5PSeq and QuantSeq. p.values are calculated by comparing the rel\\_counts of the same construct across the two RNA-seq methods using a two sided Wilcoxon signed rank exact test.}}")
+    cat('\\end{table}')
+```
+
+
+
+    cat(' pHSP26 &  \\\\')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pHSP26",
+                         protein == "mCherry") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pHSP26",
+                         protein == "mTurq") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('pRPS13 &  \\\\')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pRPS13",
+                         protein == "mCherry") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pRPS13",
+                         protein == "mTurq") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat(' pPGK1 &  \\\\')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pPGK1",
+                         protein == "mCherry") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`estimate`) %>%
+                  filter(Promoter == "pPGK1",
+                         protein == "mTurq") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
 \pagebreak
 
 ## Supplementary Figures

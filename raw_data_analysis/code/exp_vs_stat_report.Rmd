@@ -42,25 +42,38 @@ pro_mTurq_ter_all_stat_phase <- read_csv(here("raw_data_analysis/data/norm_plate
 
 pro_mCherry_ter_all_stat_phase <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCherry-ter_swaps_OD_and_mCherry.csv")) %>%
   separate(strain, into = c("Promoter", "Terminator"), sep = "-mCherry-", remove = FALSE) %>%
-  mutate(Terminator = str_remove_all(Terminator, "_biorep[123456789]"))
+  separate(Terminator, into = c("Terminator", "Biorep"), sep = "_biorep")
 ```
 
-# Using OD to detect stationary and exponential growth phases
+# Aim
+- Determine if promoters or terminators display different expression patterns across the 16 hour platereader experiment
 
-The gradient of the OD curve (the growth rate) is used to determine time points that represent the stationary and exponential growth phases of the samples. The time chosen to represent exponential growth is the time of maximum growth rate (largest gradient of OD curve). The time chosen to represent stationary phase is 12 hours after the exponential growth phase. The graph below shows the chosen stationary (dotted line) and exponential (solid line) time points across bioreps for a handful of chimera strains.
+# Overview
+We have a library of 120 'chimera' constructs consisting of all combinations of 10 terminators, 6 promoters and 2 fluorescence protein ORFs. The two fluorescent proteins are mCherry and mTurq. We measured fluorescence over a 16 hour period using a platereader and analysed the results with the Omniplate software to determine the fluorescence per OD at max growth rate. Our primary analysis consisted of determining if terminators change their contributions to gene expression according to what promoter and ORF they are paired with. 
 
+We now want to see if promoters or terminators express differently at different time points. For example, as a stress response gene HSP26 would be expected to increase expression as the cells shift from exponential to stationary growth phases. Ribosomal genes like RPS3 and RPS13 should remain constant throughout. We have picked a time point to represent the start of the stationary phase and can see a significant change in mTurq fluorescence per OD for pHSP26 between exponential and stationary growth phases, but not pRPS3 and pRPS13. Unfortunately, the results between mCherry and mTurq do not correlate at the stationary phase time point. Therefore, we are not sure if the mTurq results are correct and if there is something wrong with the mCherry results. We have outlined our results and methods below in the hopes that you may be able to suggest an explaination.
 
-```{r selecting-stat-and-exp-times, echo=FALSE, warning=FALSE, message=FALSE}
+# Results
+
+## Using OD to select stationary and exponential growth phases
+
+The time chosen to represent exponential growth is the time of maximum growth rate as calculated by Omniplate. The time chosen to represent stationary phase is when the OD is first detected to reach 0.6. We chose an OD of 0.6 because we wanted the last time point before OD becomes saturated (so we could still normalise fluorescence by OD). The graph below shows the chosen stationary (dotted line) and exponential (solid line) time points across bioreps for a handful of chimera strains.
+
+```{r od-graphs, echo=FALSE, message=FALSE, warning=FALSE}
 mTurq_stat_and_exp_phase_time <- mTurq_stat_phase_time %>%
-  bind_rows(mTurq_stat_phase_time %>%
-              mutate(time = time + 12, Growth = "Stat"))
+  bind_rows(pro_mTurq_ter_all_stat_phase %>%
+              filter(`OD mean` > 0.6, !is.na(Terminator)) %>%
+              group_by(experiment, strain, Promoter, Terminator) %>%
+              summarise(time = time[1]) %>%
+              mutate(Growth = "Stat"))
 
 mCherry_stat_and_exp_phase_time <- mCherry_stat_phase_time %>%
-  bind_rows(mCherry_stat_phase_time %>%
-              mutate(time = time + 12, Growth = "Stat"))
+  bind_rows(pro_mCherry_ter_all_stat_phase %>%
+                       filter(`OD mean` > 0.6, !is.na(Terminator)) %>%
+                       group_by(experiment, strain, Promoter, Terminator) %>%
+                       summarise(time = time[1]) %>% 
+                       mutate(Growth = "Stat"))
 
-
-  
 ggplot(pro_mTurq_ter_all_stat_phase %>%
   filter(!is.na(Terminator),
   Promoter %in% c("pHSP26", "pPGK1", "pRPS3", "pCLN2"),
@@ -71,7 +84,8 @@ ggplot(pro_mTurq_ter_all_stat_phase %>%
                filter(Promoter %in% c("pHSP26", "pPGK1", "pRPS3", "pCLN2"),
                       Terminator %in% c("tHSP26", "tPGK1", "tRPS3", "tCLN2")),
              show.legend = FALSE) +
-  facet_grid(Promoter ~ Terminator) +
+  facet_grid(Promoter ~ Terminator,
+             scales = "free_y") +
   labs(title = "mTurq: Selected stationary and exponential phase timepoints",
        y = "OD")
 
@@ -79,22 +93,23 @@ ggplot(pro_mCherry_ter_all_stat_phase %>%
   filter(!is.na(Terminator),
   Promoter %in% c("pHSP26", "pPGK1", "pRPS3", "pCLN2"),
   Terminator %in% c("tHSP26", "tPGK1", "tRPS3", "tCLN2"))) +
-  geom_line(aes(x = time, y = `OD mean`, colour = experiment),
+  geom_line(aes(x = time, y = `OD mean`, colour = Biorep),
             show.legend = FALSE) +
   geom_vline(aes(xintercept = time, linetype = Growth), data = mCherry_stat_and_exp_phase_time %>%
                filter(Promoter %in% c("pHSP26", "pPGK1", "pRPS3", "pCLN2"),
                       Terminator %in% c("tHSP26", "tPGK1", "tRPS3", "tCLN2")),
              show.legend = FALSE) +
-  facet_grid(Promoter ~ Terminator) +
+  facet_grid(Promoter ~ Terminator,
+             scales = "free_y") +
   labs(title = "mCherry: Selected stationary and exponential phase timepoints",
-       y = "OD")
+       y = "OD mean")
 ```
 
 ## Fluorescence of high expressing promoters across growth stages
 
-The fluorescence per od of RPS3, RPS13, PGK1 and HSP26 promoter chimeras across the two time points. With mTurq, the figure below suggests that the ribosomal promoters have steady expression across the two timepoints. However, HSP26 and PGK1 increase expression dramatically between stationary and exponential phases. On the other hand, mCherry fluorescence suggests most promoters do not change across time points. Except for pHSP26 which appears to reduce in expression during stationary phase.
+The fluorescence per od of RPS3, RPS13, PGK1 and HSP26 promoter chimeras across the two time points. With mTurq, the figure below suggests that the ribosomal promoters have steady expression across the two timepoints. However, HSP26 and PGK1 increase expression between stationary and exponential phases. On the other hand, mCherry fluorescence suggests most promoters do not change across time points. Except for pHSP26 which appears to reduce in expression during stationary phase.
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r paper-figure, echo=FALSE, message=FALSE, warning=FALSE}
 high_exp_pro_mTurq <- pro_mTurq_ter_all_stat_phase %>%
   filter(!Promoter %in% c("pSRO9", "pCLN2"))
 
@@ -104,7 +119,7 @@ high_exp_pro_mCherry <- pro_mCherry_ter_all_stat_phase %>%
 mTurq_stat_phase<- mTurq_stat_and_exp_phase_time %>%
   pivot_wider(names_from = Growth, values_from = time) %>%
   inner_join(high_exp_pro_mTurq) %>%
-  group_by(Promoter, Terminator, experiment) %>%
+  group_by(Promoter, Terminator, experiment, strain) %>%
   summarise(fluo_per_OD_at_max_gr = (`c-mTurq-60perod`[time > Exp])[1], Growth = "Exponential") %>%
   bind_rows(mTurq_stat_and_exp_phase_time %>%
               pivot_wider(names_from = Growth, values_from = time) %>%
@@ -117,12 +132,12 @@ mTurq_stat_phase<- mTurq_stat_and_exp_phase_time %>%
 mCherry_stat_phase <- mCherry_stat_and_exp_phase_time %>%
   pivot_wider(names_from = Growth, values_from = time) %>%
   inner_join(high_exp_pro_mCherry) %>%
-  group_by(Promoter, Terminator, strain) %>%
+  group_by(Promoter, Terminator, experiment, strain) %>%
   summarise(fluo_per_OD_at_max_gr = (`c-mCherry-100perod`[time > Exp])[1], Growth = "Exponential") %>%
   bind_rows(mCherry_stat_and_exp_phase_time %>%
               pivot_wider(names_from = Growth, values_from = time) %>%
               inner_join(high_exp_pro_mCherry) %>%
-              group_by(Promoter, Terminator, strain) %>%
+              group_by(Promoter, Terminator, experiment, strain) %>%
               summarise(fluo_per_OD_at_max_gr = (`c-mCherry-100perod`[time > Stat])[1], Growth = "Stationary")) %>%
     ungroup() %>%
   mutate(Protein = "mCherry")
@@ -169,10 +184,75 @@ ggplot(mCherry_stat_phase) +
 
 ```
 
-## Terminator luorescence normalised to tPGK1 across growth stages
-Normalising the fluorescence of all terminators paired with a promoter to the PGK1 promoter-terminator pair shows little difference in terminator expression levels across the time points.
+# Comparing differences in fluorescence curves with each fluorescent protein
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+The differences in the mCherry and mTurq results are reflected in the fluorescence curves for each construct. The mTurq fluorescence per OD time course shows the fluorescence increasing with time for all constructs after 5 hours have past. Interestingly, the HSP26 promoter constructs all seem to have a later point of inflection than other promoters suggesting it is expressed at a later time point. The mCherry fluorescence per OD time course shows a very different picture with very few constructs showing significant increases over time. Comparing fluorescence curves before normalising with OD shows that mCherry is more noisy and has lower fluorescence than mTurq. However, we're not sure how this could lead to such different results across the exponential and stationary phase time points. 
+
+```{r selecting-stat-and-exp-times, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(pro_mTurq_ter_all_stat_phase %>%
+  filter(!is.na(Terminator),
+  Promoter %in% c("pHSP26", "pPGK1", "pRPS3", "pCLN2"),
+  Terminator %in% c("tHSP26", "tPGK1", "tRPS3", "tCLN2"))) +
+  geom_line(aes(x = time, y = `c-mTurq-60perod`, colour = experiment),
+            show.legend = FALSE) +
+  geom_vline(aes(xintercept = time, linetype = Growth), data = mTurq_stat_and_exp_phase_time %>%
+               filter(Promoter %in% c("pHSP26", "pPGK1", "pRPS3", "pCLN2"),
+                      Terminator %in% c("tHSP26", "tPGK1", "tRPS3", "tCLN2")),
+             show.legend = FALSE) +
+  facet_grid(Promoter ~ Terminator,
+             scales = "free_y") +
+  labs(title = "mTurq: Fluorescence per OD time course",
+       y = "c-mTurq-60perod")
+
+ggplot(pro_mCherry_ter_all_stat_phase %>%
+  filter(!is.na(Terminator),
+  Promoter %in% c("pHSP26", "pPGK1", "pRPS3", "pCLN2"),
+  Terminator %in% c("tHSP26", "tPGK1", "tRPS3", "tCLN2"))) +
+  geom_line(aes(x = time, y = `c-mCherry-100perod`, colour = Biorep),
+            show.legend = FALSE) +
+  geom_vline(aes(xintercept = time, linetype = Growth), data = mCherry_stat_and_exp_phase_time %>%
+               filter(Promoter %in% c("pHSP26", "pPGK1", "pRPS3", "pCLN2"),
+                      Terminator %in% c("tHSP26", "tPGK1", "tRPS3", "tCLN2")),
+             show.legend = FALSE) +
+  facet_grid(Promoter ~ Terminator,
+             scales = "free_y") +
+  labs(title = "mCherry: Fluorescence per OD time course",
+       y = "c-mCherry-100-perod")
+```
+
+```{r fluorescence-graphs, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(pro_mTurq_ter_all_stat_phase %>%
+  filter(!is.na(Terminator),
+  Promoter %in% c("pHSP26", "pPGK1", "pRPS3", "pCLN2"),
+  Terminator %in% c("tHSP26", "tPGK1", "tRPS3", "tCLN2"))) +
+  geom_line(aes(x = time, y = `c-mTurq-60`, colour = experiment),
+            show.legend = FALSE) +
+  geom_vline(aes(xintercept = time, linetype = Growth), data = mTurq_stat_and_exp_phase_time %>%
+               filter(Promoter %in% c("pHSP26", "pPGK1", "pRPS3", "pCLN2"),
+                      Terminator %in% c("tHSP26", "tPGK1", "tRPS3", "tCLN2")),
+             show.legend = FALSE) +
+  facet_grid(Promoter ~ Terminator,
+             scales = "free_y") +
+  labs(title = "mTurq: Fluorescence time course",
+       y = "c-mTurq-60")
+
+ggplot(pro_mCherry_ter_all_stat_phase %>%
+  filter(!is.na(Terminator),
+  Promoter %in% c("pHSP26", "pPGK1", "pRPS3", "pCLN2"),
+  Terminator %in% c("tHSP26", "tPGK1", "tRPS3", "tCLN2"))) +
+  geom_line(aes(x = time, y = `c-mCherry-100`, colour = Biorep),
+            show.legend = FALSE) +
+  geom_vline(aes(xintercept = time, linetype = Growth), data = mCherry_stat_and_exp_phase_time %>%
+               filter(Promoter %in% c("pHSP26", "pPGK1", "pRPS3", "pCLN2"),
+                      Terminator %in% c("tHSP26", "tPGK1", "tRPS3", "tCLN2")),
+             show.legend = FALSE) +
+  facet_grid(Promoter ~ Terminator,
+             scales = "free_y") +
+  labs(title = "mCherry: Fluorescence time course",
+       y = "c-mCherry-100")
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, eval = FALSE}
 
 ggplot(data=norm_mTurq_stat_phase) +
   labs(x="Relative fluorescence per OD relative to tPGK1", y="Terminator",
@@ -202,4 +282,4 @@ ggplot(data=norm_mCherry_stat_phase) +
 ```
 
 # Conclusion
-We have detected differences in promoter expression levels across time points with mTurq but not with mCherry. As Jamie has eluded to previously, the maturation time of the two fluorophores differs significantly. I am not entirely sure what to conclude from these results. Could maturation effects be cancelling out time based effects in mCherry or could it be introducing a false signal in mTurq? 
+We have detected differences in promoter expression levels across time points with mTurq but not with mCherry. We are not entirely sure what to conclude from these results. Are the mCherry results invalid? Is it reasonable to try and determine changes in expression across time given the mTurq results? Maybe we could valid our findings using flow cytometry with a small subset of constructs?

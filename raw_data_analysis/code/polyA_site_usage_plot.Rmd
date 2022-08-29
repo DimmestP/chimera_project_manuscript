@@ -1151,6 +1151,21 @@ tRPS3_WT_polyA_site_counts <- tRPS3_WT_insertion_alpha %>%
            read_end_gap) %>%
   mutate(mod_NNN = rel_counts[label == "mod_NNN"])
 
+tRPS3_WT_polyA_site_counts_5PSeq <- tRPS3_WT_insertion_alpha_5PSeq %>%
+  bind_rows(tRPS3_missing_values_5PSeq) %>%
+  filter(promoter != "pTSA1",
+         !URA3,
+        read_end_gap < 170) %>% 
+  replace_na(list(rel_counts = 0)) %>%
+  group_by(terminator,
+           promoter,
+           label,
+           read_end_gap) %>% 
+  summarise(rel_counts_5PSeq = mean(rel_counts)) %>%
+  inner_join(tRPS3_WT_polyA_site_counts) %>%
+  select(-mod_NNN) %>%
+  rename(rel_counts_QuantSeq = rel_counts)
+
 tTSA1_WT_polyA_site_counts <- tTSA1_WT_insertion_alpha %>%
   bind_rows(tTSA1_missing_values) %>%
   filter(promoter == "pTSA1",
@@ -1194,6 +1209,15 @@ tRPS3_polyA_site_1_max <- tRPS3_WT_polyA_site_counts %>%
   summarise(max_rel_counts = max(rel_counts, na.rm = TRUE)) %>%
   mutate(site = 1)
 
+tRPS3_polyA_site_1_max_5PSeq <- tRPS3_WT_polyA_site_counts_5PSeq %>%
+  filter(read_end_gap < 65, 
+         read_end_gap >= 55) %>% 
+  group_by(promoter, 
+           terminator,  
+           label) %>% 
+  summarise(max_rel_counts = max(rel_counts_5PSeq, na.rm = TRUE)) %>%
+  mutate(site = 1)
+
 tRPS3_polyA_site_1 <- tRPS3_WT_polyA_site_counts %>%
   filter(read_end_gap < 65, 
          read_end_gap >= 55) %>%
@@ -1201,6 +1225,15 @@ tRPS3_polyA_site_1 <- tRPS3_WT_polyA_site_counts %>%
            terminator,
            label) %>%
   summarise(calc_Wilcoxon_test(rel_counts, mod_NNN)) %>%
+  mutate(site = 1)
+
+tRPS3_polyA_site_1_5PSeq <- tRPS3_WT_polyA_site_counts_5PSeq %>%
+  filter(read_end_gap < 65, 
+         read_end_gap >= 55) %>%
+  group_by(promoter,
+           terminator,
+           label) %>%
+  summarise(calc_Wilcoxon_test(rel_counts_5PSeq, rel_counts_QuantSeq)) %>%
   mutate(site = 1)
 
 tTSA1_polyA_site_2_max <- tTSA1_WT_polyA_site_counts %>%
@@ -1230,6 +1263,15 @@ tRPS3_polyA_site_2_max <- tRPS3_WT_polyA_site_counts %>%
   summarise(max_rel_counts = max(rel_counts, na.rm = TRUE)) %>%
   mutate(site = 2)
 
+tRPS3_polyA_site_2_max_5PSeq <- tRPS3_WT_polyA_site_counts_5PSeq %>%
+    filter(read_end_gap < 80, 
+           read_end_gap >= 70) %>%
+  group_by(promoter, 
+           terminator,  
+           label) %>% 
+  summarise(max_rel_counts = max(rel_counts_5PSeq, na.rm = TRUE)) %>%
+  mutate(site = 2)
+
 tRPS3_polyA_site_2 <- tRPS3_WT_polyA_site_counts %>%
   filter(read_end_gap < 80, 
          read_end_gap >= 70) %>%
@@ -1237,6 +1279,15 @@ tRPS3_polyA_site_2 <- tRPS3_WT_polyA_site_counts %>%
            terminator,
            label) %>%
   summarise(calc_Wilcoxon_test(rel_counts, mod_NNN)) %>%
+  mutate(site = 2)
+
+tRPS3_polyA_site_2_5PSeq <- tRPS3_WT_polyA_site_counts_5PSeq %>%
+  filter(read_end_gap < 80, 
+         read_end_gap >= 70) %>%
+  group_by(promoter,
+           terminator,
+           label) %>%
+  summarise(calc_Wilcoxon_test(rel_counts_5PSeq, rel_counts_QuantSeq)) %>%
   mutate(site = 2)
 
 polyA_site_p.value <- tRPS3_polyA_site_1 %>%
@@ -1249,10 +1300,17 @@ polyA_site_p.value <- tRPS3_polyA_site_1 %>%
               inner_join(tTSA1_polyA_site_2_max))  %>%
   filter(label != "mod_NNN") %>%
   transmute(promoter, terminator, label, site, max_rel_counts, p.adj = p.adjust(p.value))
+
+polyA_site_p.value_5PSeq <- tRPS3_polyA_site_1_5PSeq %>%
+  inner_join(tRPS3_polyA_site_1_max_5PSeq) %>%
+  bind_rows(tRPS3_polyA_site_2_5PSeq %>%
+  inner_join(tRPS3_polyA_site_2_max_5PSeq))
 ```
 
 ```{r print-out-5pseq-results, eval=FALSE}
 write_csv(polyA_site_p.value, here("supplementary_data_chapter/data/polyA_site_p.value.csv"))
+
+write_csv(polyA_site_p.value_5PSeq, here("supplementary_data_chapter/data/polyA_site_p.value_5PSeq.csv"))
 
 ggsave2(here("supplementary_data_chapter/figures/polya_usage_plot_5PSeq.png"), 
         polya_site_usage_plot_5PSeq, 

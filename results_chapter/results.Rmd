@@ -99,8 +99,9 @@ readr::read_csv(here("results_chapter/data/motif_summary_table.csv")) %>%
   kableExtra::column_spec(2, width = "5.2em") %>%
   kableExtra::column_spec(3, width = "5.5em") %>%
   kableExtra::column_spec(4, width = "3.5em") %>%
-  kableExtra::column_spec(c(5,6), width = "2.6em") %>%
-  kableExtra::column_spec(7, width = "4em") %>%
+  kableExtra::column_spec(c(6,8), width = "4em") %>%
+  kableExtra::column_spec(c(5,7), width = "2.6em") %>%
+  kableExtra::column_spec(9, width = "4em") %>%
   kableExtra::row_spec(0, bold = TRUE, font_size = 7) %>%
   kableExtra::kable_styling(font_size = 5)
 ```

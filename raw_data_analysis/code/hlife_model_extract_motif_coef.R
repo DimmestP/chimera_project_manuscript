@@ -54,6 +54,19 @@ combined_motif_coefficients <- broom::tidy(chan_shortlisted_motif_model) %>%
   arrange(desc(estimate_C)) %>%
   mutate(term_descending = factor(term, levels = term)) 
 
+write_csv(combined_motif_coefficients %>%
+            filter(!term %in% c("TGCAT", "TGTAAATA")) %>%
+            transmute(`Consensus Seq` = term,
+                      `Inserted Motif` = c("GTATACCTA", "ATATTC", "TTTCATTTC", "TGTACAATA"),
+                      `Deleted Motif` = c("GTATACCTA", "ATATTC", "CTTCATTTC ATACATTAT AATCATTAT", "TGTACATTA"),
+                      `Source` = c("Shalgi", "Cheng", "Hogan", "Hogan"),
+                      `Chan Coef` = signif(estimate_C, digits = 2),
+                      `Chan p.value` = signif(p.value_C, digits = 2),
+                      `Sun Coef` = signif(estimate_S, digits = 2),
+                      `Sun p.value` = signif(p.value_S, digits = 2),
+                      `Notes` = c("Unknown", "Decay motif", "Khd1/Hek2 associated motif", "Puf4p binding motif")), 
+          here("results_chapter/data/motif_summary_table.csv"))
+
 # output motif coefficients graph
 model_coefficients <-   ggplot(combined_motif_coefficients, 
                                aes(y = estimate_C, 
