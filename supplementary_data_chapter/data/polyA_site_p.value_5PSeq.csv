@@ -1,0 +1,11 @@
+promoter,terminator,label,statistic,p.value,method,alternative,site,max_rel_counts
+pRPS3,tRPS3,WT,9,0.20124262095772402,Wilcoxon signed rank test with continuity correction,two.sided,1,0.0013633798047073434
+pRPS3,tRPS3,mod_HTH,28,1,Wilcoxon signed rank exact test,two.sided,1,0.09379310344827586
+pRPS3,tRPS3,mod_NTN,28,1,Wilcoxon signed rank exact test,two.sided,1,0.06519217032774811
+pRPS3,tRPS3,mod_NAA,28,1,Wilcoxon signed rank exact test,two.sided,1,0.10476469339495974
+pRPS3,tRPS3,mod_NNN,38,0.322265625,Wilcoxon signed rank exact test,two.sided,1,0.10168741448344015
+pRPS3,tRPS3,WT,33,0.625,Wilcoxon signed rank exact test,two.sided,2,0.10127078880269749
+pRPS3,tRPS3,mod_HTH,39,0.275390625,Wilcoxon signed rank exact test,two.sided,2,0.30160919540229886
+pRPS3,tRPS3,mod_NTN,26,0.921875,Wilcoxon signed rank exact test,two.sided,2,0.38026239502174053
+pRPS3,tRPS3,mod_NAA,42,0.16015625,Wilcoxon signed rank exact test,two.sided,2,0.20646494918649774
+pRPS3,tRPS3,mod_NNN,42,0.16015625,Wilcoxon signed rank exact test,two.sided,2,0.1988836157863513
