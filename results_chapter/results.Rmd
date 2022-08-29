@@ -42,7 +42,7 @@ We observed up to 100-fold changes in fluorescence between the 4 highest express
 Expression from the stress-induced pHSP26 was notably more variable than from pPGK1 and pRPS's, across biological replicates, when combined with both coding sequences and a variety of terminators. 
 We also confirmed that most differences in protein outputs are accounted for by changes in mRNA abundance by checking a subset of mCherry constructs using RT-qPCR ($R = 0.888$, Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)D).
 
-Terminators also affect protein output with 5-fold changes in fluorescence seen within the same promoter-CDS sets (pPGK1-mTurq-tPMA1 log2 fold change = -2.73, p.value =$1.19 ✕ 10^{-41}$), relative to the tPGK1 terminator of each group (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)A).
+Terminators also affect protein output with 5-fold changes in fluorescence seen within the same promoter-CDS sets (pPGK1-mTurq-tPMA1 log2 fold change = -2.73, p.value =$1.19 \times 10^{-41}$), relative to the tPGK1 terminator of each group (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)A).
 We focus on constructs with high-expression promoters due to the poor signal to noise ratio at low expression levels.
 The interaction of coding sequence and terminator is seen most clearly for tPAB1.
 tPAB1 is consistently the most highly expressed terminator in mTurquoise2 constructs, but is more variable in mCherry constructs.
@@ -55,7 +55,7 @@ It is known that disrupting the transcription termination signal lowers expressi
 However, standardised parts libraries often assume a fixed terminator length for all genes, which is likely to omit the termination signal for genes with longer terminators.
 In the case of the YeastFab parts library [@Guo2015] the fixed terminator length is 200bp.
 We compared a gene with a median 3'UTR length less than 200bp, RPS3 to a gene with a median 3'UTR length greater than 200bp, SRO9.
-The median length of the native RPS3 3'UTR is 86nt [@Pelechano2013]; truncating the terminator to 86bp or 59bp reduces transcript protein output by almost 2-fold (86bp Fold Change = 0.544, p-value = $2.6 ✕10^{-4}$; 59bp Fold Change = 0.517, p-value = $7.8 ✕10^{-6}$; Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B).
+The median length of the native RPS3 3'UTR is 86nt [@Pelechano2013]; truncating the terminator to 86bp or 59bp reduces transcript protein output by almost 2-fold (86bp Fold Change = 0.544, p-value = $2.6 \times 10^{-4}$; 59bp Fold Change = 0.517, p-value = $7.8 \times 10^{-6}$; Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B).
 The median length of the native SRO9 3'UTR is 543nt [@Pelechano2013]; extending the terminator length to 543bp increases transcript protein output by almost 2-fold (Fold Change = 0.581, p-value = 0.01; Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B).
 This validates our assay's ability to detect known regulatory signals affecting transcription termination, while highlighting the importance of using well-informed annotations to construct parts libraries for synthetic biology.
 Note that we used the longer 543bp SRO9 terminator, and a similarly extended 421bp PMA1 terminator, for the main set of constructs (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
@@ -169,8 +169,8 @@ Interestingly, motif effects on mRNA abundance appear to be greater than that pr
 
 We next directly compared the estimated coefficients for each motif's effect on mRNA abundance across promoter-terminator pairing (Figure \@ref(fig:hlife-predict-vs-abundance-and-motif-context-dependence)B).
 The effect of a motif depends on terminator context.
-For example, ATATTCA reduces mRNA abundance substantially more when inserted in tRPS3 than in tTSA1 (pRPS3-tRPS3 log2 Fold Change = -0.99, p-value = $1.5 ✕^{10-13}$; pTSA1-tTSA1 log2 Fold Change = -0.26, p-value = 7.3 $✕10^{-3}$). 
-Meanwhile, TGTAHMNTA significantly reduces mRNA abundance when inserted in tTSA1, but not tRPS3, whichever promoter is chosen (pRPS3-tRPS3 log2 fold Change = -0.18, p-value = 0.37; pTSA1-tTSA1 log2 fold Change = -1.30, p-value = $1.0 ✕10^{-7}$).
+For example, ATATTCA reduces mRNA abundance substantially more when inserted in tRPS3 than in tTSA1 (pRPS3-tRPS3 log2 Fold Change = -0.99, p-value = $1.5 \times 10^{-13}$; pTSA1-tTSA1 log2 Fold Change = -0.26, p-value = $7.3 \times10^{-3}$). 
+Meanwhile, TGTAHMNTA significantly reduces mRNA abundance when inserted in tTSA1, but not tRPS3, whichever promoter is chosen (pRPS3-tRPS3 log2 fold Change = -0.18, p-value = 0.37; pTSA1-tTSA1 log2 fold Change = -1.30, p-value = $1.0 \times10^{-7}$).
 Promoter choice also influences the magnitude of a motif's contribution to mRNA levels.
 For the ATATTC, TGTAHMNTA and HWNCAUUWY motifs the greatest reduction in mRNA abundance occurred when native promoter-terminator pairings are measured.
 This is true for all 3 decay motifs across all 3 host terminators, except for HWNCAUUWY in pRPS3-tRPS3 constructs (Supplementary Figure \@ref(fig:motif-abundance-effect-table)).
