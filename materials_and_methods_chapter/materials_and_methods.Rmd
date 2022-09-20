@@ -85,7 +85,7 @@ Library was sequenced using NextSeq system (Illumina) with paired-end reads.
 RNA-Seq alignment and quality control was conducted using a pipeline available online at https://github.com/DimmestP/nextflow_paired_reads_pipeline, written in Nextflow [@DiTommaso2017]. 
 Quality control was conducted with FASTQC and MultiQC reports [@Ewels2016] and adapters were removed with Cutadapt [@Martin2011].
 Alignment was conducted with HISAT2 [@Kim2019], followed by processing with SAMtools [@Li2009] and BEDTools [@Quinlan2010].
-The sacCer3 (R64-2) genome build was used for alignment and transcriptome annotation was originally taken from the Saccharomyces Genome Database [@Ng2020].
+The sacCer3 (R64-2-1, GCA_000146045.1) genome build was used for alignment and transcriptome annotation was originally taken from the Saccharomyces Genome Database [@Ng2020].
 5PSeq reads contain UMIs, which were used to deduplicate reads using UMI-tools [@Smith2017]; QuantSeq reads do not.
 Counts to genomic regions of interest were calculated using FeatureCounts [@Liao2014].
 For 5PSeq data, 5'P ends were also analysed using fivepseq pipeline [@Nersisyan2020].
