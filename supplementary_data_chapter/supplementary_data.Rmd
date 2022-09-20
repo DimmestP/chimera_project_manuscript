@@ -489,6 +489,10 @@ norm_terminator_pvalue <- read_csv(here("supplementary_data_chapter/data/norm_te
 
 ## Supplementary Figures
 
+```{r raw-pro-ter-swap-protein-fluo, fig.cap="\\textbf{Both terminator and promoter contribute to gene expression.} (\\textbf{A}) Protein abundance estimated by mCherry and mTurquoise2 (mTurq) fluorescence for 10 terminators paired with 4 high expressing promoters. Fluorescence and OD were measured in cultures grown in a plate reader, and reported at the time of each sample's maximum growth rate (see methods). Each diamond represents a biological replicate, averaged over 3 technical replicates.  The vertical line is the mean of all 6 biological replicates. (\\textbf{B}) Same as panel B, but for 2 low expressing promoters. Negative fluorescence values arising from instrument noise dominating measurements of constructs with negligible fluorescence are automatically set to 0."}
+knitr::include_graphics(here("supplementary_data_chapter/figures/pro_ter_platereader_raw_mTurq_and_mCh.png"), dpi = 300)
+```
+
 ```{r protein-vs-RNA-plot-motifs, fig.cap="\\textbf{Relative protein abundance correlates with relative mRNA abundance for reporter constructs with modified 3'UTRs.} (\\textbf{A}) Fold changes in RT-qPCR vs fold changes in mCherry fluorescence for all terminator constructs in the pRPS3-mCherry-tRPS3 and pTSA1-mCherry-tTSA1 pairings. Transcript abundance is relative to the mod0 construct of each promoter-terminator pairing. (\\textbf{B}) Fold changes in RT-qPCR vs fold changes in mCherry fluorescence for all terminator constructs in the pPIR1-mCherry-tPIR1 pairing. Transcript abundance is relative to WT construct of the promoter-terminator pairing. The mean and standard error calculated over 6 biological replicates is plotted for each construct.", fig.align='center' , out.width="98%"}
 knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"), dpi = 300) 
 ```

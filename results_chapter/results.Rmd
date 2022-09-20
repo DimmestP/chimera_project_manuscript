@@ -8,17 +8,17 @@ knitr::opts_chunk$set(fig.pos = "p", dpi = 300)
 
 ## Terminator effects on gene expression depend on cis-regulatory context
 
-To investigate the context dependence of cis-regulatory regions, we created a library of 120 constructs (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)A), containing all combinations of 6 promoters (including 5'UTR), 2 coding sequences, and 10 terminators (including 3'UTR).
+To investigate the context dependence of cis-regulatory regions, we created a library of 120 constructs (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)A), containing all combinations of 6 promoters (including 5'UTR), 2 coding sequences, and 10 terminators (including 3'UTR).
 We selected promoters and terminators from native yeast genes spanning a variety of different expression patterns and functions (Table \ref{tab:terminator-summary-table}).
 To choose specific sequence lengths for the terminators of our constructs, we referred to published measurements of median 3'UTR length [@Pelechano2013] because sequences that are necessary and sufficient for efficient transcriptional termination are found upstream of the termination site [@Guo1996c]. 
 For terminators with measured length under 200nt, we used the standardised parts length of 200nt from the YeastFab library.
 The 2 coding sequences (CDS) expressed mCherry or mTurquoise2 fluorescent proteins, which are bright fluorophores with only 30% amino acid identity [@Shaner2004; @Goedhart2012].
 
 
-```{r pro-ter-platereader-mCherry-mTurq-raw, fig.cap="\\textbf{Both terminator and promoter contribute to gene expression.}  (\\textbf{A}) Design of chimeric reporter constructs with all combinations of 6 promoters, 2 fluorescent proteins, and 10 terminators, on a centromeric plasmid. (\\textbf{B}) Protein abundance estimated by mCherry and mTurquoise2 (mTurq) fluorescence for 10 terminators paired with 4 high expressing promoters. Fluorescence and OD were measured in cultures grown in a plate reader, and reported at the time of each sample's maximum growth rate (see methods). Each diamond represents a biological replicate, averaged over 3 technical replicates.  The vertical line is the mean of all 6 biological replicates. (\\textbf{C}) Same as panel B, but for 2 low expressing promoters. Negative fluorescence values arising from instrument noise dominating measurements of constructs with negligible fluorescence are automatically set to 0. (\\textbf{D}) mCherry fluorescence correlates with RT-qPCR mRNA abundance for 3 promoters paired with all 10 terminators. Note that both axes use a $log_2$ scale.", fig.align='center', out.width="80%"}
+```{r pro-ter-platereader-mCherry-mTurq-norm, fig.cap="\\textbf{Terminator contributions to gene expression are promoter, coding sequence and length dependent.}  (\\textbf{A}) Design of chimeric reporter constructs with all combinations of 6 promoters, 2 fluorescent proteins, and 10 terminators, on a centromeric plasmid. (\\textbf{B}) Relative protein abundance from each terminator, normalized to a reference terminator tPGK1 for each matched promoter. The plot shows statistical summaries (mean and standard error) of at least 6 replicates for high-expression promoter data shown in Figure 1A. (\\textbf{C}) RT-qPCR mRNA results targeting the mCherry ORF for pRPS3-mCherry-tRPS3 and pSRO9-mCherry-tSRO9 constructs with differing terminator lengths.  (\\textbf{D}) mCherry fluorescence correlates with RT-qPCR mRNA abundance for 3 promoters paired with all 10 terminators. Note that both axes use a $log_2$ scale.", fig.align='center', out.width="80%"}
 # NOTE: Currently this figure is included at 85% size so we can see the caption
 # Later we will probably want to display the caption on a separate page
-knitr::include_graphics(here("results_chapter/figures/pro_ter_swap_protein_and_rna_exp_figure.png"))
+knitr::include_graphics(here("results_chapter/figures/pro_ter_swap_protein_and_norm_rna_exp_figure.png"))
 ```
 
 
@@ -38,11 +38,11 @@ readr::read_csv(here("results_chapter/data/terminator_summary_table.csv")) %>%
 ```
 
 Measuring fluorescence with a plate reader showed that, as expected, promoter choice dominated overall protein output.
-We observed up to 100-fold changes in fluorescence between the 4 highest expressing promoters (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)B) and the 2 lowest expressing promoters (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)C; mCherry log2 fold change = 7.33, p.value = 0.000).
+We observed up to 100-fold changes in fluorescence between the 4 highest expressing promoters (Supplementary Figure \@ref(fig:raw-pro-ter-swap-protein-fluo)A) and the 2 lowest expressing promoters (Supplementary Figure \@ref(fig:raw-pro-ter-swap-protein-fluo)B; mCherry log2 fold change = 7.33, p.value = 0.000).
 Expression from the stress-induced pHSP26 was notably more variable than from pPGK1 and pRPS's, across biological replicates, when combined with both coding sequences and a variety of terminators. 
-We also confirmed that most differences in protein outputs are accounted for by changes in mRNA abundance by checking a subset of mCherry constructs using RT-qPCR ($R = 0.888$, Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)D).
+We also confirmed that most differences in protein outputs are accounted for by changes in mRNA abundance by checking a subset of mCherry constructs using RT-qPCR ($R = 0.888$, Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)D).
 
-Terminators also affect protein output with 5-fold changes in fluorescence seen within the same promoter-CDS sets (pPGK1-mTurq-tPMA1 log2 fold change = -2.73, p.value =$1.19 \times 10^{-41}$), relative to the tPGK1 terminator of each group (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)A).
+Terminators also affect protein output with 5-fold changes in fluorescence seen within the same promoter-CDS sets (pPGK1-mTurq-tPMA1 log2 fold change = -2.73, p.value =$1.19 \times 10^{-41}$), relative to the tPGK1 terminator of each group (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B).
 We focus on constructs with high-expression promoters due to the poor signal to noise ratio at low expression levels.
 The interaction of coding sequence and terminator is seen most clearly for tPAB1.
 tPAB1 is consistently the most highly expressed terminator in mTurquoise2 constructs, but is more variable in mCherry constructs.
@@ -55,14 +55,10 @@ It is known that disrupting the transcription termination signal lowers expressi
 However, standardised parts libraries often assume a fixed terminator length for all genes, which is likely to omit the termination signal for genes with longer terminators.
 In the case of the YeastFab parts library [@Guo2015] the fixed terminator length is 200bp.
 We compared a gene with a median 3'UTR length less than 200bp, RPS3 to a gene with a median 3'UTR length greater than 200bp, SRO9.
-The median length of the native RPS3 3'UTR is 86nt [@Pelechano2013]; truncating the terminator to 86bp or 59bp reduces transcript protein output by almost 2-fold (86bp Fold Change = 0.544, p-value = $2.6 \times 10^{-4}$; 59bp Fold Change = 0.517, p-value = $7.8 \times 10^{-6}$; Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B).
-The median length of the native SRO9 3'UTR is 543nt [@Pelechano2013]; extending the terminator length to 543bp increases transcript protein output by almost 2-fold (Fold Change = 0.581, p-value = 0.01; Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)B).
+The median length of the native RPS3 3'UTR is 86nt [@Pelechano2013]; truncating the terminator to 86bp or 59bp reduces transcript protein output by almost 2-fold (86bp Fold Change = 0.544, p-value = $2.6 \times 10^{-4}$; 59bp Fold Change = 0.517, p-value = $7.8 \times 10^{-6}$; Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)C).
+The median length of the native SRO9 3'UTR is 543nt [@Pelechano2013]; extending the terminator length to 543bp increases transcript protein output by almost 2-fold (Fold Change = 0.581, p-value = 0.01; Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)C).
 This validates our assay's ability to detect known regulatory signals affecting transcription termination, while highlighting the importance of using well-informed annotations to construct parts libraries for synthetic biology.
-Note that we used the longer 543bp SRO9 terminator, and a similarly extended 421bp PMA1 terminator, for the main set of constructs (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-raw)).
-
-```{r pro-ter-platereader-mCherry-mTurq-norm, fig.cap="\\textbf{Terminator contributions to gene expression are promoter, coding sequence and length dependent.} (\\textbf{A}) Relative protein abundance from each terminator, normalized to a reference terminator tPGK1 for each matched promoter. The plot shows statistical summaries (mean and standard error) of 6 replicates for high-expression promoter data shown in Figure 1A. (\\textbf{B}) RT-qPCR mRNA results targeting the mCherry ORF for pRPS3-mCherry-tRPS3 and pSRO9-mCherry-tSRO9 constructs with differing terminator lengths.", fig.align='center', out.width="98%"}
-knitr::include_graphics(here("results_chapter/figures/pro_ter_platereader_norm_mTurq_and_mCh.png"))
-```
+Note that we used the longer 543bp SRO9 terminator, and a similarly extended 421bp PMA1 terminator, for the main set of constructs (Figure \@ref(fig:pro-ter-platereader-mCherry-mTurq-norm)).
 
 ## Candidate cis-regulatory elements contribute to transcript decay rates
 
