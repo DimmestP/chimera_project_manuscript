@@ -2,6 +2,7 @@ library(here)
 library(tidyqpcr)
 library(latex2exp)
 library(dplyr)
+library(tidyr)
 library(tibble)
 library(stringr)
 library(readr)
@@ -67,6 +68,10 @@ write_csv(combined_motif_coefficients %>%
                       `Notes` = c("Unknown", "Decay motif", "Khd1/Hek2 associated motif", "Puf4p binding motif")), 
           here("results_chapter/data/motif_summary_table.csv"))
 
+motif_coefficients_R_values <- combined_motif_coefficients %>%
+  summarise(r_cor = cor(estimate_C, `estimate_S`)) %>%
+  mutate(r_cor_label = paste(TeX(paste0("R = ", signif(r_cor,digits = 3)))))
+
 # output motif coefficients graph
 model_coefficients <-   ggplot(combined_motif_coefficients, 
                                aes(y = estimate_C, 
@@ -80,19 +85,23 @@ model_coefficients <-   ggplot(combined_motif_coefficients,
                       ymax = estimate_C + std.error_C)) +
   geom_linerange(aes(xmin = estimate_S - std.error_S, 
                      xmax = estimate_S + std.error_S)) +
-  theme(axis.text.x = element_text(angle=90,vjust = 0.5),
+  theme(axis.text.x = element_text(vjust = 0.5),
         panel.grid.minor = element_blank(),
         legend.position = "right",
         legend.text = element_text(size = 9)) +
-  labs(x = TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Sun}$"),
-       y = TeX("$\\Delta \\log_2$ $\\lambda^{1/2}_{Chan}$"), 
+  labs(x = TeX("$\\Delta\\; \\log_2$ $\\lambda\\,^{1/2}_{Sun}$"),
+       y = TeX("$\\Delta\\; \\log_2$ $\\lambda\\,^{1/2}_{Chan}$"), 
        colour = "3'UTR Motif") +
   coord_equal() +
   scale_y_continuous(breaks = c(-0.5,-0.25, 0, 0.25, 0.5),
                      labels = c("-0.5","","0","","0.5")) +
   scale_x_continuous(breaks = c(-0.5,-0.25, 0, 0.25, 0.5),
                      labels = c("-0.5","","0","","0.5")) + 
-  scale_colour_brewer(type = "qual", palette = "Dark2")
+  scale_colour_brewer(type = "qual", palette = "Dark2") + 
+  geom_text(aes(label = r_cor_label), 
+            data = motif_coefficients_R_values, 
+            x = 0.55, y = -0.2, colour = "black",
+            size = text_cor_size, hjust = 1, vjust = 0)
 
 # Create full hlife model summary figure
 

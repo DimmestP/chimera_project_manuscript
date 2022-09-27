@@ -79,7 +79,7 @@ plot_data_ATATTC <- motif_positions %>%
 
 HWNCAUUWY_position_plot <- ggplot(plot_data_HWNCAUUWY) + 
   geom_histogram(aes(x=HWNCAUUWY_pos)) +
-  labs(title = "HWNCAUUWY Position in Native 3'UTRs",
+  labs(title = "HWNCATTWY Position in Native 3'UTRs",
        x = "Relative Position",
        y = "") +
   theme(plot.title = element_text(hjust=0.5), 
@@ -87,7 +87,7 @@ HWNCAUUWY_position_plot <- ggplot(plot_data_HWNCAUUWY) +
   scale_x_continuous(expand = c(0,0))
 
 TGTAHMNUA_position_plot <- ggplot(plot_data_TGTAHMNUA) + geom_histogram(aes(x=TGTAHMNUA_pos)) +
-  labs(title = "TGTAHMNUA Position in Native 3'UTRs",
+  labs(title = "TGTAHMNTA Position in Native 3'UTRs",
        x = "",
        y = TeX("$N^o$ of Genes")
   ) +

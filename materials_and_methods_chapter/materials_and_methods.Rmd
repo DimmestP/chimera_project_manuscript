@@ -110,7 +110,7 @@ This procedure was run on each decay data set independently.
 The variance explained by each predictor in the linear model trained on the @Chan2018 dataset is estimated in three ways. First, the variance explained by three individual linear models each containing one of the predicates is calculated. Then, we determine the reduction in variance explained when one of the predicates is removed from the full model. Finally, the increase in variance explained when each predicate is added to the model sequentially, starting with codon usage and ending with 3'UTR length, is reported.
 
 We selected the specific versions of the HWNCATTWY and TGTAHMNTA motifs by running two addition linear models predicting half-life that inferred separate coefficients for each version of its consensus sequence. 
-Coefficients were reported for the significant motif versions (Supplementary Table \@ref(tab:HWNCAUUWY-motif-coef), \@ref(tab:TGTAHMNTA-motif-coef)). 
+Coefficients were reported for the significant motif versions (Supplementary Table \@ref(tab:HWNCATTWY-motif-coef), \@ref(tab:TGTAHMNTA-motif-coef)). 
 We chose instances with similar effect size, statistical significance, and number of occurrences in native transcripts. 
 We chose TTTCATTTC for HWNCATTWY and for TGTAHMNTA chose TGTACAATA over TGTATATTA specifically to avoid the 5nt stretch also found in ATATTC.
 
@@ -131,7 +131,7 @@ The tTSA1 mod_NNN construct contained random bases in the M1, M2 and M3 sites, w
 
 To design deletion constructs we selected a native 3'UTR that contained the motifs of interest. 
 Again, median-length 3'UTRs were extracted from the Pelechano et al. (2013) dataset filtered for the following criteria; 1) contains at least 3 shortlisted motifs of interest, 2) a highly expressed gene, 3) synthesisable.
-The PIR1 terminator chosen for motif deletion contains one copy each of the ATATTC and UGUAHMNU motifs, and 3 copies of the HWNCAUUWY motifs (Figure \@ref(fig:tPIR1-design-and-qpcr)A), although did not contain the putative stability motif GTATACCTA.
+The PIR1 terminator chosen for motif deletion contains one copy each of the ATATTC and TGTAHMNT motifs, and 3 copies of the HWNCATTWY motifs (Figure \@ref(fig:tPIR1-design-and-qpcr)A), although did not contain the putative stability motif GTATACCTA.
 
 The mutation of motifs for their removal from the PIR1 3'UTR was carried out so that: 1) at least 50% of the motif sequence (specifically the motif consensus sequence) was mutated to a base that does not correspond to the consensus sequence,
 2) GC content was minimally altered,
@@ -145,11 +145,11 @@ To check if sequences were synthesisable, 100 nt downstream of the native 3'UTR 
 ## Determining motif effect on abundance
 
 A linear model predicting construct $\Delta$Cq's using the presence or absence of the four selected motifs was trained on each promoter-terminator pairing separately.
-The model included a term to account for interactions between the UGUAMNUA and HWNCAUUWY motifs
+The model included a term to account for interactions between the TGTAHMNTA and HWNCATTWY motifs
 The linear model also included a term for batch effects, between the 2 experimental batches of 3 biological replicates for each set of constructs, because this improved the quality of model fit.
 The model was:
 $$\Delta Cq = \sum_{m=1}^4\alpha_mn_{m} + \beta \space e_{rep} + \gamma \space n_{int}+ \epsilon$$
-where $n_m$ is the copy number of motif m in the construct, $e_{rep}$ is which experimental batch the construct was part of and $n_{int}$ is the interaction term with value 1 if both UGUAMNUA and HWNCAUUWY motifs are present.
+where $n_m$ is the copy number of motif m in the construct, $e_{rep}$ is which experimental batch the construct was part of and $n_{int}$ is the interaction term with value 1 if both TGTAHMNTA and HWNCATTWY motifs are present.
 
 ## Predicting changes in transcript abundance from changes in half-life
 

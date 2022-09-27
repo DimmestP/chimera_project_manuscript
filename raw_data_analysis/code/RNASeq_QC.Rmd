@@ -398,6 +398,10 @@ RNASeq_construct_comparison <- qPCR_like_normalised_QuantSeq %>%
   pivot_wider(names_from = `RNA-Seq`, values_from = norm_count) %>%
   filter(!is.na(QuantSeq))
 
+RNASeq_comparison_R_values <- RNASeq_construct_comparison %>%
+  summarise(r_cor = cor(QuantSeq, `5PSeq`)) %>%
+  mutate(r_cor_label = paste(TeX(paste0("R = ", signif(r_cor,digits = 3)))))
+
 QuantSeq_5PSeq_construct_abund <- ggplot(RNASeq_construct_comparison) +
   geom_point(aes(x = QuantSeq, y = `5PSeq`, colour = mod_label)) +
   scale_colour_manual(values = RPS3_TSA1_colour_scheme[c("WT", "mod_HTH", "mod_NAA", "mod_NNN", "mod_NTN")]) +
@@ -409,7 +413,11 @@ QuantSeq_5PSeq_construct_abund <- ggplot(RNASeq_construct_comparison) +
   guides(colour = guide_legend(ncol = 2,
                                title = "Construct",
                                title.position = "top",
-                               title.hjust = 0.5))
+                               title.hjust = 0.5)) + 
+  geom_text(aes(label = r_cor_label), 
+            data = RNASeq_comparison_R_values, 
+            x = 4.2, y = 1, 
+            size = 3, hjust = 1, vjust = 0)
 ```
 
 

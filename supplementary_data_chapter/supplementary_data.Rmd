@@ -32,6 +32,99 @@ knitr::opts_chunk$set(fig.pos = "p", dpi = 300)
 
 ## Supplementary Tables
 
+```{r norm-terminator-sig-effect, results='asis'}
+norm_terminator_pvalue <- read_csv(here("supplementary_data_chapter/data/norm_terminator_pvalue.csv")) %>%
+  dplyr::rename(`log2 fold change` = estimate)
+
+# Setting `results = 'asis'` allows for using Latex within the code chunk
+    cat('\\begin{table}')
+    cat('\\centering \\begingroup\\fontsize{7}{9}\\selectfont')
+    # `{c c}` Creates a two column table
+    # Use `{c | c}` if you'd like a line between the tables
+    cat('{\\renewcommand{\\arraystretch}{1}')
+    cat('\\begin{tabular}{ c c }')
+    cat('\\textbf{mCherry} & \\textbf{mTurq} \\\\')
+    cat(' pRPS3 &  \\\\')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`log2 fold change`) %>%
+                  filter(Promoter == "pRPS3",
+                         protein == "mCherry") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`log2 fold change`) %>%
+                  filter(Promoter == "pRPS3",
+                         protein == "mTurq") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE)) 
+    cat('\\\\')
+    cat(' pHSP26 &  \\\\')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`log2 fold change`) %>%
+                  filter(Promoter == "pHSP26",
+                         protein == "mCherry") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`log2 fold change`) %>%
+                  filter(Promoter == "pHSP26",
+                         protein == "mTurq") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE)) 
+    cat('\\\\')
+    cat('pRPS13 &  \\\\')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`log2 fold change`) %>%
+                  filter(Promoter == "pRPS13",
+                         protein == "mCherry") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`log2 fold change`) %>%
+                  filter(Promoter == "pRPS13",
+                         protein == "mTurq") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\\\')
+    cat(' pPGK1 &  \\\\')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`log2 fold change`) %>%
+                  filter(Promoter == "pPGK1",
+                         protein == "mCherry") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('&')
+    print(kable(norm_terminator_pvalue %>%
+                  arrange(`log2 fold change`) %>%
+                  filter(Promoter == "pPGK1",
+                         protein == "mTurq") %>%
+                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
+                  select(-protein, -Promoter),
+      format = "latex") %>%
+  kableExtra::row_spec(0, bold = TRUE))
+    cat('\\end{tabular}}\\endgroup{}')
+    cat("\\caption{\\textbf{Tables showing changing contributions to gene expression from terminators paired with different promoters and coding sequences. $log_2$ fold change is calculated with respect to the PGK1 terminator of each promoter-coding sequence set. p.adj values are FDR adjusted t-test pvalues.}}")
+    cat('\\label{tab:norm-terminator-sig-effect}')
+    cat('\\end{table}')
+```
+
 ```{r hlife-variance-table}
 knitr::kable(tibble(CRE = c("Codon Usage", "Motifs", "3'UTR Length"), Individual = c("42.0%", "3.2%", "0.6%"), Drop = c("-40.5%", "-1.6%", "0.0%"), Cumulative = c("42.0%", "43.7%", "43.7%")), caption = "\\textbf{Variance explained by each type of CRE in the half-life model applied to data from Chan et al (2018).} Variance explained was estimated in 3 different ways. The individual variance explained by a linear model containing each type of CRE on its own.  The drop in variance explained when one type of CRE is removed from the full model. The cumulative variance explained when each CRE is added to the linear model in sequence; starting with codon usage, then adding motifs and finally 3'UTR length.", format = "latex")  %>%
   kableExtra::kable_styling(latex_options = "hold_position",font_size = 7) %>%
@@ -66,10 +159,10 @@ knitr::kable(qpcr_primers, caption = "\\textbf{Primer sequences created for all 
   kableExtra::column_spec(3, width = "8em")
 ```
 
-```{r HWNCAUUWY-motif-coef}
+```{r HWNCATTWY-motif-coef}
 read.csv(here("./supplementary_data_chapter/data/HWNCAUUWY_shortlisted_motif_table.csv")) %>%
   dplyr::transmute(Motif = term,  `Total Count` = total_count, Coef = estimate, `p.value`) %>%
-knitr::kable(format = "latex", caption="\\textbf{Selecting the HWNCAUUWY motif, TTTCATTTC}. Summary of the number of occurences and contributions to a linear model predecting half-life for each possible version of the HWNCAUUWY motif.")  %>%
+knitr::kable(format = "latex", caption="\\textbf{Selecting the HWNCATTWY motif, TTTCATTTC}. Summary of the number of occurences and contributions to a linear model predecting half-life for each possible version of the HWNCATTWY motif.")  %>%
   kableExtra::kable_styling(latex_options = "hold_position", font_size = 7) %>%
   kableExtra::row_spec(0, bold = TRUE, font_size = 7)
 ```
@@ -163,6 +256,7 @@ motif_construct_ttests <- read_csv(here("supplementary_data_chapter/data/motif_c
   kableExtra::row_spec(0, bold = TRUE))
     cat('\\end{tabular}}\\endgroup{}')
     cat("\\caption{\\textbf{Tables showing fold changes in transcript abundance of promoter-terminator constructs with different inserted motifs. Tables are sorted by fold change which is calculated with respect to that promoter-terminator construct's mod\\_NNN.}}")
+    cat('\\label{tab:insertion-construct-ttest}')
     cat('\\end{table}')
 
 ```
@@ -251,6 +345,7 @@ motif_construct_ttests <- read_csv(here("supplementary_data_chapter/data/motif_c
     cat('& \\\\')
     cat('\\end{tabular}}\\endgroup{}')
     cat("\\caption{\\textbf{Tables showing fold changes in transcript abundance of promoter-terminator constructs with different deleted motifs. Tables are sorted by fold change which is calculated with respect to that promoter-terminator construct's WT.}}")
+    cat('\\label{tab:deletion-construct-ttest}')
     cat('\\end{table}')
 
 ```
@@ -310,6 +405,7 @@ motif_abundance_effects <- read_csv(here("supplementary_data_chapter/data/motif_
     cat('& \\\\')
     cat('\\end{tabular}}\\endgroup{}')
     cat("\\caption{\\textbf{Tables showing fold changes in transcript abundance of motifs in different contexts. Tables are sorted by fold change.}}")
+    cat('\\label{tab:motif-abundance-effect-table}')
     cat('\\end{table}')
 
 ```
@@ -359,6 +455,7 @@ polya_usage_pvalue <- read_csv(here("supplementary_data_chapter/data/polyA_site_
   kableExtra::row_spec(0, bold = TRUE))
     cat('\\end{tabular}}\\endgroup{}')
     cat("\\caption{\\textbf{Tables showing relative usage of the two major Poly(A) sites in tRPS3 and tTSA1 terminators across constructs. p values are calculated using a two sided Wilcoxon signed rank exact test with respect to the mod\\_NNN construct.}}")
+    cat('\\label{tab:polya-usage-effect-table}')
     cat('\\end{table}')
 
 ```
@@ -390,98 +487,8 @@ polya_usage_pvalue_5PSeq <- read_csv(here("supplementary_data_chapter/data/polyA
       format = "latex") %>%
   kableExtra::row_spec(0, bold = TRUE))
     cat('\\end{tabular}}\\endgroup{}')
-    cat("\\caption{\\textbf{Tables showing relative usage of the two major Poly(A) sites in tRPS3 across constructs as detected by 5PSeq and QuantSeq. p.values are calculated by comparing the rel\\_counts of the same construct across the two RNA-seq methods using a two sided Wilcoxon signed rank exact test.}}")
-    cat('\\end{table}')
-```
-
-```{r norm-terminator-sig-effect, results='asis'}
-norm_terminator_pvalue <- read_csv(here("supplementary_data_chapter/data/norm_terminator_pvalue.csv")) 
-
-# Setting `results = 'asis'` allows for using Latex within the code chunk
-    cat('\\begin{table}')
-    cat('\\centering \\begingroup\\fontsize{7}{9}\\selectfont')
-    # `{c c}` Creates a two column table
-    # Use `{c | c}` if you'd like a line between the tables
-    cat('{\\renewcommand{\\arraystretch}{1}')
-    cat('\\begin{tabular}{ c c }')
-    cat('\\textbf{mCherry} & \\textbf{mTurq} \\\\')
-    cat(' pRPS3 &  \\\\')
-    print(kable(norm_terminator_pvalue %>%
-                  arrange(`estimate`) %>%
-                  filter(Promoter == "pRPS3",
-                         protein == "mCherry") %>%
-                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
-                  select(-protein, -Promoter),
-      format = "latex") %>%
-  kableExtra::row_spec(0, bold = TRUE))
-    cat('&')
-    print(kable(norm_terminator_pvalue %>%
-                  arrange(`estimate`) %>%
-                  filter(Promoter == "pRPS3",
-                         protein == "mTurq") %>%
-                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
-                  select(-protein, -Promoter),
-      format = "latex") %>%
-  kableExtra::row_spec(0, bold = TRUE)) 
-    cat('\\\\')
-    cat(' pHSP26 &  \\\\')
-    print(kable(norm_terminator_pvalue %>%
-                  arrange(`estimate`) %>%
-                  filter(Promoter == "pHSP26",
-                         protein == "mCherry") %>%
-                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
-                  select(-protein, -Promoter),
-      format = "latex") %>%
-  kableExtra::row_spec(0, bold = TRUE))
-    cat('&')
-    print(kable(norm_terminator_pvalue %>%
-                  arrange(`estimate`) %>%
-                  filter(Promoter == "pHSP26",
-                         protein == "mTurq") %>%
-                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
-                  select(-protein, -Promoter),
-      format = "latex") %>%
-  kableExtra::row_spec(0, bold = TRUE)) 
-    cat('\\\\')
-    cat('pRPS13 &  \\\\')
-    print(kable(norm_terminator_pvalue %>%
-                  arrange(`estimate`) %>%
-                  filter(Promoter == "pRPS13",
-                         protein == "mCherry") %>%
-                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
-                  select(-protein, -Promoter),
-      format = "latex") %>%
-  kableExtra::row_spec(0, bold = TRUE))
-    cat('&')
-    print(kable(norm_terminator_pvalue %>%
-                  arrange(`estimate`) %>%
-                  filter(Promoter == "pRPS13",
-                         protein == "mTurq") %>%
-                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
-                  select(-protein, -Promoter),
-      format = "latex") %>%
-  kableExtra::row_spec(0, bold = TRUE))
-    cat('\\\\')
-    cat(' pPGK1 &  \\\\')
-    print(kable(norm_terminator_pvalue %>%
-                  arrange(`estimate`) %>%
-                  filter(Promoter == "pPGK1",
-                         protein == "mCherry") %>%
-                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
-                  select(-protein, -Promoter),
-      format = "latex") %>%
-  kableExtra::row_spec(0, bold = TRUE))
-    cat('&')
-    print(kable(norm_terminator_pvalue %>%
-                  arrange(`estimate`) %>%
-                  filter(Promoter == "pPGK1",
-                         protein == "mTurq") %>%
-                  mutate(`p.adj` = signif(`p.adj`, 2)) %>%
-                  select(-protein, -Promoter),
-      format = "latex") %>%
-  kableExtra::row_spec(0, bold = TRUE))
-    cat('\\end{tabular}}\\endgroup{}')
-    cat("\\caption{\\textbf{Tables showing relative usage of the two major Poly(A) sites in tRPS3 across constructs as detected by 5PSeq and QuantSeq. p.values are calculated by comparing the rel\\_counts of the same construct across the two RNA-seq methods using a two sided Wilcoxon signed rank exact test.}}")
+    cat("\\caption{\\textbf{Tables showing relative usage of the two major Poly(A) sites in tRPS3 across constructs as detected by 5PSeq. p.values are calculated by comparing the rel\\_counts of the same construct across the two RNA-seq methods using a two sided Wilcoxon signed rank exact test.}}")
+    cat('\\label{tab:polya-usage-effect-5PSeq-table}')
     cat('\\end{table}')
 ```
 
@@ -497,7 +504,7 @@ knitr::include_graphics(here("supplementary_data_chapter/figures/pro_ter_platere
 knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png"), dpi = 300) 
 ```
 
-```{r motif-position-histograms, fig.cap="\\textbf{Relative positions of ATATTC, TGTAHMNUA and HWNCAUUWY motifs in native 3'UTRs.} Histogram shows the counts of the motif occurrences in 3'UTRs relative to the total length of 3'UTR, where 0 would be starting exactly at the stop codon and 1 would be at the reported poly(A)-site. See (methods or ref to data repository) for details.", fig.align='center', out.width="98%"}
+```{r motif-position-histograms, fig.cap="\\textbf{Relative positions of ATATTC, TGTAHMNTA and HWNCATTWY motifs in native 3'UTRs.} Histogram shows the counts of the motif occurrences in 3'UTRs relative to the total length of 3'UTR, where 0 would be starting exactly at the stop codon and 1 would be at the reported poly(A)-site. See (methods or ref to data repository) for details.", fig.align='center', out.width="98%"}
 knitr::include_graphics(here("supplementary_data_chapter/figures/motif_position_histograms.png"), dpi = 300) 
 ```
 
@@ -510,11 +517,11 @@ knitr::include_graphics(here("supplementary_data_chapter/figures/polya_usage_plo
 knitr::include_graphics(here("supplementary_data_chapter/figures/sequencing_sample_correlation.png"))
 ```
 
-```{r rnaseq-QC-QuantSeq-and-5PSeq-genomic-polyA, fig.cap="\\textbf{Poly(A) site usage for genomic PGK1, TSA1 and RPS3 terminators remains the same across samples for each RNA-Seq assay.} Cumulative counts of reads mapped downstream of native genomic gene stop codons as fraction of total reads mapped to the terminator. Relative usage of poly(A) sites remain similar across samples and across RNA-seq assays. Higher variability in QuantSeq PGK1 poly(A) site usage is due to low overall transcript counts.", fig.align='center',out.width="85%"}
+```{r rnaseq-QC-QuantSeq-and-5PSeq-genomic-polyA, fig.cap="\\textbf{Poly(A) site usage for genomic PGK1, TSA1 and RPS3 terminators remains the same across samples for each RNA-Seq assay.} Cumulative counts of reads mapped downstream of native genomic gene stop codons as fraction of total reads mapped to the terminator. Each line plots the cumulative counts of a separate sequencing run (including two tech reps per sample) which is given a unique colour. Relative usage of poly(A) sites remain similar across samples and across RNA-seq assays. Higher variability in QuantSeq PGK1 poly(A) site usage is due to low overall transcript counts.", fig.align='center',out.width="85%"}
 knitr::include_graphics(here("supplementary_data_chapter/figures/polya_QC_plot_QuantSeq_and_5PSeq.png"))
 ```
 
-```{r rnaseq-QC-genomic-vs-plasmid-polyA, fig.cap="\\textbf{Poly(A) site usage remains the same for genomic TSA1 and RPS3 terminators as for plasmid expressed WT constructs in QuantSeq and 5PSeq.} Cumulative counts of reads mapped downstream of WT stop codons for native genomic terminators and plasmid construct terminators as a fraction of total reads mapped to the constructs terminator. Expressing constructs from a low copy number plasmid does not seem to affect poly(A) site usage.", fig.align='center',out.width="85%"}
+```{r rnaseq-QC-genomic-vs-plasmid-polyA, fig.cap="\\textbf{Poly(A) site usage remains the same for genomic TSA1 and RPS3 terminators as for plasmid expressed WT constructs in QuantSeq and 5PSeq.} Cumulative counts of reads mapped downstream of WT stop codons for native genomic terminators and plasmid construct terminators as a fraction of total reads mapped to the constructs terminator. Each line plots the cumulative counts of a separate sequencing run (including two tech reps per sample) which is given a unique colour. Expressing constructs from a low copy number plasmid does not seem to affect poly(A) site usage.", fig.align='center',out.width="85%"}
 knitr::include_graphics(here("supplementary_data_chapter/figures/plasmid_vs_genome_polyA_combined_plot.png"))
 ```
 

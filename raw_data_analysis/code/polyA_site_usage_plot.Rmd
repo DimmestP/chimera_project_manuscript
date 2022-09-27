@@ -8,6 +8,7 @@ library(here)
 library(readr)
 library(tidyr)
 library(dplyr)
+library(latex2exp)
 library(extrafont)
 library(purrr)
 library(cowplot)
@@ -557,13 +558,27 @@ mean_qpcr_vs_5PSeq_dataset_mod_NNN <- construct_fold_change_5PSeq_mod_NNN %>%
   ungroup() %>%
   pivot_wider(names_from = "source", values_from = "mean_rel_abund")
 
+qpcr_vs_QuantSeq_dataset_R_values <-mean_qpcr_vs_QuantSeq_dataset_mod_NNN %>% 
+  group_by(promoter) %>% 
+  summarise(r_cor = cor(qPCR, `RNA-Seq`)) %>%
+  mutate(r_cor_label = paste(TeX(paste0("R = ", signif(r_cor,digits = 3)))))
+
 qPCR_vs_RNASeq_plot_QuantSeq <- ggplot(mean_qpcr_vs_QuantSeq_dataset_mod_NNN ) +
   geom_point(aes(x = `RNA-Seq`, y = qPCR, colour = mod_label)) +
   geom_abline(slope = 1, intercept = 0) +
   coord_equal() +
   facet_wrap(~promoter, nrow = 1) +
   scale_colour_manual(values = RPS3_TSA1_colour_scheme) +
-  guides(colour = "none")
+  guides(colour = "none") + 
+  geom_text(aes(label = r_cor_label), 
+            data = qpcr_vs_QuantSeq_dataset_R_values, 
+            x = 2.4, y = 0.3, 
+            size = text_cor_size, hjust = 1, vjust = 0)
+
+qpcr_vs_5PSeq_dataset_R_values <- mean_qpcr_vs_5PSeq_dataset_mod_NNN %>% 
+  group_by(promoter) %>% 
+  summarise(r_cor = cor(qPCR, `RNA-Seq`)) %>%
+  mutate(r_cor_label = paste(TeX(paste0("R = ", signif(r_cor,digits = 3)))))
 
 qPCR_vs_RNASeq_plot_5PSeq <- ggplot(mean_qpcr_vs_5PSeq_dataset_mod_NNN ) +
   geom_point(aes(x = `RNA-Seq`, y = qPCR, colour = mod_label, shape = terminator)) +
@@ -571,7 +586,11 @@ qPCR_vs_RNASeq_plot_5PSeq <- ggplot(mean_qpcr_vs_5PSeq_dataset_mod_NNN ) +
   guides(colour = "none", shape = "none") +
   scale_colour_manual(values = RPS3_TSA1_colour_scheme) +
   theme(legend.box = "horizontal") +
-  coord_equal()
+  coord_equal() + 
+  geom_text(aes(label = r_cor_label), 
+            data = qpcr_vs_5PSeq_dataset_R_values, 
+            x = 1.5, y = 0.3, 
+            size = text_cor_size, hjust = 1, vjust = 0)
 
 mean_qpcr_vs_QuantSeq_dataset_mod_NNN_R_squared <- mean_qpcr_vs_QuantSeq_dataset_mod_NNN %>%
   group_by(promoter) %>%
@@ -944,7 +963,8 @@ quantseq_polya_site_usage_plot <- plot_grid(qPCR_vs_RNASeq_plot_QuantSeq,
                                 guides(colour = guide_legend(ncol=2),
                                        linetype = guide_legend(ncol=1)) +
                                 theme(legend.justification = "centre",
-                                      legend.box.margin = margin())),
+                                      legend.box.margin = margin(),
+                                      legend.key.size = unit(0.6, 'cm'))),
                              ncol = 1,
                              rel_heights = c(2,1.50,0.8)),
           ncol = 1,
