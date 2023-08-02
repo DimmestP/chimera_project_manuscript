@@ -1,0 +1,312 @@
+---
+title: "Create chimera swap plots"
+author: "Sam Haynes"
+date: "22/02/2022"
+output: html_document
+---
+
+```{r setup}
+library(dplyr)
+library(tibble)
+library(readr)
+library(here)
+library(ggplot2)
+library(tidyr)
+library(stringr)
+library(broom)
+library(latex2exp)
+library(magick)
+
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
+
+# define promoter and terminator levels in desired order
+pro6  <- c("pPGK1", "pHSP26", "pRPS3", "pRPS13", "pSRO9", "pCLN2")
+pro4  <- c("pPGK1", "pHSP26", "pRPS3", "pRPS13")
+ter10 <- rev(c("tPGK1", "tRPS3", "tRPS13",
+           "tPAB1", "tHSP26", 
+           "tCLN2", "tSRO9", 
+           "tTOS6", "tSUN4", "tPMA1"))
+
+pro_mTurq_ter_protein <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_raw.csv"))%>%
+  mutate(Promoter = factor(Promoter, levels = pro6),
+         Terminator = factor(str_remove(Terminator, "_long"), levels = ter10)) %>% 
+  rename(fluo_per_OD_at_max_gr = "mTurq_per_OD_at_max_gr", Protein = "mTurq")
+
+pro_mCh_ter_protein <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCh-ter_swaps_raw.csv"))%>%
+  mutate(Promoter = factor(Promoter, levels = pro6),
+         Terminator = factor(Terminator, levels = ter10)) %>% 
+  rename(fluo_per_OD_at_max_gr = "mCh_per_OD_at_max_gr", Protein = "mCherry") %>%
+  select(-sample_id)
+
+pro_mCh_ter_qPCR <- read_csv(here("raw_data_analysis/data/norm_qpcr/promoter_terminator_swaps/pRPS3_pPGK1_pSRO9_tvariable_deltacq_platesnorm_summarise.csv")) %>%
+  filter(target_id == "mCh-7") %>%
+  group_by(strain) %>%
+  summarise(mRNA = mean(deltacq)) %>%
+  rename(Strain = "strain")
+```
+
+```{r split-low-exp-promoters}
+low_exp_pro_mCh_mTurq <- pro_mCh_ter_protein %>% 
+  bind_rows(pro_mTurq_ter_protein) %>%
+  filter(Promoter %in% c("pSRO9", "pCLN2")) %>%
+  mutate(type = factor("low", levels = c("low", "high")))
+
+high_exp_pro_mCh_mTurq <- pro_mCh_ter_protein %>% 
+  bind_rows(pro_mTurq_ter_protein) %>%
+  filter(!Promoter %in% c("pSRO9", "pCLN2")) %>%
+  mutate(type = factor("high", levels = c("low", "high")))
+
+mCherry_protein_vs_RNA <- pro_mCh_ter_protein %>%
+  group_by(Strain) %>%
+  summarise(protein = mean(fluo_per_OD_at_max_gr)) %>%
+  mutate(log2protein = log2(protein)) %>%
+  inner_join(pro_mCh_ter_qPCR, by = "Strain") %>%
+  separate(Strain, into = c(NA,"Terminator"), sep = "(?<=y-)", remove = FALSE) %>%
+  separate(Strain, into = c("Promoter",NA), sep = "(?=-m)", remove = FALSE) %>%
+  mutate(Terminator = factor(Terminator, levels = ter10))
+```
+
+```{r fold-change-lm}
+tidy(lm(log2(`fluo_per_OD_at_max_gr`)~type,
+        data = high_exp_pro_mCh_mTurq %>% 
+          bind_rows(low_exp_pro_mCh_mTurq) %>%
+          filter(Protein == "mCherry")))
+
+high_exp_pro_mCh_mTurq %>%
+  bind_rows(low_exp_pro_mCh_mTurq) %>%
+  group_by(Protein, Promoter) %>%
+  summarise(tidy(lm(log2(`fluo_per_OD_at_max_gr`)~Terminator,
+                    tibble(`fluo_per_OD_at_max_gr` = `fluo_per_OD_at_max_gr`,
+                           Terminator =factor(Terminator, levels = rev(high_exp_pro_mCh_mTurq$Terminator %>% levels)))))) %>%
+  filter(term != "(Intercept)") %>%
+  filter(estimate == min(estimate))
+
+```
+
+```{r calc-cor}
+mCherry_protein_vs_RNA_cor <- cor(mCherry_protein_vs_RNA$protein,
+                                  mCherry_protein_vs_RNA$mRNA)
+
+mCherry_protein_vs_RNA_cor_text <- paste(TeX(paste0("R = ", signif(abs(mCherry_protein_vs_RNA_cor),digits = 3))))
+```
+
+```{r plot-raw-data}
+high_exp_mCh_mTurq_platereader_raw_figure <- ggplot(high_exp_pro_mCh_mTurq) +
+  protein_raw_abundance_figure_options +
+  facet_grid(Protein~Promoter) +
+  labs(x="Fluorescence per OD at max growth rate") +
+  scale_x_continuous("Fluorescence per OD \n at max growth rate",
+                    breaks = c(0, 10000, 20000),
+                    expand = expansion(mult = 0.025),
+                    oob=oob_squish, 
+                    limits = c(0,NA))
+
+low_exp_mCh_mTurq_platereader_raw_figure <- ggplot(low_exp_pro_mCh_mTurq) +
+  protein_raw_abundance_figure_options +
+  facet_grid(Protein~Promoter) +
+  scale_x_continuous("Fluorescence per OD \n at max growth rate",
+                    breaks = c(0, 500, 1000),
+                    expand = expansion(mult = 0.025),
+                    oob=oob_squish, 
+                    limits = c(0,NA))
+
+raw_fluo_low_and_high_pro <- plot_grid(high_exp_mCh_mTurq_platereader_raw_figure,
+          low_exp_mCh_mTurq_platereader_raw_figure,
+          ncol =1,
+          labels = c("A", "B"))
+```
+
+```{r normalise-to-tPGK1}
+
+#####
+# Create Normalised Platereader plot and add qPCR of short-vs-long
+
+shortvslong_platesnorm_all_median <- read_csv(here("raw_data_analysis/data/norm_qpcr/short_vs_long/shortvslong_two_exp_rep_deltadeltacq_platesnorm_summarise.csv")) %>%
+  separate(UTR3, into = c(NA, "mod_label"), sep = "_") %>%
+  mutate(mod_label = factor(mod_label, levels = rev(c("59bp","86bp","200bp","543bp"))))
+
+normalised_plot_SRO9 <- ggplot(data = shortvslong_platesnorm_all_median %>% filter(Promoter == "pSRO9")) +
+  RNA_relative_abundance_figure_options +
+  labs(x="Fold change in RNA abundance \n relative to tSRO9_543bp \n (log2 scale)", title = "SRO9", y = "Terminator \n length") +
+  scale_colour_manual(values=c("black", "#CC6666")) +
+  # theme(axis.text.y=element_text(colour=c("black", "#CC6666"))) +
+  geom_vline(xintercept=1, linetype="dotted", color = "grey50")
+
+normalised_plot_RPS3 <- ggplot(data = shortvslong_platesnorm_all_median %>% filter(Promoter == "pRPS3")) +
+  RNA_relative_abundance_figure_options + 
+  labs(x="Fold change in RNA abundance \n relative to tRPS3_200bp \n (log2 scale)", title = "RPS3", y="Terminator \n length") +
+  scale_colour_manual(values=c("black","#a84a9a","#6f3ba1")) +
+  # theme(axis.text.y=element_text(colour=c("black","#a84a9a", "#6f3ba1"))) +
+  geom_vline(xintercept=1, linetype="dotted", color = "grey50")
+
+norm_pro_mCh_ter_all <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mCherry_collection/pro-mCh-ter_swaps_summary_PGK1_norm.csv"))
+
+norm_pro_mTurq_ter_all <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_summary_PGK1_norm.csv"))
+
+norm_mTurq_and_mCherry <- norm_pro_mTurq_ter_all %>%
+  rename(protein = "mTurq", fluo_per_OD_at_max_gr = "norm_fluo_per_OD_at_max_gr") %>%
+  select(-mTurq_per_OD_at_max_gr, -remove, -X1) %>%
+  bind_rows(
+    norm_pro_mCh_ter_all %>%
+      rename(protein = "mCherry", fluo_per_OD_at_max_gr = "norm_fluo_per_OD_at_max_gr") %>%
+      select(-BioRep, -mCh_per_OD_at_max_gr, -sample_id, -remove, -X)
+  ) %>%
+  filter(!Promoter %in% c("pCLN2", "pSRO9")) %>%
+  mutate(Terminator = factor(Terminator, ter10), Promoter = factor(Promoter, pro4))
+
+norm_mTurq_and_mCherry_figure <- ggplot(data=norm_mTurq_and_mCherry %>% filter(!Promoter %in% c("pSRO9", "pCLN2"))) +
+  labs(x="Relative fluorescence per OD relative to tPGK1", y="Terminator") +
+  facet_grid(protein~Promoter) +
+  protein_relative_abundance_figure_options
+
+UTR_length_panelB <- plot_grid(normalised_plot_RPS3, normalised_plot_SRO9, nrow = 2)
+
+norm_terminator_pvalue <- norm_mTurq_and_mCherry %>% 
+  filter(!Promoter %in% c("pSRO9", "pCLN2")) %>%
+  group_by(protein, Promoter) %>%
+  summarise(tidy(lm(log2(`fluo_per_OD_at_max_gr`)~Terminator,
+                    tibble(`fluo_per_OD_at_max_gr` = `fluo_per_OD_at_max_gr`,
+                           Terminator =factor(Terminator, levels = rev(high_exp_pro_mCh_mTurq$Terminator %>% levels)))))) %>%
+  filter(term != "(Intercept)") %>%
+  mutate(p.adj = p.adjust(p.value),
+         Terminator = str_remove(term, "Terminator")) %>%
+  select(protein, Promoter, Terminator, estimate, p.adj)
+composite_norm_UTRlength_figure
+```
+
+```{r combine-norm-diagram}
+mCherry_protein_vs_RNA_figure <- ggplot(mCherry_protein_vs_RNA) +
+  geom_point(aes(y = log2protein, x = -mRNA, colour = Terminator, shape = Promoter)) +
+  scale_colour_hue(h = c(0, 360)+20,l=60,c=60) +
+  guides(colour="none") +
+  scale_y_continuous("mCherry fluorescence per \n OD at max growth rate",
+                     breaks = log2(c(12.5, 25, 50, 100, 200, 400, 800, 1600, 3200, 6400)), 
+                     labels = c("", "25", "", "100", "", "400", "", "1600", "", "6400")) +
+  scale_x_continuous(TeX("mRNA abundance ($\\Delta\\,$Cq)"),
+                     breaks = c(-6, -5, -4, -3, -2, -1, 0, 1),
+                     labels = c("-6", "", "-4", "", "-2", "", "0", "")) +
+  coord_equal() + 
+  annotate(geom = "text", x= -0.25, y = log2(17.5),
+           label = mCherry_protein_vs_RNA_cor_text,
+           size = 4.5) +
+  theme(legend.position = "bottom") +
+  guides(shape=guide_legend(ncol=1))
+
+bottom_row_swap_figure <- 
+    plot_grid(UTR_length_panelB,
+            mCherry_protein_vs_RNA_figure,
+            rel_widths = c(1.2,1),
+            labels = c("C","D"),
+            ncol = 2)
+
+chimera_swaps_overview_figure <- 
+  image_read(here("raw_data_analysis/figures/terminator_construct_designs/chimera_swaps_overview.png"))
+
+composite_pro_ter_swap_figure <- 
+  plot_grid(ggdraw() + draw_image(chimera_swaps_overview_figure),
+            norm_mTurq_and_mCherry_figure,
+            bottom_row_swap_figure,
+            ncol = 1,
+            rel_heights = c(0.41,1,1.05),
+            labels = c("A","B",""))
+composite_pro_ter_swap_figure
+```
+
+```{r exp-phase-stats}
+ttest_pRPS3_59bp <- tidy(lm(median_delta_deltacq ~  mod_label, shortvslong_platesnorm_all_median %>% filter(Promoter == "pRPS3", mod_label %in% c("200bp", "59bp"))))
+
+ttest_pRPS3_86bp <- tidy(lm(median_delta_deltacq ~  mod_label, shortvslong_platesnorm_all_median %>% filter(Promoter == "pRPS3", mod_label %in% c("200bp", "86bp"))))
+
+ttest_pSRO9_543bp <- tidy(lm(median_delta_deltacq ~  mod_label, shortvslong_platesnorm_all_median %>% filter(Promoter == "pSRO9")))
+
+terminator_length_test <- ttest_pSRO9_543bp %>% 
+  mutate(Promoter = "pSRO9",
+         Terminator = "543bp") %>%
+  bind_rows(ttest_pRPS3_59bp %>% 
+  mutate(Promoter = "pRPS3",
+         Terminator = "59bp"))%>%
+  bind_rows(ttest_pRPS3_86bp %>% 
+  mutate(Promoter = "pRPS3",
+         Terminator = "86bp")) %>%
+  filter(term != "(Intercept)") %>%
+  transmute(Promoter, Terminator, estimate = 2^(-estimate), p.value)
+```
+
+```{r compare-with-stationary-phase}
+pro_mTurq_ter_all_stat_phase <- read_csv(here("raw_data_analysis/data/norm_platereader/promoter_terminator_swaps/mTurq_collection/pro-mTurq-ter_swaps_OD_and_mTurq.csv")) %>%
+  separate(strain, into = c("Promoter", "Terminator"), sep = "-mTurq-", remove = FALSE)
+
+mTurq_stat_phase<- pro_mTurq_ter_all_stat_phase %>%
+  filter(time > 8, gr < 0.01, !Promoter %in% c("null", "POT1-ccdB"), !is.na(Terminator)) %>%
+  group_by(experiment, Promoter, Terminator, strain) %>%
+  summarise(`fluo_per_OD_at_max_gr`=`c-mTurq-60perod`[time == min(time)]) %>%
+    ungroup() %>%
+  mutate(Protein = "mTurq")
+
+norm_mTurq_stat_phase <- mTurq_stat_phase %>%
+  group_by(experiment, Promoter) %>%
+  mutate(`fluo_per_OD_at_max_gr` = `fluo_per_OD_at_max_gr`/`fluo_per_OD_at_max_gr`[Terminator == "tPGK1"])
+
+ggplot(mTurq_stat_phase %>% 
+         transmute(Promoter, 
+                   Terminator, 
+                   Strain = strain,
+                   Protein,
+                   fluo_per_OD_at_max_gr, 
+                   Growth = "Stat") %>%
+         bind_rows(high_exp_pro_mCh_mTurq %>%
+                     mutate(Growth = "Exp")) %>% 
+         filter(!Promoter %in% c("pSRO9", "pCLN2"),
+                Protein == "mTurq")) +
+  geom_vline1 + 
+  geom_point(aes(y=Terminator,x=fluo_per_OD_at_max_gr, colour = Terminator),
+             shape = 18, size = 2) +
+  scale_colour_hue(h = c(0, 360)+20,l=60,c=60) +
+  stat_summary(aes(y=Terminator,x=fluo_per_OD_at_max_gr),
+               fun="mean",colour="black",
+               geom="crossbar", size=0.3, width=0.9) +
+  theme(legend.position = "none",
+        strip.text.x = element_text(vjust = 0.95)) +
+  scale_x_continuous(oob=oob_squish, limits = c(0,NA)) +
+  facet_grid(Promoter~Growth) +
+  labs(x="Fluorescence per OD at max growth rate") 
+
+ggplot(data=norm_mTurq_stat_phase %>% 
+         transmute(Promoter, 
+                   Terminator, 
+                   Strain = strain,
+                   Protein,
+                   fluo_per_OD_at_max_gr, 
+                   Growth = "Stat") %>% 
+         bind_rows(norm_mTurq_and_mCherry %>%
+                     mutate(Growth = "Exp")) %>% 
+         filter(!Promoter %in% c("pSRO9", "pCLN2"), 
+                Protein == "mTurq")) +
+  labs(x="Relative fluorescence per OD relative to tPGK1", y="Terminator") +
+  facet_grid(Protein~Promoter) +
+  scale_colour_hue(h = c(0, 360)+20,l=60,c=60) +
+  geom_vline1 +
+  stat_summary(aes(y=Terminator,x=fluo_per_OD_at_max_gr, colour = Terminator, shape = Growth),
+               fun.data="mean_se",
+               geom="pointrange") +
+  theme(strip.text.x = element_text(vjust = 0.95)) +
+  guides(colour = "none") +
+  scale_x_continuous(oob=oob_squish, limits = c(0,1.9))
+```
+
+```{r output-figures, eval=FALSE}
+ggsave(here("results_chapter/figures/pro_ter_swap_protein_and_norm_rna_exp_figure.png"),
+       composite_pro_ter_swap_figure,
+       width = fig_width_2column, 
+       height = 240, units = "mm", 
+       dpi = fig_dpi)
+
+ggsave(here("./supplementary_data_chapter/figures/pro_ter_platereader_raw_mTurq_and_mCh.png"), 
+       raw_fluo_low_and_high_pro,
+       width = fig_width_2column, 
+       height = 175, 
+       units = "mm", 
+       dpi = fig_dpi)
+
+write_csv(norm_terminator_pvalue, here("supplementary_data_chapter/data/norm_terminator_pvalue.csv"))
+```

@@ -1,0 +1,276 @@
+---
+title: "Create poly(A) site GEO submission"
+author: "Sam Haynes"
+date: "22/02/2022"
+output: html_document
+---
+```{r setup, include=FALSE}
+library(here)
+library(readr)
+library(tidyr)
+library(dplyr)
+library(extrafont)
+library(purrr)
+library(cowplot)
+library(stringr)
+library(ggtext)
+library(glue)
+
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
+```
+
+```{r definitions}
+genomic_gene_dictionary <- tibble(construct_name = c("chrXIII", "chrIII", "chrXIV"),
+                                  promoter = c("pTSA1", "pPGK1", "pRPS3"),
+                                  terminator = c("tTSA1", "tPGK1", "tRPS3"),
+                                  mod = "genomic")
+
+construct_stop_codon_dictionary <- read_csv(here("raw_data_analysis/data/rna_seq/gene_of_interest_stop_codons"))
+
+sample_to_construct_dictionary_QuantSeq <- read_csv(here("raw_data_analysis/data/rna_seq/sample_to_construct_table_QuantSeq.csv"))
+
+sample_to_construct_dictionary_5PSeq <- read_csv(here("raw_data_analysis/data/rna_seq/sample_to_construct_table_5PSeq.csv"))
+```
+
+```{r functions}
+# reads in the polyA reads bed file outputted from the
+# find_polyA_site.sh bash script in the nextflow_paired_reads_pipeline
+# github repo. 
+# For each sample file the function expects reads from three genomic genes:
+# PGK1, RPS3 and TSA1 (used for normalisation), and two plasmid genes:
+# URA3 and the construct of interest.
+# The three genomic genes are on different chromosomes so mapped reads 
+# are easily differentiated using the first column of the bed file
+# The two plasmid genes are mapped to the same construct and are differentiated
+# by the read_end position: read_end > 3500 -> URA3 , read_end < 3500 ->
+# construct
+load_polyA_reads <- function(filename) {
+  full_bed_tibble<- read_tsv(filename,
+                        col_names = c("construct_name", "chromStart", "read_end", 
+                                      "name", "score", "strand", "thickStart",
+                                      "thickEnd", "itemRgb", "blockCount",
+                                      "blockSizes", "blockStarts")) 
+  if(nrow(full_bed_tibble) > 0){
+    # label reads mapped to construct of interest according to plasmid name (separating URA3 genes with by read end position)
+    plasmid_construct_reads <- full_bed_tibble %>%
+      filter(str_detect(construct_name, "mCherry")) %>%
+      select(construct_name,read_end) %>%
+      mutate(terminator = str_extract(construct_name, "t[A-Z0-9]+")) %>%
+      mutate(promoter = str_extract(construct_name, "p[A-Z0-9]+")) %>%
+      mutate(mod = str_extract(construct_name, "[a-zA-Z0-9]+$")) %>%
+      mutate(sample = str_extract(filename, "(?<=/)[ABEdt0-9]+(?=_)")) %>%
+      mutate(URA3 = (read_end > 3500))
+    
+    # label reads mapped to genomic genes according to chromosome
+    genomic_reads <- full_bed_tibble %>%
+      filter(!str_detect(construct_name, "mCherry")) %>%
+      select(construct_name,read_end) %>%
+      inner_join(genomic_gene_dictionary) %>%
+      mutate(sample = str_extract(filename, "(?<=/)[ABEdt0-9]+(?=_)")) %>%
+      mutate(URA3 = FALSE)
+    
+    bind_rows(plasmid_construct_reads, genomic_reads) 
+  }
+  else{NULL}
+}
+
+# function that accepts a file path to a featureCounts output file and removes unnecessary columns and standardises names so features across files can be combined 
+extract_gene_counts_from_featureCounts_file <- function(filepath){
+  raw_count_columns <- read_tsv(filepath, comment = "#") %>%
+    select(-Chr, -Start, -End, -Strand, -Length)
+  
+  plasmid_counts <- raw_count_columns %>%
+    filter(str_detect(Geneid, "primary_transcript|URA3")) %>%
+    mutate(Geneid = paste0("plasmid_", str_extract(Geneid,"(primary_transcript|URA3)")))
+  
+  renamed_counts_columns <- raw_count_columns %>%
+    filter(!str_detect(Geneid, "primary_transcript|URA3")) %>%
+    bind_rows(plasmid_counts)
+  
+  colnames(renamed_counts_columns) <- c("Geneid",
+                                        str_extract(colnames(renamed_counts_columns)[2],
+                                                    "^[A-Z0-9dt]+"))
+  renamed_counts_columns
+}
+
+# for nucleotides without count data fill with 0 or value of last nucleotide with count data
+
+fill_missing_nucleotide_data <- function(nucleotide_with_known_counts){
+  empty_full_plasmid = tibble(read_end = 1:200) %>% 
+    filter(!read_end %in% nucleotide_with_known_counts$read_end) %>%
+    mutate(terminator = unique(nucleotide_with_known_counts$terminator),
+           promoter = unique(nucleotide_with_known_counts$promoter),
+           mod = unique(nucleotide_with_known_counts$mod),
+           sample = unique(nucleotide_with_known_counts$sample),
+           URA3 = unique(nucleotide_with_known_counts$URA3),
+           construct_name = unique(nucleotide_with_known_counts$construct_name),
+           read_count = 0)
+  bind_rows(nucleotide_with_known_counts, empty_full_plasmid) %>%
+    arrange(read_end)
+  
+}
+```
+
+```{r load_polyA_reads, warnings = FALSE, message = FALSE, include=FALSE}
+all_QuantSeq_PolyA_read_files <- list.files(path = here("raw_data_analysis/data/rna_seq/construct_polyA_bam/QuantSeq/"), pattern = ".bed$", recursive = TRUE, full.names = TRUE)
+
+all_5PSeq_PolyA_read_files <- list.files(path = here("raw_data_analysis/data/rna_seq/construct_polyA_bam/5PSeq/"), pattern = ".bed$", recursive = TRUE, full.names = TRUE)
+
+full_5PSeq_PolyA_reads <- all_5PSeq_PolyA_read_files %>%
+  lapply(load_polyA_reads) %>%
+  purrr::reduce(bind_rows)
+
+full_QuantSeq_PolyA_reads <- all_QuantSeq_PolyA_read_files %>%
+  lapply(load_polyA_reads) %>%
+  purrr::reduce(bind_rows)
+
+```
+
+
+```{r calculate-cumulative-distibution, include=FALSE}
+
+full_QuantSeq_polyA_reads_from_stop_codon <- full_QuantSeq_PolyA_reads %>%
+  inner_join(construct_stop_codon_dictionary) %>%
+  mutate(read_end = read_end - stop_codon_pos) %>%
+  filter(read_end > 0, read_end < 200) %>%
+  group_by(construct_name,read_end, terminator, promoter, mod,sample, URA3) %>%
+  summarise(read_count = n()) %>%
+  arrange(construct_name, read_end)
+
+full_5PSeq_polyA_reads_from_stop_codon <- full_5PSeq_PolyA_reads %>%
+  inner_join(construct_stop_codon_dictionary) %>%
+  mutate(read_end = read_end - stop_codon_pos) %>%
+  filter(read_end > 0, read_end < 200) %>%
+  group_by(construct_name,read_end, terminator, promoter, mod,sample, URA3) %>%
+  summarise(read_count = n()) %>%
+  arrange(construct_name, read_end)
+
+empty_full_length_QuantSeq_plasmids <- tibble(construct_name = rep(full_QuantSeq_polyA_reads_from_stop_codon %>% pull(construct_name) %>% unique(), each = 201), 
+                                              read_end = rep(0:200,18))
+
+empty_full_length_5PSeq_plasmids <- tibble(construct_name = rep(full_5PSeq_polyA_reads_from_stop_codon %>% pull(construct_name) %>% unique(), each = 201), 
+                                              read_end = rep(0:200,10))
+
+full_length_5PSeq_plasmids_cumulative_polyA_reads <- full_5PSeq_polyA_reads_from_stop_codon %>%
+  filter(!URA3) %>%
+  group_by(construct_name, sample) %>%
+  do(fill_missing_nucleotide_data(.)) %>%
+  inner_join(construct_to_label_dictionary_TSA1_RPS3, by = c("mod" = "construct")) %>%
+  ungroup() %>%
+  mutate(sample = factor(sample, levels = expand.grid(1:16, "dt") %>% unite(factor, sep = "") %>% pull(factor))) %>%
+  arrange(sample, read_end) %>%
+  select(-construct_name) %>%
+  inner_join(sample_to_construct_dictionary_5PSeq, by = c("sample" = "sample_name")) %>%
+  mutate(promoter = str_extract(construct_name, "^p[A-Z0-9]+"), terminator = str_extract(construct_name, "(?<=\\-)t[A-Z0-9]+(?=_)")) %>%
+  select(-construct_name, -mod, -URA3, -label) %>%
+  unite("sample", promoter, terminator, type, rep) %>%
+  pivot_wider(names_from = sample, values_from = read_count) %>%
+  dplyr::rename(Position_from_stop_codon=read_end)
+
+full_length_5PSeq_plasmids_cumulative_polyA_reads_genomic <- full_5PSeq_polyA_reads_from_stop_codon %>%
+  filter(mod == "genomic") %>%
+  bind_rows(full_5PSeq_polyA_reads_from_stop_codon %>%
+              filter(URA3) %>%
+              mutate(promoter = "URA3")) %>%
+  group_by(construct_name, sample, promoter) %>%
+  do(fill_missing_nucleotide_data(.)) %>%
+  mutate(Gene =  str_remove(promoter, "p")) %>%
+  ungroup() %>%
+  select(Gene, read_end, read_count, sample) %>%
+  mutate(sample = factor(sample, levels = expand.grid(1:16, "dt") %>% unite(factor, sep = "") %>% pull(factor))) %>%
+  arrange(sample, read_end)  %>%
+  inner_join(sample_to_construct_dictionary_5PSeq, by = c("sample" = "sample_name")) %>%
+  mutate(promoter = str_extract(construct_name, "^p[A-Z0-9]+"), terminator = str_extract(construct_name, "(?<=\\-)t[A-Z0-9]+(?=_)")) %>%
+  select(-construct_name) %>%
+  unite("sample", promoter, terminator, type, rep) %>%
+  mutate(sample = str_replace(sample, "NA_NA_Control", "POT1_ccdB")) %>%
+  pivot_wider(names_from = sample, values_from = read_count) %>%
+  arrange(Gene, read_end) %>%
+  dplyr::rename(Position_from_stop_codon=read_end)
+
+full_length_QuantSeq_plasmids_cumulative_polyA_reads <- full_QuantSeq_polyA_reads_from_stop_codon %>%
+  filter(!URA3) %>%
+  group_by(construct_name, sample) %>%
+  do(fill_missing_nucleotide_data(.)) %>%
+  inner_join(construct_to_label_dictionary_TSA1_RPS3, by = c("mod" = "construct")) %>%
+  ungroup() %>%
+  mutate(sample = factor(sample, levels = expand.grid(c("A","B"),1:16) %>% unite(factor, sep = "") %>% add_row(factor = c("E1", "E2")) %>% pull(factor))) %>%
+  arrange(sample, read_end) %>%
+  select(-construct_name) %>%
+  inner_join(sample_to_construct_dictionary_QuantSeq, by = c("sample" = "sample_name")) %>%
+  mutate(promoter = str_extract(construct_name, "^p[A-Z0-9]+"), terminator = str_extract(construct_name, "(?<=\\-)t[A-Z0-9]+(?=_)")) %>%
+  select(-construct_name, -mod, -URA3, -label) %>%
+  unite("sample", promoter, terminator, type, rep) %>%
+  pivot_wider(names_from = sample, values_from = read_count) %>%
+  dplyr::rename(Position_from_stop_codon=read_end)
+
+full_length_QuantSeq_plasmids_cumulative_polyA_reads_genomic <- full_QuantSeq_polyA_reads_from_stop_codon %>%
+  filter(mod == "genomic") %>%
+  bind_rows(full_QuantSeq_polyA_reads_from_stop_codon %>%
+              filter(URA3) %>%
+              mutate(promoter = "URA3")) %>%
+  group_by(construct_name, sample, promoter) %>%
+  do(fill_missing_nucleotide_data(.)) %>%
+  mutate(Gene =  str_remove(promoter, "p")) %>%
+  ungroup() %>%
+  select(Gene, read_end, read_count, sample) %>%
+  mutate(sample = factor(sample, levels = expand.grid(c("A","B"),1:16) %>% unite(factor, sep = "") %>% add_row(factor = c("E1", "E2")) %>% pull(factor))) %>%
+  arrange(sample, read_end)  %>%
+  inner_join(sample_to_construct_dictionary_QuantSeq, by = c("sample" = "sample_name")) %>%
+  mutate(promoter = str_extract(construct_name, "^p[A-Z0-9]+"), terminator = str_extract(construct_name, "(?<=\\-)t[A-Z0-9]+(?=_)")) %>%
+  select(-construct_name) %>%
+  unite("sample", promoter, terminator, type, rep) %>%
+  mutate(sample = str_replace(sample, "NA_NA_Control", "POT1_ccdB")) %>%
+  pivot_wider(names_from = sample, values_from = read_count) %>%
+  arrange(Gene, read_end) %>%
+  dplyr::rename(Position_from_stop_codon=read_end)
+
+```
+
+```{r whole-genome-counts}
+raw_featureCounts_files_QuantSeq <- list.files("../data/rna_seq/counts/QuantSeq", pattern = "*.txt$", recursive = TRUE, full.names = TRUE)
+
+raw_featureCounts_files_5PSeq <- list.files("../data/rna_seq/counts/5PSeq", pattern = "*.txt$", recursive = TRUE, full.names = TRUE)
+
+all_sample_counts_QuantSeq <- raw_featureCounts_files_QuantSeq %>%
+  map(extract_gene_counts_from_featureCounts_file) %>%
+  reduce(full_join, by = "Geneid") %>%
+  pivot_longer(-Geneid, values_to = "counts", names_to = "sample") %>%
+  mutate(sample = factor(sample, levels = expand.grid(c("A","B"),1:16) %>% unite(factor, sep = "") %>% add_row(factor = c("E1", "E2")) %>% pull(factor))) %>%
+  arrange(Geneid, sample) %>%
+  inner_join(sample_to_construct_dictionary_QuantSeq, by = c("sample" = "sample_name")) %>%
+  mutate(promoter = str_extract(construct_name, "^p[A-Z0-9]+"), terminator = str_extract(construct_name, "(?<=\\-)t[A-Z0-9]+(?=_)")) %>%
+  select(-construct_name) %>%
+  unite("sample", promoter, terminator, type, rep) %>%
+  mutate(sample = str_replace(sample, "NA_NA_Control", "POT1_ccdB")) %>%
+  pivot_wider(names_from = "sample", values_from = "counts")
+
+all_sample_counts_5PSeq <- raw_featureCounts_files_5PSeq %>%
+  map(extract_gene_counts_from_featureCounts_file) %>%
+  reduce(full_join, by = "Geneid") %>%
+  pivot_longer(-Geneid, values_to = "counts", names_to = "sample") %>%
+  mutate(sample = factor(sample, levels = expand.grid(1:16, "dt") %>% unite(factor, sep = "") %>% pull(factor))) %>%
+  arrange(Geneid, sample) %>%
+  inner_join(sample_to_construct_dictionary_5PSeq, by = c("sample" = "sample_name")) %>%
+  mutate(promoter = str_extract(construct_name, "^p[A-Z0-9]+"), terminator = str_extract(construct_name, "(?<=\\-)t[A-Z0-9]+(?=_)")) %>%
+  select(-construct_name) %>%
+  unite("sample", promoter, terminator, type, rep) %>%
+  mutate(sample = str_replace(sample, "NA_NA_Control", "POT1_ccdB")) %>%
+  pivot_wider(names_from = "sample", values_from = "counts")
+  
+```
+
+```{r write_out_3UTR_counts, include = FALSE}
+write_tsv(full_length_QuantSeq_plasmids_cumulative_polyA_reads, here("raw_data_analysis/data/rna_seq/construct_polyA_bam/QuantSeq/QS_processed_polyA_constructs.tsv"))
+
+write_tsv(full_length_QuantSeq_plasmids_cumulative_polyA_reads_genomic, here("raw_data_analysis/data/rna_seq/construct_polyA_bam/QuantSeq/QS_processed_polyA_controls.tsv"))
+
+write_tsv(full_length_5PSeq_plasmids_cumulative_polyA_reads, here("raw_data_analysis/data/rna_seq/construct_polyA_bam/5PSeq/FPS_processed_polyA_constructs.tsv"))
+
+write_tsv(full_length_5PSeq_plasmids_cumulative_polyA_reads_genomic, here("raw_data_analysis/data/rna_seq/construct_polyA_bam/5PSeq/FPS_processed_polyA_controls.tsv"))
+
+write_tsv(all_sample_counts_QuantSeq, here("raw_data_analysis/data/rna_seq/counts/QuantSeq/QS_all_sample_gene_counts.tsv"))
+
+write_tsv(all_sample_counts_5PSeq, here("raw_data_analysis/data/rna_seq/counts/5PSeq/FPS_all_sample_gene_counts.tsv"))
+```
