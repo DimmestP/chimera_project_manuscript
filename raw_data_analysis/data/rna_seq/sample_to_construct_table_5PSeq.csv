@@ -1,0 +1,17 @@
+sample_name,construct_name,rep,type
+1dt,POT1-ccdB_b1,1,Control
+3dt,pRPS3-mCherry-tRPS3_WT_b1,1,WT
+5dt,pRPS3-mCherry-tRPS3_mod0_b1,1,mod_NNN
+7dt,pRPS3-mCherry-tRPS3_modA_b1,1,mod_NTN
+9dt,pRPS3-mCherry-tRPS3_modB_b1,1,mod_NAA
+11dt,pRPS3-mCherry-tRPS3_modC_b1,1,mod_NGG
+13dt,pRPS3-mCherry-tRPS3_modD_b1,1,mod_HNH
+15dt,pRPS3-mCherry-tRPS3_modE_b1,1,mod_HTH
+2dt,POT1-ccdB_b2,2,Control
+4dt,pRPS3-mCherry-tRPS3_WT_b2,2,WT
+6dt,pRPS3-mCherry-tRPS3_mod0_b2,2,mod_NNN
+8dt,pRPS3-mCherry-tRPS3_modA_b2,2,mod_NTN
+10dt,pRPS3-mCherry-tRPS3_modB_b2,2,mod_NAA
+12dt,pRPS3-mCherry-tRPS3_modC_b2,2,mod_NGG
+14dt,pRPS3-mCherry-tRPS3_modD_b2,2,mod_HNH
+16dt,pRPS3-mCherry-tRPS3_modE_b2,2,mod_HTH
