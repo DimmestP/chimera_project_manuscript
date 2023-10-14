@@ -148,7 +148,7 @@ motif_term_dictionary <- model_coefficients_PIR1_align %>%
 
 construct_dictionary <- model_coefficients_PIR1_align %>% 
   distinct(ter_pro) %>%
-  mutate(promoter_type = c("PGK1", "Native", "PGK1", "Native", "SRO9", "SRO9", "SRO9", "Native", "PGK1"))
+  mutate(promoter_type = c("pPGK1", "Native", "pPGK1", "Native", "pSRO9", "pSRO9", "pSRO9", "Native", "pPGK1"))
 
 individual_lm_coefficients_data <- 
   model_coefficients_PIR1_align %>% 
@@ -156,7 +156,7 @@ individual_lm_coefficients_data <-
   inner_join(construct_dictionary) %>%
   separate(ter_pro, into=c("promoter","terminator"), sep = "_", remove = FALSE) %>%
   mutate(terminator = factor(terminator, levels = c("tRPS3","tTSA1","tPIR1")),
-         promoter_type = factor(promoter_type, levels = c("Native","PGK1","SRO9"))
+         promoter_type = factor(promoter_type, levels = c("Native","pPGK1","pSRO9"))
          ) %>% 
   filter(!term %in% c("(Intercept)", "nativeTRUE", "exp_rep")) %>%
   arrange(term,promoter)

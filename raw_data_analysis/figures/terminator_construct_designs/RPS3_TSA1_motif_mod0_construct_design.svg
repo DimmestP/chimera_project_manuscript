@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.1"
    id="Layer_1"
    x="0px"
@@ -18,15 +11,18 @@
    inkscape:export-filename="RPS3_TSA1_motif_mod0_construct_design.png"
    inkscape:export-xdpi="342.33334"
    inkscape:export-ydpi="342.33334"
-   inkscape:version="1.0.2 (e86c8708, 2021-01-15)"><metadata
+   inkscape:version="1.3 (0e150ed, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"><metadata
    id="metadata1190"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
          rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
-   id="defs1188">
-	
-
-	
-</defs><sodipodi:namedview
+   id="defs1188">&#10;	&#10;&#10;	&#10;</defs><sodipodi:namedview
    pagecolor="#ffffff"
    bordercolor="#666666"
    borderopacity="1"
@@ -35,816 +31,552 @@
    guidetolerance="10"
    inkscape:pageopacity="0"
    inkscape:pageshadow="2"
-   inkscape:window-width="1228"
-   inkscape:window-height="710"
+   inkscape:window-width="1232"
+   inkscape:window-height="578"
    id="namedview1186"
    showgrid="false"
    inkscape:zoom="2.4722222"
-   inkscape:cx="164.22472"
-   inkscape:cy="167.51927"
-   inkscape:window-x="0"
-   inkscape:window-y="23"
+   inkscape:cx="174.13483"
+   inkscape:cy="159.57304"
+   inkscape:window-x="22"
+   inkscape:window-y="25"
    inkscape:window-maximized="0"
-   inkscape:current-layer="Layer_1" />
-<style
+   inkscape:current-layer="Layer_1"
+   inkscape:showpageshadow="2"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1" />&#10;<style
    type="text/css"
-   id="style833">
-	.st0{fill:#FFFFFF;}
-	.st1{fill:#EDEDED;}
-	.st2{fill:none;stroke:#040506;stroke-width:0.75;stroke-miterlimit:10;}
-	.st3{fill:#F4F4F4;}
-	.st4{fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}
-	.st5{fill:#DADADA;}
-	.st6{font-family:'Arial-BoldMT';}
-	.st7{font-size:6.1908px;}
-	.st8{fill:none;stroke:#8DA0AA;stroke-width:0.5;stroke-miterlimit:10;}
-	.st9{fill:#8DA0AA;}
-	.st10{fill:#020304;}
-	.st11{font-family:'ArialMT';}
-	.st12{font-size:7.7385px;}
-	.st13{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;}
-	.st14{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:0.9983,0.9983;}
-	.st15{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:0.9795,0.9795;}
-	.st16{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:1.0042,1.0042;}
-	.st17{font-size:13px;}
-	.st18{fill:#9D9D9C;}
-	.st19{font-size:9.2862px;}
-	.st20{fill:none;stroke:#9D9D9C;stroke-width:0.75;stroke-miterlimit:10;}
-	.st21{fill:none;stroke:#8DA0AA;stroke-width:0.75;stroke-miterlimit:10;}
-	.st22{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:1.055,1.055;}
-	.st23{font-size:6.191px;}
-	.st24{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:0.9979,0.9979;}
-	.st25{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:1.0146,1.0146;}
-	.st26{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:1.0201,1.0201;}
-	.st27{font-size:9.2994px;}
-</style>
-<rect
+   id="style833">&#10;	.st0{fill:#FFFFFF;}&#10;	.st1{fill:#EDEDED;}&#10;	.st2{fill:none;stroke:#040506;stroke-width:0.75;stroke-miterlimit:10;}&#10;	.st3{fill:#F4F4F4;}&#10;	.st4{fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}&#10;	.st5{fill:#DADADA;}&#10;	.st6{font-family:'Arial-BoldMT';}&#10;	.st7{font-size:6.1908px;}&#10;	.st8{fill:none;stroke:#8DA0AA;stroke-width:0.5;stroke-miterlimit:10;}&#10;	.st9{fill:#8DA0AA;}&#10;	.st10{fill:#020304;}&#10;	.st11{font-family:'ArialMT';}&#10;	.st12{font-size:7.7385px;}&#10;	.st13{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;}&#10;	.st14{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:0.9983,0.9983;}&#10;	.st15{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:0.9795,0.9795;}&#10;	.st16{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:1.0042,1.0042;}&#10;	.st17{font-size:13px;}&#10;	.st18{fill:#9D9D9C;}&#10;	.st19{font-size:9.2862px;}&#10;	.st20{fill:none;stroke:#9D9D9C;stroke-width:0.75;stroke-miterlimit:10;}&#10;	.st21{fill:none;stroke:#8DA0AA;stroke-width:0.75;stroke-miterlimit:10;}&#10;	.st22{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:1.055,1.055;}&#10;	.st23{font-size:6.191px;}&#10;	.st24{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:0.9979,0.9979;}&#10;	.st25{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:1.0146,1.0146;}&#10;	.st26{fill:none;stroke:#000000;stroke-width:0.75;stroke-miterlimit:10;stroke-dasharray:1.0201,1.0201;}&#10;	.st27{font-size:9.2994px;}&#10;</style>&#10;<rect
    x="18.88"
    y="172.66"
    class="st0"
    width="254.8"
    height="17.01"
-   id="rect835" />
-<rect
+   id="rect835" />&#10;<rect
    x="171.23"
    y="172.66"
    class="st1"
    width="102.79"
    height="17.01"
-   id="rect837" />
-<rect
+   id="rect837" />&#10;<rect
    x="18.88"
    y="172.66"
    class="st2"
    width="255.14"
    height="17.01"
-   id="rect839" />
-<rect
+   id="rect839" />&#10;<rect
    x="13.86"
    y="79.63"
    class="st3"
    width="125.1"
    height="21.7"
-   id="rect841" />
-<rect
+   id="rect841" />&#10;<rect
    x="9.8"
    y="21.91"
    class="st4"
    width="269.71"
    height="82.65"
-   id="rect843" />
-<rect
+   id="rect843" />&#10;<rect
    x="18.58"
    y="53.46"
    class="st0"
    width="254.8"
    height="17.01"
-   id="rect845" />
-<rect
+   id="rect845" />&#10;<rect
    x="45.63"
    y="53.8"
    class="st5"
    width="10.1"
    height="16.34"
-   id="rect847" />
-<text
+   id="rect847"
+   style="fill:#daa520;fill-opacity:1.0" />&#10;<text
    transform="matrix(1 0 0 1 46.4242 64.5775)"
    class="st6 st7"
-   id="text849">M1</text>
-<g
-   id="g859">
-	<g
-   id="g857">
-		<line
+   id="text849">M1</text>&#10;<g
+   id="g859">&#10;	<g
+   id="g857">&#10;		<line
    class="st8"
    x1="78.29"
    y1="70.79"
    x2="78.29"
    y2="89.25"
-   id="line851" />
-		<g
-   id="g855">
-			<polygon
+   id="line851" />&#10;		<g
+   id="g855">&#10;			<polygon
    class="st9"
    points="76.81,88.12 78.29,88.75 79.78,88.12 78.29,91.64    "
-   id="polygon853" />
-		</g>
-	</g>
-</g>
-<g
-   id="g869">
-	<g
-   id="g867">
-		<line
+   id="polygon853" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<g
+   id="g869">&#10;	<g
+   id="g867">&#10;		<line
    class="st8"
    x1="92.71"
    y1="70.79"
    x2="92.71"
    y2="78.51"
-   id="line861" />
-		<g
-   id="g865">
-			<polygon
+   id="line861" />&#10;		<g
+   id="g865">&#10;			<polygon
    class="st9"
    points="91.23,77.39 92.71,78.02 94.19,77.39 92.71,80.9    "
-   id="polygon863" />
-		</g>
-	</g>
-</g>
-<g
-   id="g873">
-	<text
+   id="polygon863" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<g
+   id="g873">&#10;	<text
    transform="matrix(1 0 0 1 16.2305 88.4216)"
    class="st10 st11 st12"
-   id="text871">CGTCTACGA</text>
-</g>
-<g
-   id="g883">
-	<g
-   id="g881">
-		<line
+   id="text871">CGTCTACGA</text>&#10;</g>&#10;<g
+   id="g883">&#10;	<g
+   id="g881">&#10;		<line
    class="st8"
    x1="50.73"
    y1="70.79"
    x2="50.73"
    y2="78.51"
-   id="line875" />
-		<g
-   id="g879">
-			<polygon
+   id="line875" />&#10;		<g
+   id="g879">&#10;			<polygon
    class="st9"
    points="49.25,77.39 50.73,78.02 52.21,77.39 50.73,80.9    "
-   id="polygon877" />
-		</g>
-	</g>
-</g>
-<g
-   id="g887">
-	<text
+   id="polygon877" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<g
+   id="g887">&#10;	<text
    transform="matrix(1 0 0 1 53.544 99.5839)"
    class="st10 st11 st12"
-   id="text885">ACTACGCCT</text>
-</g>
-<g
-   id="g891">
-	<text
+   id="text885">ACTACGCCT</text>&#10;</g>&#10;<g
+   id="g891">&#10;	<text
    transform="matrix(1 0 0 1 83.6748 88.4216)"
    class="st10 st11 st12"
-   id="text889">GCTTGAGGA</text>
-</g>
-<g
-   id="g909">
-	<g
-   id="g907">
-		<line
+   id="text889">GCTTGAGGA</text>&#10;</g>&#10;<g
+   id="g909">&#10;	<g
+   id="g907">&#10;		<line
    class="st13"
    x1="20.17"
    y1="49.95"
    x2="20.67"
    y2="49.95"
-   id="line893" />
-		<line
+   id="line893" />&#10;		<line
    class="st14"
    x1="21.67"
    y1="49.95"
    x2="43.13"
    y2="49.95"
-   id="line895" />
-		<line
+   id="line895" />&#10;		<line
    class="st13"
    x1="43.63"
    y1="49.95"
    x2="44.13"
    y2="49.95"
-   id="line897" />
-		<g
-   id="g901">
-			<polygon
+   id="line897" />&#10;		<g
+   id="g901">&#10;			<polygon
    points="18.58,49.95 20.82,50.87 20.29,49.95 20.82,49.04    "
-   id="polygon899" />
-		</g>
-		<g
-   id="g905">
-			<polygon
+   id="polygon899" />&#10;		</g>&#10;		<g
+   id="g905">&#10;			<polygon
    points="45.72,49.95 43.48,50.87 44.01,49.95 43.48,49.04    "
-   id="polygon903" />
-		</g>
-	</g>
-</g>
-<text
+   id="polygon903" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<text
    transform="matrix(1 0 0 1 24.8251 47.5069)"
    class="st11 st7"
-   id="text911">24 bp</text>
-<g
-   id="g929">
-	<g
-   id="g927">
-		<line
+   id="text911">24 bp</text>&#10;<g
+   id="g929">&#10;	<g
+   id="g927">&#10;		<line
    class="st13"
    x1="57.32"
    y1="49.95"
    x2="57.82"
    y2="49.95"
-   id="line913" />
-		<line
+   id="line913" />&#10;		<line
    class="st15"
    x1="58.8"
    y1="49.95"
    x2="70.07"
    y2="49.95"
-   id="line915" />
-		<line
+   id="line915" />&#10;		<line
    class="st13"
    x1="70.56"
    y1="49.95"
    x2="71.06"
    y2="49.95"
-   id="line917" />
-		<g
-   id="g921">
-			<polygon
+   id="line917" />&#10;		<g
+   id="g921">&#10;			<polygon
    points="55.73,49.95 57.97,50.87 57.44,49.95 57.97,49.04    "
-   id="polygon919" />
-		</g>
-		<g
-   id="g925">
-			<polygon
+   id="polygon919" />&#10;		</g>&#10;		<g
+   id="g925">&#10;			<polygon
    points="72.64,49.95 70.41,50.87 70.94,49.95 70.41,49.04    "
-   id="polygon923" />
-		</g>
-	</g>
-</g>
-<text
+   id="polygon923" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<text
    transform="matrix(1 0 0 1 56.0707 47.5069)"
    class="st11 st7"
-   id="text931">15 bp</text>
-<g
-   id="g947">
-	<g
-   id="g945">
-		<line
+   id="text931">15 bp</text>&#10;<g
+   id="g947">&#10;	<g
+   id="g945">&#10;		<line
    class="st13"
    x1="83.99"
    y1="49.95"
    x2="84.49"
    y2="49.95"
-   id="line933" />
-		<line
+   id="line933" />&#10;		<line
    class="st13"
    x1="85.91"
    y1="49.95"
    x2="86.41"
    y2="49.95"
-   id="line935" />
-		<g
-   id="g939">
-			<polygon
+   id="line935" />&#10;		<g
+   id="g939">&#10;			<polygon
    points="82.4,49.95 84.64,50.87 84.11,49.95 84.64,49.04    "
-   id="polygon937" />
-		</g>
-		<g
-   id="g943">
-			<polygon
+   id="polygon937" />&#10;		</g>&#10;		<g
+   id="g943">&#10;			<polygon
    points="88,49.95 85.76,50.87 86.3,49.95 85.76,49.04    "
-   id="polygon941" />
-		</g>
-	</g>
-</g>
-<text
+   id="polygon941" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<text
    transform="matrix(1 0 0 1 79.8714 47.5069)"
    class="st11 st7"
-   id="text949">4 bp</text>
-<g
-   id="g967">
-	<g
-   id="g965">
-		<line
+   id="text949">4 bp</text>&#10;<g
+   id="g967">&#10;	<g
+   id="g965">&#10;		<line
    class="st13"
    x1="99.08"
    y1="49.95"
    x2="99.58"
    y2="49.95"
-   id="line951" />
-		<line
+   id="line951" />&#10;		<line
    class="st16"
    x1="100.58"
    y1="49.95"
    x2="270.8"
    y2="49.95"
-   id="line953" />
-		<line
+   id="line953" />&#10;		<line
    class="st13"
    x1="271.3"
    y1="49.95"
    x2="271.8"
    y2="49.95"
-   id="line955" />
-		<g
-   id="g959">
-			<polygon
+   id="line955" />&#10;		<g
+   id="g959">&#10;			<polygon
    points="97.49,49.95 99.73,50.87 99.2,49.95 99.73,49.04    "
-   id="polygon957" />
-		</g>
-		<g
-   id="g963">
-			<polygon
+   id="polygon957" />&#10;		</g>&#10;		<g
+   id="g963">&#10;			<polygon
    points="273.39,49.95 271.15,50.87 271.68,49.95 271.15,49.04    "
-   id="polygon961" />
-		</g>
-	</g>
-</g>
-<g
-   id="g971">
-	<text
+   id="polygon961" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<g
+   id="g971">&#10;	<text
    transform="matrix(1 0 0 1 164.9081 47.5069)"
    class="st11 st7"
-   id="text969">158 bp</text>
-</g>
-<text
+   id="text969">158 bp</text>&#10;</g>&#10;<text
    class="st11 st17"
    id="text973"
    x="152.6922"
    y="15.8208"
-   style="text-align:center;text-anchor:middle">RPS3 mod_NNN terminator</text>
-<text
+   style="text-align:center;text-anchor:middle">RPS3 mod_NNN terminator</text>&#10;<text
    transform="matrix(1 0 0 1 171.1864 89.7138)"
    class="st18 st11 st19"
-   id="text977">Random sequences</text>
-<g
-   id="g987">
-	<g
-   id="g985">
-		<line
+   id="text977">Random sequences</text>&#10;<g
+   id="g987">&#10;	<g
+   id="g985">&#10;		<line
    class="st20"
    x1="143.78"
    y1="87.65"
    x2="167.57"
    y2="87.65"
-   id="line979" />
-		<g
-   id="g983">
-			<polygon
+   id="line979" />&#10;		<g
+   id="g983">&#10;			<polygon
    class="st18"
    points="144.83,89.04 144.24,87.65 144.83,86.26 141.54,87.65    "
-   id="polygon981" />
-		</g>
-	</g>
-</g>
-<rect
+   id="polygon981" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<rect
    x="72.69"
    y="53.8"
    class="st5"
    width="10.1"
    height="16.34"
-   id="rect989" />
-<g
-   id="g993">
-	<text
+   id="rect989"
+   style="fill:#daa520;fill-opacity:1.0" />&#10;<g
+   id="g993">&#10;	<text
    transform="matrix(1 0 0 1 73.4906 64.5775)"
    class="st6 st7"
-   id="text991">M2</text>
-</g>
-<rect
+   id="text991">M2</text>&#10;</g>&#10;<rect
    x="87.74"
    y="53.8"
    class="st5"
    width="10.1"
    height="16.34"
-   id="rect995" />
-<g
-   id="g999">
-	<text
+   id="rect995"
+   style="fill:#daa520;fill-opacity:1.0" />&#10;<g
+   id="g999">&#10;	<text
    transform="matrix(1 0 0 1 88.3998 64.6508)"
    class="st6 st7"
-   id="text997">M3</text>
-</g>
-<g
-   id="g1003">
-	<text
+   id="text997">M3</text>&#10;</g>&#10;<g
+   id="g1003">&#10;	<text
    transform="matrix(1 0 0 1 38.1644 34.4091)"
    class="st11 st19"
-   id="text1001">Median 3’UTR length</text>
-</g>
-<line
+   id="text1001">Median 3’UTR length</text>&#10;</g>&#10;<line
    class="st20"
    x1="19"
    y1="41.13"
    x2="19"
    y2="36.9"
-   id="line1005" />
-<line
+   id="line1005" />&#10;<line
    class="st20"
    x1="145.62"
    y1="41.13"
    x2="145.62"
    y2="36.9"
-   id="line1007" />
-<line
+   id="line1007" />&#10;<line
    class="st20"
    x1="145.86"
    y1="37.27"
    x2="18.66"
    y2="37.27"
-   id="line1009" />
-<rect
+   id="line1009" />&#10;<rect
    x="145.62"
    y="53.46"
    class="st1"
    width="128.1"
    height="17.01"
-   id="rect1011" />
-<rect
+   id="rect1011" />&#10;<rect
    x="18.58"
    y="53.46"
    class="st2"
    width="255.14"
    height="17.01"
-   id="rect1013" />
-<rect
+   id="rect1013" />&#10;<rect
    x="17.95"
    y="198.42"
    class="st3"
    width="118.91"
    height="21.61"
-   id="rect1015" />
-<rect
+   id="rect1015" />&#10;<rect
    x="10.91"
    y="140.34"
    class="st4"
    width="269.42"
    height="82.99"
-   id="rect1017" />
-<g
-   id="g1027">
-	<g
-   id="g1025">
-		<line
+   id="rect1017" />&#10;<g
+   id="g1027">&#10;	<g
+   id="g1025">&#10;		<line
    class="st21"
    x1="75.84"
    y1="189.23"
    x2="75.84"
    y2="208.31"
-   id="line1019" />
-		<g
-   id="g1023">
-			<polygon
+   id="line1019" />&#10;		<g
+   id="g1023">&#10;			<polygon
    class="st9"
    points="74.45,207.26 75.84,207.85 77.22,207.26 75.84,210.55    "
-   id="polygon1021" />
-		</g>
-	</g>
-</g>
-<g
-   id="g1037">
-	<g
-   id="g1035">
-		<line
+   id="polygon1021" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<g
+   id="g1037">&#10;	<g
+   id="g1035">&#10;		<line
    class="st21"
    x1="111.12"
    y1="190.07"
    x2="111.12"
    y2="197.65"
-   id="line1029" />
-		<g
-   id="g1033">
-			<polygon
+   id="line1029" />&#10;		<g
+   id="g1033">&#10;			<polygon
    class="st9"
    points="109.74,196.6 111.12,197.19 112.51,196.6 111.12,199.89    "
-   id="polygon1031" />
-		</g>
-	</g>
-</g>
-<g
-   id="g1041">
-	<text
+   id="polygon1031" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<g
+   id="g1041">&#10;	<text
    transform="matrix(1 0 0 1 19.5714 207.4672)"
    class="st10 st11 st12"
-   id="text1039">AAATCACAG</text>
-</g>
-<g
-   id="g1051">
-	<g
-   id="g1049">
-		<line
+   id="text1039">AAATCACAG</text>&#10;</g>&#10;<g
+   id="g1051">&#10;	<g
+   id="g1049">&#10;		<line
    class="st21"
    x1="45.22"
    y1="190.07"
    x2="45.22"
    y2="197.65"
-   id="line1043" />
-		<g
-   id="g1047">
-			<polygon
+   id="line1043" />&#10;		<g
+   id="g1047">&#10;			<polygon
    class="st9"
    points="43.83,196.6 45.22,197.19 46.6,196.6 45.22,199.89    "
-   id="polygon1045" />
-		</g>
-	</g>
-</g>
-<g
-   id="g1055">
-	<text
+   id="polygon1045" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<g
+   id="g1055">&#10;	<text
    transform="matrix(1 0 0 1 55.4181 217.5864)"
    class="st10 st11 st12"
-   id="text1053">CAAGTTAAT</text>
-</g>
-<g
-   id="g1059">
-	<text
+   id="text1053">CAAGTTAAT</text>&#10;</g>&#10;<g
+   id="g1059">&#10;	<text
    transform="matrix(1 0 0 1 89.169 207.2758)"
    class="st10 st11 st12"
-   id="text1057">TTATGTTGG</text>
-</g>
-<g
-   id="g1077">
-	<g
-   id="g1075">
-		<line
+   id="text1057">TTATGTTGG</text>&#10;</g>&#10;<g
+   id="g1077">&#10;	<g
+   id="g1075">&#10;		<line
    class="st13"
    x1="20.21"
    y1="168.27"
    x2="20.71"
    y2="168.27"
-   id="line1061" />
-		<line
+   id="line1061" />&#10;		<line
    class="st22"
    x1="21.76"
    y1="168.27"
    x2="38.11"
    y2="168.27"
-   id="line1063" />
-		<line
+   id="line1063" />&#10;		<line
    class="st13"
    x1="38.64"
    y1="168.27"
    x2="39.14"
    y2="168.27"
-   id="line1065" />
-		<g
-   id="g1069">
-			<polygon
+   id="line1065" />&#10;		<g
+   id="g1069">&#10;			<polygon
    points="20.84,169.1 20.48,168.27 20.84,167.43 18.86,168.27    "
-   id="polygon1067" />
-		</g>
-		<g
-   id="g1073">
-			<polygon
+   id="polygon1067" />&#10;		</g>&#10;		<g
+   id="g1073">&#10;			<polygon
    points="38.51,169.1 38.86,168.27 38.51,167.43 40.48,168.27    "
-   id="polygon1071" />
-		</g>
-	</g>
-</g>
-<text
+   id="polygon1071" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<text
    transform="matrix(1 0 0 1 23.4477 164.9314)"
    class="st11 st23"
-   id="text1079">21 bp</text>
-<text
+   id="text1079">21 bp</text>&#10;<text
    transform="matrix(1 0 0 1 53.0951 164.9295)"
    class="st11 st23"
-   id="text1081">20 bp</text>
-<text
+   id="text1081">20 bp</text>&#10;<text
    transform="matrix(1 0 0 1 87.2709 164.9305)"
    class="st11 st23"
-   id="text1083">24 bp</text>
-<g
-   id="g1101">
-	<g
-   id="g1099">
-		<line
+   id="text1083">24 bp</text>&#10;<g
+   id="g1101">&#10;	<g
+   id="g1099">&#10;		<line
    class="st13"
    x1="117.2"
    y1="168.27"
    x2="117.7"
    y2="168.27"
-   id="line1085" />
-		<line
+   id="line1085" />&#10;		<line
    class="st24"
    x1="118.7"
    y1="168.27"
    x2="271.87"
    y2="168.27"
-   id="line1087" />
-		<line
+   id="line1087" />&#10;		<line
    class="st13"
    x1="272.37"
    y1="168.27"
    x2="272.87"
    y2="168.27"
-   id="line1089" />
-		<g
-   id="g1093">
-			<polygon
+   id="line1089" />&#10;		<g
+   id="g1093">&#10;			<polygon
    points="117.83,169.1 117.48,168.27 117.83,167.43 115.86,168.27    "
-   id="polygon1091" />
-		</g>
-		<g
-   id="g1097">
-			<polygon
+   id="polygon1091" />&#10;		</g>&#10;		<g
+   id="g1097">&#10;			<polygon
    points="272.23,169.1 272.59,168.27 272.23,167.43 274.21,168.27    "
-   id="polygon1095" />
-		</g>
-	</g>
-</g>
-<text
+   id="polygon1095" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<text
    transform="matrix(1 0 0 1 181.7397 164.9305)"
    class="st11 st23"
-   id="text1103">155 bp</text>
-<g
-   id="g1121">
-	<g
-   id="g1119">
-		<line
+   id="text1103">155 bp</text>&#10;<g
+   id="g1121">&#10;	<g
+   id="g1119">&#10;		<line
    class="st13"
    x1="50.97"
    y1="168.27"
    x2="51.47"
    y2="168.27"
-   id="line1105" />
-		<line
+   id="line1105" />&#10;		<line
    class="st25"
    x1="52.49"
    y1="168.27"
    x2="68.21"
    y2="168.27"
-   id="line1107" />
-		<line
+   id="line1107" />&#10;		<line
    class="st13"
    x1="68.72"
    y1="168.27"
    x2="69.22"
    y2="168.27"
-   id="line1109" />
-		<g
-   id="g1113">
-			<polygon
+   id="line1109" />&#10;		<g
+   id="g1113">&#10;			<polygon
    points="51.6,169.1 51.25,168.27 51.6,167.43 49.63,168.27    "
-   id="polygon1111" />
-		</g>
-		<g
-   id="g1117">
-			<polygon
+   id="polygon1111" />&#10;		</g>&#10;		<g
+   id="g1117">&#10;			<polygon
    points="68.59,169.1 68.94,168.27 68.59,167.43 70.56,168.27    "
-   id="polygon1115" />
-		</g>
-	</g>
-</g>
-<g
-   id="g1139">
-	<g
-   id="g1137">
-		<line
+   id="polygon1115" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<g
+   id="g1139">&#10;	<g
+   id="g1137">&#10;		<line
    class="st13"
    x1="82.63"
    y1="168.27"
    x2="83.13"
    y2="168.27"
-   id="line1123" />
-		<line
+   id="line1123" />&#10;		<line
    class="st26"
    x1="84.15"
    y1="168.27"
    x2="104.04"
    y2="168.27"
-   id="line1125" />
-		<line
+   id="line1125" />&#10;		<line
    class="st13"
    x1="104.55"
    y1="168.27"
    x2="105.05"
    y2="168.27"
-   id="line1127" />
-		<g
-   id="g1131">
-			<polygon
+   id="line1127" />&#10;		<g
+   id="g1131">&#10;			<polygon
    points="83.26,169.1 82.91,168.27 83.26,167.43 81.28,168.27    "
-   id="polygon1129" />
-		</g>
-		<g
-   id="g1135">
-			<polygon
+   id="polygon1129" />&#10;		</g>&#10;		<g
+   id="g1135">&#10;			<polygon
    points="104.42,169.1 104.77,168.27 104.42,167.43 106.39,168.27    "
-   id="polygon1133" />
-		</g>
-	</g>
-</g>
-<text
-   transform="matrix(1 0 0 1 161.5156 209.8299)"
+   id="polygon1133" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<text
    class="st18 st11 st27"
-   id="text1141">Random sequences</text>
-<g
-   id="g1151">
-	<g
-   id="g1149">
-		<line
+   id="text1141"
+   x="165.15605"
+   y="210.63889">Random sequences</text>&#10;<g
+   id="g1151">&#10;	<g
+   id="g1149">&#10;		<line
    class="st20"
    x1="139.33"
    y1="207.9"
    x2="161.46"
    y2="207.9"
-   id="line1143" />
-		<g
-   id="g1147">
-			<polygon
+   id="line1143" />&#10;		<g
+   id="g1147">&#10;			<polygon
    class="st18"
    points="140.38,209.29 139.79,207.9 140.38,206.51 137.09,207.9    "
-   id="polygon1145" />
-		</g>
-	</g>
-</g>
-<rect
+   id="polygon1145" />&#10;		</g>&#10;	</g>&#10;</g>&#10;<rect
    x="40.48"
    y="173.05"
    class="st5"
    width="9.46"
    height="16.19"
-   id="rect1153" />
-<g
-   id="g1157">
-	<text
+   id="rect1153"
+   style="fill:#daa520;fill-opacity:1.0" />&#10;<g
+   id="g1157">&#10;	<text
    transform="matrix(1 0 0 1 40.8246 184.1414)"
    class="st6 st7"
-   id="text1155">M1</text>
-</g>
-<rect
+   id="text1155">M1</text>&#10;</g>&#10;<rect
    x="71.1"
    y="173"
    class="st5"
    width="9.46"
    height="16.19"
-   id="rect1159" />
-<g
-   id="g1163">
-	<text
+   id="rect1159"
+   style="fill:#daa520;fill-opacity:1.0" />&#10;<g
+   id="g1163">&#10;	<text
    transform="matrix(1 0 0 1 71.4448 184.1004)"
    class="st6 st7"
-   id="text1161">M2</text>
-</g>
-<rect
+   id="text1161">M2</text>&#10;</g>&#10;<rect
    x="106.39"
    y="173"
    class="st5"
    width="9.46"
    height="16.19"
-   id="rect1165" />
-<g
-   id="g1169">
-	<text
+   id="rect1165"
+   style="fill:#daa520;fill-opacity:1.0" />&#10;<g
+   id="g1169">&#10;	<text
    transform="matrix(1 0 0 1 106.7328 184.1004)"
    class="st6 st7"
-   id="text1167">M3</text>
-</g>
-<line
+   id="text1167">M3</text>&#10;</g>&#10;<line
    class="st20"
    x1="18.75"
    y1="154.67"
    x2="171.51"
    y2="154.67"
-   id="line1171" />
-<line
+   id="line1171" />&#10;<line
    class="st20"
    x1="18.83"
    y1="159.58"
    x2="18.83"
    y2="154.11"
-   id="line1173" />
-<line
+   id="line1173" />&#10;<line
    class="st20"
    x1="171.23"
    y1="159.69"
    x2="171.23"
    y2="154.23"
-   id="line1175" />
-<g
-   id="g1179">
-	<text
+   id="line1175" />&#10;<g
+   id="g1179">&#10;	<text
    transform="matrix(1 0 0 1 45.8823 150.7449)"
    class="st11 st19"
-   id="text1177">Median 3’UTR length</text>
-</g>
-<text
+   id="text1177">Median 3’UTR length</text>&#10;</g>&#10;<text
    class="st11 st17"
    id="text1181"
    style="text-align:center;text-anchor:middle;stroke-width:0.999999"
    x="156.49106"
-   y="134.1517">TSA1 mod_NNN terminator</text>
-</svg>
+   y="134.1517">TSA1 mod_NNN terminator</text>&#10;</svg>

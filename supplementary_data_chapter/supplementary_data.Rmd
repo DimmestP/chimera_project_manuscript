@@ -459,39 +459,6 @@ polya_usage_pvalue <- read_csv(here("supplementary_data_chapter/data/polyA_site_
     cat('\\end{table}')
 
 ```
-
-```{r polya-usage-effect-5PSeq-table, results='asis'}
-polya_usage_pvalue_5PSeq <- read_csv(here("supplementary_data_chapter/data/polyA_site_p.value_5PSeq.csv")) 
-
-# Setting `results = 'asis'` allows for using Latex within the code chunk
-    cat('\\begin{table}')
-    cat('\\centering \\begingroup\\fontsize{7}{9}\\selectfont')
-    # `{c c}` Creates a two column table
-    # Use `{c | c}` if you'd like a line between the tables
-    cat('{\\renewcommand{\\arraystretch}{1}')
-    cat('\\begin{tabular}{ c c }')
-    cat('\\textbf{tRPS3 Site 1} & \\textbf{tRPS3 Site 2} \\\\')
-    print(kable(polya_usage_pvalue_5PSeq %>%
-              arrange(`p.value`) %>%
-              filter(site == "1", terminator == "tRPS3") %>%
-              mutate(`p.value` = signif(`p.value`, 2)) %>%
-                       select(-site, -terminator, -method, -statistic, -alternative),
-      format = "latex") %>%
-  kableExtra::row_spec(0, bold = TRUE))
-    cat('&')
-    print(kable(polya_usage_pvalue_5PSeq %>%
-              arrange(`p.value`) %>%
-              filter(site == "2", terminator == "tRPS3") %>%
-              mutate(`p.value` = signif(`p.value`, 2)) %>%
-                       select(-site, -terminator, -method, -statistic, -alternative),
-      format = "latex") %>%
-  kableExtra::row_spec(0, bold = TRUE))
-    cat('\\end{tabular}}\\endgroup{}')
-    cat("\\caption{\\textbf{Tables showing relative usage of the two major Poly(A) sites in tRPS3 across constructs as detected by 5PSeq. p.values are calculated by comparing the rel\\_counts of the same construct across the two RNA-seq methods using a two sided Wilcoxon signed rank exact test.}}")
-    cat('\\label{tab:polya-usage-effect-5PSeq-table}')
-    cat('\\end{table}')
-```
-
 \pagebreak
 
 ## Supplementary Figures
@@ -508,28 +475,18 @@ knitr::include_graphics(here("supplementary_data_chapter/figures/RPS3_TSA1_PIR1_
 knitr::include_graphics(here("supplementary_data_chapter/figures/motif_position_histograms.png"), dpi = 300) 
 ```
 
-
-```{r polyA-site-usage-5Pseq, fig.cap="\\textbf{Decapped constructs measured by 5Pseq match mature constructs measured by QuantSeq.} pRPS3-tRPS3 constructs were chosen to investigate changes in poly(A) site usage across 5' decapped transcripts flagged for decay. (\\textbf{A}) Comparison of construct transcript abundance as independently measured by qPCR and RNA-Seq assays. Transcript abundance was normalised to the median abundance of  plasmid URA3, genomic PGK1 and RPS3 transcripts for each construct. Fold change is relative to the mod\\_NNN construct in each promoter-terminator context. The black diagonal line represents the expected values if RNAseq and qPCR results correlated perfectly. (\\textbf{B}) Cumulative counts of reads mapped downstream of WT (grey) and mod\\_NNN (golden) construct stop codons as fraction of total reads mapped to the constructs terminator. WT reads have been shifted downstream to align with the mod\\_NNN sequence by accounting for motif insertion sites. Major poly(A) sites have been highlighted by a black vertical line. Constructs also used in the QuantSeq analysis have their QuantSeq cumulative graphs plotted in dotted lines. (\\textbf{C}) Similar to Figure \\textbf{B} but with each motif insertion construct plotted separately. Columns designate cumulative plots from different terminator constructs.", fig.align='center',out.width="85%"}
-knitr::include_graphics(here("supplementary_data_chapter/figures/polya_usage_plot_5PSeq.png"))
-```
-
 ```{r rnaseq-QC-correlation, fig.cap="\\textbf{High correlation in transcript counts between samples for both RNA-Seq assays.} (\\textbf{A}) Correlation heat map of DESeq2 normalised log2 pseudocounts across all genes for each sample pair in the QuantSeq assay. From top to bottom on the y axis (left to right on the x-axis) the terminator contexts are pRPS3-tRPS3, pPGK1-tRPS3 and pTSA1-tTSA1. (\\textbf{B}) Similar correlation heat map for all sample pairs in the 5PSeq assay. (\\textbf{C}) Comparison of mean log2 abundance of construct mRNA transcripts as measured by 5PSeq and QuantSeq. Only 5 terminator constructs were measured by both methods and only in the pRPS3-tRPS3 context. Transcript abundance for each sample is normalised to the median of the genomic PGK1, TSA1 and RPS3, and the plasmid URA3 genes to match the normalisation used in the qPCR analysis.", fig.align='center',out.width="85%"}
 knitr::include_graphics(here("supplementary_data_chapter/figures/sequencing_sample_correlation.png"))
 ```
 
-```{r rnaseq-QC-QuantSeq-and-5PSeq-genomic-polyA, fig.cap="\\textbf{Poly(A) site usage for genomic PGK1, TSA1 and RPS3 terminators remains the same across samples for each RNA-Seq assay.} Cumulative counts of reads mapped downstream of native genomic gene stop codons as fraction of total reads mapped to the terminator. Each line plots the cumulative counts of a separate sequencing run (including two tech reps per sample) which is given a unique colour. Relative usage of poly(A) sites remain similar across samples and across RNA-seq assays. Higher variability in QuantSeq PGK1 poly(A) site usage is due to low overall transcript counts.", fig.align='center',out.width="85%"}
-knitr::include_graphics(here("supplementary_data_chapter/figures/polya_QC_plot_QuantSeq_and_5PSeq.png"))
+```{r rnaseq-QC-QuantSeq-and-5PSeq-genomic-polyA, fig.cap="\\textbf{Poly(A) site usage for genomic PGK1, TSA1 and RPS3 terminators remains the same across samples.} Cumulative counts of reads mapped downstream of native genomic gene stop codons as fraction of total reads mapped to the terminator. Each line plots the cumulative counts of a separate sequencing run (including two tech reps per sample) which is given a unique colour. Relative usage of poly(A) sites remain similar across samples and across RNA-seq assays. Higher variability in QuantSeq PGK1 poly(A) site usage is due to low overall transcript counts.", fig.align='center',out.width="85%"}
+knitr::include_graphics(here("supplementary_data_chapter/figures/polya_QC_plot_QuantSeq.png"))
 ```
 
-```{r rnaseq-QC-genomic-vs-plasmid-polyA, fig.cap="\\textbf{Poly(A) site usage remains the same for genomic TSA1 and RPS3 terminators as for plasmid expressed WT constructs in QuantSeq and 5PSeq.} Cumulative counts of reads mapped downstream of WT stop codons for native genomic terminators and plasmid construct terminators as a fraction of total reads mapped to the constructs terminator. Each line plots the cumulative counts of a separate sequencing run (including two tech reps per sample) which is given a unique colour. Expressing constructs from a low copy number plasmid does not seem to affect poly(A) site usage.", fig.align='center',out.width="85%"}
+```{r rnaseq-QC-genomic-vs-plasmid-polyA, fig.cap="\\textbf{Poly(A) site usage remains the same for genomic TSA1 and RPS3 terminators as for plasmid expressed WT constructs in QuantSeq.} Cumulative counts of reads mapped downstream of WT stop codons for native genomic terminators and plasmid construct terminators as a fraction of total reads mapped to the constructs terminator. Each line plots the cumulative counts of a separate sequencing run (including two tech reps per sample) which is given a unique colour. Expressing constructs from a low copy number plasmid does not seem to affect poly(A) site usage.", fig.align='center',out.width="85%"}
 knitr::include_graphics(here("supplementary_data_chapter/figures/plasmid_vs_genome_polyA_combined_plot.png"))
 ```
 
-```{r relative-polya-counts, fig.cap="\\textbf{Construct poly(A) site usage across 5PSeq and QuantSeq.} Relative counts of reads mapped downstream of construct stop codons as fraction of total reads mapped to the constructs terminator. Peaks represent the position of major poly(A) sites. Replicates are plotted on top of each other where available.", fig.align='center',out.width="85%"}
-knitr::include_graphics(here("./supplementary_data_chapter/figures/relative_polya_counts_QuantSeq_and_5PSeq.png"))
+```{r relative-polya-counts, fig.cap="\\textbf{Construct poly(A) site usage across QuantSeq.} Relative counts of reads mapped downstream of construct stop codons as fraction of total reads mapped to the constructs terminator. Peaks represent the position of major poly(A) sites. Replicates are plotted on top of each other where available.", fig.align='center',out.width="85%"}
+knitr::include_graphics(here("./supplementary_data_chapter/figures/relative_polya_counts_QuantSeq.png"))
 ```
-
-```{r combined-5p-end-read-plot, fig.cap="\\textbf{5PSeq data finds no detectable changes in 5'-phosphorylated intermediates between reporter constructs.} Relative counts of 5' end reads of 5'-phosphorylated intermediates as fraction of total 5' end reads mapped to the terminator. Results for plasmid constructs are plotted alongside selected genomic genes for comparison.", fig.align='center',out.width="85%"}
-knitr::include_graphics(here("supplementary_data_chapter/figures/combined_5p_end_read_plot.png"))
-```
-

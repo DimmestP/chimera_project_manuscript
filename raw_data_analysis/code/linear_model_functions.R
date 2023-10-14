@@ -61,11 +61,17 @@ motif_count_function <- function(regex_motifs, sequence, min_count_filter = 5, g
       motif_freq <- mutate(motif_freq, !!regex_motifs[i] := motif_count)
     }
   }
-  if(!is.na(gene_name)) {
-    # what does this do?
+  if(length(gene_name)>1) {
     motif_freq <- motif_freq %>% 
       mutate(geneName = gene_name) %>% 
+      relocate(geneName)}
+  else{
+    if(!is.na(gene_name)) {
+      # what does this do?
+      motif_freq <- motif_freq %>% 
+      mutate(geneName = gene_name) %>% 
       relocate(geneName)
+    }
   }
   return(motif_freq)
 }

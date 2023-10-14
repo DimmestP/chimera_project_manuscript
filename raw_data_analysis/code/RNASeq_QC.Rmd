@@ -52,7 +52,7 @@ library(here)
 library(GGally)
 library(stringr)
 library(DESeq2)
-source("/home/dimmest-p/Documents/PhD/3UTR_motifs/motifPrediction/chimera_project_manuscript/raw_data_analysis/code/shared_figure_formatting.R")
+source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 ```
 
 ```{r functions}
@@ -423,18 +423,7 @@ QuantSeq_5PSeq_construct_abund <- ggplot(RNASeq_construct_comparison) +
 
 ```{r output-cor-graphs, eval = FALSE}
 ggsave2(here("supplementary_data_chapter/figures/sequencing_sample_correlation.png"),
-        plot_grid(sample_correlation_quantseq,
-                                         plot_grid(sample_correlation_5Pseq,
-                                                   QuantSeq_5PSeq_construct_abund,
-                                                   labels = c("B", "C"),
-                                                   scale = c(1.35,0.8),
-                                                   axis = "bottom",
-                                                   hjust = c(1, -3),
-                                                   align = "hv"), 
-                                         ncol = 1,
-                                         scale = c(1,0.8),
-                                         labels = c("A", ""),
-                                         hjust = c(-3.7, 0)),
+        sample_correlation_quantseq,
         width = fig_width_2column,
         height = 210,
         units = "mm",

@@ -21,14 +21,19 @@ source(here("raw_data_analysis/code/shared_figure_formatting.R"))
 ```
 
 ```{r definitions}
-genomic_gene_dictionary <- tibble(construct_name = c("chrXIII", "chrIII", "chrXIV"),
-                                  promoter = c("pTSA1", "pPGK1", "pRPS3"),
-                                  terminator = c("tTSA1", "tPGK1", "tRPS3"),
+genomic_gene_dictionary <- tibble(construct_name = c("chrXIII", "chrIII", 
+                                                     "chrXIV", "chrII", "chrVII"),
+                                  promoter = c("pTSA1", "pPGK1", 
+                                               "pRPS3", "pHSP26", "pPMA1"),
+                                  terminator = c("tTSA1", "tPGK1",
+                                                 "tRPS3", "tHSP26", "tPMA1"),
                                   mod = "genomic")
 
 construct_stop_codon_dictionary <- read_csv(here("raw_data_analysis/data/rna_seq/gene_of_interest_stop_codons"))
 
 sample_to_construct_dictionary_QuantSeq <- read_csv(here("raw_data_analysis/data/rna_seq/sample_to_construct_table_QuantSeq.csv"))
+
+sample_to_construct_dictionary_QuantSeq_heat_shock <- read_csv(here("raw_data_analysis/data/rna_seq/sample_to_construct_table_QuantSeq_heat_shock.csv"))
 
 sample_to_construct_dictionary_5PSeq <- read_csv(here("raw_data_analysis/data/rna_seq/sample_to_construct_table_5PSeq.csv"))
 ```
@@ -59,15 +64,15 @@ load_polyA_reads <- function(filename) {
       mutate(terminator = str_extract(construct_name, "t[A-Z0-9]+")) %>%
       mutate(promoter = str_extract(construct_name, "p[A-Z0-9]+")) %>%
       mutate(mod = str_extract(construct_name, "[a-zA-Z0-9]+$")) %>%
-      mutate(sample = str_extract(filename, "(?<=/)[ABEdt0-9]+(?=_)")) %>%
-      mutate(URA3 = (read_end > 3500))
+      mutate(sample = str_extract(filename, "(?<=/)(WD_)?[ABCEdt0-9]+(?=_)")) %>%
+      mutate(URA3 = (read_end > 4000))
     
     # label reads mapped to genomic genes according to chromosome
     genomic_reads <- full_bed_tibble %>%
       filter(!str_detect(construct_name, "mCherry")) %>%
       select(construct_name,read_end) %>%
       inner_join(genomic_gene_dictionary) %>%
-      mutate(sample = str_extract(filename, "(?<=/)[ABEdt0-9]+(?=_)")) %>%
+      mutate(sample = str_extract(filename, "(?<=/)(WD_)?[ABCEdt0-9]+(?=_)")) %>%
       mutate(URA3 = FALSE)
     
     bind_rows(plasmid_construct_reads, genomic_reads) 
@@ -110,10 +115,27 @@ fill_missing_nucleotide_data <- function(nucleotide_with_known_counts){
     arrange(read_end)
   
 }
+
+fill_missing_nucleotide_data_QS_HS <- function(nucleotide_with_known_counts){
+  # if first nucleotide has no entry, make a cumulative count 0 entry
+ empty_full_plasmid = tibble(read_end = 1:500) %>% 
+    filter(!read_end %in% nucleotide_with_known_counts$read_end) %>%
+    mutate(terminator = unique(nucleotide_with_known_counts$terminator),
+           promoter = unique(nucleotide_with_known_counts$promoter),
+           mod = unique(nucleotide_with_known_counts$mod),
+           sample = unique(nucleotide_with_known_counts$sample),
+           URA3 = unique(nucleotide_with_known_counts$URA3),
+           construct_name = unique(nucleotide_with_known_counts$construct_name),
+           read_count = 0)
+  bind_rows(nucleotide_with_known_counts, empty_full_plasmid) %>%
+    arrange(read_end)
+}
 ```
 
 ```{r load_polyA_reads, warnings = FALSE, message = FALSE, include=FALSE}
 all_QuantSeq_PolyA_read_files <- list.files(path = here("raw_data_analysis/data/rna_seq/construct_polyA_bam/QuantSeq/"), pattern = ".bed$", recursive = TRUE, full.names = TRUE)
+
+all_QuantSeq_heat_shock_PolyA_read_files <- list.files(path = here("raw_data_analysis/data/rna_seq/construct_polyA_bam/QuantSeq_heat_shock/"), pattern = ".bed$", recursive = TRUE, full.names = TRUE)
 
 all_5PSeq_PolyA_read_files <- list.files(path = here("raw_data_analysis/data/rna_seq/construct_polyA_bam/5PSeq/"), pattern = ".bed$", recursive = TRUE, full.names = TRUE)
 
@@ -124,6 +146,17 @@ full_5PSeq_PolyA_reads <- all_5PSeq_PolyA_read_files %>%
 full_QuantSeq_PolyA_reads <- all_QuantSeq_PolyA_read_files %>%
   lapply(load_polyA_reads) %>%
   purrr::reduce(bind_rows)
+
+full_QuantSeq_heat_shock_PolyA_reads <- all_QuantSeq_heat_shock_PolyA_read_files %>%
+  lapply(load_polyA_reads) %>%
+  purrr::reduce(bind_rows) %>%
+  mutate(mod = ifelse(str_detect(construct_name,"mCherry"),"WT","genomic"),
+         promoter = ifelse((construct_name == "chrXIV" & read_end < 100000), 
+                           "pTOS6", ifelse((construct_name == "chrXIV" & read_end > 100000),
+                                           "pRPS3", promoter)),
+         terminator = ifelse((construct_name == "chrXIV" & read_end < 100000), 
+                           "tTOS6", ifelse((construct_name == "chrXIV" & read_end > 100000),
+                                           "tRPS3", terminator)))
 
 ```
 
@@ -138,6 +171,15 @@ full_QuantSeq_polyA_reads_from_stop_codon <- full_QuantSeq_PolyA_reads %>%
   summarise(read_count = n()) %>%
   arrange(construct_name, read_end)
 
+full_QuantSeq_heat_shock_polyA_reads_from_stop_codon <-  full_QuantSeq_heat_shock_PolyA_reads  %>%
+  inner_join(construct_stop_codon_dictionary) %>%
+  mutate(read_end = read_end - stop_codon_pos) %>%
+  mutate(read_end = ifelse(promoter == "pPMA1", - read_end, read_end)) %>%
+  filter(read_end > 0, read_end < 500) %>%
+  group_by(construct_name,read_end, terminator, promoter, mod,sample, URA3) %>%
+  summarise(read_count = n()) %>%
+  arrange(construct_name, read_end)
+
 full_5PSeq_polyA_reads_from_stop_codon <- full_5PSeq_PolyA_reads %>%
   inner_join(construct_stop_codon_dictionary) %>%
   mutate(read_end = read_end - stop_codon_pos) %>%
@@ -148,6 +190,9 @@ full_5PSeq_polyA_reads_from_stop_codon <- full_5PSeq_PolyA_reads %>%
 
 empty_full_length_QuantSeq_plasmids <- tibble(construct_name = rep(full_QuantSeq_polyA_reads_from_stop_codon %>% pull(construct_name) %>% unique(), each = 201), 
                                               read_end = rep(0:200,18))
+
+empty_full_length_QuantSeq_heat_shock_plasmids <- tibble(construct_name = rep(full_QuantSeq_heat_shock_polyA_reads_from_stop_codon %>% pull(construct_name) %>% unique(), each = 501), 
+                                              read_end = rep(0:500,10))
 
 empty_full_length_5PSeq_plasmids <- tibble(construct_name = rep(full_5PSeq_polyA_reads_from_stop_codon %>% pull(construct_name) %>% unique(), each = 201), 
                                               read_end = rep(0:200,10))
@@ -226,6 +271,44 @@ full_length_QuantSeq_plasmids_cumulative_polyA_reads_genomic <- full_QuantSeq_po
   arrange(Gene, read_end) %>%
   dplyr::rename(Position_from_stop_codon=read_end)
 
+full_length_QuantSeq_heat_shock_plasmids_cumulative_polyA_reads <- full_QuantSeq_heat_shock_polyA_reads_from_stop_codon %>%
+  group_by(construct_name, sample, URA3, terminator, promoter, mod) %>%
+  do(fill_missing_nucleotide_data_QS_HS(.)) %>%
+  dplyr::rename(location = construct_name) |>
+  mutate(label = factor(mod),
+         promoter = factor(promoter, levels = c("pHSP26","pRPS13","pPGK1", 
+                                                "pRPS3", "pTSA1","pTOS6","pPMA1"))) %>%
+  inner_join(sample_to_construct_dictionary_QuantSeq_heat_shock, by = c("sample" = "sample_name"))  |>
+  mutate(sample = factor(sample, levels = expand.grid("WD_C",7:16) %>% 
+                           unite(factor, sep = "") %>% 
+                           add_row(factor = c("WD_E2", "WD_E3")) %>% 
+                           pull(factor))) |>
+  arrange(location, read_end,sample)
+
+full_length_QuantSeq_heat_shock_plasmids_cumulative_polyA_reads_control <-
+  full_length_QuantSeq_heat_shock_plasmids_cumulative_polyA_reads |>
+  filter(mod == "genomic") %>%
+  bind_rows(full_length_QuantSeq_heat_shock_plasmids_cumulative_polyA_reads %>%
+              filter(URA3) %>%
+              mutate(promoter = "URA3")) |>
+  ungroup() |>
+  mutate(Gene = str_remove(promoter, "p")) |>
+  select(Gene,construct_name,read_count,read_end) |>
+  pivot_wider(names_from = construct_name, values_from = read_count) %>%
+  arrange(Gene, read_end) %>%
+  dplyr::rename(Position_from_stop_codon=read_end)
+
+full_length_QuantSeq_heat_shock_plasmids_cumulative_polyA_reads_plasmid <-
+  full_length_QuantSeq_heat_shock_plasmids_cumulative_polyA_reads |>
+  filter(mod == "WT", !URA3) |>
+  ungroup() |>
+  select(construct_name,read_count,read_end) |>
+  pivot_wider(names_from = construct_name, values_from = read_count) %>%
+  arrange(read_end) %>%
+  dplyr::rename(Position_from_stop_codon=read_end)
+
+  
+
 ```
 
 ```{r whole-genome-counts}
@@ -265,6 +348,10 @@ all_sample_counts_5PSeq <- raw_featureCounts_files_5PSeq %>%
 write_tsv(full_length_QuantSeq_plasmids_cumulative_polyA_reads, here("raw_data_analysis/data/rna_seq/construct_polyA_bam/QuantSeq/QS_processed_polyA_constructs.tsv"))
 
 write_tsv(full_length_QuantSeq_plasmids_cumulative_polyA_reads_genomic, here("raw_data_analysis/data/rna_seq/construct_polyA_bam/QuantSeq/QS_processed_polyA_controls.tsv"))
+
+write_tsv(full_length_QuantSeq_heat_shock_plasmids_cumulative_polyA_reads_plasmid, here("raw_data_analysis/data/rna_seq/construct_polyA_bam/QuantSeq_heat_shock/QS_processed_polyA_constructs.tsv"))
+
+write_tsv(full_length_QuantSeq_heat_shock_plasmids_cumulative_polyA_reads_control, here("raw_data_analysis/data/rna_seq/construct_polyA_bam/QuantSeq_heat_shock/QS_processed_polyA_controls.tsv"))
 
 write_tsv(full_length_5PSeq_plasmids_cumulative_polyA_reads, here("raw_data_analysis/data/rna_seq/construct_polyA_bam/5PSeq/FPS_processed_polyA_constructs.tsv"))
 

@@ -145,7 +145,7 @@ insertion_construct_displaytable <-
             theme = ttheme_minimal(base_size=8,
                                    padding = unit(c(2, 2), "mm"),
                                    core=list(
-                                     fg_params=list(col = c("black", "#C05558", "#5978BA", "#71519C", "#C288BB", "#7FBF74", "#6C6C6C",
+                                     fg_params=list(col = c("goldenrod", "#C05558", "#5978BA", "#71519C", "#C288BB", "#7FBF74", "#6C6C6C",
                                                             "black", "black", "black", "#71519C", "#C288BB", "black", "#6C6C6C",
                                                             "black", "#C05558", "#5978BA", "black", "#C288BB", "#7FBF74", "#6C6C6C",
                                                             "black", "#C05558", "black", "#71519C", "#C288BB", "#7FBF74", "#6C6C6C"),
