@@ -81,9 +81,9 @@ results/figures/insertion_constructs_design_and_qpcr.png --  Created by raw_data
 
 results/figures/polya_usage_plot_QuantSeq.png -- Created by raw_data_analysis/code/polyA_site_usage_plot.Rmd
 
-results/figures/pro_ter_swap_protein_and_norm_rna_exp_figure.png
+results/figures/pro_ter_swap_protein_and_norm_rna_exp_figure.png -- Created by pro_ter_swaps_platereader_and_qPCR_plot.Rmd (Need to raw_data_analysis/code/raw_platereader_analysis/pro-mCh-ter_swaps_analysis.Rmd and raw_data_analysis/code/raw_platereader_analysis/pro-mTurq-ter_swaps_analysis.Rmd beforehand)
 
-results/figures/qPCR_model_coef_and_pred_vs_exp_abund.png -- Created by raw_data_analysis/code/hlife_motif_pred_vs_qpcr_abund.Rmd (Need to run train_half_life_linear_model.Rmd, then hlife_model_extract_motif_coef.R and qpcr_linear_model.Rmd before hand)
+results/figures/qPCR_model_coef_and_pred_vs_exp_abund.png -- Created by raw_data_analysis/code/hlife_motif_pred_vs_qpcr_abund.Rmd (Need to run train_half_life_linear_model.Rmd, then hlife_model_extract_motif_coef.R and qpcr_linear_model.Rmd beforehand)
 
 results/figures/tPIR1_design_and_qpcr.png -- Created by raw_data_analysis/code/combine_terminator_construct_qPCR_and_design_figure.Rmd
 
@@ -94,6 +94,12 @@ supplementary_data_chapter/figures/motif_position_histograms.png -- Created by r
 supplementary_data_chapter/figures/plasmid_vs_genome_polyA_combined_plot.png -- Created by raw_data_analysis/code/polyA_site_usage_plot.Rmd
 
 supplementary_data_chapter/figures/polya_usage_plot_QuantSeq_hsp26.png -- Created by raw_data_analysis/code/polyA_site_usage_plot.Rmd
+
+supplementary_data_chapter/figures/pro_ter_platereader_raw_mTurq_and_mCh.png -- Created by pro_ter_swaps_platereader_and_qPCR_plot.Rmd (Need to raw_data_analysis/code/raw_platereader_analysis/pro-mCh-ter_swaps_analysis.Rmd and raw_data_analysis/code/raw_platereader_analysis/pro-mTurq-ter_swaps_analysis.Rmd beforehand)
+
+supplementary_data_chapter/figures/sequencing_sample_correlation.png -- Created by raw_data_analysis/code/RNASeq_QC.Rmd
+
+supplementary_data_chapter/figures/RPS3_TSA1_PIR1_protein_and_RNA_plot.png -- Created by raw_data_analysis/code/raw_platereader_analysis/motif_context_dependence/RPS3_PIR1_TSA1_protein_vs_RNA_abund.Rmd
 
 ## Getting Started
 
