@@ -370,7 +370,7 @@ plot_norm_se_pro4
 
 ```{r plot_norm_all_points, fig.height=3, fig.width=6}
 
-mCh_platereader_figure <- ggplot(data=norm_pro_mCh_ter_all %>% mutate(Terminator = str_remove(Terminator, "_long")) %>% rename(fluo_per_OD_at_max_gr = "norm_fluo_per_OD_at_max_gr")) +
+mCh_platereader_figure <- ggplot(data=norm_pro_mCh_ter_all %>% mutate(Terminator = str_remove(Terminator, "_long")) %>% dplyr::rename(fluo_per_OD_at_max_gr = "norm_fluo_per_OD_at_max_gr")) +
   labs(x="Relative mCh fluorescence per OD relative to tPGK1", y="Terminator") +
   facet_wrap(~Promoter, nrow=2) +
   protein_raw_abundance_figure_options

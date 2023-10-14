@@ -71,6 +71,30 @@ Apart from figures directly plotting the normalised qpcr/platereader results tha
 See the folder README file for full descriptions of what each file analysis and which figures it plots.
 If you want to rerun the analysis files yourself they need to be ran in a certain order to provide dependences, please see the makefile or README file for more details.
 
+### Mapping figures to Rscript plotting file
+
+**Results**
+
+results/figures/hlife_model_multi_fig.png -- Created by raw_data_analysis/code/hlife_model_extract_motif_coef.R
+
+results/figures/insertion_constructs_design_and_qpcr.png --  Created by raw_data_analysis/code/combine_terminator_construct_qPCR_and_design_figure.Rmd
+
+results/figures/polya_usage_plot_QuantSeq.png -- Created by raw_data_analysis/code/polyA_site_usage_plot.Rmd
+
+results/figures/pro_ter_swap_protein_and_norm_rna_exp_figure.png
+
+results/figures/qPCR_model_coef_and_pred_vs_exp_abund.png -- Created by raw_data_analysis/code/hlife_motif_pred_vs_qpcr_abund.Rmd (Need to run train_half_life_linear_model.Rmd, then hlife_model_extract_motif_coef.R and qpcr_linear_model.Rmd before hand)
+
+results/figures/tPIR1_design_and_qpcr.png -- Created by raw_data_analysis/code/combine_terminator_construct_qPCR_and_design_figure.Rmd
+
+**Supplementary**
+
+supplementary_data_chapter/figures/motif_position_histograms.png -- Created by raw_data_analysis/code/create_motif_position_histograms.Rmd
+
+supplementary_data_chapter/figures/plasmid_vs_genome_polyA_combined_plot.png -- Created by raw_data_analysis/code/polyA_site_usage_plot.Rmd
+
+supplementary_data_chapter/figures/polya_usage_plot_QuantSeq_hsp26.png -- Created by raw_data_analysis/code/polyA_site_usage_plot.Rmd
+
 ## Getting Started
 
 

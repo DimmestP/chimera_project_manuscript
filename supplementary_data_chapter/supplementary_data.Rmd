@@ -479,14 +479,10 @@ knitr::include_graphics(here("supplementary_data_chapter/figures/motif_position_
 knitr::include_graphics(here("supplementary_data_chapter/figures/sequencing_sample_correlation.png"))
 ```
 
-```{r rnaseq-QC-QuantSeq-and-5PSeq-genomic-polyA, fig.cap="\\textbf{Poly(A) site usage for genomic PGK1, TSA1 and RPS3 terminators remains the same across samples.} Cumulative counts of reads mapped downstream of native genomic gene stop codons as fraction of total reads mapped to the terminator. Each line plots the cumulative counts of a separate sequencing run (including two tech reps per sample) which is given a unique colour. Relative usage of poly(A) sites remain similar across samples and across RNA-seq assays. Higher variability in QuantSeq PGK1 poly(A) site usage is due to low overall transcript counts.", fig.align='center',out.width="85%"}
-knitr::include_graphics(here("supplementary_data_chapter/figures/polya_QC_plot_QuantSeq.png"))
-```
-
 ```{r rnaseq-QC-genomic-vs-plasmid-polyA, fig.cap="\\textbf{Poly(A) site usage remains the same for genomic TSA1 and RPS3 terminators as for plasmid expressed WT constructs in QuantSeq.} Cumulative counts of reads mapped downstream of WT stop codons for native genomic terminators and plasmid construct terminators as a fraction of total reads mapped to the constructs terminator. Each line plots the cumulative counts of a separate sequencing run (including two tech reps per sample) which is given a unique colour. Expressing constructs from a low copy number plasmid does not seem to affect poly(A) site usage.", fig.align='center',out.width="85%"}
 knitr::include_graphics(here("supplementary_data_chapter/figures/plasmid_vs_genome_polyA_combined_plot.png"))
 ```
 
-```{r relative-polya-counts, fig.cap="\\textbf{Construct poly(A) site usage across QuantSeq.} Relative counts of reads mapped downstream of construct stop codons as fraction of total reads mapped to the constructs terminator. Peaks represent the position of major poly(A) sites. Replicates are plotted on top of each other where available.", fig.align='center',out.width="85%"}
-knitr::include_graphics(here("./supplementary_data_chapter/figures/relative_polya_counts_QuantSeq.png"))
+```{r relative-polya-counts, fig.cap="\\textbf{Supplementary Figure S6. Poly(A) site usage remains the same for tHPS26 constructs when paired with pHSO26, pRPS3 and pRPS13.} Cumulative counts of reads mapped downstream of the mCherry stop codons for mCherry-tHSP26 constructs pair with pHSO26, pRPS3 or pRPS13 as a fraction of total reads mapped to the constructs terminator. Replicates are plotted on top of each other where available.", fig.align='center',out.width="85%"}
+knitr::include_graphics(here("./supplementary_data_chapter/figures/polya_usage_plot_QuantSeq_hsp26.png"))
 ```

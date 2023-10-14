@@ -437,7 +437,7 @@ ggsave2(here("supplementary_data_chapter/figures/polya_QC_plot_QuantSeq.png"),
         dpi = fig_dpi,
         bg = "white")
 
-ggsave2(here("supplementary_data_chapter/figures/polya_QC_plot_QuantSeq_heat_shock.png"), 
+ggsave2(here("raw_data_analysis/data/figures/polya_QC_plot_QuantSeq_heat_shock.png"), 
         genomic_QuantSeq_heat_shock_combined_cumulative_QC, 
         width = fig_width_2column,
         height = 210,
@@ -574,7 +574,7 @@ ggsave2(here("supplementary_data_chapter/figures/plasmid_vs_genome_polyA_combine
         dpi = fig_dpi,
         bg = "white")
 
-ggsave2(here("supplementary_data_chapter/figures/plasmid_vs_genome_polyA_combined_heat_shock_plot.png"), 
+ggsave2(here("raw_data_analysis/data/figures/plasmid_vs_genome_polyA_combined_heat_shock_plot.png"), 
         plot_grid(genomic_QuantSeq_heat_shock_combined_cumulative_QC,
                   plasmid_vs_genome_polyA_heat_shock_combined_plot,
                   labels = c("A", "B"),
@@ -1219,7 +1219,7 @@ ggsave2(here("supplementary_data_chapter/figures/polya_usage_plot_QuantSeq_hsp26
         dpi = fig_dpi,
         bg = "white")
 
-ggsave2(here("supplementary_data_chapter/figures/plasmid_vs_genome_polyA_heat_shock_combined_plot.png"), 
+ggsave2(here("raw_data_analysis/data/figures/plasmid_vs_genome_polyA_heat_shock_combined_plot.png"), 
         plasmid_vs_genome_polyA_heat_shock_combined_plot, 
         width = 400,
         height = 200,
@@ -1321,7 +1321,7 @@ ggsave2(here("./results_chapter/figures/polya_usage_plot_QuantSeq.png"),
         dpi = fig_dpi,
         bg = "white")
 
-ggsave2(here("./supplementary_data_chapter/figures/relative_polya_counts_QuantSeq.png"), 
+ggsave2(here("./raw_data_analysis/data/figures/relative_polya_counts_QuantSeq.png"), 
         relative_polya_counts_QuantSeq, 
         width = fig_width_2column+10,
         height = 160,
@@ -1454,7 +1454,7 @@ tRPS3_WT_polyA_site_counts_5PSeq <- tRPS3_WT_insertion_alpha_5PSeq %>%
   summarise(rel_counts_5PSeq = mean(rel_counts)) %>%
   inner_join(tRPS3_WT_polyA_site_counts) %>%
   select(-mod_NNN) %>%
-  rename(rel_counts_QuantSeq = rel_counts)
+  dplyr::rename(rel_counts_QuantSeq = rel_counts)
 
 tTSA1_WT_polyA_site_counts <- tTSA1_WT_insertion_alpha %>%
   bind_rows(tTSA1_missing_values) %>%

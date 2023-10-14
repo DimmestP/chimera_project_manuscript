@@ -391,7 +391,7 @@ plot_norm_se_pro4
 ```{r plot_norm_all_points, fig.height=3, fig.width=6}
 
 mTurq_platereader_figure <- 
-  ggplot(data=norm_pro_mTurq_ter_all %>% rename(fluo_per_OD_at_max_gr = "norm_fluo_per_OD_at_max_gr")) +
+  ggplot(data=norm_pro_mTurq_ter_all %>% dplyr::rename(fluo_per_OD_at_max_gr = "norm_fluo_per_OD_at_max_gr")) +
   labs(x="Relative mTurq fluorescence per OD relative to tPGK1", y="Terminator") +
   facet_wrap(~Promoter, nrow=2) +
   protein_raw_abundance_figure_options
